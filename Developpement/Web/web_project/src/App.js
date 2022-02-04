@@ -1,24 +1,69 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import ThemeConfig from "./theme";
+import GlobalStyles from "./theme/globalStyles";
+import { Map } from "./components/Map";
+import {
+  Box,
+  Container,
+  Stack,
+  Divider,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
+import MapRoundedIcon from "@mui/icons-material/MapRounded";
+import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 
 function App() {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <ThemeConfig>
+        <GlobalStyles />
+        <Stack
+          direction="row"
+          alignItems="stretch"
+          divider={<Divider orientation="vertical" flexItem />}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Stack direction="column" justifyContent="space-around">
+            <Typography variant="h2">Atlas</Typography>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              orientation="vertical"
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              <Tab
+                icon={<MapRoundedIcon />}
+                iconPosition="start"
+                label="Carte"
+              />
+              <Tab
+                icon={<CommuteRoundedIcon />}
+                iconPosition="start"
+                label="Voyage"
+              />
+              <Tab
+                icon={<SettingsRoundedIcon />}
+                iconPosition="start"
+                label="Options "
+              />
+            </Tabs>
+          </Stack>
+          <Stack>
+            <Map></Map>
+          </Stack>
+        </Stack>
+      </ThemeConfig>
+    </>
   );
 }
 

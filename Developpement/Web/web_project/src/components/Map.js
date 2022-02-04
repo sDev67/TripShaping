@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import {
   GoogleMap,
   LoadScript,
-  Marker,
   DirectionsRenderer,
-  DirectionService
+  DirectionService,
+  Marker,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const containerStyle = {
-  width: "1800px",
-  height: "950px",
+  position: 'relative',
+  width: '100%',
+  height: '100%'
 };
 
 const center = {
@@ -19,14 +20,26 @@ const center = {
   lng: -38.523,
 };
 
+const asideStyle = {
+  right: 60,
+  top: 30,
+  width: 400,
+  height: '90%',
+  position: 'fixed',
+  background: "#FFFFFF",
+  border: '1px solid black',
+  borderRadius: 5,
+  opacity: 0.85
+}
+
 const position = {
   lat: 37.772,
   lng: -122.214,
 };
 
-
 export const Map = () => {
   const [steps, setSteps] = useState([]);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const mapLoading = (
     <div
@@ -42,18 +55,20 @@ export const Map = () => {
   );
 
   const onMapClick = (e) => {
-    setSteps((oldArray) => [
-      ...oldArray,
-      { name: "Serkan", position: e.latLng },
-    ]);
+    if (selectedMarker !== null) {
+      setSelectedMarker(null)
+    }
+    else {
+      setSteps((oldArray) => [
+        ...oldArray,
+        { name: oldArray.length, position: e.latLng },
+      ]);
+    }
   };
 
   const dragMarker = (id, e) => {
     console.log(id);
   };
-
-
-  
 
   return (
     <>
@@ -73,13 +88,28 @@ export const Map = () => {
               key={index}
               position={step.position}
               draggable={true}
-              onCLick={() => console.log(step.name)}
+              clickable={true}
+              onClick={() => setSelectedMarker(steps[index])}
             ></Marker>
           ))}
 
           <DirectionsRenderer />
         </GoogleMap>
       </LoadScript>
+      {selectedMarker && <>
+        <aside style={asideStyle}>
+          <h3>Titre</h3>
+          <textarea value={selectedMarker.name}></textarea>
+          <hr />
+          <h3>Catégorie</h3>
+          <textarea></textarea>
+          <hr />
+          <h3>Description</h3>
+          <textarea></textarea>
+          <hr />
+          <h3>Documents</h3>
+        </aside>
+      </>}
     </>
   );
 };

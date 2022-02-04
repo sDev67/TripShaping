@@ -31,6 +31,7 @@ function App() {
           direction="row"
           alignItems="stretch"
           divider={<Divider orientation="vertical" flexItem />}
+          style={{ height: "100%", width: "100%" }}
         >
           <Stack direction="column" justifyContent="space-around">
             <Typography variant="h2">Atlas</Typography>
@@ -58,7 +59,7 @@ function App() {
               />
             </Tabs>
           </Stack>
-          <Stack>
+          <Stack style={{ width: '100%' }}>
             <Map></Map>
           </Stack>
         </Stack>

@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import {
   GoogleMap,
   LoadScript,
   Marker,
   DirectionsRenderer,
-  DirectionService
+  DirectionsService,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Button, Alert, Collapse } from "@mui/material";
 
 const containerStyle = {
   width: "1800px",
@@ -19,14 +20,10 @@ const center = {
   lng: -38.523,
 };
 
-const position = {
-  lat: 37.772,
-  lng: -122.214,
-};
-
-
 export const Map = () => {
   const [steps, setSteps] = useState([]);
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(false);
 
   const mapLoading = (
     <div
@@ -42,18 +39,51 @@ export const Map = () => {
   );
 
   const onMapClick = (e) => {
-    setSteps((oldArray) => [
-      ...oldArray,
-      { name: "Serkan", position: e.latLng },
-    ]);
+    if (!error) {
+      setSteps((oldArray) => [
+        ...oldArray,
+        {
+          location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+          stopover: true,
+        },
+      ]);
+    }
   };
 
-  const dragMarker = (id, e) => {
-    console.log(id);
+  const changeLocation = (index) => (e) => {
+    if (!error) {
+      let newSteps = [...steps];
+      newSteps[index] = {
+        location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+        stopover: true,
+      };
+      setSteps(newSteps);
+    }
   };
 
+  const deleteMarker = (step) => {
+    if (!error) {
+      let newSteps = [...steps];
+      newSteps = newSteps.filter((e) => e !== step);
+      setSteps(newSteps);
+    }
+  };
 
-  
+  const closeAlert = () => {
+    setError(false);
+    let newSteps = [...steps];
+    newSteps = newSteps.filter((e) => e !== steps[steps.length - 1]);
+    setSteps(newSteps);
+  };
+
+  const directionsCallback = useCallback((res) => {
+    if (res !== null && res.status === "OK") {
+      setResponse(res);
+    } else if (res !== null && res.status === "ZERO_RESULTS") {
+      setError(true);
+      //deleteMarker(steps[steps.length]);
+    }
+  }, []);
 
   return (
     <>
@@ -67,19 +97,54 @@ export const Map = () => {
           zoom={10}
           onClick={onMapClick}
         >
+          {steps.length >= 2 && (
+            <>
+              <DirectionsService
+                options={{
+                  origin: {
+                    lat: steps[0].location.lat,
+                    lng: steps[0].location.lng,
+                  },
+                  waypoints: steps.slice(1, steps.length - 1),
+                  destination: {
+                    lat: steps[steps.length - 1].location.lat,
+                    lng: steps[steps.length - 1].location.lng,
+                  },
+
+                  travelMode: "DRIVING",
+                }}
+                callback={directionsCallback}
+              />
+              <DirectionsRenderer
+                options={{
+                  directions: response,
+                  suppressMarkers: true,
+                  polylineOptions: { strokeColor: "#00AB55", strokeWeight: 3 },
+                }}
+              />
+            </>
+          )}
           {/* Child components, such as markers, info windows, etc. */}
           {steps.map((step, index) => (
             <Marker
               key={index}
-              position={step.position}
-              draggable={true}
-              onCLick={() => console.log(step.name)}
+              position={{ lat: step.location.lat, lng: step.location.lng }}
+              draggable={!error}
+              onClick={() => console.log("click on marker " + index)}
+              onRightClick={() => deleteMarker(step)}
+              onDragEnd={changeLocation(index)}
             ></Marker>
           ))}
-
-          <DirectionsRenderer />
         </GoogleMap>
       </LoadScript>
+      <Collapse
+        in={error}
+        style={{ position: "absolute", alignSelf: "center", bottom: 10 }}
+      >
+        <Alert variant="filled" severity="error" onClose={() => closeAlert()}>
+          Désolé, nous n'avons pas pu calculer l'itinéraire.
+        </Alert>
+      </Collapse>
     </>
   );
 };

@@ -11,6 +11,14 @@ import {
   Tab,
   Tabs,
   Typography,
+  TextField, 
+  Autocomplete,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  Switch
+
 } from "@mui/material";
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
@@ -18,10 +26,36 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 
 function App() {
   const [value, setValue] = React.useState(0);
+  const [success, setSuccess] = React.useState(false);
+  const [label, setLabel] = React.useState("Navigation");
+
+  const [valueNavMode, setValueNavMode] = React.useState("all");
+
+  const handleChangeSelectModeNav = (event) => {
+    setValueNavMode(event.target.value);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  
+
+
+  const handleChangeOnOff = (event) => {
+    setSuccess(event.target.checked);
+    if(!success){
+      setLabel("Edition")
+      setValueNavMode("all");
+
+    }
+    else{
+      setLabel("Navigation")
+    }
+    
+  }
+  
+
 
   return (
     <>
@@ -57,9 +91,25 @@ function App() {
                 label="Options "
               />
             </Tabs>
+        
+            <FormControlLabel
+              value={label}
+              control={<Switch color="primary" />}
+              label={label}
+              labelPlacement="bottom"
+              onChange={handleChangeOnOff}
+              checked={success}
+            />          
+        
           </Stack>
+        
           <Stack>
-            <Map></Map>
+            <Map 
+              choice = {success} 
+              pointToDisplay = {valueNavMode}
+              labelChoice = {label}
+              handleChangeSelectModeNav = {handleChangeSelectModeNav}>
+            </Map>
           </Stack>
         </Stack>
       </ThemeConfig>

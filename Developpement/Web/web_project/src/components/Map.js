@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback,useEffect } from "react";
 import {
   GoogleMap,
   LoadScript,
-  Marker,
   DirectionsRenderer,
-  DirectionService
+  DirectionsService,
+  Marker,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import CircularProgress from "@mui/material/CircularProgress";
 import Popover from '@mui/material/Popover';
-import Button from '@mui/material/Button';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {
   Radio,
   RadioGroup,
@@ -18,37 +16,51 @@ import {
   FormControl,
 } from "@mui/material";
 
+
+import { Button, Alert, Collapse } from "@mui/material";
+
 const containerStyle = {
-  width: window.innerWidth,
-  height: window.innerHeight,
+  position: 'relative',
+  width: '100%',
+  height: '100%'
 };
 
 
-const center = {
+const position = {
   lat: 48.5734053,
   lng: 7.7521113,
 };
-
-// const position = {
-//   lat: 37.772,
-//   lng: -122.214,
-// };
 
 export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectModeNav}) => {
 
   const [steps, setSteps] = useState([]);
   const [interestPoint, setInterestPoint] = useState([]);
 
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(false)
+
   const [valueEditionMode, setValueEditionMode] = React.useState("stepOnly");
 
   const handleChangeSelectModeEdit = (event) => {
     setValueEditionMode(event.target.value);
   };
-  
 
   useEffect(() => {
-    //rien
-  }, [pointToDisplay])
+    // met a jour les elements choisi
+  }, [pointToDisplay]);
+
+  const asideStyle = {
+    right: 60,
+    top: 30,
+    width: 400,
+    height: '90%',
+    position: 'fixed',
+    background: "#FFFFFF",
+    border: '1px solid black',
+    borderRadius: 5,
+    opacity: 0.85
+  };
 
   const mapLoading = (
     <div
@@ -66,23 +78,37 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
   const onMapClick = (e) => {
     // on peut placer les points uniquement si on est en mode edition
     if (choice){
-      
-      if(valueEditionMode === "stepOnly"){
-        setSteps((oldArray) => [
-          ...oldArray,
-          { name: "etape", position: e.latLng },
-        ]);
+
+      // si menu édition a droite est ouvert 
+      if (selectedMarker !== null) {
+        setSelectedMarker(null)
       }
-      else{
-        setInterestPoint((oldArr) => [
-          ...oldArr,
-          { name: "point interet", position: e.latLng},
-        ]);
+      else {
+        if(valueEditionMode === "stepOnly"){
+          if (!error) {
+          setSteps((oldArray) => [
+            ...oldArray,
+              {
+                location: { name: "Etape", lat: e.latLng.lat(), lng: e.latLng.lng() },
+                stopover: true,
+              },
+            ]);
+          }
+          
+        }
+        else{
+          setInterestPoint((oldArray) => [
+            ...oldArray,
+              {
+                location: { name: "Point interet", lat: e.latLng.lat(), lng: e.latLng.lng() },
+                stopover: true,
+              },
+            ]);
+        }
       }
-    
-    }
-    
-  };
+    }   
+  
+  }  
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -99,6 +125,42 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
 
   //const img = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
+    
+
+  const changeLocation = (index) => (e) => {
+    if (!error) {
+      let newSteps = [...steps];
+      newSteps[index] = {
+        location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+        stopover: true,
+      };
+      setSteps(newSteps);
+    }
+  };
+
+  const deleteMarker = (step) => {
+    if (!error) {
+      let newSteps = [...steps];
+      newSteps = newSteps.filter((e) => e !== step);
+      setSteps(newSteps);
+    }
+  };
+
+  const closeAlert = () => {
+    setError(false);
+    let newSteps = [...steps];
+    newSteps = newSteps.filter((e) => e !== steps[steps.length - 1]);
+    setSteps(newSteps);
+  };
+
+  const directionsCallback = useCallback((res) => {
+    if (res !== null && res.status === "OK") {
+      setResponse(res);
+    } else if (res !== null && res.status === "ZERO_RESULTS") {
+      setError(true);
+      //deleteMarker(steps[steps.length]);
+    }
+  }, []);
 
   return (
     <>
@@ -108,7 +170,7 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
       >
         <GoogleMap
           mapContainerStyle={containerStyle}
-          center={center}
+          center={position}
           zoom={10}
           onClick={onMapClick}
         >  
@@ -142,21 +204,20 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
                 {labelChoice}
         </Button>
          
-      
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+        >
          { !choice && 
               <FormControl>
               <RadioGroup
@@ -187,10 +248,8 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
 
               </RadioGroup>
             </FormControl>              
-            }
-           
-      
-      </Popover>
+          }
+        </Popover>
        
    
    
@@ -201,15 +260,19 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
             steps.map((step, index) => (
               <Marker
                 key={index}
-                position={step.position}
-                draggable={true}
+                position={{ lat: step.location.lat, lng: step.location.lng }}
+                draggable={!error}
                 clickable={true}
+                onClick={() => setSelectedMarker(steps[index])}
+                onRightClick={() => deleteMarker(step)}
+                onDragEnd={changeLocation(index)}
                 
               >
               </Marker>
             ))
 
           }
+
           {
             (pointToDisplay === "interestPointOnly" || pointToDisplay === "all") &&
             interestPoint.map((interestStep, index) => (
@@ -235,12 +298,61 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
           ))
           }
         
-          
+        {steps.length >= 2 && (
+            <>
+              <DirectionsService
+                options={{
+                  origin: {
+                    lat: steps[0].location.lat,
+                    lng: steps[0].location.lng,
+                  },
+                  waypoints: steps.slice(1, steps.length - 1),
+                  destination: {
+                    lat: steps[steps.length - 1].location.lat,
+                    lng: steps[steps.length - 1].location.lng,
+                  },
 
-          <DirectionsRenderer />
+                  travelMode: "DRIVING",
+                }}
+                callback={directionsCallback}
+              />
+              <DirectionsRenderer
+                options={{
+                  directions: response,
+                  suppressMarkers: true,
+                  polylineOptions: { strokeColor: "#00AB55", strokeWeight: 3 },
+                }}
+              />
+            </>
+          )}
+
+          
         </GoogleMap>
       </LoadScript>
-      
+      {
+        selectedMarker && <>
+          <aside style={asideStyle}>
+            <h3>Titre</h3>
+            <textarea value={selectedMarker.location}></textarea>
+            <hr />
+            <h3>Catégorie</h3>
+            <textarea></textarea>
+            <hr />
+            <h3>Description</h3>
+            <textarea></textarea>
+            <hr />
+            <h3>Documents</h3>
+          </aside>
+        </>
+       }
+      <Collapse
+        in={error}
+        style={{ position: "absolute", alignSelf: "center", bottom: 10 }}
+      >
+        <Alert variant="filled" severity="error" onClose={() => closeAlert()}>
+          Désolé, nous n'avons pas pu calculer l'itinéraire.
+        </Alert>
+      </Collapse>
     </>
   );
 };

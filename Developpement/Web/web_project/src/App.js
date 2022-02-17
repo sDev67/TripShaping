@@ -4,19 +4,12 @@ import ThemeConfig from "./theme";
 import GlobalStyles from "./theme/globalStyles";
 import { Map } from "./components/Map";
 import {
-  Box,
-  Container,
   Stack,
   Divider,
   Tab,
   Tabs,
   Typography,
-  TextField, 
-  Autocomplete,
-  Radio,
-  RadioGroup,
   FormControlLabel,
-  FormControl,
   Switch
 
 } from "@mui/material";
@@ -65,6 +58,7 @@ function App() {
           direction="row"
           alignItems="stretch"
           divider={<Divider orientation="vertical" flexItem />}
+          style={{ height: "100%", width: "100%" }}
         >
           <Stack direction="column" justifyContent="space-around">
             <Typography variant="h2">Atlas</Typography>
@@ -103,7 +97,7 @@ function App() {
         
           </Stack>
         
-          <Stack>
+          <Stack style={{ width: '100%' }}>
             <Map 
               choice = {success} 
               pointToDisplay = {valueNavMode}

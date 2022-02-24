@@ -238,6 +238,7 @@ export const Map = ({ choice, pointToDisplay, labelChoice, handleChangeSelectMod
             open={open}
             anchorEl={anchorEl}
             onClose={handleCloseBox}
+            style = {{marginLeft: 2}}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'left',

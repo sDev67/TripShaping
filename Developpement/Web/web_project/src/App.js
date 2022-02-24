@@ -49,16 +49,13 @@ function App() {
   const handleChangeOnOff = (event) => {
     setSuccess(event.target.checked);
     if(!success){
-      console.log("10")
       setLabel("Edition")
       setValueNavMode("all");
 
     }
     // On ferme le menu d'édition s'il est ouvert
     else{
-      console.log("20")
       if (selectedMarker !== null) {
-        console.log("21")
         setSelectedMarker(null)
       }
       setLabel("Navigation")

@@ -1,4 +1,4 @@
-import React, { useState, useCallback,useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -31,12 +31,11 @@ const position = {
   lng: 7.7521113,
 };
 
-export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectModeNav}) => {
+export const Map = ({ choice, pointToDisplay, labelChoice, handleChangeSelectModeNav,selectedMarker, setSelectedMarker }) => {
 
   const [steps, setSteps] = useState([]);
   const [interestPoint, setInterestPoint] = useState([]);
 
-  const [selectedMarker, setSelectedMarker] = useState(null);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(false)
 
@@ -47,9 +46,10 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
   };
 
   useEffect(() => {
-    // met a jour les elements choisi
+    // met a jour la page avec l'élément choisi dans la box Navigation
   }, [pointToDisplay]);
 
+  // style pour le menu edition a droite de l'écran
   const asideStyle = {
     right: 60,
     top: 30,
@@ -77,46 +77,56 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
 
   const onMapClick = (e) => {
     // on peut placer les points uniquement si on est en mode edition
-    if (choice){
-
-      // si menu édition a droite est ouvert 
+    if(choice){
       if (selectedMarker !== null) {
-        setSelectedMarker(null)
-      }
+        setSelectedMarker(null);
+      }     
       else {
-        if(valueEditionMode === "stepOnly"){
+        if (valueEditionMode === "stepOnly") {
           if (!error) {
-          setSteps((oldArray) => [
-            ...oldArray,
+            setSteps((oldArray) => [
+              ...oldArray,
               {
-                location: { name: "Etape", lat: e.latLng.lat(), lng: e.latLng.lng() },
+                // la prop name de step.location.name est très importante car c'est elle qui permet de savoir sur quelle point on clique
+                location: { name: "Etape", lat: e.latLng.lat(), lng: e.latLng.lng(), title: "chien" },
                 stopover: true,
               },
             ]);
           }
-          
         }
-        else{
-          setInterestPoint((oldArray) => [
-            ...oldArray,
+        // ici : valueEditionMode === "interestPointOnly")
+        else { 
+          if (!error) {
+            setInterestPoint((oldArr) => [
+              ...oldArr,
               {
-                location: { name: "Point interet", lat: e.latLng.lat(), lng: e.latLng.lng() },
+                location: { name: "PointInteret", lat: e.latLng.lat(), lng: e.latLng.lng(), title: "chat" },
                 stopover: true,
               },
             ]);
+          }
         }
       }
-    }   
-  
-  }  
+    }    
+    // si on est en mode navigation 
+    else{
+      // si le menu est ouvert on le ferme en cliquant sur la map
+      if (selectedMarker !== null) {
+        setSelectedMarker(null);
+      }
+    }
+
+  }
+
 
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
+  // Clique sur la box Navigation / Edition placé sur la map
+  const handleClickOnBox = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  // Ferme la box Navigation / Edition
+  const handleCloseBox = () => {
     setAnchorEl(null);
   };
 
@@ -125,27 +135,46 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
 
   //const img = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
-    
-
-  const changeLocation = (index) => (e) => {
+  // Fonction qui met a jour la position des points
+  // en fonction de leurs index et du point choisi
+  const changeLocation = (index, stp) => (e) => {
     if (!error) {
-      let newSteps = [...steps];
-      newSteps[index] = {
-        location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
-        stopover: true,
-      };
-      setSteps(newSteps);
+      if(stp.location.name === "Etape"){
+        let newSteps = [...steps];
+        newSteps[index] = {
+          location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+          stopover: true,
+        };
+        setSteps(newSteps);
+      }
+      else if (stp.location.name === "PointInteret"){
+        let newInterestSteps = [...interestPoint];
+        newInterestSteps[index] = {
+          location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+          stopover: true,
+        };
+        setInterestPoint(newInterestSteps);
+      }      
     }
   };
 
+  // Fonction qui permet de supprimer des points d'étapes et des points d'interet
   const deleteMarker = (step) => {
     if (!error) {
-      let newSteps = [...steps];
-      newSteps = newSteps.filter((e) => e !== step);
-      setSteps(newSteps);
-    }
+      if(step.location.name === "Etape"){
+        let newSteps = [...steps];
+        newSteps = newSteps.filter((e) => e !== step);
+        setSteps(newSteps);
+      }
+      else if (step.location.name === "PointInteret"){
+        let newInterestSteps = [...interestPoint];
+        newInterestSteps = newInterestSteps.filter((e) => e !== step);
+        setInterestPoint(newInterestSteps);
+      }
+    }    
   };
 
+  // Fonction qui enleve le dernier point lorsque ce dernier est placé dans un endroit qui cause pb
   const closeAlert = () => {
     setError(false);
     let newSteps = [...steps];
@@ -153,12 +182,12 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
     setSteps(newSteps);
   };
 
+  // fonction qui calcule l'itinéraire et qui le trace
   const directionsCallback = useCallback((res) => {
     if (res !== null && res.status === "OK") {
       setResponse(res);
     } else if (res !== null && res.status === "ZERO_RESULTS") {
       setError(true);
-      //deleteMarker(steps[steps.length]);
     }
   }, []);
 
@@ -173,21 +202,21 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
           center={position}
           zoom={10}
           onClick={onMapClick}
-        >  
-        <Button 
-          aria-describedby={id} 
-          variant="contained" 
-          onClick={handleClick}
+        >
+          <Button
+            aria-describedby={id}
+            variant="contained"
+            onClick={handleClickOnBox}
 
-          style={{
-              background: 'none', 
+            style={{
+              background: 'none',
               backgroundColor: 'white',
-              border:'0px',
-              padding:'0px 17px',
+              border: '0px',
+              padding: '0px 17px',
               textTransform: 'none',
               appearance: 'none',
-              position:'absolute',
-              bottom:'2rem',
+              position: 'absolute',
+              bottom: '2rem',
               left: '10 px',
               zIndex: 10,
               cursor: "pointer",
@@ -195,68 +224,68 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
               height: '40px',
               verticalAlign: 'middle',
               boxShadow: 'rgb(0 0 0 / 30%) 0px 1px 4px -1px',
-              color:'rgb(86 86 86)',
-              fontFamily:'Roboto, Arial, sans-serif',
-              fontSize:'18px',
-              
-              
-            }}>
-                {labelChoice}
-        </Button>
-         
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        >
-         { !choice && 
-              <FormControl>
-              <RadioGroup
-                aria-labelledby="controlled-radio-buttons-group"
-                name="controlled-radio-buttons-group"
-                value={pointToDisplay}
-                onChange={handleChangeSelectModeNav}
-              >
-                <FormControlLabel value="all" control={<Radio />} label="Tout" />
-                <FormControlLabel value="stepOnly" control={<Radio />} label="Etapes" />
-                <FormControlLabel value="interestPointOnly" control={<Radio />} label="Points d'intérêt" />
+              color: 'rgb(86 86 86)',
+              fontFamily: 'Roboto, Arial, sans-serif',
+              fontSize: '18px',
 
-              </RadioGroup>
-            </FormControl>
+
+            }}>
+            {labelChoice}
+          </Button>
+
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleCloseBox}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+          >
+            {!choice &&
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={pointToDisplay}
+                  onChange={handleChangeSelectModeNav}
+                >
+                  <FormControlLabel value="all" control={<Radio />} label="Tout" />
+                  <FormControlLabel value="stepOnly" control={<Radio />} label="Etapes" />
+                  <FormControlLabel value="interestPointOnly" control={<Radio />} label="Points d'intérêt" />
+
+                </RadioGroup>
+              </FormControl>
 
             }
 
-            {choice && 
+            {choice &&
               <FormControl>
-              <RadioGroup
-                aria-labelledby="controlled-radio-buttons-group"
-                name="controlled-radio-buttons-group"
-                value={valueEditionMode}
-                onChange={handleChangeSelectModeEdit}
-              >
-                <FormControlLabel value="stepOnly" control={<Radio />} label="Etapes" />
-                <FormControlLabel value="interestPointOnly" control={<Radio />} label="Points d'intérêt" />
+                <RadioGroup
+                  aria-labelledby="controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={valueEditionMode}
+                  onChange={handleChangeSelectModeEdit}
+                >
+                  <FormControlLabel value="stepOnly" control={<Radio />} label="Etapes" />
+                  <FormControlLabel value="interestPointOnly" control={<Radio />} label="Points d'intérêt" />
 
-              </RadioGroup>
-            </FormControl>              
-          }
-        </Popover>
-       
-   
-   
-      {/* Child components, such as markers, info windows, etc. */}
-    
+                </RadioGroup>
+              </FormControl>
+            }
+          </Popover>
+
+
+
+          {/* Child components, such as markers, info windows, etc. */}
+
           {
-            (pointToDisplay === "stepOnly" || pointToDisplay === "all") && 
+            (pointToDisplay === "stepOnly" || pointToDisplay === "all") &&
             steps.map((step, index) => (
               <Marker
                 key={index}
@@ -265,8 +294,8 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
                 clickable={true}
                 onClick={() => setSelectedMarker(steps[index])}
                 onRightClick={() => deleteMarker(step)}
-                onDragEnd={changeLocation(index)}
-                
+                onDragEnd={changeLocation(index,step )}
+
               >
               </Marker>
             ))
@@ -278,9 +307,12 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
             interestPoint.map((interestStep, index) => (
               <Marker
                 key={index}
-                position={interestStep.position}
-                draggable={true}
-                clickable={true}                
+                position={{ lat: interestStep.location.lat, lng: interestStep.location.lng }}
+                draggable={!error}
+                clickable={true}
+                onClick={() => setSelectedMarker(interestPoint[index])}
+                onRightClick={() => deleteMarker(interestStep)}
+                onDragEnd={changeLocation(index, interestStep)}
                 icon={{
                   path:
                     "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
@@ -290,15 +322,16 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
                   strokeColor: "black",
                   strokeWeight: 1,
                 }}
-                            
+
                 title={"TEST"}
+
 
               >
               </Marker>
-          ))
+            ))
           }
-        
-        {steps.length >= 2 && (
+          
+          {steps.length >= 2 && (
             <>
               <DirectionsService
                 options={{
@@ -326,14 +359,14 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
             </>
           )}
 
-          
+
         </GoogleMap>
       </LoadScript>
       {
         selectedMarker && <>
           <aside style={asideStyle}>
             <h3>Titre</h3>
-            <textarea value={selectedMarker.location}></textarea>
+            <textarea value={selectedMarker.location.title}></textarea>
             <hr />
             <h3>Catégorie</h3>
             <textarea></textarea>
@@ -344,7 +377,10 @@ export const Map = ({choice, pointToDisplay, labelChoice, handleChangeSelectMode
             <h3>Documents</h3>
           </aside>
         </>
-       }
+      }
+      
+      {/* Affichage popin lorsque le trajet est introuvable. */}
+
       <Collapse
         in={error}
         style={{ position: "absolute", alignSelf: "center", bottom: 10 }}

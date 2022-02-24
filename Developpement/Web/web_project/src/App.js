@@ -24,25 +24,43 @@ function App() {
 
   const [valueNavMode, setValueNavMode] = React.useState("all");
 
+  const [selectedMarker, setSelectedMarker] = React.useState(null);
+
+
+  // Lorsqu'on change de choix dans la box Navigation :
+  // - Tout
+  // - Etapes
+  // - Points d'intérêt
   const handleChangeSelectModeNav = (event) => {
     setValueNavMode(event.target.value);
   };
 
+
+  // Lorsqu'on change d'élement choisi entre :
+  // Carte, Voyage et Options
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
+  }; 
 
-  
-
-
+  // switch correspondant au mode navigation et mode Edition
+  // success = true par defaut --> Navigation 
+  // success = false --> Edition
+  // Lorsqu'on switch de mode, on reset les points a afficher en les affichant tous
   const handleChangeOnOff = (event) => {
     setSuccess(event.target.checked);
     if(!success){
+      console.log("10")
       setLabel("Edition")
       setValueNavMode("all");
 
     }
+    // On ferme le menu d'édition s'il est ouvert
     else{
+      console.log("20")
+      if (selectedMarker !== null) {
+        console.log("21")
+        setSelectedMarker(null)
+      }
       setLabel("Navigation")
     }
     
@@ -102,7 +120,9 @@ function App() {
               choice = {success} 
               pointToDisplay = {valueNavMode}
               labelChoice = {label}
-              handleChangeSelectModeNav = {handleChangeSelectModeNav}>
+              handleChangeSelectModeNav = {handleChangeSelectModeNav}
+              selectedMarker = {selectedMarker}
+              setSelectedMarker = {setSelectedMarker}>
             </Map>
           </Stack>
         </Stack>

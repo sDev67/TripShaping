@@ -12,7 +12,7 @@ const ListDetail = ({list}) =>
     useEffect(()=>
     {
         setAllTasks(list.tasks);
-    })
+    })  
 
 
     const Handleclick = ({key}) =>

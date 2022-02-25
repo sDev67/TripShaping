@@ -16,6 +16,7 @@ import {
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import TodoList from "./TodoList/TodoList";
 
 function App() {
   const [value, setValue] = React.useState(0);
@@ -111,8 +112,9 @@ function App() {
             />          
         
           </Stack>
-        
-          <Stack style={{ width: '100%' }}>
+          <TodoList/>
+        {/** 
+         * <Stack style={{ width: '100%' }}>
             <Map 
               choice = {success} 
               pointToDisplay = {valueNavMode}
@@ -122,6 +124,8 @@ function App() {
               setSelectedMarker = {setSelectedMarker}>
             </Map>
           </Stack>
+        */}
+          
         </Stack>
       </ThemeConfig>
     </>

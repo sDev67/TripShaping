@@ -3,6 +3,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import {useState} from 'react';
 import '../App.css';
+
+
 const TodoList = () =>
 {
     const [currentTask, setCurrentTask] = useState();
@@ -145,10 +147,10 @@ const TodoList = () =>
 
     return(
         <>             
-                <div style={{ height:250}}>
+                <div style={{ height:250, marginLeft:100}}>
 
                     <h1 style={{textAlign:'left', marginTop:10, marginLeft:50}}>Todo List</h1>
-                    <hr style={{width:"95%", marginLeft:50, borderWidth:'3px'}}/>
+                    <hr style={{width:"85vw", marginLeft:50, borderWidth:'2px'}}/>
 
                     <div style={{display:'flex', flexDirection:'row', alignItems:'space-between'}}>
 
@@ -164,9 +166,9 @@ const TodoList = () =>
                                     <>
                                         <hr style={{width:"75%", marginLeft:60, marginTop:0}}/>
 
-                                        <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
+                                        <div style={{display:'flex', flexDirection:'row',height:'120px', alignContent:'space-between'}} color="black">
                                             <h2 key={key} style={{marginLeft:50, marginTop:0}}>{x.title}</h2>
-                                            <h4 style={{marginLeft:100, padding:10, borderStyle:'solid', borderWidth:'2px', borderRadius:10}}>{x.executionDate}</h4>
+                                            <h4 style={{height:'40px', marginLeft:100, padding:5, borderStyle:'solid', borderWidth:'2px', borderRadius:10}}>{x.executionDate}</h4>
                                             <DeleteIcon style={{marginLeft:100}} fontSize='large' onClick={() => RemoveTask(x)} />
                                         </div>
                                         <div>
@@ -180,7 +182,7 @@ const TodoList = () =>
                             </div>
                           
 
-                            <hr style={{width:"750%", marginLeft:60, marginTop:0}}/>
+                            <hr style={{width:"650%", marginLeft:60, marginTop:0}}/>
 
                         </div>   
                         <div style={{position:'fixed', right:0, marginRight:'5vh'}}>
@@ -196,7 +198,7 @@ const TodoList = () =>
                                         {allLabels.map((x, key) => (
 
                                             <>
-                                                <div style={{display:'flex', textAlign:'center', flexDirection:'row',margin:10, alignContent:'center',borderStyle:'solid', borderWidth:'2px', borderRadius:5, marginLeft:60}}>
+                                                <div style={{display:'flex', textAlign:'center', flexDirection:'row',margin:10, alignContent:'space-between',borderStyle:'solid', borderWidth:'2px', borderRadius:5, marginLeft:60}}>
                                                     <h2 key={key} style={{ marginTop:5}}>{x.title}</h2>
                                                     <DeleteIcon style={{marginLeft:20}} fontSize='large' onClick={() => RemoveTask(x)} />
                                                 </div>
@@ -209,7 +211,7 @@ const TodoList = () =>
                                     <div style={{fontSize:'inherit', marginLeft:20, marginBottom:10}}>
                                         <AddCircleOutlineRoundedIcon sx={{ fontSize: 65 }} />
                                     </div>
-                                    <hr style={{width:"100%", marginLeft:16}}/>
+                                    <hr style={{width:"90%", marginLeft:16}}/>
                                     <div style={{top:0, marginLeft:'3%'}}>
                                         <h2 >Ajouter Label</h2>
                                         <form onSubmit={OnAddLabel} style={{textAlign:'center'}}>
@@ -225,9 +227,9 @@ const TodoList = () =>
                     <div style={{fontSize:'inherit', marginLeft:65, marginBottom:40, width:'50vh'}}>
                         <AddCircleOutlineRoundedIcon sx={{ fontSize: 50 }} />
                     </div>           
-                    <hr style={{width:"75%", marginLeft:30}}/>
+                    <hr style={{width:"70%", marginLeft:30}}/>
                     <div style={{top:0, marginLeft:'3%'}}>
-                        <h2 >Ajouter Label</h2>
+                        <h2 >Ajouter/Modifier Label</h2>
                         <form onSubmit={OnAddLabel}  style={{alignContent:'space-between'}}>
                             <input style={{width:'25%', height:'20px', left:0, margin:10}} type="text" placeholder={currentTask}/>   
                             <input type="date" style={{margin:10}} />

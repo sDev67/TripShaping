@@ -19,10 +19,10 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 
 function App() {
   const [value, setValue] = React.useState(0);
-  const [success, setSuccess] = React.useState(false);
-  const [label, setLabel] = React.useState("Navigation");
+  const [isEdition, setIsEdition] = React.useState(false);
+  const [switchText, setSwitchText] = React.useState("Navigation");
 
-  const [valueNavMode, setValueNavMode] = React.useState("all");
+  const [markerFilter, setMarkerFilter] = React.useState("all");
 
   const [selectedMarker, setSelectedMarker] = React.useState(null);
 
@@ -32,7 +32,7 @@ function App() {
   // - Etapes
   // - Points d'intérêt
   const handleChangeSelectModeNav = (event) => {
-    setValueNavMode(event.target.value);
+    setMarkerFilter(event.target.value);
   };
 
 
@@ -43,25 +43,21 @@ function App() {
   }; 
 
   // switch correspondant au mode navigation et mode Edition
-  // success = true par defaut --> Navigation 
-  // success = false --> Edition
+  // isEdition = true par defaut --> Navigation 
+  // isEdition = false --> Edition
   // Lorsqu'on switch de mode, on reset les points a afficher en les affichant tous
-  const handleChangeOnOff = (event) => {
-    setSuccess(event.target.checked);
-    if(!success){
-      console.log("10")
-      setLabel("Edition")
-      setValueNavMode("all");
-
+  const handleSwitch = (event) => {
+    setIsEdition(event.target.checked);
+    if(!isEdition){
+      setSwitchText("Edition")
+      setMarkerFilter("all");
     }
     // On ferme le menu d'édition s'il est ouvert
     else{
-      console.log("20")
       if (selectedMarker !== null) {
-        console.log("21")
         setSelectedMarker(null)
       }
-      setLabel("Navigation")
+      setSwitchText("Navigation")
     }
     
   }
@@ -78,11 +74,11 @@ function App() {
           divider={<Divider orientation="vertical" flexItem />}
           style={{ height: "100%", width: "100%" }}
         >
-          <Stack direction="column" justifyContent="space-around">
-            <Typography variant="h2">Atlas</Typography>
+          <Stack style={{ width: '10%' }} direction="column" justifyContent="space-around">
+            <Typography variant="h1" color="primary" textAlign="center">Atlas</Typography>
             <Tabs
               value={value}
-              onChange={handleChange}
+              onChange={handleChange} 
               orientation="vertical"
               textColor="primary"
               indicatorColor="primary"
@@ -105,21 +101,21 @@ function App() {
             </Tabs>
         
             <FormControlLabel
-              value={label}
+              value={switchText}
               control={<Switch color="primary" />}
-              label={label}
+              label={switchText}
               labelPlacement="bottom"
-              onChange={handleChangeOnOff}
-              checked={success}
-            />          
-        
+              onChange={handleSwitch}
+              checked={isEdition}
+            />
+
           </Stack>
-        
+
           <Stack style={{ width: '100%' }}>
             <Map 
-              choice = {success} 
-              pointToDisplay = {valueNavMode}
-              labelChoice = {label}
+              isEdition = {isEdition} 
+              markerFilter = {markerFilter}
+              switchText = {switchText}
               handleChangeSelectModeNav = {handleChangeSelectModeNav}
               selectedMarker = {selectedMarker}
               setSelectedMarker = {setSelectedMarker}>

@@ -64,7 +64,6 @@ export const Map = ({
   const [editionMode, setEditionMode] = useState("stepOnlyEdit");
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  
 
   const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
   const InterestPointIcon = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
@@ -74,6 +73,16 @@ export const Map = ({
   const [files, setFiles] = useState([]);
   const [description, setDescription] = useState("");
   const [lengthOfStay, setLengthOfStay] = useState(0);
+
+  let handleChangeTitle = (e) =>{
+    //selectedMarker.location.title = e.target.value;
+    
+    setSelectedMarker({location:{title : e.target.value}});
+    //console.log(selectedMarker.location.title)
+  }
+  
+
+  
 
   const handleChangeSelectModeEdit = (event) => {
     setEditionMode(event.target.value);
@@ -180,18 +189,18 @@ export const Map = ({
 
   // Fonction qui met a jour la position des points
   // en fonction de leurs index et du point choisi
-  const updateLocation = (marker) => (e) => {
+  const updateLocation = (index, marker) => (e) => {
     console.log(marker);
     if (!error) {
       if (marker.location.name === "Etape") {
         let newStep = [...steps];
-        newStep[marker.id] = {
+        newStep[index] = {
           location: {
-            id: marker.id,
-            name: "PointInteret",
+            id: index,
+            name: "Etape",
             title: marker.location.title,
             categorie: marker.location.categorie,
-            lengthOfStay:0,
+            lengthOfStay: 0,
             files: [],
             description: marker.location.description,
             lat: e.latLng.lat(),
@@ -202,9 +211,9 @@ export const Map = ({
         setSteps(newStep);
       } else if (marker.location.name === "PointInteret") {
         let newInterestPoint = [...interestPoints];
-        newInterestPoint[marker.id] = {
+        newInterestPoint[index] = {
           location: {
-            id: marker.id,
+            id: index,
             name: "PointInteret",
             title: marker.location.title,
             categorie: marker.location.categorie,
@@ -221,6 +230,7 @@ export const Map = ({
   };
 
   const updateProperties = (marker) => (e) => {
+    console.log(marker);
     if (!error) {
       if (marker.location.name === "Etape") {
         let newStep = [...steps];
@@ -230,7 +240,7 @@ export const Map = ({
             name: "PointInteret",
             title: marker.location.title,
             categorie: marker.location.categorie,
-            lengthOfStay:0,
+            lengthOfStay: 0,
             files: [],
             description: marker.location.description,
             lat: marker.location.lat,
@@ -398,7 +408,9 @@ export const Map = ({
 
           {/* Child components, such as markers, info windows, etc. */}
 
-          {(markerFilter === "stepOnlyNav" || markerFilter ==="stepOnlyEdit" || markerFilter === "all" ) &&
+          {(markerFilter === "stepOnlyNav" ||
+            markerFilter === "stepOnlyEdit" ||
+            markerFilter === "all") &&
             steps.map((step, index) => (
               <Marker
                 key={index}
@@ -407,12 +419,14 @@ export const Map = ({
                 clickable={true}
                 onClick={() => setSelectedMarker(steps[index])}
                 onRightClick={() => deleteMarker(step)}
-                onDragEnd={updateLocation(step)}
+                onDragEnd={updateLocation(index, step)}
                 icon={stepIcon}
               ></Marker>
             ))}
 
-          {(markerFilter === "interestPointOnlyNav" || markerFilter ==="interestPointOnlyEdit" || markerFilter === "all" ) &&
+          {(markerFilter === "interestPointOnlyNav" ||
+            markerFilter === "interestPointOnlyEdit" ||
+            markerFilter === "all") &&
             interestPoints.map((interestPoint, index) => (
               <Marker
                 key={index}
@@ -424,42 +438,42 @@ export const Map = ({
                 clickable={true}
                 onClick={() => setSelectedMarker(interestPoints[index])}
                 onRightClick={() => deleteMarker(interestPoint)}
-                onDragEnd={updateLocation(interestPoint)}
+                onDragEnd={updateLocation(index, interestPoint)}
                 icon={InterestPointIcon}
               ></Marker>
             ))}
 
-          { (steps.length >= 2 && !(!isEdition && markerFilter === "interestPointOnlyNav")) && (
-            <>
-              <DirectionsService
-                options={{
-                  origin: {
-                    lat: steps[0].location.lat,
-                    lng: steps[0].location.lng,
-                  },
-                  waypoints: steps.slice(1, steps.length - 1),
-                  destination: {
-                    lat: steps[steps.length - 1].location.lat,
-                    lng: steps[steps.length - 1].location.lng,
-                  },
+          {steps.length >= 2 &&
+            !(!isEdition && markerFilter === "interestPointOnlyNav") && (
+              <>
+                <DirectionsService
+                  options={{
+                    origin: {
+                      lat: steps[0].location.lat,
+                      lng: steps[0].location.lng,
+                    },
+                    waypoints: steps.slice(1, steps.length - 1),
+                    destination: {
+                      lat: steps[steps.length - 1].location.lat,
+                      lng: steps[steps.length - 1].location.lng,
+                    },
 
-                  travelMode: "DRIVING",
-                }}
-                callback={directionsCallback}
-              />
-              <DirectionsRenderer
-                options={{
-                  
-                  directions: response,
-                  suppressMarkers: true,
-                  polylineOptions: {
-                    strokeColor: palette.primary.main,
-                    strokeWeight: 3,
-                  },
-                }}
-              />
-            </>
-          )}
+                    travelMode: "DRIVING",
+                  }}
+                  callback={directionsCallback}
+                />
+                <DirectionsRenderer
+                  options={{
+                    directions: response,
+                    suppressMarkers: true,
+                    polylineOptions: {
+                      strokeColor: palette.primary.main,
+                      strokeWeight: 3,
+                    },
+                  }}
+                />
+              </>
+            )}
         </GoogleMap>
       </LoadScript>
       {selectedMarker && (
@@ -473,7 +487,7 @@ export const Map = ({
             <IconButton
               color="error"
               onClick={() => setSelectedMarker(null)}
-              style={{ position: 'absolute', right: 5, top: 5 }}
+              style={{ position: "absolute", right: 5, top: 5 }}
             >
               <CancelRounded />
             </IconButton>
@@ -483,10 +497,7 @@ export const Map = ({
                 fullWidth
                 label="Nom"
                 value={selectedMarker.location.title}
-                onChange={(e) => {
-                  
-                  selectedMarker.location.title=e.target.value;
-                  setSelectedMarker(selectedMarker)}}
+                onChange={handleChangeTitle}
                 style={{ marginBottom: 25 }}
               />
               <TextField
@@ -553,7 +564,6 @@ export const Map = ({
                   color="primary"
                   startIcon={<DoneRounded />}
                   onClick={updateProperties(selectedMarker)}
-                  
                 >
                   Enregistrer
                 </Button>
@@ -565,10 +575,12 @@ export const Map = ({
 
       {/* Affichage popin lorsque le trajet est introuvable. */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>Choississez un fichier</DialogTitle>
-        <FileUploader
-          handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
-        />
+        <div style={{ margin: 10, marginTop:0}}>
+          <DialogTitle>Choississez un fichier</DialogTitle>
+          <FileUploader
+            handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
+          />
+        </div>
       </Dialog>
 
       <Collapse

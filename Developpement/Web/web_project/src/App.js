@@ -1,6 +1,4 @@
 import TodoList from './TodoList/TodoList';
-import ListDetail from './TodoList/ListDetail'
-
 
 function App() {
   return (

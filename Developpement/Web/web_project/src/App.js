@@ -76,7 +76,7 @@ function App() {
           divider={<Divider orientation="vertical" flexItem />}
           style={{ height: "100%", width: "100%" }}
         >
-          <Stack direction="column" justifyContent="space-around">
+          <Stack width='20%' direction="column" justifyContent="space-around">
             <Typography variant="h2">Atlas</Typography>
             <Tabs
               value={value}

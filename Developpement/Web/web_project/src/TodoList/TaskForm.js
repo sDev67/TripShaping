@@ -1,64 +1,64 @@
-import DoneIcon from '@mui/icons-material/Done';
-import { TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import {  TextField, Typography } from "@mui/material";
+import {Stack,List,ListItemButton,ListItemText,ListItem, Box,Divider,Chip,Button,Grid,Tab,Tabs,FormControlLabel,Switch} from "@mui/material";
+import IconButton from '@mui/material/IconButton';
+import { DatePicker } from '@mui/lab';
+import React, {useState } from "react";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-
-
-const TaskForm = ({task, setTask}) =>
+const TaskForm = ({task}) => 
 {
-    const [title, setTitle] = useState('');
-    const [date, setDate] = useState(Date());
+    const [currentTitle, setCurrentTitle] = useState('');
+    const [currentLabels, setCurrentLabels] = useState([]);
 
-    useEffect(() =>
-    {
-        setTitle("");
-        setDate(Date.now());
+    const [value, setValue] = React.useState(new Date('2014-08-18T21:11:54'));
 
-    })
-    
-    const handleSubmit = () =>
-    {
-        if(title !== null)
-        {
-            setTask(
-            {
-                title:{title},
-                executionDate:date
-
-            })
-        }
-        else
-        {
-            setTask(
-                {
-                  
-                    executionDate:date
-    
-                })
-        }
-
-        setTitle("");
-        setDate(Date.now());
-    }
-
+    const handleChange = (newValue) => {
+      setValue(newValue);
+    };
+  
 
     return(
         <>
-        <div style={{marginLeft:20}}>
-            <h2>Éditer Task</h2>
-            <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-                    <h4 style={{marginRight:20}}>Title</h4>
-                    <TextField onChange={(e) => setTitle(e.target.value)}  id="outlined-basic" label={task.title} variant="outlined" size='medium'/>
+             <Stack
+                direction="column"
+                alignItems='flex-start'
+                style={{ height: "100%", width: "100%", margin:'20px' }}>
 
-          
-                    { /*<LocalizationProvider  dateAdapter={AdapterDateFns} size='medium'/>*/ }
-                  
-            </div>
-            <DoneIcon onClick={() => handleSubmit} size="large"/>
-        </div>
-          
-          
+                    <Typography variant='h3'>Create a Task</Typography>
 
+                <Stack direction="row" width='100%' marginTop={1}>
+
+                    <TextField
+                        required
+                        id="standard-required"
+                        label="Required"
+                        defaultValue="Title"
+                        variant="standard"
+                        style={{marginRight:11}} />
+                    
+                    <TextField
+                        id="date"
+                        label="Execution Date"
+                        type="date"
+                    
+                        sx={{ width: 220 }}
+                        InputLabelProps={{
+                        shrink: true,
+                        }}/>
+                </Stack>
+                <Box sx={{width:'75%', maxWidth:'75%', bgColor:'grey', flexDirection:'row'}}>
+                    <Stack component='nav' direction='row' flexWrap='wrap' spacing={0} margin={1}>
+                        {currentLabels.map((label, yKey) =>(
+                            <>
+                                <Chip style={{margin:5, padding:10}} size='medium' color='primary' label={label.title} />
+                            </>
+                        ))} 
+                        <IconButton aria-label="Add">
+                            <AddCircleIcon sx={{fontSize:'35px'}} color='primary' />
+                        </IconButton>          
+                    </Stack>            
+                </Box>
+            </Stack>
         </>
     )
 }

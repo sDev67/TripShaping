@@ -1,17 +1,23 @@
 import '../Styles/ButtonStyles.css';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import PlaylistAddCheckOutlinedIcon from '@mui/icons-material/PlaylistAddCheckOutlined';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {Stack,Divider,Typography} from "@mui/material";
+import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
 import {useState} from 'react';
 import '../App.css';
 import TasksItemGrid from './TasksItemGrid';
 import LabelsItemGrid from './LabelsItemGrid';
 import IconButton from '@mui/material/IconButton';
 import TaskForm from './TaskForm';
+import LabelForm from './LabelForm';
+
 
 
 
 const TodoList = () =>
 {
+    const [currentLabel, setCurrentLabel] = useState();
     const [currentTask, setCurrentTask] = useState();
     const [allTasks, setAllTasks] = useState
     ([       
@@ -276,9 +282,9 @@ const TodoList = () =>
         setAllLabels(...allLabels, label);
     }
 
-    const OnSelectTask = ({task}) => 
+    const OnSelectTask = (task) => 
     {
-        setCurrentTask(allTasks[task]);
+        setCurrentTask(task);
     }
 
     const OnAddTask = ({label}) =>
@@ -288,7 +294,7 @@ const TodoList = () =>
 
     const OnRemoveTask = ({task}) =>
     {
-    
+        
     }
 
     const OnAddLabelToTask = ({label, task}) => 
@@ -296,8 +302,9 @@ const TodoList = () =>
         
     }
 
-    const OnRemoveLabelToTask = ({label, task}) =>{
-
+    const OnRemoveLabelToTask = ({label, task}) =>
+    {
+        //allTasks[task].labels
     }
 
     const OnDeleteLabel = ({label}) =>{
@@ -314,23 +321,31 @@ const TodoList = () =>
                     divider={<Divider orientation="horizontal" flexItem />}
                     style={{ height: "100%", width: "100%" }}>
 
-                        <Typography variant="h3">Todo List</Typography>
-
+        
+                        <Stack direction='row' alignItems='flex-start' justifyContent='center'>
+                            <FormatListBulletedOutlinedIcon sx={{fontSize:'40px'}} />
+                            <Typography variant="h3">Todo List</Typography>
+                        </Stack>
+                     
                         <Stack
                          direction='column'
                          divider={<Divider orientation="horizontal" flexItem />}
                          style={{ height: "65%", width: "100%" }}>
-
+                            
+                            <Stack direction='row' alignItems='flex-start'>
+                            <PlaylistAddCheckOutlinedIcon sx={{fontSize:'40px', marginTop:'25px'}}/>
                             <Typography margin='20px' variant="h3">Tasks</Typography>
+                            </Stack>
                             <TasksItemGrid tasks={allTasks} OnRemoveLabelToTask={OnRemoveLabelToTask} OnSelectTask={OnSelectTask} />       
                          </Stack> 
-                         <IconButton aria-label="Add">
-                            <AddCircleIcon sx={{fontSize:'50px'}} />
+                         <IconButton aria-label="Add" onClick={(e) => setCurrentTask({title:undefined, label:[], executionDate:Date.now()})}>
+                            <AddCircleIcon sx={{fontSize:'50px'}}  /> Add a task
                         </IconButton>
 
                         {
-                            currentTask !== null ?
-                             <TaskForm /> :
+                            
+                            currentTask !== undefined ?
+                             <TaskForm task={currentTask} /> :
                               ""
                         }    
                     </Stack>
@@ -346,12 +361,20 @@ const TodoList = () =>
                          direction='column'
                          divider={<Divider orientation="horizontal" flexItem />}
                          style={{ height: "100%", width: "80%" }}>
+                            
+                            <Stack direction='rox' justifyContent='flex-start'>
+                                <LabelOutlinedIcon sx={{fontSize:'40px', marginTop:'25px'}} />
+                                <Typography margin='20px' variant="h3">Labels</Typography>
+                            </Stack>
+                            <LabelsItemGrid labels={allLabels} OnSelectLabel={setCurrentLabel} OnAddLabel={OnAddLabel} OnDeleteLabel={OnDeleteLabel} />
 
-                            <Typography margin='20px' variant="h3">Labels</Typography>
-
-                            <LabelsItemGrid labels={allLabels} OnAddLabel={OnAddLabel} OnDeleteLabel={OnDeleteLabel} />
-
-                         </Stack>   
+                         </Stack> 
+                         {
+                            currentLabel !== undefined ? 
+                            <LabelForm label={currentLabel} /> :
+                            ""
+                        } 
+                         
                     </Stack> 
                 </div>              
         </>

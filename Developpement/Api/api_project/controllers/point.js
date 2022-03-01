@@ -3,62 +3,62 @@ const db = require('../models');
 module.exports = {
 
 	get_all: (req, res, next) => {
-		return db.Label.findAll({
+		return db.Point.findAll({
 			order: ['title']
 		})
-			.then(label => res.json(label))
+			.then(point => res.json(point))
 			.catch(next);
 	},
 
 	load_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Point.findByPk(req.params.point_id)
+			.then(point => {
+				if (!point) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				req.label = label;
+				req.point = point;
 				return next();
 			})
 			.catch(next);
 	},
 
 	get_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Point.findByPk(req.params.point_id)
+			.then(point => {
+				if (!point) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				return res.json(label);
+				return res.json(point);
 			})
 			.catch(next);
 	},
 
 	create: (req, res, next) => {
-		return db.Label.create(req.body)
-			.then(label => res.json(label))
+		return db.Point.create(req.body)
+			.then(point => res.json(point))
 			.catch(next);
 	},
 
 	update_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Point.findByPk(req.params.point_id)
+			.then(point => {
+				if (!point) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				Object.assign(label, req.body);
-				return label.save();
+				Object.assign(point, req.body);
+				return point.save();
 			})
-			.then(label => res.json(label))
+			.then(point => res.json(point))
 			.catch(next);
 	},
 
 	delete_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Point.findByPk(req.params.point_id)
+			.then(point => {
+				if (!point) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				return label.destroy();
+				return point.destroy();
 			})
 			.then(() => res.status(200).end())
 			.catch(next);

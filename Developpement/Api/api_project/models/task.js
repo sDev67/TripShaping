@@ -14,7 +14,7 @@ module.exports = sequelize => {
 
 	}, {
 		sequelize,
-		modelName: 'task'
+		modelName: 'Task'
 	});
 
 	return Task;

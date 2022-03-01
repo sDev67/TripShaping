@@ -3,62 +3,62 @@ const db = require('../models');
 module.exports = {
 
 	get_all: (req, res, next) => {
-		return db.Label.findAll({
-			order: ['title']
+		return db.Travel.findAll({
+			order: ['name']
 		})
-			.then(label => res.json(label))
+			.then(travel => res.json(travel))
 			.catch(next);
 	},
 
 	load_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				req.label = label;
+				req.travel = travel;
 				return next();
 			})
 			.catch(next);
 	},
 
 	get_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				return res.json(label);
+				return res.json(travel);
 			})
 			.catch(next);
 	},
 
 	create: (req, res, next) => {
-		return db.Label.create(req.body)
-			.then(label => res.json(label))
+		return db.Travel.create(req.body)
+			.then(travel => res.json(travel))
 			.catch(next);
 	},
 
 	update_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				Object.assign(label, req.body);
-				return label.save();
+				Object.assign(travel, req.body);
+				return travel.save();
 			})
-			.then(label => res.json(label))
+			.then(travel => res.json(travel))
 			.catch(next);
 	},
 
 	delete_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				return label.destroy();
+				return travel.destroy();
 			})
 			.then(() => res.status(200).end())
 			.catch(next);

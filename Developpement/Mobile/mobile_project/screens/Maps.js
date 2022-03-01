@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import RadioForm from 'react-native-simple-radio-button';
+import { DefaultTheme, RadioButton } from 'react-native-paper';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { StyleSheet, View, Dimensions } from 'react-native';
@@ -27,12 +27,7 @@ const Maps = () => {
     const [errorMsg, setErrorMsg] = useState(null);
     const [duration, setDuration] = useState(null);
     const [distance, setDistance] = useState(null);
-    const radio_props = [
-        { label: 'Tout', value: 0 },
-        { label: 'Etapes', value: 1 },
-        { label: "Points \nd'intérêt", value: 2 }
-    ];
-    const [checked, setChecked] = useState(0);
+    const [checked, setChecked] = useState("0");
 
     useEffect(() => {
         (async () => {
@@ -60,7 +55,7 @@ const Maps = () => {
                         <PointModal modalVisible={modalPointVisible} setModalVisible={setModalPointVisible} point={selected} />
                         <StepModal modalVisible={modalStepVisible} setModalVisible={setModalStepVisible} point={selected} />
                         <MapView style={styles.map} scrollEnabled={true} provider={PROVIDER_GOOGLE} showsUserLocation={true} initialRegion={{ latitude: location.coords.latitude, longitude: location.coords.longitude, longitudeDelta: 0.125, latitudeDelta: 0.125 }}>
-                            {(checked === 0 || checked === 1) &&
+                            {(checked === "0" || checked === "1") &&
                                 <>
                                     {steps.map((step, index) => (
                                         <Marker pinColor='green' key={index} coordinate={{ latitude: step.lat, longitude: step.long }} onPress={() => { setModalStepVisible(true); setSelected(step) }}>
@@ -81,7 +76,7 @@ const Maps = () => {
                                     />
                                 </>
                             }
-                            {(checked === 0 || checked === 2) &&
+                            {(checked === "0" || checked === "2") &&
                                 points.map((point, index) => (
                                     <Marker key={index} coordinate={{ latitude: point.lat, longitude: point.long }} onPress={() => { setModalPointVisible(true); setSelected(point) }}>
                                     </Marker>)
@@ -89,15 +84,25 @@ const Maps = () => {
                             }
                         </MapView>
                         <View style={styles.window}>
-                            <RadioForm
-                                radio_props={radio_props}
-                                initial={0}
-                                borderWidth={1}
-                                formHorizontal={false}
-                                labelHorizontal={true}
-                                buttonColor={'#3498DB'}
-                                onPress={(value) => setChecked(value)}
-                            />
+                            <RadioButton.Group onValueChange={newValue => setChecked(newValue)} value={checked}>
+                                <RadioButton.Item
+                                    label="Tout"
+                                    value="0"
+                                    style={{ marginVertical: -10 }}
+                                    color='#3498DB'
+                                />
+                                <RadioButton.Item
+                                    label="Etapes"
+                                    value="1"
+                                    style={{ marginVertical: -10 }}
+                                    color='#3498DB'
+                                />
+                                <RadioButton.Item
+                                    label="Points d'intérêts"
+                                    value="2"
+                                    color='#3498DB'
+                                />
+                            </RadioButton.Group>
                         </View>
                     </SafeAreaView>
                 </NativeBaseProvider>
@@ -109,9 +114,10 @@ const Maps = () => {
 
 const styles = StyleSheet.create({
     window: {
+        flex: 1,
         backgroundColor: '#fff',
-        height: '25%',
-        width: '30%',
+        height: '22%',
+        width: '40%',
         position: 'absolute',
         bottom: 5,
         left: 5,

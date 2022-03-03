@@ -66,7 +66,8 @@ export const Map = ({
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const InterestPointIcon = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+  const InterestPointIcon =
+    "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
   const [title, setTitle] = useState("");
   const [categorie, setCategorie] = useState("");
@@ -74,15 +75,12 @@ export const Map = ({
   const [description, setDescription] = useState("");
   const [lengthOfStay, setLengthOfStay] = useState(0);
 
-  let handleChangeTitle = (e) =>{
+  let handleChangeTitle = (e) => {
     //selectedMarker.location.title = e.target.value;
-    
-    setSelectedMarker({location:{title : e.target.value}});
-    //console.log(selectedMarker.location.title)
-  }
-  
 
-  
+    setSelectedMarker({ location: { title: e.target.value } });
+    //console.log(selectedMarker.location.title)
+  };
 
   const handleChangeSelectModeEdit = (event) => {
     setEditionMode(event.target.value);
@@ -347,7 +345,7 @@ export const Map = ({
             open={open}
             anchorEl={anchorEl}
             onClose={handleCloseBox}
-            style = {{marginLeft: 2}}
+            style={{ marginLeft: 2 }}
             anchorOrigin={{
               vertical: "top",
               horizontal: "left",
@@ -576,7 +574,7 @@ export const Map = ({
 
       {/* Affichage popin lorsque le trajet est introuvable. */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <div style={{ margin: 10, marginTop:0}}>
+        <div style={{ margin: 10, marginTop: 0 }}>
           <DialogTitle>Choississez un fichier</DialogTitle>
           <FileUploader
             handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}

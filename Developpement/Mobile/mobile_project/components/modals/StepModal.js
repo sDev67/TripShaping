@@ -11,6 +11,7 @@ const StepModal = ({ modalVisible, setModalVisible, point }) => {
                 <Modal.CloseButton />
                 <Modal.Header>{point.name}</Modal.Header>
                 <Modal.Body>
+
                     <Text>Catégorie : {point.cat}</Text>
                     <Text>Jours : {point.day}</Text>
                     <Text>Description</Text>

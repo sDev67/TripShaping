@@ -11,7 +11,7 @@ import ItinaryModal from '../components/modals/ItinaryModal';
 import PointModal from '../components/modals/pointModal';
 import StepModal from '../components/modals/StepModal';
 
-const Maps = () => {
+const Maps = ({ messages, setMessages }) => {
 
     const GOOGLE_MAPS_APIKEY = 'AIzaSyAJVvWk_VD4fFSTgIbKZn4mKbudKeQXEII';
 
@@ -52,7 +52,7 @@ const Maps = () => {
                 <NativeBaseProvider>
                     <SafeAreaView style={{ flex: 1 }}>
                         <ItinaryModal modalVisible={modalVisible} setModalVisible={setModalVisible} distance={distance} duration={duration} />
-                        <PointModal modalVisible={modalPointVisible} setModalVisible={setModalPointVisible} point={selected} />
+                        <PointModal modalVisible={modalPointVisible} setModalVisible={setModalPointVisible} point={selected} messages={messages} setMessages={setMessages} />
                         <StepModal modalVisible={modalStepVisible} setModalVisible={setModalStepVisible} point={selected} />
                         <MapView style={styles.map} scrollEnabled={true} provider={PROVIDER_GOOGLE} showsUserLocation={true} initialRegion={{ latitude: location.coords.latitude, longitude: location.coords.longitude, longitudeDelta: 0.125, latitudeDelta: 0.125 }}>
                             {(checked === "0" || checked === "1") &&

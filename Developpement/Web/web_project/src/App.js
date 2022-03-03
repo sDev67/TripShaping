@@ -41,7 +41,7 @@ function App() {
   // Carte, Voyage et Options
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  }; 
+  };
 
   // switch correspondant au mode navigation et mode Edition
   // isEdition = true par defaut --> Navigation 
@@ -49,20 +49,20 @@ function App() {
   // Lorsqu'on switch de mode, on reset les points a afficher en les affichant tous
   const handleSwitch = (event) => {
     setIsEdition(event.target.checked);
-    if(!isEdition){
+    if (!isEdition) {
       setSwitchText("Edition")
       setMarkerFilter("all");
     }
     // On ferme le menu d'édition s'il est ouvert
-    else{
+    else {
       if (selectedMarker !== null) {
         setSelectedMarker(null)
       }
       setSwitchText("Navigation")
     }
-    
+
   }
-  
+
 
 
   return (
@@ -79,7 +79,7 @@ function App() {
             <Typography variant="h1" color="primary" textAlign="center">Atlas</Typography>
             <Tabs
               value={value}
-              onChange={handleChange} 
+              onChange={handleChange}
               orientation="vertical"
               textColor="primary"
               indicatorColor="primary"
@@ -100,7 +100,7 @@ function App() {
                 label="Options "
               />
             </Tabs>
-        
+
             <FormControlLabel
               value={switchText}
               control={<Switch color="primary" />}
@@ -112,23 +112,23 @@ function App() {
 
           </Stack>
 
+          {/* <Stack style={{ width: '100%' }}> */}
+          {/* <TodoList/> */}
+
           <Stack style={{ width: '100%' }}>
-          <TodoList/>
-        {/** 
-         * <Stack style={{ width: '100%' }}>
-            <Map 
-              isEdition = {isEdition} 
-              markerFilter = {markerFilter}
-              switchText = {switchText}
-              handleChangeSelectModeNav = {handleChangeSelectModeNav}
-              selectedMarker = {selectedMarker}
-              setSelectedMarker = {setSelectedMarker}>
+            <Map
+              isEdition={isEdition}
+              markerFilter={markerFilter}
+              switchText={switchText}
+              handleChangeSelectModeNav={handleChangeSelectModeNav}
+              selectedMarker={selectedMarker}
+              setSelectedMarker={setSelectedMarker}>
             </Map>
           </Stack>
-        */}
-          
-          </Stack>
+
+
         </Stack>
+        {/* </Stack> */}
       </ThemeConfig>
     </>
   );

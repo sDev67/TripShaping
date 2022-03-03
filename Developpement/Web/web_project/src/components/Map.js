@@ -2,9 +2,9 @@ import React, { useState, useCallback, useEffect } from "react";
 import {
   GoogleMap,
   LoadScript,
-  DirectionsRenderer,
-  DirectionsService,
   Marker,
+  DirectionsService,
+  DirectionsRenderer
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import {
@@ -35,6 +35,7 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
+import Direction from "./Direction";
 
 const containerStyle = {
   position: "relative",
@@ -57,6 +58,7 @@ export const Map = ({
 }) => {
   const [steps, setSteps] = useState([]);
   const [interestPoints, setInterestPoints] = useState([]);
+  const [routeOpen, setRouteOpen] = useState(false);
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
@@ -188,7 +190,6 @@ export const Map = ({
   // Fonction qui met a jour la position des points
   // en fonction de leurs index et du point choisi
   const updateLocation = (index, marker) => (e) => {
-    console.log(marker);
     if (!error) {
       if (marker.location.name === "Etape") {
         let newStep = [...steps];
@@ -300,6 +301,10 @@ export const Map = ({
     }
   }, []);
 
+  const onItineraryClick = () => {
+    setRouteOpen(!routeOpen);
+  }
+
   return (
     <>
       <LoadScript
@@ -312,6 +317,24 @@ export const Map = ({
           zoom={10}
           onClick={onMapClick}
         >
+          <Button
+            style={{
+              background: "none",
+              backgroundColor: "white",
+              border: "0px",
+              padding: "0px 17px",
+              textTransform: "none",
+              appearance: "none",
+              position: "absolute",
+              bottom: "2rem",
+              left: "125px",
+              zIndex: 10,
+            }}
+            onClick={onItineraryClick}
+          >
+            Itinéraire
+          </Button>
+
           <Button
             aria-describedby={id}
             variant="contained"
@@ -383,25 +406,28 @@ export const Map = ({
             )}
 
             {isEdition && (
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={editionMode}
-                  onChange={handleChangeSelectModeEdit}
-                >
-                  <FormControlLabel
-                    value="stepOnlyEdit"
-                    control={<Radio />}
-                    label="Etapes"
-                  />
-                  <FormControlLabel
-                    value="interestPointOnlyEdit"
-                    control={<Radio />}
-                    label="Points d'intérêt"
-                  />
-                </RadioGroup>
-              </FormControl>
+              <>
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={editionMode}
+                    onChange={handleChangeSelectModeEdit}
+                  >
+                    <FormControlLabel
+                      value="stepOnlyEdit"
+                      control={<Radio />}
+                      label="Etapes"
+                    />
+                    <FormControlLabel
+                      value="interestPointOnlyEdit"
+                      control={<Radio />}
+                      label="Points d'intérêt"
+                    />
+                  </RadioGroup>
+                </FormControl>
+
+              </>
             )}
           </Popover>
 
@@ -465,17 +491,22 @@ export const Map = ({
                   options={{
                     directions: response,
                     suppressMarkers: true,
+                    preserveViewport: true,
+                    draggable: true,
                     polylineOptions: {
                       strokeColor: palette.primary.main,
                       strokeWeight: 3,
+                      clickable: true
                     },
                   }}
+                  onClick={() => console.log("ola")}
                 />
               </>
-            )}
+            )
+          }
         </GoogleMap>
       </LoadScript>
-      {selectedMarker && (
+      {selectedMarker && !routeOpen && (
         <>
           <Card style={asideStyle}>
             <CardMedia
@@ -567,6 +598,55 @@ export const Map = ({
                   Enregistrer
                 </Button>
               </Stack>
+            </CardContent>
+          </Card>
+        </>
+      )}
+      {routeOpen && !selectedMarker && (
+        <>
+          <Card style={asideStyle}>
+            <CardMedia
+              component="img"
+              height="194"
+              image={require("../assets/pointInterets.JPG")}
+            />
+            <IconButton
+              color="error"
+              onClick={() => setSelectedMarker(null)}
+              style={{ position: "absolute", right: 5, top: 5 }}
+            >
+              <CancelRounded />
+            </IconButton>
+
+            <CardContent>
+              <TextField
+                fullWidth
+                label="Route1"
+                value=""
+                onChange={handleChangeTitle}
+                style={{ marginBottom: 25 }}
+              />
+              <TextField
+                fullWidth
+                label="Route2"
+                value=""
+                onChange={handleChangeTitle}
+                style={{ marginBottom: 25 }}
+              />
+              <TextField
+                fullWidth
+                label="Route3"
+                value=""
+                onChange={handleChangeTitle}
+                style={{ marginBottom: 25 }}
+              />
+              <TextField
+                fullWidth
+                label="Route4"
+                value=""
+                onChange={handleChangeTitle}
+                style={{ marginBottom: 25 }}
+              />
             </CardContent>
           </Card>
         </>

@@ -1,384 +1,220 @@
-import '../Styles/ButtonStyles.css';
-import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
-import PlaylistAddCheckOutlinedIcon from '@mui/icons-material/PlaylistAddCheckOutlined';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import {Stack,Divider,Typography} from "@mui/material";
-import LabelOutlinedIcon from '@mui/icons-material/LabelOutlined';
-import {useState} from 'react';
-import '../App.css';
-import TasksItemGrid from './TasksItemGrid';
-import LabelsItemGrid from './LabelsItemGrid';
-import IconButton from '@mui/material/IconButton';
-import TaskForm from './TaskForm';
-import LabelForm from './LabelForm';
+import "../Styles/ButtonStyles.css";
+import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
+import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Stack, Divider, Typography, Dialog } from "@mui/material";
+import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
+import { useState } from "react";
+import "../App.css";
+import TasksItemGrid from "./TasksItemGrid";
+import LabelsItemGrid from "./LabelsItemGrid";
+import IconButton from "@mui/material/IconButton";
+import TaskForm from "./TaskForm";
+import LabelForm from "./LabelForm";
 
-
-
-
-const TodoList = () =>
-{
-    const [currentLabel, setCurrentLabel] = useState();
-    const [currentTask, setCurrentTask] = useState();
-    const [allTasks, setAllTasks] = useState
-    ([       
-        {
-            title:"Faire les papiers",
-            executionDate:'2022-05-07',
-            labels:
-            [
-                {
-                    title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                },
-                {
-                    title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                },
-                {
-                    title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                },
-                {
-                    title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                },
-                {
-                    title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Faire les valises",
-            executionDate:'2022-07-07',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Faire Organiser les repas",
-            executionDate:'2022-05-14',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Trouver un gardiens pour le chien",
-            executionDate:'2022-05-11',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Trouver un gardiens pour le chien",
-            executionDate:'2022-05-04',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Trouver un gardiens pour le chien",
-            executionDate:'2022-05-30',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Trouver un gardiens pour le chien",
-            executionDate:'2022-03-07',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Trouver un gardiens pour le chien",
-            executionDate:'2022-05-07',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-
-        },
-        {
-            title:"Trouver un gardiens pour le chien",
-            executionDate:'2022-04-07',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Préparer psychologiquement les enfants",
-            executionDate:'2022-04-07',
-            labels:
-            [
-                {
-                title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        },
-        {
-            title:"Trouver voiture de location",
-            executionDate:'2022-04-07',
-            labels:
-            [
-                {
-                    title:'Label1',
-                },
-                {
-                    title:'Label2'
-                },
-                {
-                    title:'Label3'
-                }
-            ]
-        }
-    ])
-  
-    const [allLabels, setAllLabels] = useState(
-        [
-            {
-                title:'Label1'
-            },
-            {
-                title:'Babel2'
-            },
-            {
-                title:'Label3'
-            },
-            {
-                title:'Label5'
-            },
-            {
-                title:'Babel6'
-            },
-            {
-                title:'Label33'
-            },
-            {
-                title:'Label1'
-            },
-            {
-                title:'Babel2'
-            },
-            {
-                title:'Label3'
-            },
-            {
-                title:'Label5'
-            },
-            {
-                title:'Babel6'
-            },
-            {
-                title:'Label3333333'
-            },
-        ]
-    )
-
-    const OnAddLabel = ({label}) =>
+const TodoList = () => {
+  const [currentLabel, setCurrentLabel] = useState();
+  const [currentTask, setCurrentTask] = useState();
+  const [allTasks, setAllTasks] = useState([
     {
-        setAllLabels(...allLabels, label);
-    }
-
-    const OnSelectTask = (task) => 
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
     {
-        setCurrentTask(task);
-    }
-
-    const OnAddTask = ({label}) =>
+      title: "Faire les valises",
+      executionDate: "2022-07-07",
+      labels: [
+        {
+          title: "Serkan",
+        },
+        {
+          title: "Vivien",
+        },
+      ],
+    },
     {
-        setAllTasks(...allTasks, label);
-    }
-
-    const OnRemoveTask = ({task}) =>
+      title: "Organiser les repas",
+      executionDate: "2022-05-14",
+      labels: [
+        {
+          title: "Nourriture",
+        },
+        {
+          title: "Philippe",
+        },
+        {
+          title: "Courses",
+        },
+      ],
+    },
     {
-        
-    }
-
-    const OnAddLabelToTask = ({label, task}) => 
+      title: "Préparer psychologiquement les enfants",
+      executionDate: "2022-04-07",
+      labels: [
+        {
+          title: "Baptiste",
+        },
+      ],
+    },
     {
-        
-    }
+      title: "Trouver une voiture de location",
+      executionDate: "2022-04-07",
+      labels: [
+        {
+          title: "Réservation",
+        },
+        {
+          title: "Enzo",
+        },
+      ],
+    },
+  ]);
 
-    const OnRemoveLabelToTask = ({label, task}) =>
+  const [allLabels, setAllLabels] = useState([
     {
-        //allTasks[task].labels
-    }
+      title: "Benjamin",
+    },
+    {
+      title: "Vivien",
+    },
+    {
+      title: "Serkan",
+    },
+    {
+      title: "Baptiste",
+    },
+    {
+      title: "Enzo",
+    },
+    {
+      title: "Philippe",
+    },
+    {
+      title: "Nourriture",
+    },
+    {
+      title: "Réservation",
+    },
+    {
+      title: "Administration",
+    },
+    {
+      title: "Passeport",
+    },
+    {
+      title: "Courses",
+    },
+  ]);
 
-    const OnDeleteLabel = ({label}) =>{
+  const [taskFormOpen, setTaskFormOpen] = useState(false);
+  const [labelFormOpen, setLabelFormOpen] = useState(false);
 
-    }
+  const OnAddLabel = ({ label }) => {
+    setAllLabels(...allLabels, label);
+  };
 
-    return(
-        <>             
-        
-                <div style={{ height:'100%', width:'100%', display:'flex', flexDirection:'row'}}>
-                    <Stack
-                    direction="column"
-                    alignItems='flex-start'
-                    divider={<Divider orientation="horizontal" flexItem />}
-                    style={{ height: "100%", width: "100%" }}>
+  const addLabel = (title) =>{
+    // console.log("AJouter un label");
+    // setAllLabels((oldArray) => [...oldArray,
+    // {
+    //     title:"caca"
+    // }])
+  };
 
-        
-                        <Stack direction='row' alignItems='flex-start' justifyContent='center'>
-                            <FormatListBulletedOutlinedIcon sx={{fontSize:'40px'}} />
-                            <Typography variant="h3">Todo List</Typography>
-                        </Stack>
-                     
-                        <Stack
-                         direction='column'
-                         divider={<Divider orientation="horizontal" flexItem />}
-                         style={{ height: "65%", width: "100%" }}>
-                            
-                            <Stack direction='row' alignItems='flex-start'>
-                            <PlaylistAddCheckOutlinedIcon sx={{fontSize:'40px', marginTop:'25px'}}/>
-                            <Typography margin='20px' variant="h3">Tasks</Typography>
-                            </Stack>
-                            <TasksItemGrid tasks={allTasks} OnRemoveLabelToTask={OnRemoveLabelToTask} OnSelectTask={OnSelectTask} />       
-                         </Stack> 
-                         <IconButton aria-label="Add" onClick={(e) => setCurrentTask({title:undefined, label:[], executionDate:Date.now()})}>
-                            <AddCircleIcon sx={{fontSize:'50px'}}  /> Add a task
-                        </IconButton>
+  const OnSelectTask = (task) => {
+    setCurrentTask(task);
+  };
 
-                        {
-                            
-                            currentTask !== undefined ?
-                             <TaskForm task={currentTask} /> :
-                              ""
-                        }    
-                    </Stack>
-                   
-                    <Divider orientation='vertical'/>
-                    <Stack
-                        direction="column"
-                        alignItems='flex-start'
-                        divider={<Divider orientation="horizontal" flexItem />}
-                        style={{ height: "100%", width: "50%" }}>  
+  const OnAddTask = ({ label }) => {
+    setAllTasks(...allTasks, label);
+  };
 
-                        <Stack
-                         direction='column'
-                         divider={<Divider orientation="horizontal" flexItem />}
-                         style={{ height: "100%", width: "80%" }}>
-                            
-                            <Stack direction='rox' justifyContent='flex-start'>
-                                <LabelOutlinedIcon sx={{fontSize:'40px', marginTop:'25px'}} />
-                                <Typography margin='20px' variant="h3">Labels</Typography>
-                            </Stack>
-                            <LabelsItemGrid labels={allLabels} OnSelectLabel={setCurrentLabel} OnAddLabel={OnAddLabel} OnDeleteLabel={OnDeleteLabel} />
+  const OnRemoveTask = ({ task }) => {};
 
-                         </Stack> 
-                         {
-                            currentLabel !== undefined ? 
-                            <LabelForm label={currentLabel} /> :
-                            ""
-                        } 
-                         
-                    </Stack> 
-                </div>              
-        </>
-    )
-}
+  const OnAddLabelToTask = ({ label, task }) => {};
+
+  const OnRemoveLabelToTask = ({ label, task }) => {
+    //allTasks[task].labels
+  };
+
+  const OnDeleteLabel = ({ label }) => {};
+
+  return (
+    <>
+      <Stack height="100%" width="100%" direction="row">
+        <Stack direction="column" width="100%">
+          <Typography
+            color="primary"
+            variant="h2"
+            textAlign="center"
+            marginTop={4}
+          >
+            Tâches
+          </Typography>
+          <Stack
+            marginLeft="5%"
+            width="90%"
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h3">Liste des tâches</Typography>
+            <IconButton
+              aria-label="Add"
+              color="primary"
+              onClick={(e) => setTaskFormOpen(true)}
+            >
+              <AddCircleIcon sx={{ fontSize: "60px" }} />
+            </IconButton>
+          </Stack>
+          <Divider></Divider>
+          <TasksItemGrid
+            tasks={allTasks}
+            OnRemoveLabelToTask={OnRemoveLabelToTask}
+            OnSelectTask={OnSelectTask}
+          />
+        </Stack>
+        <Stack direction="column" width="25%">
+          <Stack
+            marginTop="50px"
+            marginLeft="5%"
+            width="90%"
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h3">Labels</Typography>
+            <IconButton
+              aria-label="Add"
+              color="secondary"
+              onClick={(e) => setLabelFormOpen(true)}
+            >
+              <AddCircleIcon sx={{ fontSize: "45px" }} />
+            </IconButton>
+          </Stack>
+          <Divider></Divider>
+          <LabelsItemGrid
+            labels={allLabels}
+            OnSelectLabel={setCurrentLabel}
+            OnAddLabel={OnAddLabel}
+            OnDeleteLabel={OnDeleteLabel}
+          />
+        </Stack>
+      </Stack>
+
+      <Dialog open={taskFormOpen} onClose={() => setTaskFormOpen(false)}>
+        <TaskForm></TaskForm>
+      </Dialog>
+      <Dialog open={labelFormOpen} onClose={() => setLabelFormOpen(false)}>
+        <LabelForm addLabel={addLabel}></LabelForm>
+      </Dialog>
+    </>
+  );
+};
 
 export default TodoList;

@@ -6,16 +6,112 @@ import { Stack, Divider, Typography, Dialog } from "@mui/material";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import { useState } from "react";
 import "../App.css";
-import TasksItemGrid from "./TasksItemGrid";
-import LabelsItemGrid from "./LabelsItemGrid";
+import TasksItemGrid from "../components/TasksItemGrid";
+import LabelsItemGrid from "../components/LabelsItemGrid";
 import IconButton from "@mui/material/IconButton";
-import TaskForm from "./TaskForm";
-import LabelForm from "./LabelForm";
+import TaskForm from "../components/TaskForm";
+import LabelForm from "../components/LabelForm";
 
 const TodoList = () => {
   const [currentLabel, setCurrentLabel] = useState();
   const [currentTask, setCurrentTask] = useState();
   const [allTasks, setAllTasks] = useState([
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+        {
+          title: "Benjamin",
+        },
+        {
+          title: "Benjamin",
+        },
+        {
+          title: "Benjamin",
+        },
+        {
+          title: "Benjamin",
+        },
+        {
+          title: "Benjamin",
+        },
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
+    {
+      title: "Faire les valises",
+      executionDate: "2022-07-07",
+      labels: [
+        {
+          title: "Serkan",
+        },
+        {
+          title: "Vivien",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
+    {
+      title: "Faire les valises",
+      executionDate: "2022-07-07",
+      labels: [
+        {
+          title: "Serkan",
+        },
+        {
+          title: "Vivien",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
     {
       title: "Faire les papiers",
       executionDate: "2022-05-07",
@@ -58,6 +154,30 @@ const TodoList = () => {
       labels: [
         {
           title: "Baptiste",
+        },
+      ],
+    },
+    {
+      title: "Faire les valises",
+      executionDate: "2022-07-07",
+      labels: [
+        {
+          title: "Serkan",
+        },
+        {
+          title: "Vivien",
+        },
+      ],
+    },
+    {
+      title: "Faire les valises",
+      executionDate: "2022-07-07",
+      labels: [
+        {
+          title: "Serkan",
+        },
+        {
+          title: "Vivien",
         },
       ],
     },

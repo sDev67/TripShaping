@@ -12,52 +12,19 @@ import {
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import AssignmentRounded from '@mui/icons-material/AssignmentRounded';
-import HomeRounded from '@mui/icons-material/HomeRounded';
-
+import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import TextSnippetRoundedIcon from '@mui/icons-material/TextSnippetRounded';
 import { Link, Outlet, NavLink } from "react-router-dom";
+import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 
 const NavigationBar = () => {
   const [value, setValue] = React.useState(0);
-  const [isEdition, setIsEdition] = React.useState(false);
-  const [switchText, setSwitchText] = React.useState("Navigation");
 
-  const [markerFilter, setMarkerFilter] = React.useState("all");
-
-  const [selectedMarker, setSelectedMarker] = React.useState(null);
-
-  // Lorsqu'on change de choix dans la box Navigation :
-  // - Tout
-  // - Etapes
-  // - Points d'intérêt
-  const handleChangeSelectModeNav = (event) => {
-    setMarkerFilter(event.target.value);
-  };
-
-  // Lorsqu'on change d'élement choisi entre :
-  // Carte, Voyage et Options
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  // switch correspondant au mode navigation et mode Edition
-  // isEdition = true par defaut --> Navigation
-  // isEdition = false --> Edition
-  // Lorsqu'on switch de mode, on reset les points a afficher en les affichant tous
-  const handleSwitch = (event) => {
-    setIsEdition(event.target.checked);
-    if (!isEdition) {
-      setSwitchText("Edition");
-      setMarkerFilter("all");
-    }
-    // On ferme le menu d'édition s'il est ouvert
-    else {
-      if (selectedMarker !== null) {
-        setSelectedMarker(null);
-      }
-      setSwitchText("Navigation");
-    }
-  };
   return (
     <Stack
       direction="row"
@@ -81,42 +48,46 @@ const NavigationBar = () => {
           indicatorColor="primary"
         >
           <Tab
-            icon={<HomeRounded />}
-            iconPosition="start"
-            label="Accueil"
-            value="/"
-            component={Link}
-            to="/"
-          />
-          <Tab
             icon={<MapRoundedIcon />}
             iconPosition="start"
-            label="Itinéraire"
-            value="/itinerary"
+            label="Carte"
+            value="/map"
             component={Link}
-            to="/itinerary"
+            to="/map"
           />
           <Tab
-            icon={<AssignmentRounded />}
+            icon={<AssignmentRoundedIcon />}
             iconPosition="start"
             label="Tâches"
             value="/todolist"
             component={Link}
             to="/todolist"
           />
+          <Tab
+            icon={<TextSnippetRoundedIcon />}
+            iconPosition="start"
+            label="Informations"
+            value="/informations"
+            component={Link}
+            to="/informations"
+          />
+          <Tab
+            icon={<GroupsRoundedIcon />}
+            iconPosition="start"
+            label="Membres"
+            value="/members"
+            component={Link}
+            to="/members"
+          />
 
         </Tabs>
 
-        <FormControlLabel
-          value={switchText}
-          control={<Switch color="primary" />}
-          label={switchText}
-          labelPlacement="bottom"
-          onChange={handleSwitch}
-          checked={isEdition}
-        />
+        
       </Stack>
-      <Outlet></Outlet>
+      <Stack style={{ width: "100%" }}>
+        <Outlet></Outlet>
+      </Stack>
+      
     </Stack>
   );
 };

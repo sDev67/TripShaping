@@ -1,51 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Image } from 'react-native';
-
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-const Tab = createBottomTabNavigator();
-
-import Maps from './screens/Maps';
-import Journal from './screens/Journal';
-
-import iconMaps from './assets/navigation_icons/icon_maps.png'
-import iconJournal from './assets/navigation_icons/icon_journal.png'
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
-
-  const [messages, setMessages] = useState([{ body: "Cet endroit est magnifique, j'en prends plein les yeux !", author: "Vivien Riehl", date: "20/12/2021", time: "18h55", step: { name: "Cathédrale de Strasbourg", cat: "Monument historique", description: "Le musée Lalique est un musée français situé à Wingen-sur-Moder, en Alsace, et consacré au maître verrier et bijoutier René Lalique et à ses successeurs.La cathédrale Notre-Dame de Strasbourg est une cathédrale gothique située à Strasbourg, dans la circonscription administrative du Bas-Rhin, sur le territoire de la collectivité européenne d’Alsace.", long: 7.751035121539488, lat: 48.581878956275794 } }, { body: "La plus belle cathédrale de France !", author: "Philippe Grandpre", date: "20/12/2021", time: "19h00", step: null }])
-
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            if (route.name === 'Atlas') {
-              return <Image source={iconMaps} style={{ width: 30, height: 30, tintColor: color }} />;
-            }
-            else if (route.name === "Journal") {
-              return <Image source={iconJournal} style={{ width: 30, height: 30, tintColor: color }} />;
-            }
-          },
-          tabBarActiveTintColor: '#3498DB',
-          tabBarInactiveTintColor: 'black',
-          tabBarShowLabel: false
-        })}
-      >
-        <Tab.Screen name="Atlas" children={() => <Maps messages={messages} setMessages={setMessages} />} />
-        <Tab.Screen name="Journal" children={() => <Journal messages={messages} setMessages={setMessages} />} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <View style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar style="auto" />
+    </View>
   );
 }
 
-//Choix techno, expliquer pourquoi -> 2,3 diapos
-//Demo de ce qu'on a qui fonctionne
-//Model objet
-//Questions sur des trucs spécifiques
-//Maquette Whimsical
-//Préparer un minimum
-
-//D'abord ce qu'on a en vrai + les maquettes pour ce qu'on a fait
-
-//Durée 30 minutes
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

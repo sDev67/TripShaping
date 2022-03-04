@@ -24,6 +24,7 @@ import TodoList from "./TodoList/TodoList";
 import Home from "./routes/Home";
 import Itinerary from "./routes/Itinerary";
 import NavigationBar from "./components/NavigationBar";
+import Members from "./routes/Members";
 
 function App() {
   
@@ -35,6 +36,7 @@ function App() {
             <Route path="/" element={<NavigationBar />}>
               <Route path="itinerary" element={<Itinerary />} />
               <Route path="todolist" element={<TodoList />} />
+              <Route path="members" element={<Members />} />
             </Route>
           </Routes>
         </BrowserRouter>

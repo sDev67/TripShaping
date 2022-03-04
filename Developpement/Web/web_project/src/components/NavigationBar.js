@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
+import GroupsIcon from '@mui/icons-material/Groups';
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import AssignmentRounded from '@mui/icons-material/AssignmentRounded';
@@ -103,6 +104,14 @@ const NavigationBar = () => {
             value="/todolist"
             component={Link}
             to="/todolist"
+          />
+           <Tab
+            icon={<GroupsIcon />}
+            iconPosition="start"
+            label="Members"
+            value="/members"
+            component={Link}
+            to="/members"
           />
 
         </Tabs>

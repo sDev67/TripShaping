@@ -1,9 +1,4 @@
-import {
-  Button,
-  tabsListUnstyledClasses,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, tabsListUnstyledClasses, TextField, Typography } from "@mui/material";
 import { Stack, Box, Chip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useState } from "react";
@@ -68,9 +63,7 @@ const TaskForm = ({ task }) => {
         alignItems="flex-start"
         style={{ height: "100%", margin: "20px" }}
       >
-        <Typography variant="h3" marginY={2}>
-          Ajouter une tâche
-        </Typography>
+        <Typography variant="h3" marginY={2}>Ajouter une tâche</Typography>
 
         <Stack direction="row" width="100%" spacing={1}>
           <TextField
@@ -94,6 +87,7 @@ const TaskForm = ({ task }) => {
             variant="contained"
             color="primary"
             startIcon={<DoneRounded />}
+            
           >
             Enregistrer
           </Button>

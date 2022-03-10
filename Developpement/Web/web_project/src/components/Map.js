@@ -5,17 +5,15 @@ import {
   Marker,
   DirectionsService,
   DirectionsRenderer,
+  Polyline,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import {
-  CircularProgress,
-  Alert,
-  Collapse,
-} from "@mui/material";
+import { CircularProgress, Alert, Collapse } from "@mui/material";
 import palette from "./../theme/palette";
 import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
 import MapModeSwitch from "./MapModeSwitch";
+import RouteMenu from "./RouteMenu";
 
 const containerStyle = {
   position: "relative",
@@ -29,11 +27,11 @@ const position = {
 };
 
 export const Map = ({}) => {
-
   const [isEdition, setIsEdition] = useState(false);
   const [switchText, setSwitchText] = useState("Navigation");
   const [markerFilter, setMarkerFilter] = useState("all");
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [selectedRoute, setSelectedRoute] = useState(null);
 
   const [steps, setSteps] = useState([]);
   const [interestPoints, setInterestPoints] = useState([]);
@@ -44,7 +42,8 @@ export const Map = ({}) => {
   const [editionMode, setEditionMode] = useState("stepOnlyEdit");
 
   const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const InterestPointIcon ="https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+  const InterestPointIcon =
+    "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
@@ -99,6 +98,8 @@ export const Map = ({}) => {
     if (isEdition) {
       if (selectedMarker !== null) {
         setSelectedMarker(null);
+      } else if (selectedRoute !== null) {
+        setSelectedRoute(null);
       } else {
         if (editionMode === "stepOnlyEdit") {
           if (!error) {
@@ -219,15 +220,6 @@ export const Map = ({}) => {
     setSteps(newSteps);
   };
 
-  // fonction qui calcule l'itinéraire et qui le trace
-  const directionsCallback = useCallback((res) => {
-    if (res !== null && res.status === "OK") {
-      setResponse(res);
-    } else if (res !== null && res.status === "ZERO_RESULTS") {
-      setError(true);
-    }
-  }, []);
-
   return (
     <>
       <LoadScript
@@ -259,7 +251,10 @@ export const Map = ({}) => {
                 position={{ lat: step.location.lat, lng: step.location.lng }}
                 draggable={!error && isEdition}
                 clickable={true}
-                onClick={() => setSelectedMarker(steps[index])}
+                onClick={() => {
+                  setSelectedMarker(steps[index]);
+                  setSelectedRoute(null);
+                }}
                 onRightClick={() => deleteMarker(step)}
                 onDragEnd={updateLocation(index, step)}
                 icon={stepIcon}
@@ -278,7 +273,10 @@ export const Map = ({}) => {
                 }}
                 draggable={!error && isEdition}
                 clickable={true}
-                onClick={() => setSelectedMarker(interestPoints[index])}
+                onClick={() => {
+                  setSelectedMarker(interestPoints[index]);
+                  setSelectedRoute(null);
+                }}
                 onRightClick={() => deleteMarker(interestPoint)}
                 onDragEnd={updateLocation(index, interestPoint)}
                 icon={InterestPointIcon}
@@ -288,36 +286,35 @@ export const Map = ({}) => {
           {steps.length >= 2 &&
             !(!isEdition && markerFilter === "interestPointOnlyNav") && (
               <>
-                <DirectionsService
-                  options={{
-                    origin: {
-                      lat: steps[0].location.lat,
-                      lng: steps[0].location.lng,
-                    },
-                    waypoints: steps.slice(1, steps.length - 1),
-                    destination: {
-                      lat: steps[steps.length - 1].location.lat,
-                      lng: steps[steps.length - 1].location.lng,
-                    },
-
-                    travelMode: "DRIVING",
-                  }}
-                  callback={directionsCallback}
-                />
-                <DirectionsRenderer
-                  options={{
-                    directions: response,
-                    suppressMarkers: true,
-                    preserveViewport: true,
-                    draggable: true,
-                    polylineOptions: {
-                      strokeColor: palette.primary.main,
-                      strokeWeight: 3,
-                      clickable: true,
-                    },
-                  }}
-                  onClick={() => console.log("ola")}
-                />
+                {steps.map((step, index) => (
+                  <>
+                    {index > 0 && (
+                      <Polyline
+                        key={index - 1}
+                        geodesic={true}
+                        clickable={true}
+                        onClick={() => {
+                          setSelectedRoute(index);
+                          setSelectedMarker(null);
+                        }}
+                        path={[
+                          {
+                            lat: steps[index - 1].location.lat,
+                            lng: steps[index - 1].location.lng,
+                          },
+                          {
+                            lat: step.location.lat,
+                            lng: step.location.lng,
+                          },
+                        ]}
+                        options={{
+                          strokeColor: palette.primary.main,
+                          strokeWeight: 8,
+                        }}
+                      ></Polyline>
+                    )}
+                  </>
+                ))}
               </>
             )}
         </GoogleMap>
@@ -342,6 +339,12 @@ export const Map = ({}) => {
             ></StepMenu>
           )
         ))}
+      {selectedRoute && (
+        <RouteMenu
+          selectedRoute={selectedRoute}
+          setSelectedRoute={setSelectedRoute}
+        ></RouteMenu>
+      )}
 
       <Collapse
         in={error}

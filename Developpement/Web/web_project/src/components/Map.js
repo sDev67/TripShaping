@@ -2,64 +2,83 @@ import React, { useState, useCallback, useEffect } from "react";
 import {
   GoogleMap,
   LoadScript,
-  DirectionsRenderer,
-  DirectionsService,
   Marker,
+  DirectionsService,
+  DirectionsRenderer,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import CircularProgress from "@mui/material/CircularProgress";
-import Popover from '@mui/material/Popover';
 import {
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
+  CircularProgress,
+  Alert,
+  Collapse,
 } from "@mui/material";
-
-
-import { Button, Alert, Collapse } from "@mui/material";
+import palette from "./../theme/palette";
+import InterestPointMenu from "./InterestPointMenu";
+import StepMenu from "./StepMenu";
+import MapModeSwitch from "./MapModeSwitch";
 
 const containerStyle = {
-  position: 'relative',
-  width: '100%',
-  height: '100%'
+  position: "relative",
+  width: "100%",
+  height: "100%",
 };
-
 
 const position = {
   lat: 48.5734053,
   lng: 7.7521113,
 };
 
-export const Map = ({ choice, pointToDisplay, labelChoice, handleChangeSelectModeNav,selectedMarker, setSelectedMarker }) => {
+export const Map = ({}) => {
+
+  const [isEdition, setIsEdition] = useState(false);
+  const [switchText, setSwitchText] = useState("Navigation");
+  const [markerFilter, setMarkerFilter] = useState("all");
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const [steps, setSteps] = useState([]);
-  const [interestPoint, setInterestPoint] = useState([]);
+  const [interestPoints, setInterestPoints] = useState([]);
 
   const [response, setResponse] = useState(null);
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
 
-  const [valueEditionMode, setValueEditionMode] = React.useState("stepOnly");
+  const [editionMode, setEditionMode] = useState("stepOnlyEdit");
 
-  const handleChangeSelectModeEdit = (event) => {
-    setValueEditionMode(event.target.value);
-  };
+  const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+  const InterestPointIcon ="https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
-  }, [pointToDisplay]);
+  }, [markerFilter]);
 
-  // style pour le menu edition a droite de l'écran
-  const asideStyle = {
-    right: 60,
-    top: 30,
-    width: 400,
-    height: '90%',
-    position: 'fixed',
-    background: "#FFFFFF",
-    border: '1px solid black',
-    borderRadius: 5,
-    opacity: 0.85
+  // Lorsqu'on change de choix dans la box Navigation :
+  // - Tout
+  // - Etapes
+  // - Points d'intérêt
+  const handleChangeSelectModeNav = (event) => {
+    setMarkerFilter(event.target.value);
+  };
+
+  // switch correspondant au mode navigation et mode Edition
+  // isEdition = true par defaut --> Navigation
+  // isEdition = false --> Edition
+  // Lorsqu'on switch de mode, on reset les points a afficher en les affichant tous
+  const handleSwitch = (event) => {
+    setIsEdition(event.target.checked);
+    if (!isEdition) {
+      setSwitchText("Edition");
+      setMarkerFilter("all");
+    }
+    // On ferme le menu d'édition s'il est ouvert
+    else {
+      if (selectedMarker !== null) {
+        setSelectedMarker(null);
+      }
+      setSwitchText("Navigation");
+    }
+  };
+
+  const handleChangeSelectModeEdit = (event) => {
+    setEditionMode(event.target.value);
   };
 
   const mapLoading = (
@@ -77,101 +96,119 @@ export const Map = ({ choice, pointToDisplay, labelChoice, handleChangeSelectMod
 
   const onMapClick = (e) => {
     // on peut placer les points uniquement si on est en mode edition
-    if(choice){
+    if (isEdition) {
       if (selectedMarker !== null) {
         setSelectedMarker(null);
-      }     
-      else {
-        if (valueEditionMode === "stepOnly") {
+      } else {
+        if (editionMode === "stepOnlyEdit") {
           if (!error) {
             setSteps((oldArray) => [
               ...oldArray,
               {
                 // la prop name de step.location.name est très importante car c'est elle qui permet de savoir sur quelle point on clique
-                location: { name: "Etape", lat: e.latLng.lat(), lng: e.latLng.lng(), title: "chien" },
+                location: {
+                  id: steps.length,
+                  name: "Etape",
+                  title: "",
+                  categorie: "",
+                  lengthOfStay: 0,
+                  files: [],
+                  description: "",
+                  lat: e.latLng.lat(),
+                  lng: e.latLng.lng(),
+                },
                 stopover: true,
               },
             ]);
           }
         }
-        // ici : valueEditionMode === "interestPointOnly")
-        else { 
+        // ici : editionMode === "interestPointOnlyEdit")
+        else {
           if (!error) {
-            setInterestPoint((oldArr) => [
+            setInterestPoints((oldArr) => [
               ...oldArr,
               {
-                location: { name: "PointInteret", lat: e.latLng.lat(), lng: e.latLng.lng(), title: "chat" },
+                location: {
+                  id: interestPoints.length,
+                  name: "PointInteret",
+                  title: "",
+                  categorie: "",
+                  files: [],
+                  description: "",
+                  lat: e.latLng.lat(),
+                  lng: e.latLng.lng(),
+                },
                 stopover: true,
               },
             ]);
           }
         }
       }
-    }    
-    // si on est en mode navigation 
-    else{
+    }
+    // si on est en mode navigation
+    else {
       // si le menu est ouvert on le ferme en cliquant sur la map
       if (selectedMarker !== null) {
         setSelectedMarker(null);
       }
     }
-
-  }
-
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  // Clique sur la box Navigation / Edition placé sur la map
-  const handleClickOnBox = (event) => {
-    setAnchorEl(event.currentTarget);
   };
-
-  // Ferme la box Navigation / Edition
-  const handleCloseBox = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
-  //const img = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
   // Fonction qui met a jour la position des points
   // en fonction de leurs index et du point choisi
-  const changeLocation = (index, stp) => (e) => {
+  const updateLocation = (index, marker) => (e) => {
     if (!error) {
-      if(stp.location.name === "Etape"){
-        let newSteps = [...steps];
-        newSteps[index] = {
-          location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
+      if (marker.location.name === "Etape") {
+        let newStep = [...steps];
+        newStep[index] = {
+          location: {
+            id: index,
+            name: "Etape",
+            title: marker.location.title,
+            categorie: marker.location.categorie,
+            lengthOfStay: 0,
+            files: [],
+            description: marker.location.description,
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng(),
+          },
           stopover: true,
         };
-        setSteps(newSteps);
+        setSteps(newStep);
+      } else if (marker.location.name === "PointInteret") {
+        let newInterestPoint = [...interestPoints];
+        newInterestPoint[index] = {
+          location: {
+            id: index,
+            name: "PointInteret",
+            title: marker.location.title,
+            categorie: marker.location.categorie,
+            files: [],
+            description: marker.location.description,
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng(),
+          },
+          stopover: true,
+        };
+        setInterestPoints(newInterestPoint);
       }
-      else if (stp.location.name === "PointInteret"){
-        let newInterestSteps = [...interestPoint];
-        newInterestSteps[index] = {
-          location: { lat: e.latLng.lat(), lng: e.latLng.lng() },
-          stopover: true,
-        };
-        setInterestPoint(newInterestSteps);
-      }      
     }
   };
 
   // Fonction qui permet de supprimer des points d'étapes et des points d'interet
-  const deleteMarker = (step) => {
-    if (!error) {
-      if(step.location.name === "Etape"){
-        let newSteps = [...steps];
-        newSteps = newSteps.filter((e) => e !== step);
-        setSteps(newSteps);
+  const deleteMarker = (marker) => {
+    if (!error && isEdition) {
+      if (marker.location.name === "Etape") {
+        let newStep = [...steps];
+        newStep = newStep.filter((e) => e !== marker);
+        setSteps(newStep);
+      } else if (marker.location.name === "PointInteret") {
+        let newInterestPoint = [...interestPoints];
+        newInterestPoint = newInterestPoint.filter((e) => e !== marker);
+        setInterestPoints(newInterestPoint);
       }
-      else if (step.location.name === "PointInteret"){
-        let newInterestSteps = [...interestPoint];
-        newInterestSteps = newInterestSteps.filter((e) => e !== step);
-        setInterestPoint(newInterestSteps);
-      }
-    }    
+      setSelectedMarker(null);
+    }
   };
 
   // Fonction qui enleve le dernier point lorsque ce dernier est placé dans un endroit qui cause pb
@@ -203,188 +240,117 @@ export const Map = ({ choice, pointToDisplay, labelChoice, handleChangeSelectMod
           zoom={10}
           onClick={onMapClick}
         >
-          <Button
-            aria-describedby={id}
-            variant="contained"
-            onClick={handleClickOnBox}
+          <MapModeSwitch
+            switchText={switchText}
+            handleSwitch={handleSwitch}
+            isEdition={isEdition}
+            markerFilter={markerFilter}
+            handleChangeSelectModeEdit={handleChangeSelectModeEdit}
+            handleChangeSelectModeNav={handleChangeSelectModeNav}
+            editionMode={editionMode}
+          ></MapModeSwitch>
 
-            style={{
-              background: 'none',
-              backgroundColor: 'white',
-              border: '0px',
-              padding: '0px 17px',
-              textTransform: 'none',
-              appearance: 'none',
-              position: 'absolute',
-              bottom: '2rem',
-              left: '10 px',
-              zIndex: 10,
-              cursor: "pointer",
-              textAlign: "center",
-              height: '40px',
-              verticalAlign: 'middle',
-              boxShadow: 'rgb(0 0 0 / 30%) 0px 1px 4px -1px',
-              color: 'rgb(86 86 86)',
-              fontFamily: 'Roboto, Arial, sans-serif',
-              fontSize: '18px',
-
-
-            }}>
-            {labelChoice}
-          </Button>
-
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleCloseBox}
-            style = {{marginLeft: 2}}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-            transformOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-          >
-            {!choice &&
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={pointToDisplay}
-                  onChange={handleChangeSelectModeNav}
-                >
-                  <FormControlLabel value="all" control={<Radio />} label="Tout" />
-                  <FormControlLabel value="stepOnly" control={<Radio />} label="Etapes" />
-                  <FormControlLabel value="interestPointOnly" control={<Radio />} label="Points d'intérêt" />
-
-                </RadioGroup>
-              </FormControl>
-
-            }
-
-            {choice &&
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={valueEditionMode}
-                  onChange={handleChangeSelectModeEdit}
-                >
-                  <FormControlLabel value="stepOnly" control={<Radio />} label="Etapes" />
-                  <FormControlLabel value="interestPointOnly" control={<Radio />} label="Points d'intérêt" />
-
-                </RadioGroup>
-              </FormControl>
-            }
-          </Popover>
-
-
-
-          {/* Child components, such as markers, info windows, etc. */}
-
-          {
-            (pointToDisplay === "stepOnly" || pointToDisplay === "all") &&
+          {(markerFilter === "stepOnlyNav" ||
+            markerFilter === "stepOnlyEdit" ||
+            markerFilter === "all") &&
             steps.map((step, index) => (
               <Marker
                 key={index}
                 position={{ lat: step.location.lat, lng: step.location.lng }}
-                draggable={!error}
+                draggable={!error && isEdition}
                 clickable={true}
                 onClick={() => setSelectedMarker(steps[index])}
                 onRightClick={() => deleteMarker(step)}
-                onDragEnd={changeLocation(index,step )}
+                onDragEnd={updateLocation(index, step)}
+                icon={stepIcon}
+              ></Marker>
+            ))}
 
-              >
-              </Marker>
-            ))
-
-          }
-
-          {
-            (pointToDisplay === "interestPointOnly" || pointToDisplay === "all") &&
-            interestPoint.map((interestStep, index) => (
+          {(markerFilter === "interestPointOnlyNav" ||
+            markerFilter === "interestPointOnlyEdit" ||
+            markerFilter === "all") &&
+            interestPoints.map((interestPoint, index) => (
               <Marker
                 key={index}
-                position={{ lat: interestStep.location.lat, lng: interestStep.location.lng }}
-                draggable={!error}
+                position={{
+                  lat: interestPoint.location.lat,
+                  lng: interestPoint.location.lng,
+                }}
+                draggable={!error && isEdition}
                 clickable={true}
-                onClick={() => setSelectedMarker(interestPoint[index])}
-                onRightClick={() => deleteMarker(interestStep)}
-                onDragEnd={changeLocation(index, interestStep)}
-                icon={{
-                  path:
-                    "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
-                  fillColor: "green",
-                  fillOpacity: 1,
-                  scale: 1.9,
-                  strokeColor: "black",
-                  strokeWeight: 1,
-                }}
+                onClick={() => setSelectedMarker(interestPoints[index])}
+                onRightClick={() => deleteMarker(interestPoint)}
+                onDragEnd={updateLocation(index, interestPoint)}
+                icon={InterestPointIcon}
+              ></Marker>
+            ))}
 
-                title={"TEST"}
+          {steps.length >= 2 &&
+            !(!isEdition && markerFilter === "interestPointOnlyNav") && (
+              <>
+                <DirectionsService
+                  options={{
+                    origin: {
+                      lat: steps[0].location.lat,
+                      lng: steps[0].location.lng,
+                    },
+                    waypoints: steps.slice(1, steps.length - 1),
+                    destination: {
+                      lat: steps[steps.length - 1].location.lat,
+                      lng: steps[steps.length - 1].location.lng,
+                    },
 
-
-              >
-              </Marker>
-            ))
-          }
-          
-          {steps.length >= 2 && (
-            <>
-              <DirectionsService
-                options={{
-                  origin: {
-                    lat: steps[0].location.lat,
-                    lng: steps[0].location.lng,
-                  },
-                  waypoints: steps.slice(1, steps.length - 1),
-                  destination: {
-                    lat: steps[steps.length - 1].location.lat,
-                    lng: steps[steps.length - 1].location.lng,
-                  },
-
-                  travelMode: "DRIVING",
-                }}
-                callback={directionsCallback}
-              />
-              <DirectionsRenderer
-                options={{
-                  directions: response,
-                  suppressMarkers: true,
-                  polylineOptions: { strokeColor: "#00AB55", strokeWeight: 3 },
-                }}
-              />
-            </>
-          )}
-
-
+                    travelMode: "DRIVING",
+                  }}
+                  callback={directionsCallback}
+                />
+                <DirectionsRenderer
+                  options={{
+                    directions: response,
+                    suppressMarkers: true,
+                    preserveViewport: true,
+                    draggable: true,
+                    polylineOptions: {
+                      strokeColor: palette.primary.main,
+                      strokeWeight: 3,
+                      clickable: true,
+                    },
+                  }}
+                  onClick={() => console.log("ola")}
+                />
+              </>
+            )}
         </GoogleMap>
       </LoadScript>
-      {
-        selectedMarker && <>
-          <aside style={asideStyle}>
-            <h3>Titre</h3>
-            <textarea value={selectedMarker.location.title}></textarea>
-            <hr />
-            <h3>Catégorie</h3>
-            <textarea></textarea>
-            <hr />
-            <h3>Description</h3>
-            <textarea></textarea>
-            <hr />
-            <h3>Documents</h3>
-          </aside>
-        </>
-      }
-      
-      {/* Affichage popin lorsque le trajet est introuvable. */}
+      {selectedMarker &&
+        (selectedMarker.location.name === "PointInteret" ? (
+          <InterestPointMenu
+            interestPoints={interestPoints}
+            setInterestPoints={setInterestPoints}
+            selectedMarker={selectedMarker}
+            setSelectedMarker={setSelectedMarker}
+            deleteMarker={deleteMarker}
+          ></InterestPointMenu>
+        ) : (
+          selectedMarker.location.name === "Etape" && (
+            <StepMenu
+              steps={steps}
+              setSteps={setSteps}
+              selectedMarker={selectedMarker}
+              setSelectedMarker={setSelectedMarker}
+              deleteMarker={deleteMarker}
+            ></StepMenu>
+          )
+        ))}
 
       <Collapse
         in={error}
-        style={{ position: "absolute", alignSelf: "center", bottom: 10 }}
+        style={{
+          position: "absolute",
+          textAlign: "center",
+          bottom: 10,
+          marginLeft: "700px",
+        }}
       >
         <Alert variant="filled" severity="error" onClose={() => closeAlert()}>
           Désolé, nous n'avons pas pu calculer l'itinéraire.

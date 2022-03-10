@@ -35,7 +35,6 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
-import Direction from "./Direction";
 
 const containerStyle = {
   position: "relative",

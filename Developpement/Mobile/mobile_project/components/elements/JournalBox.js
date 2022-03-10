@@ -13,8 +13,13 @@ const JournalBox = ({ message }) => {
             <View style={{ marginLeft: 5 }}>
                 {message.step !== null ?
                     (<View style={{ marginTop: 5, flexDirection: "row" }}>
-                        <Image source={marker} style={{ width: 20, height: 20, tintColor: "red" }} />
-                        <Text>{message.step.name}</Text>
+                        {
+                            message.catStep === 1 ? <>
+                                <Image source={marker} style={{ width: 20, height: 20, tintColor: "blue" }} />
+                                <Text>{message.step.name}</Text></> : <>
+                                <Image source={marker} style={{ width: 20, height: 20, tintColor: "red" }} />
+                                <Text>{message.step.name}</Text></>
+                        }
                     </View>) : null
                 }
                 <Text style={{ marginTop: 5 }} >Écrit par {message.author} le {message.date} à {message.time}</Text>

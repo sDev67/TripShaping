@@ -11,7 +11,7 @@ import ItinaryModal from '../components/modals/ItinaryModal';
 import PointModal from '../components/modals/pointModal';
 import StepModal from '../components/modals/StepModal';
 
-const Maps = ({ messages, setMessages }) => {
+const Maps = ({ messages, setMessages, setStartCamera }) => {
 
     const GOOGLE_MAPS_APIKEY = 'AIzaSyAJVvWk_VD4fFSTgIbKZn4mKbudKeQXEII';
 
@@ -52,20 +52,20 @@ const Maps = ({ messages, setMessages }) => {
                 <NativeBaseProvider>
                     <SafeAreaView style={{ flex: 1 }}>
                         <ItinaryModal modalVisible={modalVisible} setModalVisible={setModalVisible} distance={distance} duration={duration} />
-                        <PointModal modalVisible={modalPointVisible} setModalVisible={setModalPointVisible} point={selected} messages={messages} setMessages={setMessages} />
-                        <StepModal modalVisible={modalStepVisible} setModalVisible={setModalStepVisible} point={selected} />
+                        <PointModal modalVisible={modalPointVisible} setModalVisible={setModalPointVisible} point={selected} messages={messages} setMessages={setMessages} setStartCamera={setStartCamera} />
+                        <StepModal modalVisible={modalStepVisible} setModalVisible={setModalStepVisible} point={selected} setStartCamera={setStartCamera} messages={messages} setMessages={setMessages} />
                         <MapView style={styles.map} scrollEnabled={true} provider={PROVIDER_GOOGLE} showsUserLocation={true} initialRegion={{ latitude: location.coords.latitude, longitude: location.coords.longitude, longitudeDelta: 0.125, latitudeDelta: 0.125 }}>
                             {(checked === "0" || checked === "1") &&
                                 <>
                                     {steps.map((step, index) => (
-                                        <Marker pinColor='green' key={index} coordinate={{ latitude: step.lat, longitude: step.long }} onPress={() => { setModalStepVisible(true); setSelected(step) }}>
+                                        <Marker key={index} coordinate={{ latitude: step.lat, longitude: step.long }} onPress={() => { setModalStepVisible(true); setSelected(step) }}>
                                         </Marker>)
                                     )}
                                     <MapViewDirections
                                         origin={{ latitude: 48.87825669202483, longitude: 7.415160892563047 }}
                                         destination={{ latitude: 48.56599996601616, longitude: 7.730613259942172 }}
                                         strokeWidth={3}
-                                        strokeColor='green'
+                                        strokeColor='#00AB55'
                                         apikey={GOOGLE_MAPS_APIKEY}
                                         tappable={true}
                                         onPress={() => showModal()}
@@ -78,7 +78,7 @@ const Maps = ({ messages, setMessages }) => {
                             }
                             {(checked === "0" || checked === "2") &&
                                 points.map((point, index) => (
-                                    <Marker key={index} coordinate={{ latitude: point.lat, longitude: point.long }} onPress={() => { setModalPointVisible(true); setSelected(point) }}>
+                                    <Marker key={index} pinColor='blue' coordinate={{ latitude: point.lat, longitude: point.long }} onPress={() => { setModalPointVisible(true); setSelected(point) }}>
                                     </Marker>)
                                 )
                             }

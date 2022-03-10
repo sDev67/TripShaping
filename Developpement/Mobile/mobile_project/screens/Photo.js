@@ -21,12 +21,10 @@ const Photo = ({ setStartCamera, photo }) => {
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
             quality: 1,
+            allowsEditing: true,
             base64: true
         });
-
-        console.log(result);
 
         if (!result.cancelled) {
             setImage(result);
@@ -44,7 +42,7 @@ const Photo = ({ setStartCamera, photo }) => {
                             resizeMode={"stretch"}
                             source={{ uri: `data:image/gif;base64,${photo.base64}` }} />
                     }
-                    {image && <Image source={{ uri: `data:image/gif;base64,${image.base64}` }} style={{ width: image.width, height: image.height }} alt="photo" />}
+                    {image && <Image source={{ uri: `data:image/gif;base64,${image.base64}` }} style={{ width: image.width / 8, height: image.height / 8 }} alt="photo" />}
                     <View>
                         <Button style={{ width: "50%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={startCamera}>Prendre une photo</Button>
                         <Button style={{ width: "50%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>

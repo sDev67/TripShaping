@@ -3,6 +3,7 @@ import "./App.css";
 import ThemeConfig from "./theme";
 import GlobalStyles from "./theme/globalStyles";
 import { Map } from "./components/Map";
+
 import {
   Stack,
   Divider,
@@ -10,64 +11,80 @@ import {
   Tabs,
   Typography,
   FormControlLabel,
-  Switch
-
+  Switch,
 } from "@mui/material";
+
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import TodoList from "./TodoList/TodoList";
+import TodoList from "./routes/TodoList";
+
+import Home from "./routes/Home";
+import Itinerary from "./routes/Itinerary";
+import NavigationBar from "./components/NavigationBar";
+import Informations from "./routes/Informations";
+import Members from "./routes/Members";
 
 function App() {
-  const [value, setValue] = React.useState(0);
-  const [isEdition, setIsEdition] = React.useState(false);
-  const [switchText, setSwitchText] = React.useState("Navigation");
-
-  const [markerFilter, setMarkerFilter] = React.useState("all");
-
-  const [selectedMarker, setSelectedMarker] = React.useState(null);
-
-
-  // Lorsqu'on change de choix dans la box Navigation :
-  // - Tout
-  // - Etapes
-  // - Points d'intérêt
-  const handleChangeSelectModeNav = (event) => {
-    setMarkerFilter(event.target.value);
-  };
+  
+  // // Lorsqu'on change de choix dans la box Navigation :
+  // // - Tout
+  // // - Etapes
+  // // - Points d'intérêt
+  // const handleChangeSelectModeNav = (event) => {
+  //   setMarkerFilter(event.target.value);
+  // };
 
 
-  // Lorsqu'on change d'élement choisi entre :
-  // Carte, Voyage et Options
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  // // Lorsqu'on change d'élement choisi entre :
+  // // Carte, Voyage et Options
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  // };
 
-  // switch correspondant au mode navigation et mode Edition
-  // isEdition = true par defaut --> Navigation 
-  // isEdition = false --> Edition
-  // Lorsqu'on switch de mode, on reset les points a afficher en les affichant tous
-  const handleSwitch = (event) => {
-    setIsEdition(event.target.checked);
-    if (!isEdition) {
-      setSwitchText("Edition")
-      setMarkerFilter("all");
-    }
-    // On ferme le menu d'édition s'il est ouvert
-    else {
-      if (selectedMarker !== null) {
-        setSelectedMarker(null)
-      }
-      setSwitchText("Navigation")
-    }
+  // // switch correspondant au mode navigation et mode Edition
+  // // isEdition = true par defaut --> Navigation 
+  // // isEdition = false --> Edition
+  // // Lorsqu'on switch de mode, on reset les points a afficher en les affichant tous
+  // const handleSwitch = (event) => {
+  //   setIsEdition(event.target.checked);
+  //   if (!isEdition) {
+  //     setSwitchText("Edition")
+  //     setMarkerFilter("all");
+  //   }
+  //   // On ferme le menu d'édition s'il est ouvert
+  //   else {
+  //     if (selectedMarker !== null) {
+  //       setSelectedMarker(null)
+  //     }
+  //     setSwitchText("Navigation")
+  //   }
 
-  }
-
+  // }
 
 
   return (
     <>
-      <ThemeConfig>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<NavigationBar />}>
+              <Route path="map" element={<Itinerary />} />
+              <Route path="todolist" element={<TodoList />} />
+              <Route path="informations" element={<Informations />} />
+              <Route path="members" element={<Members />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+
+        {/** 
+         * <Stack style={{ width: '100%' }}>
+           
+          </Stack>
+        */}
+      
+      {/* <ThemeConfig>
         <GlobalStyles />
         <Stack
           direction="row"
@@ -115,7 +132,7 @@ function App() {
           {/* <Stack style={{ width: '100%' }}> */}
           {/* <TodoList/> */}
 
-          <Stack style={{ width: '100%' }}>
+          {/* <Stack style={{ width: '100%' }}>
             <Map
               isEdition={isEdition}
               markerFilter={markerFilter}
@@ -127,9 +144,9 @@ function App() {
           </Stack>
 
 
-        </Stack>
+        </Stack> */}
         {/* </Stack> */}
-      </ThemeConfig>
+      {/* </ThemeConfig> */}
     </>
   );
 }

@@ -17,7 +17,6 @@ const pointModal = ({ modalVisible, setModalVisible, point, messages, setMessage
             setMessages([...messages, newPost]);
             setNewMessage("");
         }
-
     };
 
     return (
@@ -55,6 +54,5 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     }
 });
-
 
 export default pointModal;

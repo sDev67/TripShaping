@@ -1,28 +1,14 @@
 import "../Styles/ButtonStyles.css";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {
-  Stack,
-  List,
-  ListItemButton,
-  Box,
-  Divider,
   Chip,
   Grid,
-  Typography,
 } from "@mui/material";
-import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 import "../App.css";
 import IconButton from "@mui/material/IconButton";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 

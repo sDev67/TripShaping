@@ -25,7 +25,7 @@ import Home from "./routes/Home";
 import Itinerary from "./routes/Itinerary";
 import NavigationBar from "./components/NavigationBar";
 import Informations from "./routes/Informations";
-import Members from "./routes/Members";
+import Members from "./components/Members";
 
 function App() {
   

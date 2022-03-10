@@ -298,6 +298,7 @@ const TodoList = () => {
             OnRemoveLabelToTask={OnRemoveLabelToTask}
             OnSelectTask={OnSelectTask}
           />
+       
         </Stack>
         <Stack direction="column" width="25%">
           <Stack
@@ -324,6 +325,7 @@ const TodoList = () => {
             OnAddLabel={OnAddLabel}
             OnDeleteLabel={OnDeleteLabel}
           />
+        
         </Stack>
       </Stack>
 

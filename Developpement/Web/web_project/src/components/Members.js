@@ -66,6 +66,7 @@ const Members = () => {
     const OnAddMember = ({member}) => 
     {
         setCurrentMembers(...currentMembers, member);
+
         if(addFictifMember)
         {
             setAddFictifMember(false);

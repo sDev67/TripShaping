@@ -6,10 +6,10 @@ module.exports = sequelize => {
 		static associate(db) {
 
 			Travel.hasMany(db.Point, { onDelete: 'cascade' });
+			Travel.hasMany(db.Step, { onDelete: 'cascade' });
+
 			/* Travel.OneToMany(db.Task, {through : 'TravelTask'} );
-			* Travel.OneToMany(db.Step, {through : 'TravelStep'} );
 			* Travel.OneToMany(db.Label, {through : 'TravelLabel'} );
-			.....
 			*/
 		}
 	}

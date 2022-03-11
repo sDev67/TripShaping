@@ -37,11 +37,23 @@ module.exports = {
 		return db.Travel.findByPk(req.params.travel_id)
 			.then(travel => {
 				if (!travel) {
-					throw { status: 404, message: 'Module not found' };
+					throw { status: 404, message: 'Travel not found' };
 				}
 				return travel.getPoints();
 			})
 			.then(points => res.json(points))
+			.catch(err => next(err));
+	},
+
+	get_steps_of_travel: (req, res, next) => {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
+					throw { status: 404, message: 'Travel not found' };
+				}
+				return travel.getSteps();
+			})
+			.then(steps => res.json(steps))
 			.catch(err => next(err));
 	},
 

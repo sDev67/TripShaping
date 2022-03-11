@@ -5,7 +5,7 @@ module.exports = sequelize => {
 	class Step extends Sequelize.Model {
 		static associate(db) {
 			//Step.OneToMany(db.Task, {through : 'TaskStep'} );
-			//Step.ManyToOne(db.Travel, {through : 'TravelStep'} );
+			Step.belongsTo(db.Travel);
 		}
 	}
 
@@ -14,6 +14,7 @@ module.exports = sequelize => {
 		description: DataTypes.STRING,
 		latitude: DataTypes.FLOAT,
 		longitude: DataTypes.FLOAT,
+		duration: DataTypes.INTEGER,
 		category: DataTypes.STRING
 
 	}, {

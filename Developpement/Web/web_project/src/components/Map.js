@@ -7,9 +7,9 @@ import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
 import MapModeSwitch from "./MapModeSwitch";
 import RouteMenu from "./RouteMenu";
-import TravelRequests from "../requests/TravelRequests";
 import { url_prefix } from "../utils";
 import axios from "axios";
+import * as API from "../requests/TravelRequests";
 
 const containerStyle = {
   position: "relative",
@@ -23,6 +23,7 @@ const position = {
 };
 
 export const Map = ({ }) => {
+  const idTravel = 1
   const [isEdition, setIsEdition] = useState(false);
   const [switchText, setSwitchText] = useState("Navigation");
   const [markerFilter, setMarkerFilter] = useState("all");
@@ -45,11 +46,15 @@ export const Map = ({ }) => {
     axios.get(`${url_prefix}/travel/1/points`)
       .then(function (response) {
         setInterestPoints(response.data);
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        // handle error
-      })
+      });
+    // setInterestPoints(getPointsByTravel(idTravel))
+    // console.log(interestPoints)
+
+    axios.get(`${url_prefix}/travel/1/steps`)
+      .then(function (response) {
+        // console.log(response.data);
+        setSteps(response.data);
+      });
   }, [])
 
   useEffect(() => {
@@ -251,15 +256,15 @@ export const Map = ({ }) => {
 
           {(markerFilter === "stepOnlyNav" ||
             markerFilter === "stepOnlyEdit" ||
-            markerFilter === "all") &&
+            markerFilter === "all") && steps &&
             steps.map((step, index) => (
               <Marker
                 key={index}
-                position={{ lat: step.location.lat, lng: step.location.lng }}
+                position={{ lat: step.latitude, lng: step.longitude }}
                 draggable={!error && isEdition}
                 clickable={true}
                 onClick={() => {
-                  setSelectedMarker(steps[index]);
+                  setSelectedMarker({ marker: steps[index], type: "Step" });
                   setSelectedRoute(null);
                 }}
                 onRightClick={() => deleteMarker(step)}
@@ -274,6 +279,7 @@ export const Map = ({ }) => {
             interestPoints.map((interestPoint, index) => (
               <Marker
                 key={index}
+                name="Point"
                 position={{
                   lat: interestPoint.latitude,
                   lng: interestPoint.longitude,
@@ -281,7 +287,7 @@ export const Map = ({ }) => {
                 draggable={!error && isEdition}
                 clickable={true}
                 onClick={() => {
-                  setSelectedMarker(interestPoints[index]);
+                  setSelectedMarker({ marker: interestPoints[index], type: "Point" });
                   setSelectedRoute(null);
                 }}
                 onRightClick={() => deleteMarker(interestPoint)}
@@ -306,12 +312,12 @@ export const Map = ({ }) => {
                         }}
                         path={[
                           {
-                            lat: steps[index - 1].location.lat,
-                            lng: steps[index - 1].location.lng,
+                            lat: steps[index - 1].latitude,
+                            lng: steps[index - 1].longitude,
                           },
                           {
-                            lat: step.location.lat,
-                            lng: step.location.lng,
+                            lat: step.latitude,
+                            lng: step.longitude,
                           },
                         ]}
                         options={{
@@ -327,31 +333,33 @@ export const Map = ({ }) => {
         </GoogleMap>
       </LoadScript>
       {selectedMarker &&
-        (selectedMarker.location.name === "PointInteret" ? (
+        (selectedMarker.type === "Point" ? (
           <InterestPointMenu
             interestPoints={interestPoints}
             setInterestPoints={setInterestPoints}
-            selectedMarker={selectedMarker}
+            selectedMarker={selectedMarker.marker}
             setSelectedMarker={setSelectedMarker}
             deleteMarker={deleteMarker}
           ></InterestPointMenu>
         ) : (
-          selectedMarker.location.name === "Etape" && (
+          selectedMarker.type === "Step" && (
             <StepMenu
               steps={steps}
               setSteps={setSteps}
-              selectedMarker={selectedMarker}
+              selectedMarker={selectedMarker.marker}
               setSelectedMarker={setSelectedMarker}
               deleteMarker={deleteMarker}
             ></StepMenu>
           )
         ))}
-      {selectedRoute && (
-        <RouteMenu
-          selectedRoute={selectedRoute}
-          setSelectedRoute={setSelectedRoute}
-        ></RouteMenu>
-      )}
+      {
+        selectedRoute && (
+          <RouteMenu
+            selectedRoute={selectedRoute}
+            setSelectedRoute={setSelectedRoute}
+          ></RouteMenu>
+        )
+      }
 
       <Collapse
         in={error}

@@ -42,7 +42,7 @@ const InterestPointMenu = ({
   const [lengthOfStay, setLengthOfStay] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  let handleChangeTitle = (e) => {};
+  let handleChangeTitle = (e) => { };
 
   const updateProperties = (marker) => (e) => {
     let newInterestPoint = [...interestPoints];
@@ -82,7 +82,7 @@ const InterestPointMenu = ({
           <TextField
             fullWidth
             label="Nom"
-            value={selectedMarker.location.title}
+            value={selectedMarker.title}
             onChange={handleChangeTitle}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
@@ -93,7 +93,7 @@ const InterestPointMenu = ({
             fullWidth
             select
             label="Catégorie"
-            value={selectedMarker.location.categorie}
+            value={selectedMarker.category}
             onChange={(e) => setCategorie(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
@@ -113,14 +113,15 @@ const InterestPointMenu = ({
               fullWidth
               select
               label="Documents"
-              value={selectedMarker.location.files}
+              value=""
+              //value={selectedMarker.location.files}
               InputLabelProps={{
                 shrink: true,
               }}
             >
-              {files.map((file, index) => (
+              {/* {files.map((file, index) => (
                 <MenuItem key={index}>{file.name}</MenuItem>
-              ))}
+              ))} */}
             </TextField>
 
             <Button
@@ -140,7 +141,7 @@ const InterestPointMenu = ({
             label="Description"
             multiline
             rows={10}
-            value={selectedMarker.location.description}
+            value={selectedMarker.description}
             onChange={(e) => setDescription(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{

@@ -1,12 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  DirectionsService,
-  DirectionsRenderer,
-  Polyline,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker, Polyline } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import { CircularProgress, Alert, Collapse } from "@mui/material";
 import palette from "./../theme/palette";
@@ -14,6 +7,9 @@ import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
 import MapModeSwitch from "./MapModeSwitch";
 import RouteMenu from "./RouteMenu";
+import TravelRequests from "../requests/TravelRequests";
+import { url_prefix } from "../utils";
+import axios from "axios";
 
 const containerStyle = {
   position: "relative",
@@ -30,20 +26,31 @@ export const Map = ({ }) => {
   const [isEdition, setIsEdition] = useState(false);
   const [switchText, setSwitchText] = useState("Navigation");
   const [markerFilter, setMarkerFilter] = useState("all");
+  const [editionMode, setEditionMode] = useState("stepOnlyEdit");
+
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
   const [steps, setSteps] = useState([]);
   const [interestPoints, setInterestPoints] = useState([]);
+  const [routes, setRoutes] = useState([]);
 
-  const [response, setResponse] = useState(null);
+  //const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
 
-  const [editionMode, setEditionMode] = useState("stepOnlyEdit");
-
   const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const InterestPointIcon =
-    "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+  const InterestPointIcon = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+
+  useEffect(() => {
+    axios.get(`${url_prefix}/travel/1/points`)
+      .then(function (response) {
+        setInterestPoints(response.data);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+      })
+  }, [])
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
@@ -263,13 +270,13 @@ export const Map = ({ }) => {
 
           {(markerFilter === "interestPointOnlyNav" ||
             markerFilter === "interestPointOnlyEdit" ||
-            markerFilter === "all") &&
+            markerFilter === "all") && interestPoints &&
             interestPoints.map((interestPoint, index) => (
               <Marker
                 key={index}
                 position={{
-                  lat: interestPoint.location.lat,
-                  lng: interestPoint.location.lng,
+                  lat: interestPoint.latitude,
+                  lng: interestPoint.longitude,
                 }}
                 draggable={!error && isEdition}
                 clickable={true}

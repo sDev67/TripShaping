@@ -3,62 +3,62 @@ const db = require('../models');
 module.exports = {
 
 	get_all: (req, res, next) => {
-		return db.Label.findAll({
+		return db.Step.findAll({
 			order: ['title']
 		})
-			.then(label => res.json(label))
+			.then(step => res.json(step))
 			.catch(next);
 	},
 
 	load_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Step.findByPk(req.params.step_id)
+			.then(step => {
+				if (!step) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				req.label = label;
+				req.step = step;
 				return next();
 			})
 			.catch(next);
 	},
 
 	get_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Step.findByPk(req.params.step_id)
+			.then(step => {
+				if (!step) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				return res.json(label);
+				return res.json(step);
 			})
 			.catch(next);
 	},
 
 	create: (req, res, next) => {
-		return db.Label.create(req.body)
-			.then(label => res.json(label))
+		return db.Step.create(req.body)
+			.then(step => res.json(step))
 			.catch(next);
 	},
 
 	update_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Step.findByPk(req.params.step_id)
+			.then(step => {
+				if (!step) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				Object.assign(label, req.body);
-				return label.save();
+				Object.assign(step, req.body);
+				return step.save();
 			})
-			.then(label => res.json(label))
+			.then(step => res.json(step))
 			.catch(next);
 	},
 
 	delete_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.Step.findByPk(req.params.step_id)
+			.then(step => {
+				if (!step) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				return label.destroy();
+				return step.destroy();
 			})
 			.then(() => res.status(200).end())
 			.catch(next);

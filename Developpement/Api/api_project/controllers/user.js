@@ -3,62 +3,62 @@ const db = require('../models');
 module.exports = {
 
 	get_all: (req, res, next) => {
-		return db.Label.findAll({
-			order: ['title']
+		return db.User.findAll({
+			order: ['username']
 		})
-			.then(label => res.json(label))
+			.then(user => res.json(user))
 			.catch(next);
 	},
 
 	load_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.User.findByPk(req.params.user_id)
+			.then(user => {
+				if (!user) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				req.label = label;
+				req.user = user;
 				return next();
 			})
 			.catch(next);
 	},
 
 	get_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.User.findByPk(req.params.user_id)
+			.then(user => {
+				if (!user) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				return res.json(label);
+				return res.json(user);
 			})
 			.catch(next);
 	},
 
 	create: (req, res, next) => {
-		return db.Label.create(req.body)
-			.then(label => res.json(label))
+		return db.User.create(req.body)
+			.then(user => res.json(user))
 			.catch(next);
 	},
 
 	update_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.User.findByPk(req.params.user_id)
+			.then(user => {
+				if (!user) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				Object.assign(label, req.body);
-				return label.save();
+				Object.assign(user, req.body);
+				return user.save();
 			})
 			.then(label => res.json(label))
 			.catch(next);
 	},
 
 	delete_by_id: (req, res, next) => {
-		return db.Label.findByPk(req.params.label_id)
-			.then(label => {
-				if (!label) {
+		return db.User.findByPk(req.params.user_id)
+			.then(user => {
+				if (!user) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				return label.destroy();
+				return user.destroy();
 			})
 			.then(() => res.status(200).end())
 			.catch(next);

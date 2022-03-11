@@ -4,6 +4,7 @@ import {useState} from "react";
 import MemberAllItemsGrid from './MemberAllItemsGrid';
 import Button from '@mui/material/Button';
 import MemberForm from "./MemberForm";
+import Autocomplete from '@mui/material/Autocomplete';
 
 const MemberList = ({OnAddMember, allMembers, HandleClickAddFictifMember, statusAddFictifMember=false, setAddFictifMember}) => 
 {

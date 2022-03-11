@@ -63,9 +63,10 @@ const Members = () => {
         setAddFictifMember(true);
     }
 
-    const OnAddMember = ({member}) => 
+    const OnAddMember = ({firstname, lastname}) => 
     {
-        setCurrentMembers(...currentMembers, member);
+        console.log({firstname, lastname});
+        setCurrentMembers([...currentMembers, {firstname, lastname}]);
 
         if(addFictifMember)
         {
@@ -73,13 +74,17 @@ const Members = () => {
         }
         else
         {
-            setMembers(allMembers.filter(memberI => memberI !== member));
+            // changer ca car si plusieurs personne ont le meme nom et prenom ca les enleve
+            let filteredArray = allMembers.filter(memberI => memberI.firstname !== firstname && memberI.lastname !== lastname);
+            setMembers(filteredArray);
         }
     }
 
     const OnDeleteMember = ({member}) => 
     {
-        setCurrentMembers(currentMembers.filter(memberI => memberI !== member));
+           // changer ca car si plusieurs personne ont le meme nom et prenom ca les enleve
+           let filteredArray = currentMembers.filter(memberI => memberI.firstname !== member.firstname && memberI.lastname !== member.lastname);
+           setCurrentMembers(filteredArray);
     }
 
     return(

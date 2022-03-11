@@ -23,7 +23,7 @@ const MembersItemGrid = ({members, OnDeleteMember}) =>
                             <CardContent sx={{ display:'flex', flexDirection:'row', alignContent:'center'}}>
                               <Avatar sx={{ bgcolor: randomColor, height:'50px', width:'50px', fontSize:'15px' }}/>
                               <Typography paddingLeft='6px' paddingTop='6px' variant="h4" textAlign='left'>{member.firstname} {member.lastname[0]}</Typography>
-                              <IconButton aria-label="Delete"color="error" onClick={OnDeleteMember}>
+                              <IconButton aria-label="Delete"color="error" onClick={(e) => OnDeleteMember({member:member})}>
                                 <ClearIcon sx={{ fontSize: "30px" }} />
                               </IconButton> 
                             </CardContent>       

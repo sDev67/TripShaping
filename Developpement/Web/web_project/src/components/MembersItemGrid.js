@@ -1,7 +1,7 @@
-import { Stack, Box, Divider, Chip,Avatar, Typography,IconButton } from "@mui/material";
+import { Grid,Card, Box,Avatar, Typography,IconButton, CardContent } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
-import AddIcon from '@mui/icons-material/Add';
-const MembersItemGrid = ({members, canBeDelete=true, OnDeleteMember, flexStyle, justifyStyle, canBeSelected=false, OnAddMember,canBeFiltered=false, filterCriteria=''}) =>
+
+const MembersItemGrid = ({members, OnDeleteMember}) =>
 {
     function randomColor() {
         let hex = Math.floor(Math.random() * 0xFFFFFF);
@@ -11,84 +11,31 @@ const MembersItemGrid = ({members, canBeDelete=true, OnDeleteMember, flexStyle, 
       }
 
     return (
-        <>
-          
-            <Box
-                textAlign="left"
-                sx={{
-                  padding:1,
-                  alignContent:'left',
-                  display:'flex',
-                  flexDirection:flexStyle,
-                  justifyContent:justifyStyle,
-                  marginTop:'10px'
-
-                }}>  
+        <>       
+      <Grid style={{ overflow: "auto",height: "100%", }}>
+            <Grid item xs={'auto'} container textAlign="left" sx={{ padding:1,display:'flex',flexDirection:'row',justifyContent:'flex-start'}}>  
                 {
-                  members.map((member) => 
-                  (
-                    <>
-                      {
-                        canBeFiltered && filterCriteria !== '' ? 
-                          member.firstname === filterCriteria || member.lastname === filterCriteria ?
-
-                            <Stack key={member.toString()} direction="row" spacing={2} alignItems='center' marginRight={5} marginBottom={1}>
+                    members.map((member) => 
+                    (
+                      <>  
+                        <Card key={member.toString()} direction="row" alignItems='flex-start' sx={{display:'flex'}} marginRight={5} marginBottom={1}>
+                          <Box sx={{display:'flex', flexDirection:'row',justifyContent:'space-between'}}>
+                            <CardContent sx={{ display:'flex', flexDirection:'row', alignContent:'center'}}>
                               <Avatar sx={{ bgcolor: randomColor, height:'50px', width:'50px', fontSize:'15px' }}/>
-                              <Typography variant="h4" textAlign='left'>{member.firstname} {member.lastname[0]}</Typography>
-                              {canBeDelete ? 
-                                <IconButton
-                                aria-label="Delete"
-                                color="error"                  
-                                onClick={OnDeleteMember}>
-
-                                  <ClearIcon sx={{ fontSize: "30px" }} />
-
-                                </IconButton> : "" 
-                              }
-                              {
-                                canBeSelected ?
-                                  <IconButton
-                                  aria-label="Add"
-                                  color="secondary"                  
-                                  onClick={OnAddMember}
-                                  >
-                                    <AddIcon sx={{ fontSize: "30px" }} />
-                                  </IconButton> : ""
-                              }
-                          </Stack>
-                          : ""
-                        :        
-                          <Stack key={member.toString()} direction="row" spacing={2} alignItems='center' marginRight={5} marginBottom={1}>
-                            <Avatar sx={{ bgcolor: randomColor, height:'50px', width:'50px', fontSize:'15px' }}/>
-                            <Typography variant="h4" textAlign='left'>{member.firstname} {member.lastname[0]}</Typography>
-                            {canBeDelete ? 
-                              <IconButton
-                              aria-label="Delete"
-                              color="error"                  
-                              onClick={OnDeleteMember}
-                              >
+                              <Typography paddingLeft='6px' paddingTop='6px' variant="h4" textAlign='left'>{member.firstname} {member.lastname[0]}</Typography>
+                              <IconButton aria-label="Delete"color="error" onClick={OnDeleteMember}>
                                 <ClearIcon sx={{ fontSize: "30px" }} />
-                              </IconButton> : "" 
-                            }
-                            {
-                              canBeSelected ?
-                                <IconButton
-                                aria-label="Add"
-                                color="secondary"                  
-                                onClick={OnAddMember}
-                                >
-                                  <AddIcon sx={{ fontSize: "30px" }} />
-                                </IconButton> : ""
-                            }
-                        </Stack>
-                     }
-                  </>
-                ))
-              }
-           
-              
-            </Box>
-          
+                              </IconButton> 
+                            </CardContent>       
+                          </Box>             
+                        </Card>                                   
+                      </>
+                    )
+                  )
+                }             
+            </Grid>     
+          </Grid>
+            
         </>
       );
 }

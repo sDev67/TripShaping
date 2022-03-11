@@ -1,10 +1,11 @@
-import { Divider, Stack } from "@mui/material";
+import { Divider, Stack, Grid, Dialog } from "@mui/material";
 import TextField from '@mui/material/TextField';
-import MembersItemGrid from "./MembersItemGrid";
 import {useState} from "react";
+import MemberAllItemsGrid from './MemberAllItemsGrid';
+import Button from '@mui/material/Button';
+import MemberForm from "./MemberForm";
 
-
-const MemberList = ({onSelectMember, allMembers, onDeleteMember}) => 
+const MemberList = ({OnAddMember, allMembers, HandleClickAddFictifMember, statusAddFictifMember=false, setAddFictifMember}) => 
 {
     function randomColor() {
         let hex = Math.floor(Math.random() * 0xFFFFFF);
@@ -15,35 +16,28 @@ const MemberList = ({onSelectMember, allMembers, onDeleteMember}) =>
 
       const [filterCriteria, setFilterCriteria] = useState('');
 
-      const handleCriteriaChange = (crtieria) =>{
-          console.log(crtieria);
-          setFilterCriteria(crtieria);
+      const handleCriteriaChange = (critieria) =>{
+          console.log(critieria);
+          setFilterCriteria(critieria);
       }
     return(
         <>
-            <Stack heigth='100%'>
-                <TextField onChange={(e) => handleCriteriaChange(e.target.value)} sx={{width:'80%'}} id="outlined-basic" label="Member Name" variant="outlined" />
-
-                <Stack  marginTop={2} height="30%" direction='column' justifyContent='flex-start'>
-
+            <Stack height='100%'>
+                <Stack direction='row' justifyContent='flex-start'>
+                    <TextField onChange={(e) => handleCriteriaChange(e.target.value)} sx={{width:'40%', paddingRight:'20px'}} id="outlined-basic" label="Member Name" variant="outlined" />
+                    <Button onClick={(e) => HandleClickAddFictifMember()} sx={{width:'40%'}} variant="contained">Ajouter un membre non inscrit</Button>
+                </Stack>  
+                <Stack  marginTop={2}  direction='column' justifyContent='flex-start' height='85%'>
                     <Divider sx={{borderStyle:'solid',background:'black', borderBottomWidth: 2}}/>
-
-                        <Stack style={{overflow: "auto", height: "100%", }}>
-                            <MembersItemGrid canBeDelete={false} onDeleteMember={onDeleteMember}
-                             members={allMembers} canBeSelected={true}
-                            flexStyle='column' justifyStyle='flex-start'
-                            OnAddMember={onSelectMember}
-                            filterCriteria={filterCriteria}
-                            canBeFiltered={true}/>
-                        </Stack>
-                       
-
+                        <MemberAllItemsGrid allMembers={allMembers} OnAddMember={OnAddMember} critereFilteria={filterCriteria}/>
                     <Divider sx={{borderStyle:'solid',background:'black', borderBottomWidth: 2}}/>
-
                 </Stack>
-                
-
+                <Dialog open={statusAddFictifMember} onClose={(e) => setAddFictifMember(false)}>
+                    <MemberForm OnAddMember={OnAddMember} />
+                </Dialog>
             </Stack>
+            
+          
         </>
     )
 }

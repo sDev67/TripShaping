@@ -16,7 +16,7 @@ const TasksItemGrid = ({ tasks, OnRemoveLabelToTask, OnSelectTask }) => {
   return (
     <>
       <Grid
-      marginTop={0}
+        marginTop={0}
         paddingX={2}
         paddingBottom={2}
         container

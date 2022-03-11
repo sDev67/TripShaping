@@ -31,10 +31,10 @@ const MemberForm = ({OnAddMember}) =>
 
     return(
         <>
-            <Stack justifyContent='space-between' height='65%'>
+            <Stack alignItems='center' justifyContent='space-around' height='300px' width='300px'>
                 <TextField onChange={(e) => setFirstName(e.target.value)} sx={{width:'80%'}} id="outlined-basic" label="Member Firstname" variant="outlined" />
                 <TextField onChange={(e) => setLastName(e.target.value)} sx={{width:'80%'}} id="outlined-basic" label="Member Lastname" variant="outlined" />
-                <Button sx={{width:'25%'}} onClick={(e) => HandleClick()} variant="contained">Add member to trip</Button>
+                <Button  onClick={(e) => HandleClick()} variant="contained">Add member to trip</Button>
             </Stack>
             
             <Dialog open={errorDialogOpen} onClose={(e) => setErrorDialogOpen(false)}>

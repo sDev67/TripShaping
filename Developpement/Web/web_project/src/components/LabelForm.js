@@ -21,7 +21,7 @@ const LabelForm = ( {addLabel} ) => {
         alignItems="flex-start"
         style={{ height: "100%", margin: "20px" }}
       >
-        <Typography variant="h3" marginY={2}>
+        <Typography variant="h3" marginBottom={2}>
           Créer un label
         </Typography>
         <Stack direction="row" width="100%" spacing={1}>

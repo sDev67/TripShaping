@@ -6,7 +6,7 @@ import {
   List,
   ListItemButton,
   Box,
-  Divider,
+  Tooltip,
   Chip,
   Grid,
   Typography,
@@ -23,14 +23,14 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
-
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import { useEffect, useState } from "react";
 
 const TasksItemGrid = ({ tasks, OnRemoveLabelToTask, OnSelectTask }) => {
   return (
     <>
       <Grid
-      marginTop={0}
+        marginTop={0}
         paddingX={2}
         paddingBottom={2}
         container
@@ -39,46 +39,50 @@ const TasksItemGrid = ({ tasks, OnRemoveLabelToTask, OnSelectTask }) => {
         spacing={2}
         style={{
           overflow: "auto",
-          height: "100%",
         }}
       >
-        {tasks.map((task) => (
-          <Grid item xs={4}>
-          <Card key={task.toString()}>
-              <CardHeader
-                action={
-                  <IconButton>
-                    <HighlightOffIcon sx={{ fontSize: "30px" }} />
-                  </IconButton>
-                }
-                title={
-                <>{task.title}
-                <IconButton>
-                  <EditRoundedIcon  />
-                </IconButton>
-                </>
-                  
-                }
-                subheader={task.executionDate}
-              />
-              <CardContent>
-                {task.labels.map((label) => (
-                  <>
-                    <Chip
-                      key={label.toString()}
-                      style={{ margin: 5}}
-                      size="medium"
-                      onDelete={OnRemoveLabelToTask}
-                      onClick={OnRemoveLabelToTask}
-                      color="primary"
-                      label={label.title}
-                    />
-                  </>
-                ))}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+        {tasks.map(
+          (task, index) =>
+            task.labels.filter((e) => e.title === "Benjamin").length > 0 && (
+              <Grid key={index} item xs={4}>
+                <Card>
+                  <CardHeader
+                    action={
+                      <IconButton color="error">
+                        <HighlightOffIcon sx={{ fontSize: "30px" }} />
+                      </IconButton>
+                    }
+                    title={
+                      <>
+                        {task.title}
+                        <Tooltip title="Editer" placement="right" arrow>
+                          <IconButton>
+                            <EditRoundedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    }
+                    subheader={task.executionDate}
+                  />
+                  <CardContent>
+                    {task.labels.map((label) => (
+                      <>
+                        <Chip
+                          key={label.toString()}
+                          style={{ margin: 5 }}
+                          size="medium"
+                          onDelete={OnRemoveLabelToTask}
+                          onClick={OnRemoveLabelToTask}
+                          color="primary"
+                          label={label.title}
+                        />
+                      </>
+                    ))}
+                  </CardContent>
+                </Card>
+              </Grid>
+            )
+        )}
       </Grid>
     </>
   );

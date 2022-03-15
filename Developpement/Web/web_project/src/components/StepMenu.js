@@ -183,7 +183,9 @@ const StepMenu = ({
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <div style={{ margin: 10, marginTop: 0 }}>
-          <DialogTitle>Choississez un fichier</DialogTitle>
+        <Typography variant="h3" marginY={2}>
+          Ajouter un fichier
+        </Typography>
           <FileUploader
             handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
           />

@@ -2,7 +2,7 @@ import "../Styles/ButtonStyles.css";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Stack, Divider, Typography, Dialog } from "@mui/material";
+import { Stack, Divider, Typography, Dialog, Chip, Box } from "@mui/material";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import { useState } from "react";
 import "../App.css";
@@ -11,6 +11,7 @@ import LabelsItemGrid from "../components/LabelsItemGrid";
 import IconButton from "@mui/material/IconButton";
 import TaskForm from "../components/TaskForm";
 import LabelForm from "../components/LabelForm";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const TodoList = () => {
   const [currentLabel, setCurrentLabel] = useState();
@@ -52,6 +53,42 @@ const TodoList = () => {
         },
         {
           title: "Vivien",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
+        },
+      ],
+    },
+    {
+      title: "Faire les papiers",
+      executionDate: "2022-05-07",
+      labels: [
+        {
+          title: "Benjamin",
         },
       ],
     },
@@ -194,39 +231,49 @@ const TodoList = () => {
       ],
     },
   ]);
-
   const [allLabels, setAllLabels] = useState([
     {
+      id:1,
       title: "Benjamin",
     },
     {
+      id:2,
       title: "Vivien",
     },
     {
+      id:3,
       title: "Serkan",
     },
     {
+      id:4,
       title: "Baptiste",
     },
     {
+      id:5,
       title: "Enzo",
     },
     {
+      id:6,
       title: "Philippe",
     },
     {
+      id:7,
       title: "Nourriture",
     },
     {
+      id:8,
       title: "Réservation",
     },
     {
+      id:9,
       title: "Administration",
     },
     {
+      id:10,
       title: "Passeport",
     },
     {
+      id:11,
       title: "Courses",
     },
   ]);
@@ -238,7 +285,7 @@ const TodoList = () => {
     setAllLabels(...allLabels, label);
   };
 
-  const addLabel = (title) =>{
+  const addLabel = (title) => {
     // console.log("AJouter un label");
     // setAllLabels((oldArray) => [...oldArray,
     // {
@@ -292,6 +339,38 @@ const TodoList = () => {
               <AddCircleIcon sx={{ fontSize: "60px" }} />
             </IconButton>
           </Stack>
+          <Stack
+            marginLeft="5%"
+            marginY={2}
+            width="90%"
+            direction="row"
+            alignItems="center"
+            justifyContent="flex-start"
+          >
+            <Typography variant="h5" marginLeft={5} marginRight={10}>
+              Filtrer
+            </Typography>
+            <Stack direction="row">
+              <Chip
+                style={{ margin: 5 }}
+                size="medium"
+                color="primary"
+                label="Benjamin"
+              />
+              <Chip
+                style={{ margin: 5 }}
+                size="medium"
+                color="primary"
+                label="Benjamin"
+              />
+              <Chip
+                style={{ margin: 5 }}
+                size="medium"
+                color="primary"
+                label="Benjamin"
+              />
+            </Stack>
+          </Stack>
           <Divider></Divider>
           <TasksItemGrid
             tasks={allTasks}
@@ -318,12 +397,40 @@ const TodoList = () => {
             </IconButton>
           </Stack>
           <Divider></Divider>
-          <LabelsItemGrid
-            labels={allLabels}
-            OnSelectLabel={setCurrentLabel}
-            OnAddLabel={OnAddLabel}
-            OnDeleteLabel={OnDeleteLabel}
-          />
+
+          <DragDropContext>
+            <Droppable droppableId="labels" direction="vertical">
+              {(provided) => (
+                <Stack direction="column" alignItems="center" spacing={1}
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  
+                  sx={{
+                    padding: 1,
+                    
+                  }}
+                >
+                  {allLabels.map((label, index) => {
+                    return (
+                      <Draggable key={`draggable-${label.id}`} draggableId={`draggable-${label.id}`} index={index}>
+                        {(provided) => (
+                          <Chip
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            size="medium"
+                            color="secondary"
+                            label={label.title}
+                          />
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </Stack>
+              )}
+            </Droppable>
+          </DragDropContext>
         </Stack>
       </Stack>
 

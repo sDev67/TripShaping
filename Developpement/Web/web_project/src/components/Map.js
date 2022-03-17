@@ -1,12 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  DirectionsService,
-  DirectionsRenderer,
-  Polyline,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker, Polyline } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import { CircularProgress, Alert, Collapse } from "@mui/material";
 import palette from "./../theme/palette";
@@ -14,6 +7,9 @@ import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
 import MapModeSwitch from "./MapModeSwitch";
 import RouteMenu from "./RouteMenu";
+import { url_prefix } from "../utils";
+import axios from "axios";
+import * as API from "../requests/TravelRequests";
 
 const containerStyle = {
   position: "relative",
@@ -26,24 +22,40 @@ const position = {
   lng: 7.7521113,
 };
 
-export const Map = ({}) => {
+export const Map = ({ }) => {
+  const idTravel = 1
   const [isEdition, setIsEdition] = useState(false);
   const [switchText, setSwitchText] = useState("Navigation");
   const [markerFilter, setMarkerFilter] = useState("all");
+  const [editionMode, setEditionMode] = useState("stepOnlyEdit");
+
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
   const [steps, setSteps] = useState([]);
   const [interestPoints, setInterestPoints] = useState([]);
+  const [routes, setRoutes] = useState([]);
 
-  const [response, setResponse] = useState(null);
+  //const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
 
-  const [editionMode, setEditionMode] = useState("stepOnlyEdit");
-
   const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const InterestPointIcon =
-    "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+  const InterestPointIcon = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+
+  useEffect(() => {
+    axios.get(`${url_prefix}/travel/1/points`)
+      .then(function (response) {
+        setInterestPoints(response.data);
+      });
+    // setInterestPoints(getPointsByTravel(idTravel))
+    // console.log(interestPoints)
+
+    axios.get(`${url_prefix}/travel/1/steps`)
+      .then(function (response) {
+        // console.log(response.data);
+        setSteps(response.data);
+      });
+  }, [])
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
@@ -244,15 +256,15 @@ export const Map = ({}) => {
 
           {(markerFilter === "stepOnlyNav" ||
             markerFilter === "stepOnlyEdit" ||
-            markerFilter === "all") &&
+            markerFilter === "all") && steps &&
             steps.map((step, index) => (
               <Marker
                 key={index}
-                position={{ lat: step.location.lat, lng: step.location.lng }}
+                position={{ lat: step.latitude, lng: step.longitude }}
                 draggable={!error && isEdition}
                 clickable={true}
                 onClick={() => {
-                  setSelectedMarker(steps[index]);
+                  setSelectedMarker({ marker: steps[index], type: "Step" });
                   setSelectedRoute(null);
                 }}
                 onRightClick={() => deleteMarker(step)}
@@ -263,18 +275,19 @@ export const Map = ({}) => {
 
           {(markerFilter === "interestPointOnlyNav" ||
             markerFilter === "interestPointOnlyEdit" ||
-            markerFilter === "all") &&
+            markerFilter === "all") && interestPoints &&
             interestPoints.map((interestPoint, index) => (
               <Marker
                 key={index}
+                name="Point"
                 position={{
-                  lat: interestPoint.location.lat,
-                  lng: interestPoint.location.lng,
+                  lat: interestPoint.latitude,
+                  lng: interestPoint.longitude,
                 }}
                 draggable={!error && isEdition}
                 clickable={true}
                 onClick={() => {
-                  setSelectedMarker(interestPoints[index]);
+                  setSelectedMarker({ marker: interestPoints[index], type: "Point" });
                   setSelectedRoute(null);
                 }}
                 onRightClick={() => deleteMarker(interestPoint)}
@@ -299,12 +312,12 @@ export const Map = ({}) => {
                         }}
                         path={[
                           {
-                            lat: steps[index - 1].location.lat,
-                            lng: steps[index - 1].location.lng,
+                            lat: steps[index - 1].latitude,
+                            lng: steps[index - 1].longitude,
                           },
                           {
-                            lat: step.location.lat,
-                            lng: step.location.lng,
+                            lat: step.latitude,
+                            lng: step.longitude,
                           },
                         ]}
                         options={{
@@ -320,31 +333,33 @@ export const Map = ({}) => {
         </GoogleMap>
       </LoadScript>
       {selectedMarker &&
-        (selectedMarker.location.name === "PointInteret" ? (
+        (selectedMarker.type === "Point" ? (
           <InterestPointMenu
             interestPoints={interestPoints}
             setInterestPoints={setInterestPoints}
-            selectedMarker={selectedMarker}
+            selectedMarker={selectedMarker.marker}
             setSelectedMarker={setSelectedMarker}
             deleteMarker={deleteMarker}
           ></InterestPointMenu>
         ) : (
-          selectedMarker.location.name === "Etape" && (
+          selectedMarker.type === "Step" && (
             <StepMenu
               steps={steps}
               setSteps={setSteps}
-              selectedMarker={selectedMarker}
+              selectedMarker={selectedMarker.marker}
               setSelectedMarker={setSelectedMarker}
               deleteMarker={deleteMarker}
             ></StepMenu>
           )
         ))}
-      {selectedRoute && (
-        <RouteMenu
-          selectedRoute={selectedRoute}
-          setSelectedRoute={setSelectedRoute}
-        ></RouteMenu>
-      )}
+      {
+        selectedRoute && (
+          <RouteMenu
+            selectedRoute={selectedRoute}
+            setSelectedRoute={setSelectedRoute}
+          ></RouteMenu>
+        )
+      }
 
       <Collapse
         in={error}

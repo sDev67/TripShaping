@@ -42,7 +42,7 @@ const StepMenu = ({
   const [lengthOfStay, setLengthOfStay] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  let handleChangeTitle = (e) => {};
+  let handleChangeTitle = (e) => { };
 
   const updateProperties = (marker) => (e) => {
     let newStep = [...steps];
@@ -83,38 +83,38 @@ const StepMenu = ({
           <TextField
             fullWidth
             label="Nom"
-            value={selectedMarker.location.title}
+            value={selectedMarker.title}
             onChange={handleChangeTitle}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
-                shrink: true,
-              }}
+              shrink: true,
+            }}
           />
           <TextField
             fullWidth
             select
             label="Catégorie"
-            value={selectedMarker.location.categorie}
+            value={selectedMarker.category}
             onChange={(e) => setCategorie(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
-                shrink: true,
-              }}
+              shrink: true,
+            }}
           >
             <MenuItem>Musées</MenuItem>
             <MenuItem>Parcs</MenuItem>
           </TextField>
           <TextField
-              fullWidth
-              label="Durée du séjour"
-              type="number"
-              value={selectedMarker.location.title}
-              onChange={handleChangeTitle}
-              style={{ marginBottom: 25 }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+            fullWidth
+            label="Durée du séjour"
+            type="number"
+            value={selectedMarker.duration}
+            onChange={handleChangeTitle}
+            style={{ marginBottom: 25 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
           <Stack
             style={{ marginBottom: 25 }}
             direction="row"
@@ -125,14 +125,15 @@ const StepMenu = ({
               fullWidth
               select
               label="Documents"
-              value={selectedMarker.location.files}
+              value=""
+              //value={selectedMarker.location.files}
               InputLabelProps={{
                 shrink: true,
               }}
             >
-              {files.map((file, index) => (
+              {/* {files.map((file, index) => (
                 <MenuItem key={index}>{file.name}</MenuItem>
-              ))}
+              ))} */}
             </TextField>
 
             <Button
@@ -152,12 +153,12 @@ const StepMenu = ({
             label="Description"
             multiline
             rows={10}
-            value={selectedMarker.location.description}
+            value={selectedMarker.description}
             onChange={(e) => setDescription(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
-                shrink: true,
-              }}
+              shrink: true,
+            }}
           />
 
           <Stack direction="row" justifyContent="space-between">

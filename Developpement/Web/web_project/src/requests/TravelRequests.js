@@ -27,10 +27,10 @@ const TravelRequests = {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/point`, {
             method: 'POST',
-            // headers: {
-            //     'Content-Type': 'application/json',
-            //     Authorization: 'Bearer ' + token
-            // },
+            headers: {
+                'Content-Type': 'application/json',
+                //  Authorization: 'Bearer ' + token
+            },
             body: JSON.stringify({ title, latitude, longitude, description, category, TravelId })
         })
             .then(checkStatus)
@@ -41,10 +41,10 @@ const TravelRequests = {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/step`, {
             method: 'POST',
-            // headers: {
-            //     'Content-Type': 'application/json',
-            //     Authorization: 'Bearer ' + token
-            // },
+            headers: {
+                'Content-Type': 'application/json',
+                //Authorization: 'Bearer ' + token
+            },
             body: JSON.stringify({ title, latitude, longitude, description, category, duration, TravelId })
         })
             .then(checkStatus)

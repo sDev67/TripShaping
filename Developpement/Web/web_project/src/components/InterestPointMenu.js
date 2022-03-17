@@ -42,7 +42,7 @@ const InterestPointMenu = ({
   const [lengthOfStay, setLengthOfStay] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  let handleChangeTitle = (e) => { };
+  let handleChangeTitle = (e) => {};
 
   const updateProperties = (marker) => (e) => {
     let newInterestPoint = [...interestPoints];
@@ -103,6 +103,40 @@ const InterestPointMenu = ({
             <MenuItem>Musées</MenuItem>
             <MenuItem>Parcs</MenuItem>
           </TextField>
+          <Stack
+            style={{ marginBottom: 25 }}
+            direction="row"
+            justifyContent="space-between"
+            spacing={2}
+          >
+            <TextField
+              fullWidth
+              select
+              label="Etape associée"
+              value={selectedMarker.category}
+              onChange={(e) => setCategorie(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            >
+              <MenuItem>Etape 1</MenuItem>
+              <MenuItem>Etape 2</MenuItem>
+            </TextField>
+            <TextField
+              fullWidth
+              select
+              label="Jour"
+              value={selectedMarker.category}
+              onChange={(e) => setCategorie(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            >
+              <MenuItem>1</MenuItem>
+              <MenuItem>2</MenuItem>
+            </TextField>
+          </Stack>
+          
           <Stack
             style={{ marginBottom: 25 }}
             direction="row"

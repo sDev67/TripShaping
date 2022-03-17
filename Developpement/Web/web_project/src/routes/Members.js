@@ -90,7 +90,7 @@ const Members = () => {
     return(
         <>
             <Stack height="100%" width="100%" direction="column">
-                <Typography color="primary" variant="h2"textAlign="center" marginTop={4}> Members </Typography>
+                <Typography color="primary" variant="h2"textAlign="center" marginTop={4}> Membres </Typography>
                 <Stack width="90%" marginLeft="5%" direction="column"alignItems="left" justifyContent="space-between" height='30%'>
                     <Typography variant="h3">Currents members</Typography>
                     <Divider></Divider>    

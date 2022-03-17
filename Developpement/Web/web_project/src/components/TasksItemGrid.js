@@ -64,8 +64,9 @@ const TasksItemGrid = ({ tasks, OnRemoveLabelToTask, OnSelectTask }) => {
                     {task.labels.map((label) => (
                       <>
                         <Chip
+                          
                           key={label.toString()}
-                          style={{ margin: 5 }}
+                          
                           size="medium"
                           onDelete={OnRemoveLabelToTask}
                           onClick={OnRemoveLabelToTask}

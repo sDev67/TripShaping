@@ -29,6 +29,15 @@ const Maps = ({ messages, setMessages, setStartCamera }) => {
     const [distance, setDistance] = useState(null);
     const [checked, setChecked] = useState("0");
 
+    // const [date, setDate] = useState(new Date());
+
+    // useEffect(() => {
+    //     const id = setInterval(() => { setDate(new Date()) }, 300000);
+    //     return () => {
+    //         clearInterval(id);
+    //     }
+    // }, []);
+
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -37,8 +46,10 @@ const Maps = ({ messages, setMessages, setStartCamera }) => {
                 return;
             }
 
+
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
+            console.log(location);
         })();
     }, []);
 

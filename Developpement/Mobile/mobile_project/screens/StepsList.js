@@ -1,0 +1,72 @@
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import Constants from 'expo-constants';
+import Collapsible from 'react-native-collapsible';
+
+export default StepsList = ({ steps }) => {
+
+    const [collapsed, setCollapsed] = useState([true])
+
+    useEffect(() => {
+        steps.map((step, idx) => (
+            setCollapsed([...collapsed, true])
+        ))
+    }, [steps]);
+
+    const toggleExpanded = (idx) => {
+
+        const newTab = [...collapsed];
+        newTab[idx] = !newTab[idx];
+        setCollapsed(newTab);
+        console.log(collapsed)
+    };
+
+    return (
+        <View>
+            {steps.map((step, idx) => (
+                <ScrollView contentContainerStyle={{ paddingTop: 0 }} key={idx}>
+                    <TouchableOpacity onPress={() => toggleExpanded(idx)}>
+                        <View style={styles.header}>
+                            <Text style={styles.headerText}>{step.name}</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Collapsible collapsed={collapsed[idx]} align="center">
+                        <View style={styles.content}>
+                            <Text>
+                                Description
+                            </Text>
+                        </View>
+                    </Collapsible>
+                </ScrollView>
+            ))}
+        </View>
+    );
+}
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#F5FCFF',
+        paddingTop: Constants.statusBarHeight,
+    },
+    title: {
+        textAlign: 'center',
+        fontSize: 22,
+        fontWeight: '300',
+        marginBottom: 20,
+    },
+    header: {
+        backgroundColor: '#F5FCFF',
+        padding: 10,
+    },
+    headerText: {
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    content: {
+        padding: 20,
+        backgroundColor: '#fff',
+    }
+});

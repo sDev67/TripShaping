@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
@@ -28,20 +30,25 @@ import Informations from "./routes/Informations";
 import Members from "./routes/Members";
 import TripSelection from "./routes/TripSelection";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/mytrips" element={<TripSelection />}/>
-          <Route path="/trip" element={<NavigationBar />}>
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/mytrips" element={<TripSelection />} />
+            <Route path="/trip" element={<NavigationBar />}>
               <Route path="map" element={<Itinerary />} />
               <Route path="todolist" element={<TodoList />} />
               <Route path="informations" element={<Informations />} />
               <Route path="members" element={<Members />} />
             </Route>
-        </Routes>
+          </Routes>
+          {/* <ReactQueryDevtools /> */}
+        </QueryClientProvider>
       </BrowserRouter>
     </>
   );

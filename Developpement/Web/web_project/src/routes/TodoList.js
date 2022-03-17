@@ -377,6 +377,7 @@ const TodoList = () => {
             OnRemoveLabelToTask={OnRemoveLabelToTask}
             OnSelectTask={OnSelectTask}
           />
+       
         </Stack>
         <Stack direction="column" width="25%">
           <Stack

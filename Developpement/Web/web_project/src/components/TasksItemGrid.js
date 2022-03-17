@@ -1,6 +1,5 @@
 import "../Styles/ButtonStyles.css";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {
   Stack,
   List,
@@ -9,14 +8,11 @@ import {
   Tooltip,
   Chip,
   Grid,
-  Typography,
 } from "@mui/material";
-import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 import "../App.css";
 import IconButton from "@mui/material/IconButton";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
@@ -43,7 +39,7 @@ const TasksItemGrid = ({ tasks, OnRemoveLabelToTask, OnSelectTask }) => {
       >
         {tasks.map(
           (task, index) =>
-            task.labels.filter((e) => e.title === "Benjamin").length > 0 && (
+            task.labels.filter((e) => e.title === "Serkan").length > 0 && (
               <Grid key={index} item xs={4}>
                 <Card>
                   <CardHeader

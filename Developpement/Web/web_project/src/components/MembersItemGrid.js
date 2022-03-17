@@ -8,7 +8,6 @@ import {
   Chip,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import CustomChip from "./CustomChip";
 
 const MembersItemGrid = ({ members, OnDeleteMember }) => {
   function randomColor() {
@@ -35,8 +34,7 @@ const MembersItemGrid = ({ members, OnDeleteMember }) => {
         >
           {members.map((member) => (
             <>
-                <CustomChip key={member.toString()}
-                  size={12}
+                <Chip key={member.toString()}
                   avatar={<Avatar sx={{ bgcolor: randomColor }} />}
                   variant="outlined"
                   color="default"

@@ -21,19 +21,31 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import TravelRequests from "../requests/TravelRequests";
 
 const Informations = () => {
 
+  const queryClient = useQueryClient();
   const [value, setValue] = React.useState("");
+  const idtravel = 1;
 
-  useEffect(() => 
-  {
-    // load
-  },[])
+  const { isLoading: isLoading, isError: isError, error: error, data: travelDatas } = useQuery(
+    ['getInfos', idTravel], () => TravelRequests.getTravel(idTravel)
+  );
 
-  const handleChange = (event) => {
-    // API
+  const handleChange = () => {
+    
+    updateInformation.mutate();
   };
+
+  const updateInformation = useMutation(TravelRequests.updateTravel,{
+    onSuccess: infos => queryClient.setQueryData(
+      ['getInfos', idTravel],
+      setValue(infos.infos)
+      )
+    }
+  )
 
   return (
     <>

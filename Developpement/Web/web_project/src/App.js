@@ -27,6 +27,7 @@ import NavigationBar from "./components/NavigationBar";
 import Informations from "./routes/Informations";
 import Members from "./routes/Members";
 import TripSelection from "./routes/TripSelection";
+import Steps from "./routes/Steps";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/mytrips" element={<TripSelection />}/>
           <Route path="/trip" element={<NavigationBar />}>
               <Route path="map" element={<Itinerary />} />
+              <Route path="steps" element={<Steps />} />
               <Route path="todolist" element={<TodoList />} />
               <Route path="informations" element={<Informations />} />
               <Route path="members" element={<Members />} />

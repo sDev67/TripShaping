@@ -21,6 +21,7 @@ import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
+import DirectionsWalkRoundedIcon from '@mui/icons-material/DirectionsWalkRounded';
 
 const NavigationBar = () => {
   const [value, setValue] = React.useState(0);
@@ -90,6 +91,14 @@ const NavigationBar = () => {
               value="/trip/map"
               component={Link}
               to="/trip/map"
+            />
+            <Tab
+              icon={<DirectionsWalkRoundedIcon />}
+              iconPosition="start"
+              label="Etapes"
+              value="/trip/steps"
+              component={Link}
+              to="/trip/steps"
             />
             <Tab
               icon={<AssignmentRoundedIcon />}

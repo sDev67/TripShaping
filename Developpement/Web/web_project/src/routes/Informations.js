@@ -28,7 +28,7 @@ const Informations = () => {
 
   const queryClient = useQueryClient();
   const [value, setValue] = React.useState("");
-  const idtravel = 1;
+  const idTravel = 1;
 
   const { isLoading: isLoading, isError: isError, error: error, data: travelDatas } = useQuery(
     ['getInfos', idTravel], () => TravelRequests.getTravel(idTravel)
@@ -36,8 +36,21 @@ const Informations = () => {
 
   const handleChange = () => {
     
-    updateInformation.mutate();
+    var newTravel = 
+    {
+      TravelId:idTravel,
+      name:travelDatas.name,
+      picture:travelDatas.picture,
+      activated:travelDatas.activated,
+      budget:travelDatas.budget,
+      infos:value,
+      finished:travelDatas.finished,
+    }
+
+    updateInformation.mutate(newTravel);
   };
+
+  
 
   const updateInformation = useMutation(TravelRequests.updateTravel,{
     onSuccess: infos => queryClient.setQueryData(
@@ -46,6 +59,7 @@ const Informations = () => {
       )
     }
   )
+
 
   return (
     <>
@@ -58,19 +72,40 @@ const Informations = () => {
         >
           Informations
         </Typography>
-        <TextField
-          style={{margin:"30px"}}
-          label="Informations"
-          placeholder="Ajouter des informations sur le voyage"
-          multiline
-          rows={30}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          InputLabelProps={{
+        {
+          isLoading ? 
+          <Typography
+            color="error"
+            variant="h5"
+            textAlign="center"
+            marginTop={4}>
+              Chargement...
+          </Typography>
+
+        :
+          
+          !isError ?
+          <>
+            <TextField
+            style={{margin:"30px"}}
+            label="Informations"
+            placeholder="Ajouter des informations sur le voyage"
+            multiline
+            rows={30}
+            value={travelDatas.infos}
+            onChange={(e) => setValue(e.target.value)}
+            InputLabelProps={{
             shrink: true,
-          }}
-        />
-   <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>
+            }}
+          />
+          <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>
+          </>
+          
+        :
+        console.log({error})
+      }
+        
+
       </Stack>
     </>
   );

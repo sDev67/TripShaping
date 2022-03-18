@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Radio,
   RadioGroup,
@@ -26,8 +26,13 @@ const Informations = () => {
 
   const [value, setValue] = React.useState("");
 
+  useEffect(() => 
+  {
+    // load
+  },[])
+
   const handleChange = (event) => {
-    setValue(event.target.value);
+    // API
   };
 
   return (
@@ -48,11 +53,12 @@ const Informations = () => {
           multiline
           rows={30}
           value={value}
-          onChange={handleChange}
+          onChange={(e) => setValue(e.target.value)}
           InputLabelProps={{
             shrink: true,
           }}
         />
+   <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>
       </Stack>
     </>
   );

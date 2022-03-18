@@ -24,6 +24,8 @@ import {
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
 
+import Editor from '../components/RichTextEditor'
+
 const Informations = () => {
 
   const queryClient = useQueryClient();
@@ -86,7 +88,8 @@ const Informations = () => {
           
           !isError ?
           <>
-            <TextField
+
+            {/*<TextField
             style={{margin:"30px"}}
             label="Informations"
             placeholder="Ajouter des informations sur le voyage"
@@ -97,8 +100,9 @@ const Informations = () => {
             InputLabelProps={{
             shrink: true,
             }}
-          />
-          <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>
+          />*/}
+          <Editor/>
+          <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>s
           </>
           
         :

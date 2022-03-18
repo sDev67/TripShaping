@@ -60,7 +60,7 @@ const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErr
                         <PointModal modalVisible={modalPointVisible} setModalVisible={setModalPointVisible} point={selected} messages={messages} setMessages={setMessages} setStartCamera={setStartCamera} />
                         <StepModal modalVisible={modalStepVisible} setModalVisible={setModalStepVisible} point={selected} setStartCamera={setStartCamera} messages={messages} setMessages={setMessages} />
                         <MapView style={styles.map} scrollEnabled={true} provider={PROVIDER_GOOGLE} showsUserLocation={true} initialRegion={{ latitude: location.coords.latitude, longitude: location.coords.longitude, longitudeDelta: 0.125, latitudeDelta: 0.125 }}>
-                            {(checked === "0" || checked === "1") && isLoadingS ? <Text>Chargement...</Text> : isErrorS ? <Text style={{ color: 'red' }}>{errorS.message}</Text> :
+                            {(checked === "0" || checked === "1") && (isLoadingS ? <Text>Chargement...</Text> : isErrorS ? <Text style={{ color: 'red' }}>{errorS.message}</Text> :
                                 <>
                                     {steps.map((step, index) => (
                                         <Marker key={index} coordinate={{ latitude: step.latitude, longitude: step.longitude }} onPress={() => { setModalStepVisible(true); setSelected(step) }}>
@@ -83,10 +83,6 @@ const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErr
                                                             { latitude: step.latitude, longitude: step.longitude }
                                                         ]}
                                                         onPress={() => showModal()}
-                                                        onReady={result => {
-                                                            setDistance(result.distance);
-                                                            setDuration(result.duration);
-                                                        }}
                                                     />
                                                 )}
                                             </>
@@ -105,13 +101,13 @@ const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErr
                                             setDuration(result.duration);
                                         }}
                                     /> */}
-                                </>
+                                </>)
                             }
-                            {(checked === "0" || checked === "2") && isLoadingP ? <Text>Chargement...</Text> : isErrorP ? <Text style={{ color: 'red' }}>{errorP.message}</Text> :
+                            {(checked === "0" || checked === "2") && (isLoadingP ? <Text>Chargement...</Text> : isErrorP ? <Text style={{ color: 'red' }}>{errorP.message}</Text> :
                                 points.map((point, index) => (
                                     <Marker key={index} pinColor='blue' coordinate={{ latitude: point.latitude, longitude: point.longitude }} onPress={() => { setModalPointVisible(true); setSelected(point) }}>
                                     </Marker>)
-                                )
+                                ))
                             }
                         </MapView>
                         <View style={styles.window}>

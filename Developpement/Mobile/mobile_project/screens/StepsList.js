@@ -9,14 +9,16 @@ export default StepsList = ({ steps }) => {
 
     useEffect(() => {
         const bool = true;
+        let tabCollapse = collapsed;
         steps.map((step, idx) => {
-            setCollapsed([...collapsed, bool])
-            console.log("map");
+            if (idx !== (steps.length - 1)) {
+                tabCollapse = [...tabCollapse, bool]
+            }
+            setCollapsed(tabCollapse)
         })
     }, []);
 
     const toggleExpanded = (idx) => {
-        console.log(collapsed);
         const newTab = [...collapsed];
         newTab[idx] = !newTab[idx];
         setCollapsed(newTab);
@@ -35,18 +37,13 @@ export default StepsList = ({ steps }) => {
                         <Collapsible collapsed={collapsed[idx]} align="center">
                             <View style={styles.content}>
                                 <Text>
-                                    Description
+                                    Durée : {step.duration}{step.duration > 1 ? " jours" : " jour"}
                                 </Text>
                             </View>
                         </Collapsible>
                     </ScrollView>
                 ))}
             </ScrollView>
-
-
-
-
-
         </View>
     );
 }

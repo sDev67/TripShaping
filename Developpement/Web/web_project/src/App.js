@@ -1,28 +1,11 @@
 import React from "react";
 import "./App.css";
-import ThemeConfig from "./theme";
-import GlobalStyles from "./theme/globalStyles";
-import { Map } from "./components/Map";
-
-import {
-  Stack,
-  Divider,
-  Tab,
-  Tabs,
-  Typography,
-  FormControlLabel,
-  Switch,
-} from "@mui/material";
 
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import MapRoundedIcon from "@mui/icons-material/MapRounded";
-import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import TodoList from "./routes/TodoList";
-
 import Home from "./routes/Home";
 import Itinerary from "./routes/Itinerary";
 import NavigationBar from "./components/NavigationBar";

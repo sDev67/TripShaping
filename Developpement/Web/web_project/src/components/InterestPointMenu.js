@@ -27,14 +27,17 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
+import { useQuery, useQueryClient, useMutation } from 'react-query';
 
 const InterestPointMenu = ({
-  deleteMarker,
+  deletePoint,
   selectedMarker,
   setSelectedMarker,
   interestPoints,
   setInterestPoints,
 }) => {
+  const queryClient = useQueryClient();
+
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("");
   const [categorie, setCategorie] = useState("");
@@ -154,7 +157,7 @@ const InterestPointMenu = ({
               variant="outlined"
               color="error"
               startIcon={<DeleteRounded />}
-              onClick={() => deleteMarker(selectedMarker)}
+              onClick={() => { deletePoint.mutate(selectedMarker.id); setSelectedMarker(null) }}
             >
               Supprimer
             </Button>

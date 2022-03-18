@@ -42,7 +42,6 @@ export const Map = ({ }) => {
   const { isLoading: isLoadingP, isError: isErrorP, error: errorP, data: interestPoints } = useQuery(
     ['getPoints', idTravel], () => TravelRequests.getPointsOfTravel(idTravel)
   );
-  //console.log(interestPoints)
 
   const [routes, setRoutes] = useState([]);
 
@@ -207,21 +206,21 @@ export const Map = ({ }) => {
     }
   };
 
-  // Fonction qui permet de supprimer des points d'étapes et des points d'interet
-  const deleteMarker = (marker) => {
-    if (!error && isEdition) {
-      if (marker.location.name === "Etape") {
-        let newStep = [...steps];
-        newStep = newStep.filter((e) => e !== marker);
-        setSteps(newStep);
-      } else if (marker.location.name === "PointInteret") {
-        let newInterestPoint = [...interestPoints];
-        newInterestPoint = newInterestPoint.filter((e) => e !== marker);
-        setInterestPoints(newInterestPoint);
-      }
-      setSelectedMarker(null);
-    }
-  };
+  //Suppression de point
+  const deletePoint = useMutation(TravelRequests.removePoint, {
+    onSuccess: (_, id) => queryClient.setQueryData(
+      ['getPoints', idTravel],
+      interestPoints => interestPoints.filter(e => e.id !== id)
+    )
+  });
+
+  //Suppression d'étape
+  const deleteStep = useMutation(TravelRequests.removeStep, {
+    onSuccess: (_, id) => queryClient.setQueryData(
+      ['getSteps', idTravel],
+      steps => steps.filter(e => e.id !== id)
+    )
+  });
 
   // Fonction qui enleve le dernier point lorsque ce dernier est placé dans un endroit qui cause pb
   const closeAlert = () => {
@@ -267,7 +266,11 @@ export const Map = ({ }) => {
                   setSelectedMarker({ marker: steps[index], type: "Step" });
                   setSelectedRoute(null);
                 }}
-                onRightClick={() => deleteMarker(step)}
+                onRightClick={() => {
+                  if (!error && isEdition) {
+                    deleteStep.mutate(step.id); setSelectedMarker(null)
+                  }
+                }}
                 onDragEnd={updateLocation(index, step)}
                 icon={stepIcon}
               ></Marker>
@@ -291,7 +294,11 @@ export const Map = ({ }) => {
                   setSelectedMarker({ marker: interestPoints[index], type: "Point" });
                   setSelectedRoute(null);
                 }}
-                onRightClick={() => deleteMarker(interestPoint)}
+                onRightClick={() => {
+                  if (!error && isEdition) {
+                    deletePoint.mutate(interestPoint.id); setSelectedMarker(null)
+                  }
+                }}
                 onDragEnd={updateLocation(index, interestPoint)}
                 icon={InterestPointIcon}
               ></Marker>
@@ -342,7 +349,7 @@ export const Map = ({ }) => {
             setInterestPoints={setInterestPoints}
             selectedMarker={selectedMarker.marker}
             setSelectedMarker={setSelectedMarker}
-            deleteMarker={deleteMarker}
+            deletePoint={deletePoint}
           ></InterestPointMenu>
         ) : (
           selectedMarker.type === "Step" && isLoadingS ? 'Chargement...' : isErrorS ? <p style={{ color: 'red' }}>{errorS.message}</p> : (
@@ -351,7 +358,7 @@ export const Map = ({ }) => {
               setSteps={setSteps}
               selectedMarker={selectedMarker.marker}
               setSelectedMarker={setSelectedMarker}
-              deleteMarker={deleteMarker}
+              deleteStep={deleteStep}
             ></StepMenu>
           )
         ))}

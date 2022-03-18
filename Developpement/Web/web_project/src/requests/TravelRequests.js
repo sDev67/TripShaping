@@ -1,6 +1,17 @@
 import { checkStatus, url_prefix } from "../utils";
 
 const TravelRequests = {
+    getTravelByid: idTravel => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${idTravel}`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
     getPointsOfTravel: idTravel => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/points`, {
@@ -49,7 +60,29 @@ const TravelRequests = {
         })
             .then(checkStatus)
             .then(res => res.json());
-    }
+    },
+
+    removePoint: idPoint => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/point/${idPoint}`, {
+            method: 'DELETE',
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // },
+        })
+            .then(checkStatus);
+    },
+
+    removeStep: idStep => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/step/${idStep}`, {
+            method: 'DELETE',
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // },
+        })
+            .then(checkStatus);
+    },
 };
 
 export default TravelRequests;

@@ -8,13 +8,15 @@ export default StepsList = ({ steps }) => {
     const [collapsed, setCollapsed] = useState([true])
 
     useEffect(() => {
-        steps.map((step, idx) => (
-            setCollapsed([...collapsed, true])
-        ))
-    }, [steps]);
+        const bool = true;
+        steps.map((step, idx) => {
+            setCollapsed([...collapsed, bool])
+            console.log("map");
+        })
+    }, []);
 
     const toggleExpanded = (idx) => {
-
+        console.log(collapsed);
         const newTab = [...collapsed];
         newTab[idx] = !newTab[idx];
         setCollapsed(newTab);
@@ -22,22 +24,29 @@ export default StepsList = ({ steps }) => {
 
     return (
         <View>
-            {steps.map((step, idx) => (
-                <ScrollView contentContainerStyle={{ paddingTop: 0 }} key={idx}>
-                    <TouchableOpacity onPress={() => toggleExpanded(idx)}>
-                        <View style={styles.header}>
-                            <Text style={styles.headerText}>{step.title}</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <Collapsible collapsed={collapsed[idx]} align="center">
-                        <View style={styles.content}>
-                            <Text>
-                                Description
-                            </Text>
-                        </View>
-                    </Collapsible>
-                </ScrollView>
-            ))}
+            <ScrollView>
+                {steps.map((step, idx) => (
+                    <ScrollView contentContainerStyle={{ paddingTop: 0 }} key={idx}>
+                        <TouchableOpacity onPress={() => toggleExpanded(idx)}>
+                            <View style={styles.header}>
+                                <Text style={styles.headerText}>{step.title}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <Collapsible collapsed={collapsed[idx]} align="center">
+                            <View style={styles.content}>
+                                <Text>
+                                    Description
+                                </Text>
+                            </View>
+                        </Collapsible>
+                    </ScrollView>
+                ))}
+            </ScrollView>
+
+
+
+
+
         </View>
     );
 }

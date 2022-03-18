@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DefaultTheme, RadioButton } from 'react-native-paper';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import * as Location from 'expo-location';
@@ -64,8 +64,34 @@ const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErr
                                 <>
                                     {steps.map((step, index) => (
                                         <Marker key={index} coordinate={{ latitude: step.latitude, longitude: step.longitude }} onPress={() => { setModalStepVisible(true); setSelected(step) }}>
-                                        </Marker>)
+                                        </Marker>
+                                    )
                                     )}
+
+                                    {steps.length >= 2 && <>
+                                        {steps.map((step, index) => (
+                                            <>
+                                                {index > 0 && (
+                                                    <Polyline
+                                                        key={index - 1}
+                                                        geodesic={true}
+                                                        tappable={true}
+                                                        strokeWidth={3}
+                                                        strokeColor='#00AB55'
+                                                        coordinates={[
+                                                            { latitude: steps[index - 1].latitude, longitude: steps[index - 1].longitude },
+                                                            { latitude: step.latitude, longitude: step.longitude }
+                                                        ]}
+                                                        onPress={() => showModal()}
+                                                        onReady={result => {
+                                                            setDistance(result.distance);
+                                                            setDuration(result.duration);
+                                                        }}
+                                                    />
+                                                )}
+                                            </>
+                                        ))}
+                                    </>}
                                     {/* <MapViewDirections
                                         origin={{ latitude: 48.87825669202483, longitude: 7.415160892563047 }}
                                         destination={{ latitude: 48.56599996601616, longitude: 7.730613259942172 }}

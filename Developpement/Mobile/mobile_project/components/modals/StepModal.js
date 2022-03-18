@@ -46,15 +46,16 @@ const StepModal = ({ modalVisible, setModalVisible, point, setStartCamera, messa
     };
 
     return (
+        point != null &&
         <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
             <Modal.Content maxWidth="90%">
                 <Modal.CloseButton />
-                <Modal.Header>{point.name}</Modal.Header>
+                <Modal.Header>{point.title}</Modal.Header>
                 <Modal.Body>
                     <Text style={styles.font}>Catégorie</Text>
-                    <Text>{point.cat}</Text>
+                    <Text>{point.category}</Text>
                     <Text style={styles.font} >Jours</Text>
-                    <Text>{point.day} jour</Text>
+                    <Text>{point.duration} jour</Text>
                     <Text style={styles.font} >Description</Text>
                     <Text>{point.description}</Text>
                     <Text style={styles.font}>Documents</Text>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DefaultTheme, RadioButton } from 'react-native-paper';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import * as Location from 'expo-location';
 import { NativeBaseProvider } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,15 +11,15 @@ import ItinaryModal from '../components/modals/ItinaryModal';
 import PointModal from '../components/modals/pointModal';
 import StepModal from '../components/modals/StepModal';
 
-const Maps = ({ messages, setMessages, setStartCamera, points, steps }) => {
+import { GOOGLE_MAPS_APIKEY } from "../utils";
 
-    const GOOGLE_MAPS_APIKEY = 'AIzaSyAJVvWk_VD4fFSTgIbKZn4mKbudKeQXEII';
+const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErrorP, errorP, steps, isLoadingS, isErrorS, errorS }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalPointVisible, setModalPointVisible] = useState(false);
     const [modalStepVisible, setModalStepVisible] = useState(false);
 
-    const [selected, setSelected] = useState(points[0]);
+    const [selected, setSelected] = useState(null);
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [duration, setDuration] = useState(null);
@@ -42,11 +42,8 @@ const Maps = ({ messages, setMessages, setStartCamera, points, steps }) => {
                 setErrorMsg('Permission to access location was denied');
                 return;
             }
-
-
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
-            console.log(location);
         })();
     }, []);
 
@@ -63,13 +60,13 @@ const Maps = ({ messages, setMessages, setStartCamera, points, steps }) => {
                         <PointModal modalVisible={modalPointVisible} setModalVisible={setModalPointVisible} point={selected} messages={messages} setMessages={setMessages} setStartCamera={setStartCamera} />
                         <StepModal modalVisible={modalStepVisible} setModalVisible={setModalStepVisible} point={selected} setStartCamera={setStartCamera} messages={messages} setMessages={setMessages} />
                         <MapView style={styles.map} scrollEnabled={true} provider={PROVIDER_GOOGLE} showsUserLocation={true} initialRegion={{ latitude: location.coords.latitude, longitude: location.coords.longitude, longitudeDelta: 0.125, latitudeDelta: 0.125 }}>
-                            {(checked === "0" || checked === "1") &&
+                            {(checked === "0" || checked === "1") && isLoadingS ? <Text>Chargement...</Text> : isErrorS ? <Text style={{ color: 'red' }}>{errorS.message}</Text> :
                                 <>
                                     {steps.map((step, index) => (
-                                        <Marker key={index} coordinate={{ latitude: step.lat, longitude: step.long }} onPress={() => { setModalStepVisible(true); setSelected(step) }}>
+                                        <Marker key={index} coordinate={{ latitude: step.latitude, longitude: step.longitude }} onPress={() => { setModalStepVisible(true); setSelected(step) }}>
                                         </Marker>)
                                     )}
-                                    <MapViewDirections
+                                    {/* <MapViewDirections
                                         origin={{ latitude: 48.87825669202483, longitude: 7.415160892563047 }}
                                         destination={{ latitude: 48.56599996601616, longitude: 7.730613259942172 }}
                                         strokeWidth={3}
@@ -81,18 +78,18 @@ const Maps = ({ messages, setMessages, setStartCamera, points, steps }) => {
                                             setDistance(result.distance);
                                             setDuration(result.duration);
                                         }}
-                                    />
+                                    /> */}
                                 </>
                             }
-                            {(checked === "0" || checked === "2") &&
+                            {(checked === "0" || checked === "2") && isLoadingP ? <Text>Chargement...</Text> : isErrorP ? <Text style={{ color: 'red' }}>{errorP.message}</Text> :
                                 points.map((point, index) => (
-                                    <Marker key={index} pinColor='blue' coordinate={{ latitude: point.lat, longitude: point.long }} onPress={() => { setModalPointVisible(true); setSelected(point) }}>
+                                    <Marker key={index} pinColor='blue' coordinate={{ latitude: point.latitude, longitude: point.longitude }} onPress={() => { setModalPointVisible(true); setSelected(point) }}>
                                     </Marker>)
                                 )
                             }
                         </MapView>
                         <View style={styles.window}>
-                            <RadioButton.Group onValueChange={newValue => setChecked(newValue)} value={checked}>
+                            <RadioButton.Group onValueChange={(newValue) => { setChecked(newValue) }} value={checked}>
                                 <RadioButton.Item
                                     label="Tout"
                                     value="0"

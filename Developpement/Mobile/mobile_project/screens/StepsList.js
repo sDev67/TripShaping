@@ -18,7 +18,6 @@ export default StepsList = ({ steps }) => {
         const newTab = [...collapsed];
         newTab[idx] = !newTab[idx];
         setCollapsed(newTab);
-        console.log(collapsed)
     };
 
     return (
@@ -27,7 +26,7 @@ export default StepsList = ({ steps }) => {
                 <ScrollView contentContainerStyle={{ paddingTop: 0 }} key={idx}>
                     <TouchableOpacity onPress={() => toggleExpanded(idx)}>
                         <View style={styles.header}>
-                            <Text style={styles.headerText}>{step.name}</Text>
+                            <Text style={styles.headerText}>{step.title}</Text>
                         </View>
                     </TouchableOpacity>
                     <Collapsible collapsed={collapsed[idx]} align="center">

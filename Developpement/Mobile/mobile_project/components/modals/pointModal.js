@@ -46,13 +46,14 @@ const pointModal = ({ modalVisible, setModalVisible, point, messages, setMessage
     };
 
     return (
+        point != null &&
         <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
             <Modal.Content maxWidth="90%">
                 <Modal.CloseButton />
-                <Modal.Header>{point.name}</Modal.Header>
+                <Modal.Header>{point.title}</Modal.Header>
                 <Modal.Body>
                     <Text style={styles.font}>Catégorie</Text>
-                    <Text>{point.cat}</Text>
+                    <Text>{point.category}</Text>
                     <Text style={styles.font}>Description</Text>
                     <Text>{point.description}</Text>
                     <Text style={styles.font}> Documents</Text>

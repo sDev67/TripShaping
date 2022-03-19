@@ -7,9 +7,8 @@ import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
 import MapModeSwitch from "./MapModeSwitch";
 import RouteMenu from "./RouteMenu";
-import { url_prefix } from "../utils";
-import axios from "axios";
-import * as API from "../requests/TravelRequests";
+import TravelRequests from "../requests/TravelRequests";
+import { useQuery, useQueryClient, useMutation } from 'react-query';
 
 const containerStyle = {
   position: "relative",
@@ -23,6 +22,8 @@ const position = {
 };
 
 export const Map = ({ }) => {
+  const queryClient = useQueryClient();
+
   const idTravel = 1
   const [isEdition, setIsEdition] = useState(false);
   const [switchText, setSwitchText] = useState("Navigation");
@@ -32,8 +33,16 @@ export const Map = ({ }) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
-  const [steps, setSteps] = useState([]);
-  const [interestPoints, setInterestPoints] = useState([]);
+  const [stepos, setSteps] = useState([]);
+  const { isLoading: isLoadingS, isError: isErrorS, error: errorS, data: steps } = useQuery(
+    ['getSteps', idTravel], () => TravelRequests.getStepsOfTravel(idTravel)
+  );
+
+  const [interestPointos, setInterestPoints] = useState([]);
+  const { isLoading: isLoadingP, isError: isErrorP, error: errorP, data: interestPoints } = useQuery(
+    ['getPoints', idTravel], () => TravelRequests.getPointsOfTravel(idTravel)
+  );
+
   const [routes, setRoutes] = useState([]);
 
   //const [response, setResponse] = useState(null);
@@ -41,21 +50,6 @@ export const Map = ({ }) => {
 
   const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
   const InterestPointIcon = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-
-  useEffect(() => {
-    axios.get(`${url_prefix}/travel/1/points`)
-      .then(function (response) {
-        setInterestPoints(response.data);
-      });
-    // setInterestPoints(getPointsByTravel(idTravel))
-    // console.log(interestPoints)
-
-    axios.get(`${url_prefix}/travel/1/steps`)
-      .then(function (response) {
-        // console.log(response.data);
-        setSteps(response.data);
-      });
-  }, [])
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
@@ -105,6 +99,20 @@ export const Map = ({ }) => {
     </div>
   );
 
+  const addPoint = useMutation(TravelRequests.addPoint, {
+    onSuccess: point => queryClient.setQueryData(
+      ['getPoints', idTravel],
+      interestPoints => [...interestPoints, point]
+    )
+  });
+
+  const addStep = useMutation(TravelRequests.addStep, {
+    onSuccess: step => queryClient.setQueryData(
+      ['getSteps', idTravel],
+      steps => [...steps, step]
+    )
+  });
+
   const onMapClick = (e) => {
     // on peut placer les points uniquement si on est en mode edition
     if (isEdition) {
@@ -115,45 +123,34 @@ export const Map = ({ }) => {
       } else {
         if (editionMode === "stepOnlyEdit") {
           if (!error) {
-            setSteps((oldArray) => [
-              ...oldArray,
-              {
-                // la prop name de step.location.name est très importante car c'est elle qui permet de savoir sur quelle point on clique
-                location: {
-                  id: steps.length,
-                  name: "Etape",
-                  title: "",
-                  categorie: "",
-                  lengthOfStay: 0,
-                  files: [],
-                  description: "",
-                  lat: e.latLng.lat(),
-                  lng: e.latLng.lng(),
-                },
-                stopover: true,
-              },
-            ]);
+            const newStep = {
+              title: "",
+              latitude: parseFloat(e.latLng.lat()),
+              longitude: parseFloat(e.latLng.lng()),
+              description: "",
+              category: "",
+              duration: 1,
+              TravelId: idTravel
+            }
+
+            addStep.mutate(newStep);
           }
         }
         // ici : editionMode === "interestPointOnlyEdit")
         else {
           if (!error) {
-            setInterestPoints((oldArr) => [
-              ...oldArr,
-              {
-                location: {
-                  id: interestPoints.length,
-                  name: "PointInteret",
-                  title: "",
-                  categorie: "",
-                  files: [],
-                  description: "",
-                  lat: e.latLng.lat(),
-                  lng: e.latLng.lng(),
-                },
-                stopover: true,
-              },
-            ]);
+            const newPoint = {
+              title: "",
+              latitude: parseFloat(e.latLng.lat()),
+              longitude: parseFloat(e.latLng.lng()),
+              description: "",
+              category: "",
+              TravelId: idTravel
+            }
+
+            console.log(newPoint);
+
+            addPoint.mutate(newPoint);
           }
         }
       }
@@ -189,6 +186,7 @@ export const Map = ({ }) => {
         };
         setSteps(newStep);
       } else if (marker.location.name === "PointInteret") {
+        console.log(e.latLng.lat())
         let newInterestPoint = [...interestPoints];
         newInterestPoint[index] = {
           location: {
@@ -208,21 +206,21 @@ export const Map = ({ }) => {
     }
   };
 
-  // Fonction qui permet de supprimer des points d'étapes et des points d'interet
-  const deleteMarker = (marker) => {
-    if (!error && isEdition) {
-      if (marker.location.name === "Etape") {
-        let newStep = [...steps];
-        newStep = newStep.filter((e) => e !== marker);
-        setSteps(newStep);
-      } else if (marker.location.name === "PointInteret") {
-        let newInterestPoint = [...interestPoints];
-        newInterestPoint = newInterestPoint.filter((e) => e !== marker);
-        setInterestPoints(newInterestPoint);
-      }
-      setSelectedMarker(null);
-    }
-  };
+  //Suppression de point
+  const deletePoint = useMutation(TravelRequests.removePoint, {
+    onSuccess: (_, id) => queryClient.setQueryData(
+      ['getPoints', idTravel],
+      interestPoints => interestPoints.filter(e => e.id !== id)
+    )
+  });
+
+  //Suppression d'étape
+  const deleteStep = useMutation(TravelRequests.removeStep, {
+    onSuccess: (_, id) => queryClient.setQueryData(
+      ['getSteps', idTravel],
+      steps => steps.filter(e => e.id !== id)
+    )
+  });
 
   // Fonction qui enleve le dernier point lorsque ce dernier est placé dans un endroit qui cause pb
   const closeAlert = () => {
@@ -256,7 +254,8 @@ export const Map = ({ }) => {
 
           {(markerFilter === "stepOnlyNav" ||
             markerFilter === "stepOnlyEdit" ||
-            markerFilter === "all") && steps &&
+            markerFilter === "all") &&
+            isLoadingS ? 'Chargement...' : isErrorS ? <p style={{ color: 'red' }}>{errorS.message}</p> :
             steps.map((step, index) => (
               <Marker
                 key={index}
@@ -267,7 +266,11 @@ export const Map = ({ }) => {
                   setSelectedMarker({ marker: steps[index], type: "Step" });
                   setSelectedRoute(null);
                 }}
-                onRightClick={() => deleteMarker(step)}
+                onRightClick={() => {
+                  if (!error && isEdition) {
+                    deleteStep.mutate(step.id); setSelectedMarker(null)
+                  }
+                }}
                 onDragEnd={updateLocation(index, step)}
                 icon={stepIcon}
               ></Marker>
@@ -275,7 +278,8 @@ export const Map = ({ }) => {
 
           {(markerFilter === "interestPointOnlyNav" ||
             markerFilter === "interestPointOnlyEdit" ||
-            markerFilter === "all") && interestPoints &&
+            markerFilter === "all") &&
+            isLoadingP ? 'Chargement...' : isErrorP ? <p style={{ color: 'red' }}>{errorP.message}</p> :
             interestPoints.map((interestPoint, index) => (
               <Marker
                 key={index}
@@ -290,14 +294,20 @@ export const Map = ({ }) => {
                   setSelectedMarker({ marker: interestPoints[index], type: "Point" });
                   setSelectedRoute(null);
                 }}
-                onRightClick={() => deleteMarker(interestPoint)}
+                onRightClick={() => {
+                  if (!error && isEdition) {
+                    deletePoint.mutate(interestPoint.id); setSelectedMarker(null)
+                  }
+                }}
                 onDragEnd={updateLocation(index, interestPoint)}
                 icon={InterestPointIcon}
               ></Marker>
             ))}
 
-          {steps.length >= 2 &&
-            !(!isEdition && markerFilter === "interestPointOnlyNav") && (
+          {isLoadingS ? 'Chargement...' : isErrorS ? <p style={{ color: 'red' }}>{errorS.message}</p> :
+            steps.length >= 2 &&
+            !(!isEdition && markerFilter === "interestPointOnlyNav") &&
+            (
               <>
                 {steps.map((step, index) => (
                   <>
@@ -333,22 +343,22 @@ export const Map = ({ }) => {
         </GoogleMap>
       </LoadScript>
       {selectedMarker &&
-        (selectedMarker.type === "Point" ? (
+        (selectedMarker.type === "Point" ? isLoadingP ? 'Chargement...' : isErrorP ? <p style={{ color: 'red' }}>{errorP.message}</p> : (
           <InterestPointMenu
             interestPoints={interestPoints}
             setInterestPoints={setInterestPoints}
             selectedMarker={selectedMarker.marker}
             setSelectedMarker={setSelectedMarker}
-            deleteMarker={deleteMarker}
+            deletePoint={deletePoint}
           ></InterestPointMenu>
         ) : (
-          selectedMarker.type === "Step" && (
+          selectedMarker.type === "Step" && isLoadingS ? 'Chargement...' : isErrorS ? <p style={{ color: 'red' }}>{errorS.message}</p> : (
             <StepMenu
               steps={steps}
               setSteps={setSteps}
               selectedMarker={selectedMarker.marker}
               setSelectedMarker={setSelectedMarker}
-              deleteMarker={deleteMarker}
+              deleteStep={deleteStep}
             ></StepMenu>
           )
         ))}

@@ -1,40 +1,33 @@
 import React, { useState } from "react";
 import {
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
   Card,
-  CircularProgress,
   TextField,
-  Popover,
   Stack,
   CardMedia,
   CardContent,
   Dialog,
   MenuItem,
   Button,
-  Alert,
-  Collapse,
-  DialogTitle,
-  Icon,
   Typography,
   IconButton,
 } from "@mui/material";
-import palette from "./../theme/palette";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+
 
 const StepMenu = ({
-  deleteMarker,
+  deleteStep,
   selectedMarker,
   setSelectedMarker,
   steps,
   setSteps,
 }) => {
+  const queryClient = useQueryClient();
+
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("");
   const [categorie, setCategorie] = useState("");
@@ -166,7 +159,7 @@ const StepMenu = ({
               variant="outlined"
               color="error"
               startIcon={<DeleteRounded />}
-              onClick={() => deleteMarker(selectedMarker)}
+              onClick={() => { deleteStep.mutate(selectedMarker.id); setSelectedMarker(null) }}
             >
               Supprimer
             </Button>
@@ -184,9 +177,9 @@ const StepMenu = ({
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <div style={{ margin: 10, marginTop: 0 }}>
-        <Typography variant="h3" marginY={2}>
-          Ajouter un fichier
-        </Typography>
+          <Typography variant="h3" marginY={2}>
+            Ajouter un fichier
+          </Typography>
           <FileUploader
             handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
           />

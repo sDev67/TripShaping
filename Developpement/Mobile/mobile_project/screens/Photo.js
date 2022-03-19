@@ -5,18 +5,9 @@ import { StyleSheet, View, TextInput, Text } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
-const Photo = ({ setStartCamera, photo }) => {
+const Photo = ({ navigation }) => {
 
     const [image, setImage] = useState(null);
-
-    const startCamera = async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync()
-        if (status === 'granted') {
-            setStartCamera(true)
-        } else {
-            Alert.alert('Access denied')
-        }
-    }
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -35,16 +26,9 @@ const Photo = ({ setStartCamera, photo }) => {
         <>
             <NativeBaseProvider>
                 <SafeAreaView style={{ flex: 1 }}>
-                    {photo &&
-                        < Image
-                            alt="photo"
-                            size={100}
-                            resizeMode={"stretch"}
-                            source={{ uri: `data:image/gif;base64,${photo.base64}` }} />
-                    }
                     {image && <Image source={{ uri: `data:image/gif;base64,${image.base64}` }} style={{ width: image.width / 8, height: image.height / 8 }} alt="photo" />}
                     <View>
-                        <Button style={{ width: "50%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={startCamera}>Prendre une photo</Button>
+                        <Button style={{ width: "50%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras")}>Prendre une photo</Button>
                         <Button style={{ width: "50%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                     </View>
                     <View style={{ marginBottom: 10, position: "absolute", bottom: 0, alignSelf: "flex-end" }}>

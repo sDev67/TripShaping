@@ -3,6 +3,7 @@ import { Image } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,6 +13,10 @@ import Photo from './screens/Photo';
 import Cameras from './screens/Cameras';
 import Files from './screens/Files';
 import StepsList from './screens/StepsList';
+
+import ItinaryDetails from './screens/ItinaryDetails';
+import StepDetails from './screens/StepDetails';
+import PointDetails from './screens/PointDetails';
 
 import iconMaps from './assets/navigation_icons/icon_maps.png';
 import iconJournal from './assets/navigation_icons/icon_journal.png';
@@ -24,9 +29,10 @@ import TravelRequests from "./requests/TravelRequests";
 import { useQuery, useQueryClient } from 'react-query';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+
 const queryClient = new QueryClient();
 
-const Main = () => {
+const TabScreen = () => {
 
   const idTravel = 1;
 
@@ -36,54 +42,62 @@ const Main = () => {
     ['getSteps', idTravel], () => TravelRequests.getStepsOfTravel(idTravel)
   );
 
-  const { isLoading: isLoadingP, isError: isErrorP, error: errorP, data: points } = useQuery(
-    ['getPoints', idTravel], () => TravelRequests.getPointsOfTravel(idTravel)
-  );
-
-  const [startCamera, setStartCamera] = useState(false);
-  const [photo, setPhoto] = useState(null)
-
   return (
-    startCamera ? (<Cameras setStartCamera={setStartCamera} setPhoto={setPhoto} />) : (
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              if (route.name === 'Atlas') {
-                return <Image source={iconMaps} style={{ width: 30, height: 30, tintColor: color }} />;
-              }
-              else if (route.name === "Journal") {
-                return <Image source={iconJournal} style={{ width: 30, height: 30, tintColor: color }} />;
-              }
-              else if (route.name === "Photo") {
-                return <Image source={iconPhoto} style={{ width: 30, height: 30, tintColor: color }} />;
-              }
-              else if (route.name === "Documents") {
-                return <Image source={iconFiles} style={{ width: 30, height: 30, tintColor: color }} />
-              }
-              else if (route.name === "Etapes") {
-                return <Image source={iconStepsList} style={{ width: 30, height: 30, tintColor: color }} />
-              }
-            },
-            tabBarActiveTintColor: '#3498DB',
-            tabBarInactiveTintColor: 'black',
-            tabBarShowLabel: false
-          })}
-        >
-          <Tab.Screen name="Atlas" children={() => <Maps messages={messages} setMessages={setMessages} setStartCamera={setStartCamera} points={points} isLoadingP={isLoadingP} isErrorP={isErrorP} errorP={errorP} steps={steps} isLoadingS={isLoadingS} isErrorS={isErrorS} errorS={errorS} />} />
-          <Tab.Screen name="Etapes" children={() => <StepsList steps={steps} />} />
-          <Tab.Screen name="Journal" children={() => <Journal messages={messages} setMessages={setMessages} />} />
-          <Tab.Screen name="Photo" children={() => <Photo setStartCamera={setStartCamera} photo={photo} />} />
-          <Tab.Screen name='Documents' children={() => <Files />} />
-        </Tab.Navigator>
-      </NavigationContainer>)
+
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          if (route.name === 'Altas') {
+            return <Image source={iconMaps} style={{ width: 30, height: 30, tintColor: color }} />;
+          }
+          else if (route.name === "Journal") {
+            return <Image source={iconJournal} style={{ width: 30, height: 30, tintColor: color }} />;
+          }
+          else if (route.name === "Photo") {
+            return <Image source={iconPhoto} style={{ width: 30, height: 30, tintColor: color }} />;
+          }
+          else if (route.name === "Documents") {
+            return <Image source={iconFiles} style={{ width: 30, height: 30, tintColor: color }} />
+          }
+          else if (route.name === "Etapes") {
+            return <Image source={iconStepsList} style={{ width: 30, height: 30, tintColor: color }} />
+          }
+        },
+        tabBarActiveTintColor: '#3498DB',
+        tabBarInactiveTintColor: 'black',
+        tabBarShowLabel: false
+      })}
+    >
+      <Tab.Screen name="Altas" component={Maps} />
+      <Tab.Screen name="Etapes" children={() => <StepsList steps={steps} />} />
+      <Tab.Screen name="Journal" children={() => <Journal messages={messages} setMessages={setMessages} />} />
+      <Tab.Screen name="Photo" component={Photo} />
+      <Tab.Screen name='Documents' children={() => <Files />} />
+    </Tab.Navigator>
+
+  );
+}
+
+const Stack = createNativeStackNavigator();
+
+function MapStackScreen() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Map" component={TabScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Itinéraire" component={ItinaryDetails} />
+        <Stack.Screen name="StepDetails" component={StepDetails} />
+        <Stack.Screen name="PointDetails" component={PointDetails} />
+        <Stack.Screen name="Cameras" component={Cameras} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Main />
+      <MapStackScreen />
     </QueryClientProvider>
   );
 }

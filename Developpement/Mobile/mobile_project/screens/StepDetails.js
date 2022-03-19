@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { Modal, Button, Image } from 'native-base';
-import { Camera } from 'expo-camera';
+import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native';
+import { NativeBaseProvider, Button, Image, ScrollView } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 
-const StepModal = ({ modalVisible, setModalVisible, point, setStartCamera, messages, setMessages, }) => {
+const StepDetails = ({ route, navigation }) => {
+
+    const { step } = route.params;
+
+    useEffect(() => {
+        navigation.setOptions({ title: step.title });
+    }, [])
 
     const [image, setImage] = useState(null);
 
@@ -17,20 +22,11 @@ const StepModal = ({ modalVisible, setModalVisible, point, setStartCamera, messa
         const time = dateCourante.getHours() + "h" + dateCourante.getMinutes();
 
         if (newMessage != "") {
-            const newPost = { body: newMessage, author: user, date: date, time: time, catStep: 2, step: point };
+            const newPost = { body: newMessage, author: user, date: date, time: time, catStep: 2, step: step };
             setMessages([...messages, newPost]);
             setNewMessage("");
         }
     };
-
-    const startCamera = async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync()
-        if (status === 'granted') {
-            setStartCamera(true)
-        } else {
-            Alert.alert('Access denied')
-        }
-    }
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -46,18 +42,16 @@ const StepModal = ({ modalVisible, setModalVisible, point, setStartCamera, messa
     };
 
     return (
-        point != null &&
-        <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
-            <Modal.Content maxWidth="90%">
-                <Modal.CloseButton />
-                <Modal.Header>{point.title}</Modal.Header>
-                <Modal.Body>
+        step != null &&
+        <NativeBaseProvider >
+            <View style={styles.container}>
+                <ScrollView>
                     <Text style={styles.font}>Catégorie</Text>
-                    <Text>{point.category}</Text>
-                    <Text style={styles.font} >Jours</Text>
-                    <Text>{point.duration} jour</Text>
+                    <Text style={{ marginLeft: 10 }}>{step.category}</Text>
+                    <Text style={styles.font} >Durée</Text>
+                    <Text style={{ marginLeft: 10 }}>{step.duration}{step.duration > 1 ? " jours" : " jour"}</Text>
                     <Text style={styles.font} >Description</Text>
-                    <Text>{point.description}</Text>
+                    <Text style={{ marginLeft: 10 }}>{step.description}</Text>
                     <Text style={styles.font}>Documents</Text>
                     <Text style={styles.font} >Journal</Text>
                     <View>
@@ -67,16 +61,22 @@ const StepModal = ({ modalVisible, setModalVisible, point, setStartCamera, messa
                     <Text style={styles.font}>Photo</Text>
                     {image && <Image source={{ uri: `data:image/gif;base64,${image.base64}` }} style={{ width: image.width / 8, height: image.height / 8 }} alt="photo" />}
                     <View>
-                        <Button style={{ width: "70%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={startCamera}>Prendre une photo</Button>
+                        <Button style={{ width: "70%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras")}>Prendre une photo</Button>
                         <Button style={{ width: "70%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                     </View>
-                </Modal.Body>
-            </Modal.Content>
-        </Modal>
+                </ScrollView>
+            </View>
+        </NativeBaseProvider>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+        backgroundColor: "white"
+    },
     inputFocused: {
         borderRadius: 5,
         borderWidth: 1,
@@ -86,8 +86,9 @@ const styles = StyleSheet.create({
     },
     font: {
         fontSize: 15,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        margin: 10
     }
 });
 
-export default StepModal;
+export default StepDetails;

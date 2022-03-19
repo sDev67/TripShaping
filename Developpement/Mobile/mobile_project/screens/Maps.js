@@ -7,13 +7,23 @@ import * as Location from 'expo-location';
 import { NativeBaseProvider } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import ItinaryModal from '../components/modals/ItinaryModal';
-import PointModal from '../components/modals/pointModal';
-import StepModal from '../components/modals/StepModal';
+import TravelRequests from "../requests/TravelRequests";
 
+import { useQuery, useQueryClient } from 'react-query';
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 
-const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErrorP, errorP, steps, isLoadingS, isErrorS, errorS }) => {
+const Maps = ({ navigation }) => {
+
+    const idTravel = 1;
+    const [messages, setMessages] = useState([{ body: "Cet endroit est magnifique, j'en prends plein les yeux !", author: "Vivien Riehl", date: "20/12/2021", time: "18h55", catStep: 1, step: { name: "Cathédrale de Strasbourg", cat: "Monument historique", description: "Le musée Lalique est un musée français situé à Wingen-sur-Moder, en Alsace, et consacré au maître verrier et bijoutier René Lalique et à ses successeurs.La cathédrale Notre-Dame de Strasbourg est une cathédrale gothique située à Strasbourg, dans la circonscription administrative du Bas-Rhin, sur le territoire de la collectivité européenne d’Alsace.", long: 7.751035121539488, lat: 48.581878956275794 } }, { body: "Cet hôtel est très sympathique", author: "Marc Keller", date: "19/12/2021", time: "21h00", catStep: 2, step: { name: "Chez GrandPa", cat: "Chambres d'Hôtes", description: "Cadre charmant", long: 7.730613259942172, lat: 48.56599996601616, day: 3 } }, { body: "La plus belle cathédrale de France !", author: "Philippe Grandpre", date: "20/12/2021", time: "19h00", catStep: 0, step: null }])
+
+    const { isLoading: isLoadingS, isError: isErrorS, error: errorS, data: steps } = useQuery(
+        ['getSteps', idTravel], () => TravelRequests.getStepsOfTravel(idTravel)
+    );
+
+    const { isLoading: isLoadingP, isError: isErrorP, error: errorP, data: points } = useQuery(
+        ['getPoints', idTravel], () => TravelRequests.getPointsOfTravel(idTravel)
+    );
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalPointVisible, setModalPointVisible] = useState(false);
@@ -56,15 +66,16 @@ const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErr
             {location &&
                 <NativeBaseProvider>
                     <SafeAreaView style={{ flex: 1 }}>
-                        <ItinaryModal modalVisible={modalVisible} setModalVisible={setModalVisible} distance={distance} duration={duration} />
-                        <PointModal modalVisible={modalPointVisible} setModalVisible={setModalPointVisible} point={selected} messages={messages} setMessages={setMessages} setStartCamera={setStartCamera} />
-                        <StepModal modalVisible={modalStepVisible} setModalVisible={setModalStepVisible} point={selected} setStartCamera={setStartCamera} messages={messages} setMessages={setMessages} />
                         <MapView style={styles.map} scrollEnabled={true} provider={PROVIDER_GOOGLE} showsUserLocation={true} initialRegion={{ latitude: location.coords.latitude, longitude: location.coords.longitude, longitudeDelta: 0.125, latitudeDelta: 0.125 }}>
                             {(checked === "0" || checked === "1") && (isLoadingS ? <Text>Chargement...</Text> : isErrorS ? <Text style={{ color: 'red' }}>{errorS.message}</Text> :
                                 <>
                                     {steps.map((step, index) => (
-                                        <Marker key={index} coordinate={{ latitude: step.latitude, longitude: step.longitude }} onPress={() => { setModalStepVisible(true); setSelected(step) }}>
-                                        </Marker>
+                                        <Marker key={index} coordinate={{ latitude: step.latitude, longitude: step.longitude }} onPress={() => {
+                                            navigation.navigate('StepDetails', {
+                                                step: step
+                                            })
+                                        }
+                                        } />
                                     )
                                     )}
 
@@ -82,7 +93,7 @@ const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErr
                                                             { latitude: steps[index - 1].latitude, longitude: steps[index - 1].longitude },
                                                             { latitude: step.latitude, longitude: step.longitude }
                                                         ]}
-                                                        onPress={() => showModal()}
+                                                        onPress={() => navigation.navigate('Itinéraire')}
                                                     />
                                                 )}
                                             </>
@@ -105,7 +116,11 @@ const Maps = ({ messages, setMessages, setStartCamera, points, isLoadingP, isErr
                             }
                             {(checked === "0" || checked === "2") && (isLoadingP ? <Text>Chargement...</Text> : isErrorP ? <Text style={{ color: 'red' }}>{errorP.message}</Text> :
                                 points.map((point, index) => (
-                                    <Marker key={index} pinColor='blue' coordinate={{ latitude: point.latitude, longitude: point.longitude }} onPress={() => { setModalPointVisible(true); setSelected(point) }}>
+                                    <Marker key={index} pinColor='blue' coordinate={{ latitude: point.latitude, longitude: point.longitude }} onPress={() => {
+                                        navigation.navigate('PointDetails', {
+                                            point: point
+                                        })
+                                    }}>
                                     </Marker>)
                                 ))
                             }

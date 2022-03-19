@@ -1,16 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, ImageBackground } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Camera } from 'expo-camera'
 
 let camera = Camera;
 
-const Cameras = ({ setStartCamera, setPhoto }) => {
+const Cameras = ({ navigation }) => {
 
+    const [startCamera, setStartCamera] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null)
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
     const [flashMode, setFlashMode] = useState('off')
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync()
+            if (status === 'granted') {
+                setStartCamera(true)
+            } else {
+                Alert.alert('Access denied')
+            }
+        });
+    }, [])
 
     const takePicture = async () => {
         const options = { quality: 0.5, base64: true };
@@ -45,7 +56,7 @@ const Cameras = ({ setStartCamera, setPhoto }) => {
 
     const save = () => {
         setStartCamera(false);
-        setPhoto(capturedImage);
+        navigation.goBack();
     }
 
     return (
@@ -70,7 +81,7 @@ const Cameras = ({ setStartCamera, setPhoto }) => {
                                         {cameraType === 'front' ? '🤳' : '📷'}
                                     </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => setStartCamera(false)} style={{ marginTop: 20, borderRadius: 50, height: 25, width: 25 }}>
+                                <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 20, borderRadius: 50, height: 25, width: 25 }}>
                                     <Text style={{ fontSize: 20 }}>🔙</Text>
                                 </TouchableOpacity>
                             </View>

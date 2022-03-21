@@ -1,6 +1,18 @@
 import { checkStatus, url_prefix } from "../utils";
 
 const TravelRequests = {
+
+    getAllTravel: ()=>{
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
     getTravelByid: idTravel => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}`, {
@@ -10,6 +22,21 @@ const TravelRequests = {
         })
             .then(checkStatus)
             .then(res => res.json())
+    },
+
+    createTravel: ({name}) => {
+        //const token = window.localStorage.getItem('token');
+        console.log(name)
+        return fetch(`${url_prefix}/travel`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                //  Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ name })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
     },
 
     getPointsOfTravel: idTravel => {

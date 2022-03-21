@@ -24,7 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/mytrips" element={<TripSelection />} />
             <Route path="/trip" element={<NavigationBar />}>
-              <Route path="map" element={<Itinerary />} />
+              <Route path="map/:idTravel" element={<Itinerary/>} />
               <Route path="todolist" element={<TodoList />} />
               <Route path="informations" element={<Informations />} />
               <Route path="members" element={<Members />} />

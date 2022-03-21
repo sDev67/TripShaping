@@ -11,6 +11,8 @@ import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import PointRequests from "../requests/PointRequests";
 import StepRequests from "../requests/StepRequests";
+import { useParams } from "react-router-dom";
+
 
 const containerStyle = {
   position: "relative",
@@ -26,7 +28,9 @@ const position = {
 export const Map = ({ }) => {
   const queryClient = useQueryClient();
 
-  const idTravel = 1
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
   const [isEdition, setIsEdition] = useState(false);
   const [switchText, setSwitchText] = useState("Navigation");
   const [markerFilter, setMarkerFilter] = useState("all");

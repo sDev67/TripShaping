@@ -16,13 +16,26 @@ import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import TextSnippetRoundedIcon from "@mui/icons-material/TextSnippetRounded";
-import { Link, Outlet, NavLink } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import TravelRequests from "../requests/TravelRequests";
+
+
 
 const NavigationBar = () => {
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
+  const { isLoading: isLoadingT, isError: isErrorT, error: errorT, data: travels } = useQuery(
+    ['getTravelById', idTravel], () => TravelRequests.getTravelByid(idTravel)
+  );
+
+  
+
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -73,7 +86,9 @@ const NavigationBar = () => {
               />
             </IconButton>
             <Typography variant="h5" color="primary" textAlign="center">
-              Voyage Paris
+              {isLoadingT ? 'Chargement...' : isErrorT ? <p style={{ color: 'red' }}>{errorT.message}</p> :
+                travels.name
+              }
             </Typography>
           </Stack>
           <Tabs
@@ -87,9 +102,9 @@ const NavigationBar = () => {
               icon={<MapRoundedIcon />}
               iconPosition="start"
               label="Carte"
-              value="/trip/map"
+              value={"/trip/map/" + idTravel}
               component={Link}
-              to="/trip/map"
+              to={"/trip/map/" + idTravel}
             />
             <Tab
               icon={<AssignmentRoundedIcon />}

@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { GoogleMap, LoadScript, Marker, Polyline } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import { CircularProgress, Alert, Collapse } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import palette from "./../theme/palette";
 import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
@@ -9,6 +9,10 @@ import MapModeSwitch from "./MapModeSwitch";
 import RouteMenu from "./RouteMenu";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from 'react-query';
+import PointRequests from "../requests/PointRequests";
+import StepRequests from "../requests/StepRequests";
+import { useParams } from "react-router-dom";
+
 
 const containerStyle = {
   position: "relative",
@@ -24,7 +28,9 @@ const position = {
 export const Map = ({ }) => {
   const queryClient = useQueryClient();
 
-  const idTravel = 1
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
   const [isEdition, setIsEdition] = useState(false);
   const [switchText, setSwitchText] = useState("Navigation");
   const [markerFilter, setMarkerFilter] = useState("all");
@@ -33,17 +39,15 @@ export const Map = ({ }) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
-  const [stepos, setSteps] = useState([]);
   const { isLoading: isLoadingS, isError: isErrorS, error: errorS, data: steps } = useQuery(
     ['getSteps', idTravel], () => TravelRequests.getStepsOfTravel(idTravel)
   );
 
-  const [interestPointos, setInterestPoints] = useState([]);
   const { isLoading: isLoadingP, isError: isErrorP, error: errorP, data: interestPoints } = useQuery(
     ['getPoints', idTravel], () => TravelRequests.getPointsOfTravel(idTravel)
   );
 
-  const [routes, setRoutes] = useState([]);
+  //const [routes, setRoutes] = useState([]);
 
   //const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
@@ -113,98 +117,33 @@ export const Map = ({ }) => {
     )
   });
 
-  const onMapClick = (e) => {
-    // on peut placer les points uniquement si on est en mode edition
-    if (isEdition) {
-      if (selectedMarker !== null) {
-        setSelectedMarker(null);
-      } else if (selectedRoute !== null) {
-        setSelectedRoute(null);
-      } else {
-        if (editionMode === "stepOnlyEdit") {
-          if (!error) {
-            const newStep = {
-              title: "",
-              latitude: parseFloat(e.latLng.lat()),
-              longitude: parseFloat(e.latLng.lng()),
-              description: "",
-              category: "",
-              duration: 1,
-              TravelId: idTravel
-            }
+  const updateLocationPoint = useMutation(PointRequests.updatePointLocationById, {
+    onSuccess: point => queryClient.setQueryData(
+      ['getPoints', idTravel],
+      interestPoints => [...interestPoints, point],
+    )
+  });
 
-            addStep.mutate(newStep);
-          }
-        }
-        // ici : editionMode === "interestPointOnlyEdit")
-        else {
-          if (!error) {
-            const newPoint = {
-              title: "",
-              latitude: parseFloat(e.latLng.lat()),
-              longitude: parseFloat(e.latLng.lng()),
-              description: "",
-              category: "",
-              TravelId: idTravel
-            }
+  const updateInfoPoint = useMutation(PointRequests.updatePointInfoById, {
+    onSuccess: point => queryClient.setQueryData(
+      ['getPoints', idTravel],
+      interestPoints => [...interestPoints, point],
+    )
+  });
 
-            console.log(newPoint);
+  const updateLocationStep = useMutation(StepRequests.updateStepLocationById, {
+    onSuccess: step => queryClient.setQueryData(
+      ['getSteps', idTravel],
+      steps => [...steps, step]
+    )
+  });
 
-            addPoint.mutate(newPoint);
-          }
-        }
-      }
-    }
-    // si on est en mode navigation
-    else {
-      // si le menu est ouvert on le ferme en cliquant sur la map
-      if (selectedMarker !== null) {
-        setSelectedMarker(null);
-      }
-    }
-  };
-
-  // Fonction qui met a jour la position des points
-  // en fonction de leurs index et du point choisi
-  const updateLocation = (index, marker) => (e) => {
-    if (!error) {
-      if (marker.location.name === "Etape") {
-        let newStep = [...steps];
-        newStep[index] = {
-          location: {
-            id: index,
-            name: "Etape",
-            title: marker.location.title,
-            categorie: marker.location.categorie,
-            lengthOfStay: 0,
-            files: [],
-            description: marker.location.description,
-            lat: e.latLng.lat(),
-            lng: e.latLng.lng(),
-          },
-          stopover: true,
-        };
-        setSteps(newStep);
-      } else if (marker.location.name === "PointInteret") {
-        console.log(e.latLng.lat())
-        let newInterestPoint = [...interestPoints];
-        newInterestPoint[index] = {
-          location: {
-            id: index,
-            name: "PointInteret",
-            title: marker.location.title,
-            categorie: marker.location.categorie,
-            files: [],
-            description: marker.location.description,
-            lat: e.latLng.lat(),
-            lng: e.latLng.lng(),
-          },
-          stopover: true,
-        };
-        setInterestPoints(newInterestPoint);
-      }
-    }
-  };
+  const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
+    onSuccess: step => queryClient.setQueryData(
+      ['getSteps', idTravel],
+      steps => [...steps, step]
+    )
+  });
 
   //Suppression de point
   const deletePoint = useMutation(TravelRequests.removePoint, {
@@ -222,12 +161,88 @@ export const Map = ({ }) => {
     )
   });
 
-  // Fonction qui enleve le dernier point lorsque ce dernier est placé dans un endroit qui cause pb
-  const closeAlert = () => {
-    setError(false);
-    let newSteps = [...steps];
-    newSteps = newSteps.filter((e) => e !== steps[steps.length - 1]);
-    setSteps(newSteps);
+  const onMapClick = (e) => {
+    // on peut placer les points uniquement si on est en mode edition
+    if (isEdition) {
+      if (selectedMarker !== null) {
+        setSelectedMarker(null);
+      } 
+      else if (selectedRoute !== null) {
+        setSelectedRoute(null);
+      } 
+      else {
+        if (editionMode === "stepOnlyEdit") {
+          if (!error) {
+            addStepPoint(e);
+          }
+        }
+        // ici : editionMode === "interestPointOnlyEdit")
+        else {
+          if (!error) {
+            addInterestPoint(e);
+          }
+        }
+      }
+    }
+    // si on est en mode navigation
+    else {
+      // si le menu est ouvert on le ferme en cliquant sur la map
+      if (selectedMarker !== null) {
+        setSelectedMarker(null);
+      }
+    }
+  };
+
+  // Fonction qui permet d'ajouter un point d'étape
+  const addStepPoint = (e) => {
+    const newStep = {
+      title: "",
+      latitude: parseFloat(e.latLng.lat()),
+      longitude: parseFloat(e.latLng.lng()),
+      description: "",
+      category: "",
+      duration: 1,
+      TravelId: idTravel
+    }
+    addStep.mutate(newStep);
+};
+
+   // Fonction qui permet d'ajouter un point d'interet
+   const addInterestPoint = (e) => {
+      const newPoint = {
+        title: "",
+        latitude: parseFloat(e.latLng.lat()),
+        longitude: parseFloat(e.latLng.lng()),
+        description: "",
+        category: "",
+        TravelId: idTravel
+      }
+      addPoint.mutate(newPoint);
+  };
+
+  // Fonction qui met a jour la position d'un point d'interet
+  const updateInterestPointLocation = (interestPoint) => (e) => {
+    if (!error) {
+      const newPoint = {
+        latitude: parseFloat(e.latLng.lat()),
+        longitude: parseFloat(e.latLng.lng()),
+        idPoint: interestPoint.id
+      };
+        updateLocationPoint.mutate(newPoint)
+    }
+  };
+
+  // Fonction qui met a jour la position d'un point d'interet
+  const updateStepLocation = (step) => (e) => {
+    if (!error) {
+      const newPoint = {
+        latitude: parseFloat(e.latLng.lat()),
+        longitude: parseFloat(e.latLng.lng()),
+        idPoint: step.id
+      };
+      
+        updateLocationStep.mutate(newPoint)
+    }
   };
 
   return (
@@ -263,7 +278,7 @@ export const Map = ({ }) => {
                 draggable={!error && isEdition}
                 clickable={true}
                 onClick={() => {
-                  setSelectedMarker({ marker: steps[index], type: "Step" });
+                  setSelectedMarker({ marker: step, type: "Step" });
                   setSelectedRoute(null);
                 }}
                 onRightClick={() => {
@@ -271,7 +286,8 @@ export const Map = ({ }) => {
                     deleteStep.mutate(step.id); setSelectedMarker(null)
                   }
                 }}
-                onDragEnd={updateLocation(index, step)}
+                onDragEnd= {updateStepLocation(step)}
+
                 icon={stepIcon}
               ></Marker>
             ))}
@@ -291,7 +307,7 @@ export const Map = ({ }) => {
                 draggable={!error && isEdition}
                 clickable={true}
                 onClick={() => {
-                  setSelectedMarker({ marker: interestPoints[index], type: "Point" });
+                  setSelectedMarker({ marker: interestPoint, type: "Point" });
                   setSelectedRoute(null);
                 }}
                 onRightClick={() => {
@@ -299,7 +315,7 @@ export const Map = ({ }) => {
                     deletePoint.mutate(interestPoint.id); setSelectedMarker(null)
                   }
                 }}
-                onDragEnd={updateLocation(index, interestPoint)}
+                onDragEnd= {updateInterestPointLocation(interestPoint)}
                 icon={InterestPointIcon}
               ></Marker>
             ))}
@@ -345,20 +361,20 @@ export const Map = ({ }) => {
       {selectedMarker &&
         (selectedMarker.type === "Point" ? isLoadingP ? 'Chargement...' : isErrorP ? <p style={{ color: 'red' }}>{errorP.message}</p> : (
           <InterestPointMenu
-            interestPoints={interestPoints}
-            setInterestPoints={setInterestPoints}
             selectedMarker={selectedMarker.marker}
             setSelectedMarker={setSelectedMarker}
             deletePoint={deletePoint}
+            updateInfoPoint= {updateInfoPoint}
+            isEdition = {isEdition}
           ></InterestPointMenu>
         ) : (
           selectedMarker.type === "Step" && isLoadingS ? 'Chargement...' : isErrorS ? <p style={{ color: 'red' }}>{errorS.message}</p> : (
             <StepMenu
-              steps={steps}
-              setSteps={setSteps}
               selectedMarker={selectedMarker.marker}
               setSelectedMarker={setSelectedMarker}
               deleteStep={deleteStep}
+              updateInfoStep = {updateInfoStep}
+              isEdition = {isEdition}
             ></StepMenu>
           )
         ))}
@@ -370,20 +386,6 @@ export const Map = ({ }) => {
           ></RouteMenu>
         )
       }
-
-      <Collapse
-        in={error}
-        style={{
-          position: "absolute",
-          textAlign: "center",
-          bottom: 10,
-          marginLeft: "700px",
-        }}
-      >
-        <Alert variant="filled" severity="error" onClose={() => closeAlert()}>
-          Désolé, nous n'avons pas pu calculer l'itinéraire.
-        </Alert>
-      </Collapse>
     </>
   );
 };

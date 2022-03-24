@@ -16,44 +16,57 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
-import { useQuery, useQueryClient, useMutation } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 
 const StepMenu = ({
   deleteStep,
   selectedMarker,
   setSelectedMarker,
-  steps,
-  setSteps,
+  updateInfoStep,
+  isEdition
 }) => {
   const queryClient = useQueryClient();
 
   const [files, setFiles] = useState([]);
-  const [title, setTitle] = useState("");
-  const [categorie, setCategorie] = useState("");
-  const [description, setDescription] = useState("");
-  const [lengthOfStay, setLengthOfStay] = useState(0);
+  const [title, setTitle] = useState(selectedMarker.title);
+  const [category, setCategory] = useState(selectedMarker.category);
+  const [description, setDescription] = useState(selectedMarker.description);
+  const [duration, setDuration] = useState(selectedMarker.duration);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  let handleChangeTitle = (e) => { };
+  const categ = [
+    {
+      value: 'Hôtel',
+    },
+    {
+      value: 'Gîtes',
+    },
+    {
+      value: 'Camping',
+    },
+    {
+      value: 'Palace',
+    },
+    {
+      value: 'Autre',
+    },
+    
+    
+  ];
 
-  const updateProperties = (marker) => (e) => {
-    let newStep = [...steps];
-    newStep[marker.id] = {
-      location: {
-        id: marker.id,
-        name: "Etape",
-        title: marker.location.title,
-        categorie: marker.location.categorie,
-        lengthOfStay: 0,
-        files: [],
-        description: marker.location.description,
-        lat: marker.location.lat,
-        lng: marker.location.lng,
-      },
-      stopover: true,
-    };
-    setSteps(newStep);
+  // Fonction qui met a jour les propriétés d'un point d'interet
+  const updateStepInfo = (step) => (e) => {
+    if(isEdition){
+      const newPoint = {
+        title: title,
+        category: category,
+        description: description,
+        idStep: step.id
+      };
+      updateInfoStep.mutate(newPoint);
+      setSelectedMarker(null);
+    }  
   };
 
   return (
@@ -76,37 +89,45 @@ const StepMenu = ({
           <TextField
             fullWidth
             label="Nom"
-            value={selectedMarker.title}
-            onChange={handleChangeTitle}
+            value={title}
+            onChange={(e) =>setTitle(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={!isEdition}
           />
-          <TextField
+         <TextField
             fullWidth
             select
             label="Catégorie"
-            value={selectedMarker.category}
-            onChange={(e) => setCategorie(e.target.value)}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={!isEdition}
+
           >
-            <MenuItem>Musées</MenuItem>
-            <MenuItem>Parcs</MenuItem>
+            {categ.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.value}
+            </MenuItem>
+          ))}
           </TextField>
           <TextField
             fullWidth
             label="Durée du séjour"
             type="number"
-            value={selectedMarker.duration}
-            onChange={handleChangeTitle}
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={!isEdition}
+
           />
           <Stack
             style={{ marginBottom: 25 }}
@@ -114,7 +135,7 @@ const StepMenu = ({
             justifyContent="space-between"
             spacing={2}
           >
-            <TextField
+            {/* <TextField
               fullWidth
               select
               label="Documents"
@@ -126,7 +147,7 @@ const StepMenu = ({
             >
               {/* {files.map((file, index) => (
                 <MenuItem key={index}>{file.name}</MenuItem>
-              ))} */}
+              ))}
             </TextField>
 
             <Button
@@ -138,7 +159,7 @@ const StepMenu = ({
             >
               {" "}
               Ajouter
-            </Button>
+            </Button> */}
           </Stack>
 
           <TextField
@@ -146,15 +167,19 @@ const StepMenu = ({
             label="Description"
             multiline
             rows={10}
-            value={selectedMarker.description}
+            value={description}
             onChange={(e) => setDescription(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={!isEdition}
+
           />
 
           <Stack direction="row" justifyContent="space-between">
+          {isEdition && <>
+
             <Button
               variant="outlined"
               color="error"
@@ -167,10 +192,12 @@ const StepMenu = ({
               variant="contained"
               color="primary"
               startIcon={<DoneRounded />}
-              onClick={updateProperties(selectedMarker)}
+              onClick={updateStepInfo(selectedMarker)}
             >
               Enregistrer
             </Button>
+            </>
+          }
           </Stack>
         </CardContent>
       </Card>

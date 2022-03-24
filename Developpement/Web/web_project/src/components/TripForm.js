@@ -11,14 +11,32 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import TravelRequests from "../requests/TravelRequests";
+
 const TripForm = () => {
+  const queryClient = useQueryClient();
+
   const [name, setName] = useState("");
 
   const handleNameChange = (newName) => {
     setName(newName);
   };
 
-  const handleSubmit = () => {};
+  const creationTravel = useMutation(TravelRequests.createTravel, {
+    onSuccess: travel => queryClient.setQueryData(
+      ['getTravels'],
+      travels => [...travels, travel]
+    )
+  });
+
+  const handleSubmit = () => {
+    const newStep = {
+      name: name.trim()
+    }
+    creationTravel.mutate(newStep);
+
+  };
 
   return (
     <>
@@ -41,6 +59,7 @@ const TripForm = () => {
             variant="contained"
             color="primary"
             startIcon={<DoneRounded />}
+            onClick= {handleSubmit}
           >
             Créer
           </Button>

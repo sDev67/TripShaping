@@ -13,12 +13,15 @@ import {
 import Loading from "../utils/Loading";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
-
+import { useParams } from "react-router-dom";
 import StepList from "../components/StepList";
 import StepTimeline from "../components/StepTimeline";
 
 const Steps = () => {
-  const idTravel = 1;
+
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
   const queryClient = useQueryClient();
 
   const {
@@ -64,7 +67,7 @@ const Steps = () => {
             <p style={{ color: "red" }}>{errorS.message}</p>
           ) : (
             <div>
-              <StepTimeline steps={steps}></StepTimeline>
+              
               <Stack
                 direction="row"
                 alignItems="center"

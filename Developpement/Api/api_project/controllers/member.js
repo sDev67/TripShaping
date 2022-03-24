@@ -4,7 +4,7 @@ module.exports = {
 
 	get_all: (req, res, next) => {
 		return db.Member.findAll({
-			order: ['title']
+			order: ['lastname']
 		})
 			.then(member => res.json(member))
 			.catch(next);

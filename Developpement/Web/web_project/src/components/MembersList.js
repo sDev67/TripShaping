@@ -13,35 +13,44 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 
-const MembersList = ({ members, OnDeleteMember }) => {
-
+const MembersList = ({ members, deleteMember }) => {
   return (
     <>
-    <Divider></Divider>
-      <List style={{
+      <Divider></Divider>
+      <List
+        style={{
           overflowY: "scroll",
-          height:"100%"
-        }}>
+          height: "100%",
+        }}
+      >
         {members.map((member) => (
           <ListItem
             key={member.toString()}
             disablePadding
             secondaryAction={
-              <IconButton color="error" onClick={(e) => OnDeleteMember({member : member})}>
+              <IconButton
+                color="error"
+                onClick={(e) => deleteMember.mutate(member.id)}
+              >
                 <ClearIcon />
               </IconButton>
             }
           >
             <ListItemButton>
               <ListItemAvatar>
-                <Avatar {...stringAvatar(member.firstname + " " + member.lastname)} />
+                <Avatar
+                  {...stringAvatar(member.firstname + " " + member.lastname)}
+                />
               </ListItemAvatar>
               <ListItemText
                 primary={
-                  <Typography>
+                  <>
                     {member.firstname} {member.lastname}
-                  </Typography>
+                  </>
                 }
+                secondary={<i>
+                {member.fictive ? "Non Répertorié" :""}
+                </i>}
               />
             </ListItemButton>
           </ListItem>

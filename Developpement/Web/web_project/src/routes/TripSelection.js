@@ -1,226 +1,33 @@
 import React, { useState } from "react";
 import {
-  Radio,
   CardActionArea,
-  FormControlLabel,
-  FormControl,
   Card,
   Grid,
-  AvatarGroup,
-  Popover,
   Stack,
-  CardMedia,
   CardContent,
   Dialog,
-  Avatar,
   Button,
-  Alert,
-  Collapse,
-  DialogTitle,
-  Icon,
   Typography,
-  IconButton,
 } from "@mui/material";
-import { Link, Outlet, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import TripForm from "../components/TripForm";
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import TravelRequests from "../requests/TravelRequests";
+import Loading from './../utils/Loading';
+
 
 const TripSelection = () => {
-  const [trips, setTrips] = useState([
-    {
-      title: "Voyage Paris",
-      members: [
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Serkan Deveci",
-        },
-        {
-          name: "Vivien Riehl",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-      ],
-    },
-    {
-      title: "Voyage Paris",
-      members: [
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Serkan Deveci",
-        },
-        {
-          name: "Vivien Riehl",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-      ],
-    },
-    {
-      title: "Voyage Paris",
-      members: [
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Serkan Deveci",
-        },
-        {
-          name: "Vivien Riehl",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-      ],
-    },
-    {
-      title: "Voyage Paris",
-      members: [
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Serkan Deveci",
-        },
-        {
-          name: "Vivien Riehl",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-      ],
-    },
-    {
-      title: "Voyage Paris",
-      members: [
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Serkan Deveci",
-        },
-        {
-          name: "Vivien Riehl",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-      ],
-    },
-    {
-      title: "Voyage Paris",
-      members: [
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Serkan Deveci",
-        },
-        {
-          name: "Vivien Riehl",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Benjamin Gallier",
-        },
-      ],
-    },
-    {
-      title: "Voyage Paris",
-      members: [
-        {
-          name: "Benjamin Gallier",
-        },
-        {
-          name: "Serkan Deveci",
-        },
-        {
-          name: "Vivien Riehl",
-        },
-      ],
-    },
-  ]);
+
+  const { isLoading: isLoadingT, isError: isErrorT, error: errorT, data: travels } = useQuery(
+    ['getTravels'], () => TravelRequests.getAllTravel()
+  );
+
 
   const [tripFormOpen, setTripFormOpen] = useState(false);
-
-  //const imgMyimageexample = require('../assets/balloons-flying.png');
+  
+  let isActive = travels?.activated;
 
   return (
     <>
@@ -249,40 +56,44 @@ const TripSelection = () => {
           alignItems="center"
           spacing={10}
         >
-          {trips.map((trip, index) => (
+          {
+          isLoadingT ? <Loading/> : isErrorT ? <p style={{ color: 'red' }}>{errorT.message}</p> :
+          travels.map((travel, index) => (
             <Grid key={index} item xs={4}>
               <Card>
-                <CardActionArea component={Link} to="/trip/map">
+                <CardActionArea component={Link} to={"/trip/" + travel.id + "/map"}>
                   <CardContent>
                     <Stack
                       direction="row"
                       alignItems="center"
                       justifyContent="space-between"
                     >
+                      
                       <Stack>
                         <Typography
                           color="primary"
                           variant="h4"
                           textAlign="center"
                         >
-                          {trip.title}
+                          {travel.name}
                         </Typography>
                         <Typography
                           variant="body2"
                           color="text.secondary"
                           marginLeft={1}
                         >
-                          En cours
+                          {travel.activated ? <p>Active</p> : <p>Inactive</p>} <br></br>
+
                         </Typography>
                       </Stack>
 
-                      <AvatarGroup max={4}>
+                      {/* <AvatarGroup max={4}>
                         {trip.members.map((member) => (
                           <>
                             <Avatar {...stringAvatar(member.name)} />
                           </>
                         ))}
-                      </AvatarGroup>
+                      </AvatarGroup> */}
                     </Stack>
                   </CardContent>
                 </CardActionArea>
@@ -303,7 +114,7 @@ const TripSelection = () => {
         </div>
       </Stack>
       <Dialog open={tripFormOpen} onClose={() => setTripFormOpen(false)}>
-        <TripForm></TripForm>
+        <TripForm setTripFormOpen={setTripFormOpen}></TripForm>
       </Dialog>
     </> 
   );

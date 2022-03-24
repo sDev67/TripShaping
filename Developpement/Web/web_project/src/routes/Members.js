@@ -7,63 +7,47 @@ import "../App.css";
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import MemberForm from "../components/MemberForm";
+import TravelRequests from "../requests/TravelRequests";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+import Loading from "../utils/Loading";
+import MemberRequests from "../requests/MemberRequests";
+import UserRequests from "../requests/UserRequests";
 
 const Members = () => {
-  const [currentMembers, setCurrentMembers] = useState([
-    { id : 1, firstname: "Enzo", lastname: "Mazzarella" },
-    { id : 2, firstname: "Vivien", lastname: "Rhiel" },
-    { id : 3, firstname: "Baptiste", lastname: "Fléjou" },
-    { id : 4, firstname: "Sese", lastname: "dev" },
-    { id : 5, firstname: "Oklm", lastname: "Lol" },
-    { id : 6, firstname: "azdaz", lastname: "ezf" },
-    { id : 7, firstname: "tgrt", lastname: "zef" },
-    { id : 8, firstname: "vg", lastname: "za" },
-    { id : 9, firstname: "fez", lastname: "jkl" },
-  ]);
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
 
-  const [allMembers, setMembers] = useState([
-    { id : 1, firstname: "Enzo", lastname: "Mazzarella" },
-    { id : 2, firstname: "Vivien", lastname: "Rhiel" },
-    { id : 3, firstname: "Baptiste", lastname: "Fléjou" },
-    { id : 4, firstname: "Sese", lastname: "dev" },
-    { id : 5, firstname: "Oklm", lastname: "Lol" },
-    { id : 6, firstname: "azdaz", lastname: "ezf" },
-    { id : 7, firstname: "tgrt", lastname: "zef" },
-    { id : 8, firstname: "vg", lastname: "za" },
-    { id : 9, firstname: "fez", lastname: "jkl" },
-    { id : 10, firstname: "Ben", lastname: "Momo" },
-    { id : 11, firstname: "Mimi", lastname: "popo" },
-    { id : 12, firstname: "zbeul", lastname: "balle" },
-    { id : 13, firstname: "rackai", lastname: "dev" },
-    { id : 14, firstname: "Benjamin", lastname: "Gallier" },
-    { id : 15, firstname: "Serkan", lastname: "Deveci" },
-    { id : 16, firstname: "Enzo", lastname: "Mazzarella" },
-    { id : 17, firstname: "Philippe", lastname: "Grandpré" },
-  ]);
+  const queryClient = useQueryClient();
 
-  const [addFictifMember, setAddFictifMember] = useState(false);
+  const {
+    isLoading: isLoading,
+    isError: isError,
+    error: error,
+    data: membersOfTravel,
+  } = useQuery(["getMembers", idTravel], () =>
+    TravelRequests.getMembersOfTravel(idTravel)
+  );
 
-  const OnAddMember = ({ firstname, lastname }) => {
-    console.log({ firstname, lastname });
-    const id = currentMembers.length;
-    setCurrentMembers([...currentMembers, { id, firstname, lastname }]);
+  const {
+    isLoading: isLoadingA,
+    isError: isErrorA,
+    error: errorA,
+    data: users,
+  } = useQuery(["getUsers"], () => UserRequests.getAllUsers());
 
-    // changer ca car si plusieurs personne ont le meme nom et prenom ca les enleve
-    let filteredArray = allMembers.filter(
-      (currentMember) =>
-      currentMember.id !== id
-    );
-    setMembers(filteredArray);
-  };
+ 
 
-  const OnDeleteMember = ({ member }) => {
-    // changer ca car si plusieurs personne ont le meme nom et prenom ca les enleve
-    let filteredArray = currentMembers.filter(
-      (currentMember) =>
-      currentMember.id !== member.id
-    );
-    setCurrentMembers(filteredArray);
-  };
+  const deleteMember = useMutation(MemberRequests.removeMember, {
+    onSuccess: (_, id) => queryClient.setQueryData(
+      ['getMembers', idTravel],
+      members => members.filter(e => e.id !== id)
+    )
+  });
+
+ 
+
+
 
   return (
     <>
@@ -87,13 +71,22 @@ const Members = () => {
             <Typography variant="h4" marginY={1}>
               Liste des membres
             </Typography>
-            <MemberList
-              members={currentMembers}
-              canBeDelete={true}
-              OnDeleteMember={OnDeleteMember}
-            />
+            {isLoading ? (
+              <Loading />
+            ) : isError ? (
+              <p style={{ color: "red" }}>{error.message}</p>
+            ) : (
+              <MemberList
+                members={membersOfTravel}
+                canBeDelete={true}
+                deleteMember={deleteMember}
+              />
+            )}
           </Stack>
-          <MemberForm OnAddMember={OnAddMember} allMembers={allMembers} />
+          <MemberForm
+            users={users}
+           
+          />
         </Stack>
       </Stack>
     </>

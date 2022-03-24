@@ -10,10 +10,30 @@ import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import HotelIcon from '@mui/icons-material/Hotel';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import Typography from '@mui/material/Typography';
+import CancelRounded from "@mui/icons-material/CancelRounded";
+import {
+  Card,
+  TextField,
+  Stack,
+  CardMedia,
+  CardContent,
+  Dialog,
+  MenuItem,
+  Button,
+  IconButton,
+} from "@mui/material";
+import Loading from '../utils/Loading';
 
-const StepTimeline = ({steps}) => {
+const StepTimeline = ({steps, isLoadingS, isErrorS, errorS}) => {
   return (
-    <Timeline position="alternate">
+    <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", overflowY:"scroll", height:"90%" }}>
+        
+        {isLoadingS ? (
+            <Loading></Loading>
+          ) : isErrorS ? (
+            <p style={{ color: "red" }}>{errorS.message}</p>
+          ) :
+    <Timeline position="alternate" style={{}}>
         {steps.map((step) =>(
             <TimelineItem>
         
@@ -42,61 +62,12 @@ const StepTimeline = ({steps}) => {
       </TimelineItem>
 
         ))}
+        
       
       
-      {/* <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: 'auto 0' }}
-          variant="body2"
-          color="text.secondary"
-        >
-          10:00 am
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot color="primary">
-            <LaptopMacIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Code
-          </Typography>
-          <Typography>Because it&apos;s awesome!</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot color="primary" variant="outlined">
-            <HotelIcon />
-          </TimelineDot>
-          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Sleep
-          </Typography>
-          <Typography>Because you need rest</Typography>
-        </TimelineContent>
-      </TimelineItem>
-      <TimelineItem>
-        <TimelineSeparator>
-          <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-          <TimelineDot color="secondary">
-            <RepeatIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: '12px', px: 2 }}>
-          <Typography variant="h6" component="span">
-            Repeat
-          </Typography>
-          <Typography>Because this is the life you love!</Typography>
-        </TimelineContent>
-      </TimelineItem> */}
-    </Timeline>
+      
+    </Timeline>}
+    </Card>
   )
 }
 

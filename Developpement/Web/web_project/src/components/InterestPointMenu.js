@@ -1,70 +1,95 @@
 import React, { useState } from "react";
 import {
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
   Card,
-  CircularProgress,
   TextField,
-  Popover,
   Stack,
   CardMedia,
   CardContent,
   Dialog,
   MenuItem,
   Button,
-  Alert,
-  Collapse,
-  DialogTitle,
-  Icon,
   Typography,
   IconButton,
 } from "@mui/material";
-import palette from "./../theme/palette";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
+import { useQueryClient } from 'react-query';
 
 const InterestPointMenu = ({
-  deleteMarker,
+  deletePoint,
   selectedMarker,
   setSelectedMarker,
-  interestPoints,
-  setInterestPoints,
+  updateInfoPoint,
+  isEdition
 }) => {
+  const queryClient = useQueryClient();
+
   const [files, setFiles] = useState([]);
-  const [title, setTitle] = useState("");
-  const [categorie, setCategorie] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState(selectedMarker.title);
+  const [category, setCategory] = useState(selectedMarker.category);
+  const [description, setDescription] = useState(selectedMarker.description);
   const [lengthOfStay, setLengthOfStay] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  let handleChangeTitle = (e) => {};
+  const categ = [
+    {
+      value: 'Parc',
+    },
+    {
+      value: 'Musée',
+    },
+    {
+      value: 'Cinéma',
+    },
+    {
+      value: 'Stade',
+    },
+    {
+      value: 'Magasin',
+    },
+    {
+      value: 'Monument historique',
+    },
+    {
+      value: 'Restaurant',
+    },
+    {
+      value: 'Spectacle',
+    },
+    {
+      value: 'Nature',
+    },
+    {
+      value: 'Port',
+    },
+    {
+      value: 'Autre',
+    },
+    
+    
+  ];
 
-  const updateProperties = (marker) => (e) => {
-    let newInterestPoint = [...interestPoints];
-    newInterestPoint[marker.id] = {
-      location: {
-        id: marker.id,
-        name: "PointInteret",
-        title: marker.location.title,
-        categorie: marker.location.categorie,
-        files: [],
-        description: marker.location.description,
-        lat: marker.location.lat,
-        lng: marker.location.lng,
-      },
-      stopover: true,
-    };
-    setInterestPoints(newInterestPoint);
+ // Fonction qui met a jour les propriétés d'un point d'interet
+  const updateInterestPointInfo = (pointId) => (e) => {
+    if(isEdition){
+      const newPoint = {
+        title: title,
+        category: category,
+        description: description,
+        idPoint: pointId.id
+      };
+      updateInfoPoint.mutate(newPoint);
+      setSelectedMarker(null);
+    }  
   };
+  
 
   return (
     <>
-      <Card style={{ right: 60, top: 30, width: 400, position: "fixed" }}>
+      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height:"90%" }}>
         <CardMedia
           component="img"
           height="194"
@@ -82,26 +107,33 @@ const InterestPointMenu = ({
           <TextField
             fullWidth
             label="Nom"
-            value={selectedMarker.title}
-            onChange={handleChangeTitle}
+            value={title}
+            onChange={(e) =>setTitle(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={!isEdition}
+
           />
           <TextField
             fullWidth
             select
             label="Catégorie"
-            value={selectedMarker.category}
-            onChange={(e) => setCategorie(e.target.value)}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={!isEdition}
+
           >
-            <MenuItem>Musées</MenuItem>
-            <MenuItem>Parcs</MenuItem>
+            {categ.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.value}
+            </MenuItem>
+          ))}
           </TextField>
           <Stack
             style={{ marginBottom: 25 }}
@@ -109,7 +141,7 @@ const InterestPointMenu = ({
             justifyContent="space-between"
             spacing={2}
           >
-            <TextField
+            {/* <TextField
               fullWidth
               select
               label="Etape associée"
@@ -134,7 +166,7 @@ const InterestPointMenu = ({
             >
               <MenuItem>1</MenuItem>
               <MenuItem>2</MenuItem>
-            </TextField>
+            </TextField> */}
           </Stack>
           
           <Stack
@@ -143,7 +175,7 @@ const InterestPointMenu = ({
             justifyContent="space-between"
             spacing={2}
           >
-            <TextField
+            {/* <TextField
               fullWidth
               select
               label="Documents"
@@ -153,9 +185,9 @@ const InterestPointMenu = ({
                 shrink: true,
               }}
             >
-              {/* {files.map((file, index) => (
+              {files.map((file, index) => (
                 <MenuItem key={index}>{file.name}</MenuItem>
-              ))} */}
+              ))}
             </TextField>
 
             <Button
@@ -167,7 +199,7 @@ const InterestPointMenu = ({
             >
               {" "}
               Ajouter
-            </Button>
+            </Button> */}
           </Stack>
 
           <TextField
@@ -175,31 +207,40 @@ const InterestPointMenu = ({
             label="Description"
             multiline
             rows={10}
-            value={selectedMarker.description}
+            value={description}
             onChange={(e) => setDescription(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={!isEdition}
+
           />
 
           <Stack direction="row" justifyContent="space-between">
-            <Button
-              variant="outlined"
-              color="error"
-              startIcon={<DeleteRounded />}
-              onClick={() => deleteMarker(selectedMarker)}
-            >
-              Supprimer
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<DoneRounded />}
-              onClick={updateProperties(selectedMarker)}
-            >
-              Enregistrer
-            </Button>
+            {isEdition && <>
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<DeleteRounded />}
+                onClick={() => { deletePoint.mutate(selectedMarker.id); setSelectedMarker(null) }}
+              >
+                Supprimer
+              </Button>            
+            
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<DoneRounded />}
+                //onClick={updateProperties(selectedMarker)}
+                onClick={updateInterestPointInfo(selectedMarker)}
+
+              >
+                Enregistrer
+              </Button>
+              </>
+            }
+            
           </Stack>
         </CardContent>
       </Card>

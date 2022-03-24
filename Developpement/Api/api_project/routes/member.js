@@ -3,7 +3,7 @@ const member_ctrl = require('../controllers/member');
 module.exports = [
 
 	{
-		url: '/member',
+		url: '/members',
 		method: 'get',
 		func: member_ctrl.get_all
 	},

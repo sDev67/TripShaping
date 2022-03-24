@@ -4,16 +4,51 @@ import { useState } from "react";
 import { Button, Stack, Avatar } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import { stringAvatar } from "../utils/AvatarColorPicker";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+import Loading from "../utils/Loading";
+import MemberRequests from "../requests/MemberRequests";
 
 const MemberForm = ({
-  OnAddMember,
-  allMembers,
-  statusAddFictifMember = false,
-  setAddFictifMember,
+  users,
 }) => {
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
+  const queryClient = useQueryClient();
+
+
   const [selectedMember, setSelectedMember] = useState({});
-  const [fictivFirstname, setFictivFirstname] = useState("");
-  const [fictivLastname, setFictivLastname] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+
+  const addMember = useMutation(MemberRequests.addMember, {
+    onSuccess: (member) =>
+      queryClient.setQueryData(["getMembers", idTravel], (members) => [
+        ...members,
+        member,
+      ]),
+  });
+
+  const OnAddMember = (firstname, lastname, fictive) => {
+    const newMember = {
+      firstname: firstname,
+      lastname: lastname,
+      fictive: fictive,
+      TravelId: idTravel,
+    };
+    addMember.mutate(newMember);
+    if(fictive)
+    {
+      setFirstname("");
+      setLastname("");
+    }
+    else
+    {
+      setSelectedMember({});
+    }
+    
+  };
 
   return (
     <>
@@ -27,7 +62,7 @@ const MemberForm = ({
               style={{ width: "75%" }}
               noOptionsText={"Aucun membre trouvé"}
               fullWidth
-              options={allMembers}
+              options={users}
               onChange={(event, value) => setSelectedMember(value)}
               autoHighlight
               getOptionLabel={(option) =>
@@ -60,14 +95,10 @@ const MemberForm = ({
             />
             <Button
               style={{ width: "25%" }}
-              onClick={(e) =>
-                OnAddMember({
-                  id: allMembers.length,
-                  firstname: selectedMember.firstname,
-                  lastname: selectedMember.lastname,
-                })
-              }
               variant="contained"
+              onClick={(e) => {
+                OnAddMember(selectedMember.firstname, selectedMember.lastname, false);
+              }}
             >
               Ajouter
             </Button>
@@ -87,8 +118,8 @@ const MemberForm = ({
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={fictivFirstname}
-                onChange={(e) => setFictivFirstname(e.target.value)}
+                value={firstname}
+                onChange={(e) => setFirstname(e.target.value)}
               />
               <TextField
                 label="Nom"
@@ -96,21 +127,15 @@ const MemberForm = ({
                 InputLabelProps={{
                   shrink: true,
                 }}
-                onChange={(e) => setFictivLastname(e.target.value)}
-                value={fictivLastname}
+                onChange={(e) => setLastname(e.target.value)}
+                value={lastname}
               />
             </Stack>
 
             <Button
               style={{ width: "25%" }}
               onClick={(e) => {
-                OnAddMember({
-                  id: allMembers.length,
-                  firstname: fictivFirstname,
-                  lastname: fictivLastname,
-                });
-                setFictivFirstname("");
-                setFictivLastname("");
+                OnAddMember(firstname, lastname, true);
               }}
               variant="contained"
             >

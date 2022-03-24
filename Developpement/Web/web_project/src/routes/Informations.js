@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
+import { useParams } from "react-router-dom";
 
 import Editor from '../components/RichTextEditor'
 
@@ -30,7 +31,9 @@ const Informations = () => {
 
   const queryClient = useQueryClient();
   const [value, setValue] = React.useState("");
-  const idTravel = 1;
+  
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
 
   const { isLoading: isLoading, isError: isError, error: error, data: travelDatas } = useQuery(
     ['getInfos', idTravel], () => TravelRequests.getTravel(idTravel)

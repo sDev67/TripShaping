@@ -99,7 +99,7 @@ const Informations = () => {
             multiline
             rows={30}
             value={travelDatas.infos}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => setValue(e.target.value )}
             InputLabelProps={{
             shrink: true,
             }}

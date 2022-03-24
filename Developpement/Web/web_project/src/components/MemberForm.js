@@ -25,7 +25,7 @@ const MemberForm = ({
           <Stack direction="row" spacing={1}>
             <Autocomplete
               style={{ width: "75%" }}
-              noOptionsText={'Aucun membre trouvé'}
+              noOptionsText={"Aucun membre trouvé"}
               fullWidth
               options={allMembers}
               onChange={(event, value) => setSelectedMember(value)}
@@ -79,9 +79,9 @@ const MemberForm = ({
             Ajouter un membre non répertorié
           </Typography>
 
-          <Stack direction="row" spacing={1} >
+          <Stack direction="row" spacing={1}>
             <Stack direction="row" spacing={1} style={{ width: "75%" }}>
-            <TextField
+              <TextField
                 label="Prénom"
                 fullWidth
                 InputLabelProps={{
@@ -100,23 +100,18 @@ const MemberForm = ({
                 value={fictivLastname}
               />
             </Stack>
-              
-            
 
             <Button
               style={{ width: "25%" }}
-              onClick={(e) =>
-                {
-                  OnAddMember({
-                    id: allMembers.length,
-                    firstname: fictivFirstname,
-                    lastname: fictivLastname,
-                  })
-                  setFictivFirstname("");
-                  setFictivLastname("");
-                }
-                
-              }
+              onClick={(e) => {
+                OnAddMember({
+                  id: allMembers.length,
+                  firstname: fictivFirstname,
+                  lastname: fictivLastname,
+                });
+                setFictivFirstname("");
+                setFictivLastname("");
+              }}
               variant="contained"
             >
               Ajouter

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Stack,
@@ -6,37 +6,48 @@ import {
   AccordionSummary,
   Accordion,
   Typography,
-  FormControlLabel,
-  Switch,
+  Divider,
+  Box,
 } from "@mui/material";
 
-import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
+import Loading from "../utils/Loading";
+import TravelRequests from "../requests/TravelRequests";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+
+import StepList from "../components/StepList";
+import StepTimeline from "../components/StepTimeline";
 
 const Steps = () => {
+  const idTravel = 1;
+  const queryClient = useQueryClient();
 
-    const [steps, setSteps] = useState([
-        { id : 1, firstname: "Enzo", lastname: "Mazzarella" },
-        { id : 2, firstname: "Vivien", lastname: "Rhiel" },
-        { id : 3, firstname: "Baptiste", lastname: "Fléjou" },
-        { id : 4, firstname: "Sese", lastname: "dev" },
-        { id : 5, firstname: "Oklm", lastname: "Lol" },
-        { id : 6, firstname: "azdaz", lastname: "ezf" },
-        { id : 7, firstname: "tgrt", lastname: "zef" },
-        { id : 8, firstname: "vg", lastname: "za" },
-        { id : 9, firstname: "fez", lastname: "jkl" },
-        { id : 10, firstname: "Ben", lastname: "Momo" },
-        { id : 11, firstname: "Mimi", lastname: "popo" },
-        { id : 12, firstname: "zbeul", lastname: "balle" },
-        { id : 13, firstname: "rackai", lastname: "dev" },
-        { id : 14, firstname: "Benjamin", lastname: "Gallier" },
-        { id : 15, firstname: "Serkan", lastname: "Deveci" },
-        { id : 16, firstname: "Enzo", lastname: "Mazzarella" },
-        { id : 17, firstname: "Philippe", lastname: "Grandpré" },
-      ]);
-      
+  const {
+    isLoading: isLoadingS,
+    isError: isErrorS,
+    error: errorS,
+    data: steps,
+  } = useQuery(["getSteps", idTravel], () =>
+    TravelRequests.getStepsOfTravel(idTravel)
+  );
+
+  const [totalDuration, setTotalDuration] = useState(0);
+
+  useEffect(() => {
+    if (steps) calculTotalDuration(steps);
+  }, [steps]);
+
+  const calculTotalDuration = (steps) => {
+    let duration = 0;
+
+    steps.map((step) => {
+      duration = duration + step.duration;
+    });
+    setTotalDuration(duration);
+  };
+
   return (
     <>
-      <Stack height="100%" width="100%" direction="column">
+      <Stack height="100%" width="100%" direction="column" style={{overflowY:"scroll"}} >
         <Typography
           color="primary"
           variant="h2"
@@ -45,39 +56,38 @@ const Steps = () => {
         >
           Etapes
         </Typography>
-        <Stack width="90%" marginLeft="5%" direction="column" height="85%">
-          <Typography variant="h4" marginY={1}>
-            Nombre d'étapes : {steps.length}
-          </Typography>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
-              <Typography>Accordion 1</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                eget.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
-              <Typography>Accordion 2</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                eget.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion disabled>
-            <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
-              <Typography>Disabled Accordion</Typography>
-            </AccordionSummary>
-          </Accordion>
+      
+        <Stack width="90%" marginLeft="5%" direction="column" height="85%"  >
+          {isLoadingS ? (
+            <Loading></Loading>
+          ) : isErrorS ? (
+            <p style={{ color: "red" }}>{errorS.message}</p>
+          ) : (
+            <div>
+              <StepTimeline steps={steps}></StepTimeline>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="flex-start"
+                spacing={10}
+              >
+                <Typography variant="h4" marginY={1}>
+                  Nombre d'étapes : {steps.length}
+                </Typography>
+                <Typography variant="h4" marginY={1}>
+                  Durée totale :{" "}
+                  {totalDuration > 1 ? (
+                    <Typography variant="body">
+                      {totalDuration} jours
+                    </Typography>
+                  ) : (
+                    <Typography variant="body">{totalDuration} jour</Typography>
+                  )}
+                </Typography>
+              </Stack>
+              <StepList steps={steps}></StepList>
+            </div>
+          )}
         </Stack>
       </Stack>
     </>

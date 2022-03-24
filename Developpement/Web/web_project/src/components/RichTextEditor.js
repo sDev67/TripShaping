@@ -1,38 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from "draft-js";
+import {  Editor } from "react-draft-wysiwyg";
+import { EditorState, ContentState } from "draft-js";
+import { convertToHTML } from 'draft-convert';
+import { convertFromHTML } from "draft-convert";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { TextField } from "@mui/material";
 
 
 
-const RichTextEditor = () => 
+const RichTextEditor = ({setValue, value}) => 
 {
     
     const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
+      
+     EditorState.createEmpty()
     );
-    useEffect(() => {
-    console.log(editorState);
-    }, [editorState]);
 
     return (
         <div>
           <div style={{ border: "1px solid black", padding: '2px', minHeight: '400px' }}>
             <Editor
               editorState={editorState}
-              onEditorStateChange={setEditorState}>
-
-                <TextField
-                 style={{margin:"30px"}}
-                 label="Informations"
-                 placeholder="Ajouter des informations sur le voyage"
-                 multiline
-                 rows={30}
+              onEditorStateChange={setEditorState}
+              placeholderText="Informations sur le voyage"
+            
+              onChange={(e) => setValue(convertToHTML(editorState.getCurrentContent()))}
+              >
+                
                
-                 InputLabelProps={{
-                shrink: true,
-                }}/>
             </Editor>
           </div>
         </div>

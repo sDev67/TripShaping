@@ -30,6 +30,7 @@ const Informations = () => {
 
   const queryClient = useQueryClient();
   const [value, setValue] = React.useState("");
+  const [updatingStatuts, setUpdatingStatuts] = React.useState(true);
   const idTravel = 1;
 
   const { isLoading: isLoading, isError: isError, error: error, data: travelDatas } = useQuery(
@@ -38,6 +39,7 @@ const Informations = () => {
 
   const handleChange = () => {
     
+    setUpdatingStatuts(false);
     var newTravel = 
     {
       TravelId:idTravel,
@@ -50,14 +52,14 @@ const Informations = () => {
     }
 
     updateInformation.mutate(newTravel);
+    console.log('Infos updated ! ' + newTravel.infos);
   };
 
-  
-
   const updateInformation = useMutation(TravelRequests.updateTravel,{
-    onSuccess: infos => queryClient.setQueryData(
+    onSuccess: travels => queryClient.setQueryData(
       ['getInfos', idTravel],
-      setValue(infos.infos)
+      travelDatas => [travels],
+      
       )
     }
   )
@@ -75,7 +77,7 @@ const Informations = () => {
           Informations
         </Typography>
         {
-          isLoading ? 
+          isLoading || queryClient.isMutating() ? 
           <Typography
             color="error"
             variant="h5"
@@ -83,6 +85,7 @@ const Informations = () => {
             marginTop={4}>
               Chargement...
           </Typography>
+         
 
         :
           
@@ -101,12 +104,12 @@ const Informations = () => {
             shrink: true,
             }}
           />*/}
-          <Editor/>
-          <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>s
+          <Editor setValue={setValue} value={travelDatas.infos}/>
+          <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>
           </>
           
         :
-        console.log({error})
+        <p style={{ color: 'red' }}>{error.message}</p> 
       }
         
 

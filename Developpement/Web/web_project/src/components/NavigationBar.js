@@ -34,7 +34,7 @@ const NavigationBar = () => {
     ['getTravelById', idTravel], () => TravelRequests.getTravelByid(idTravel)
   );
 
-  
+
 
   const [value, setValue] = React.useState(0);
 
@@ -54,84 +54,84 @@ const NavigationBar = () => {
         direction="column"
         justifyContent="space-between"
       >
-        
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            spacing={1}
-            style={{marginTop:"50px"}}
-          >
-            <img
-              src={require("../assets/globe-terrestre.png")}
-              width="64px"
-              height="64px"
-            ></img>
-            <Typography variant="h1" color="primary" textAlign="center">
-              Atlas
-            </Typography>
-          </Stack>
-          
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="flex-start"
-            spacing={1}
-            paddingLeft={3}
-          >
-            <IconButton component={Link} to="/mytrips">
-              <ArrowCircleLeftRoundedIcon
-                color="primary"
-                sx={{ fontSize: "35px" }}
-              />
-            </IconButton>
-            <Typography variant="h5" color="primary" textAlign="center">
-              {isLoadingT ? 'Chargement...' : isErrorT ? <p style={{ color: 'red' }}>{errorT.message}</p> :
-                travels.name
-              }
-            </Typography>
-          </Stack>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            orientation="vertical"
-            textColor="primary"
-            indicatorColor="primary"
-          >
-            <Tab
-              icon={<MapRoundedIcon />}
-              iconPosition="start"
-              label="Carte"
-              value={"/trip/map/" + idTravel}
-              component={Link}
-              to={"/trip/map/" + idTravel}
+
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+          spacing={1}
+          style={{ marginTop: "50px" }}
+        >
+          <img
+            src={require("../assets/globe-terrestre.png")}
+            width="64px"
+            height="64px"
+          ></img>
+          <Typography variant="h1" color="primary" textAlign="center">
+            Atlas
+          </Typography>
+        </Stack>
+
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="flex-start"
+          spacing={1}
+          paddingLeft={3}
+        >
+          <IconButton component={Link} to="/mytrips">
+            <ArrowCircleLeftRoundedIcon
+              color="primary"
+              sx={{ fontSize: "35px" }}
             />
-            <Tab
-              icon={<AssignmentRoundedIcon />}
-              iconPosition="start"
-              label="Tâches"
-              value="/trip/todolist"
-              component={Link}
-              to="/trip/todolist"
-            />
-            <Tab
-              icon={<TextSnippetRoundedIcon />}
-              iconPosition="start"
-              label="Informations"
-              value="/trip/informations"
-              component={Link}
-              to="/trip/informations"
-            />
-            <Tab
-              icon={<GroupsRoundedIcon />}
-              iconPosition="start"
-              label="Membres"
-              value="/trip/members"
-              component={Link}
-              to="/trip/members"
-            />
-          </Tabs>
-        
+          </IconButton>
+          <Typography variant="h5" color="primary" textAlign="center">
+            {isLoadingT ? 'Chargement...' : isErrorT ? <p style={{ color: 'red' }}>{errorT.message}</p> :
+              travels.name
+            }
+          </Typography>
+        </Stack>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          orientation="vertical"
+          textColor="primary"
+          indicatorColor="primary"
+        >
+          <Tab
+            icon={<MapRoundedIcon />}
+            iconPosition="start"
+            label="Carte"
+            value={"/trip/map/" + idTravel}
+            component={Link}
+            to={"/trip/map/" + idTravel}
+          />
+          <Tab
+            icon={<AssignmentRoundedIcon />}
+            iconPosition="start"
+            label="Tâches"
+            value={"/trip/todolist/" + idTravel}
+            component={Link}
+            to={"/trip/todolist/" + idTravel}
+          />
+          <Tab
+            icon={<TextSnippetRoundedIcon />}
+            iconPosition="start"
+            label="Informations"
+            value={"/trip/informations/" + idTravel}
+            component={Link}
+            to={"/trip/informations/" + idTravel}
+          />
+          <Tab
+            icon={<GroupsRoundedIcon />}
+            iconPosition="start"
+            label="Membres"
+            value={"/trip/members/" + idTravel}
+            component={Link}
+            to={"/trip/members/" + idTravel}
+          />
+        </Tabs>
+
 
         <Stack
           direction="row"

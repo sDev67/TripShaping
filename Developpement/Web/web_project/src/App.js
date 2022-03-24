@@ -24,10 +24,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/mytrips" element={<TripSelection />} />
             <Route path="/trip" element={<NavigationBar />}>
-              <Route path="map/:idTravel" element={<Itinerary/>} />
-              <Route path="todolist" element={<TodoList />} />
-              <Route path="informations" element={<Informations />} />
-              <Route path="members" element={<Members />} />
+              <Route path="map/:idTravel" element={<Itinerary />} />
+              <Route path="todolist/:idTravel" element={<TodoList />} />
+              <Route path="informations/:idTravel" element={<Informations />} />
+              <Route path="members/:idTravel" element={<Members />} />
             </Route>
           </Routes>
           {/* <ReactQueryDevtools /> */}

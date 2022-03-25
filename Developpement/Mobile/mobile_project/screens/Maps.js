@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { DefaultTheme, RadioButton } from 'react-native-paper';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import * as Location from 'expo-location';
-import { NativeBaseProvider } from 'native-base';
+import { NativeBaseProvider, Select, CheckIcon } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import TravelRequests from "../requests/TravelRequests";
 
 import { useQuery, useQueryClient } from 'react-query';
-import { GOOGLE_MAPS_APIKEY } from "../utils";
 
 const Maps = ({ navigation }) => {
 
@@ -66,7 +64,7 @@ const Maps = ({ navigation }) => {
             {location &&
                 <NativeBaseProvider>
                     <SafeAreaView style={{ flex: 1 }}>
-                        <MapView style={styles.map} scrollEnabled={true} provider={PROVIDER_GOOGLE} showsUserLocation={true} initialRegion={{ latitude: location.coords.latitude, longitude: location.coords.longitude, longitudeDelta: 0.125, latitudeDelta: 0.125 }}>
+                        <MapView style={styles.map} scrollEnabled={true} provider={PROVIDER_GOOGLE} showsUserLocation={true} initialRegion={{ latitude: location.coords.latitude, longitude: location.coords.longitude, longitudeDelta: 2, latitudeDelta: 2 }}>
                             {(checked === "0" || checked === "1") && (isLoadingS ? <Text>Chargement...</Text> : isErrorS ? <Text style={{ color: 'red' }}>{errorS.message}</Text> :
                                 <>
                                     {steps.map((step, index) => (
@@ -93,25 +91,12 @@ const Maps = ({ navigation }) => {
                                                             { latitude: steps[index - 1].latitude, longitude: steps[index - 1].longitude },
                                                             { latitude: step.latitude, longitude: step.longitude }
                                                         ]}
-                                                        onPress={() => navigation.navigate('Itinéraire')}
+                                                        onPress={() => navigation.navigate('Itinéraire', { step: step, stepBefore: steps[index - 1] })}
                                                     />
                                                 )}
                                             </>
                                         ))}
                                     </>}
-                                    {/* <MapViewDirections
-                                        origin={{ latitude: 48.87825669202483, longitude: 7.415160892563047 }}
-                                        destination={{ latitude: 48.56599996601616, longitude: 7.730613259942172 }}
-                                        strokeWidth={3}
-                                        strokeColor='#00AB55'
-                                        apikey={GOOGLE_MAPS_APIKEY}
-                                        tappable={true}
-                                        onPress={() => showModal()}
-                                        onReady={result => {
-                                            setDistance(result.distance);
-                                            setDuration(result.duration);
-                                        }}
-                                    /> */}
                                 </>)
                             }
                             {(checked === "0" || checked === "2") && (isLoadingP ? <Text>Chargement...</Text> : isErrorP ? <Text style={{ color: 'red' }}>{errorP.message}</Text> :
@@ -126,25 +111,11 @@ const Maps = ({ navigation }) => {
                             }
                         </MapView>
                         <View style={styles.window}>
-                            <RadioButton.Group onValueChange={(newValue) => { setChecked(newValue) }} value={checked}>
-                                <RadioButton.Item
-                                    label="Tout"
-                                    value="0"
-                                    style={{ marginVertical: -10 }}
-                                    color='#3498DB'
-                                />
-                                <RadioButton.Item
-                                    label="Etapes"
-                                    value="1"
-                                    style={{ marginVertical: -10 }}
-                                    color='#3498DB'
-                                />
-                                <RadioButton.Item
-                                    label="Points d'intérêts"
-                                    value="2"
-                                    color='#3498DB'
-                                />
-                            </RadioButton.Group>
+                            <Select variant="unstyled" selectedValue={checked} maxWidth="130" maxHeight="50" accessibilityLabel="Choisir un moyen de transport" placeholder="Choisir un moyen de transport" _selectedItem={{ endIcon: <CheckIcon size="5" /> }} mt={1} onValueChange={itemValue => { setChecked(itemValue) }}>
+                                <Select.Item label="Vue d'ensemble" value="0" />
+                                <Select.Item label="Etapes" value="1" />
+                                <Select.Item label="Points d'intérêts" value="2" />
+                            </Select>
                         </View>
                     </SafeAreaView>
                 </NativeBaseProvider>
@@ -157,15 +128,14 @@ const Maps = ({ navigation }) => {
 const styles = StyleSheet.create({
     window: {
         flex: 1,
-        backgroundColor: '#fff',
-        height: '22%',
-        width: '40%',
+        paddingTop: -5,
+        borderRadius: 5,
+        backgroundColor: "white",
+        height: 50,
+        width: 130,
         position: 'absolute',
         bottom: 5,
         left: 5,
-        borderRadius: 5,
-        borderColor: 'black',
-        borderWidth: 1
     },
     map: {
         flex: 1,

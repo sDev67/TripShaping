@@ -1,9 +1,17 @@
+import { useEffect } from 'react';
+
 import { StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-const Files = () => {
+const Files = ({ route, navigation }) => {
+
+    const { document } = route.params;
+    useEffect(() => {
+        navigation.setOptions({ title: document.title });
+    }, [])
+
     return (
-        < WebView source={{ uri: 'http://gahp.net/wp-content/uploads/2017/09/sample.pdf' }} />
+        < WebView source={{ uri: document.url }} />
     )
 }
 

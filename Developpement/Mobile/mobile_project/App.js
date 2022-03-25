@@ -56,9 +56,6 @@ const TabScreen = () => {
           else if (route.name === "Photo") {
             return <Image source={iconPhoto} style={{ width: 30, height: 30, tintColor: color }} />;
           }
-          else if (route.name === "Documents") {
-            return <Image source={iconFiles} style={{ width: 30, height: 30, tintColor: color }} />
-          }
           else if (route.name === "Etapes") {
             return <Image source={iconStepsList} style={{ width: 30, height: 30, tintColor: color }} />
           }
@@ -69,10 +66,9 @@ const TabScreen = () => {
       })}
     >
       <Tab.Screen name="Altas" component={Maps} />
-      <Tab.Screen name="Etapes" children={() => <StepsList steps={steps} />} />
+      <Tab.Screen name="Etapes" component={StepsList} />
       <Tab.Screen name="Journal" children={() => <Journal messages={messages} setMessages={setMessages} />} />
       <Tab.Screen name="Photo" component={Photo} />
-      <Tab.Screen name='Documents' children={() => <Files />} />
     </Tab.Navigator>
 
   );
@@ -86,9 +82,10 @@ function MapStackScreen() {
       <Stack.Navigator>
         <Stack.Screen name="Map" component={TabScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Itinéraire" component={ItinaryDetails} />
-        <Stack.Screen name="StepDetails" component={StepDetails} />
-        <Stack.Screen name="PointDetails" component={PointDetails} />
+        <Stack.Screen name="StepDetails" component={StepDetails} options={{ title: "Etape" }} />
+        <Stack.Screen name="PointDetails" component={PointDetails} options={{ title: "Point d'intérêt" }} />
         <Stack.Screen name="Cameras" component={Cameras} options={{ headerShown: false }} />
+        <Stack.Screen name='Documents' component={Files} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -101,3 +98,4 @@ export default function App() {
     </QueryClientProvider>
   );
 }
+

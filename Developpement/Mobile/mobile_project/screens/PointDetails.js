@@ -7,10 +7,6 @@ const PointDetails = ({ route, navigation }) => {
 
     const { point } = route.params;
 
-    useEffect(() => {
-        navigation.setOptions({ title: point.title });
-    }, [])
-
     const [image, setImage] = useState(null);
 
     const user = "Vivien Riehl"
@@ -46,6 +42,8 @@ const PointDetails = ({ route, navigation }) => {
         <NativeBaseProvider >
             <View style={styles.container}>
                 <ScrollView>
+                    <Text style={styles.font}>Nom</Text>
+                    <Text style={{ marginLeft: 10 }}>{point.title}</Text>
                     <Text style={styles.font}>Catégorie</Text>
                     <Text style={{ marginLeft: 10 }}>{point.category}</Text>
                     <Text style={styles.font}>Description</Text>

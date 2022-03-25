@@ -7,10 +7,6 @@ const StepDetails = ({ route, navigation }) => {
 
     const { step } = route.params;
 
-    useEffect(() => {
-        navigation.setOptions({ title: step.title });
-    }, [])
-
     const [image, setImage] = useState(null);
 
     const user = "Vivien Riehl"
@@ -46,6 +42,8 @@ const StepDetails = ({ route, navigation }) => {
         <NativeBaseProvider >
             <View style={styles.container}>
                 <ScrollView>
+                    <Text style={styles.font}>Nom</Text>
+                    <Text style={{ marginLeft: 10 }}>{step.title}</Text>
                     <Text style={styles.font}>Catégorie</Text>
                     <Text style={{ marginLeft: 10 }}>{step.category}</Text>
                     <Text style={styles.font} >Durée</Text>

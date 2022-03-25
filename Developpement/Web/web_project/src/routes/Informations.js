@@ -29,8 +29,7 @@ import Editor from '../components/RichTextEditor'
 const Informations = () => {
 
   const queryClient = useQueryClient();
-  const [value, setValue] = React.useState("");
-  const [updatingStatuts, setUpdatingStatuts] = React.useState(true);
+  const [value, setValue] = React.useState();
   const idTravel = 1;
 
   const { isLoading: isLoading, isError: isError, error: error, data: travelDatas } = useQuery(
@@ -39,7 +38,7 @@ const Informations = () => {
 
   const handleChange = () => {
     
-    setUpdatingStatuts(false);
+    console.log(value);
     var newTravel = 
     {
       TravelId:idTravel,
@@ -59,7 +58,7 @@ const Informations = () => {
     onSuccess: travels => queryClient.setQueryData(
       ['getInfos', idTravel],
       travelDatas => [travels],
-      
+      window.location.reload(true)
       )
     }
   )
@@ -92,18 +91,6 @@ const Informations = () => {
           !isError ?
           <>
 
-            {/*<TextField
-            style={{margin:"30px"}}
-            label="Informations"
-            placeholder="Ajouter des informations sur le voyage"
-            multiline
-            rows={30}
-            value={travelDatas.infos}
-            onChange={(e) => setValue(e.target.value)}
-            InputLabelProps={{
-            shrink: true,
-            }}
-          />*/}
           <Editor setValue={setValue} value={travelDatas.infos}/>
           <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>
           </>

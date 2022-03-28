@@ -31,7 +31,7 @@ const InterestPointMenu = ({
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
-  const [lengthOfStay, setLengthOfStay] = useState(0);
+  const [lengthOfStay, setLengthOfStay] = useState(selectedMarker.duration);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const categ = [
@@ -141,12 +141,11 @@ const InterestPointMenu = ({
             justifyContent="space-between"
             spacing={2}
           >
-            {/* <TextField
+            <TextField
               fullWidth
               select
               label="Etape associée"
-              value={selectedMarker.category}
-              onChange={(e) => setCategorie(e.target.value)}
+              
               InputLabelProps={{
                 shrink: true,
               }}
@@ -158,15 +157,14 @@ const InterestPointMenu = ({
               fullWidth
               select
               label="Jour"
-              value={selectedMarker.category}
-              onChange={(e) => setCategorie(e.target.value)}
+              
               InputLabelProps={{
                 shrink: true,
               }}
             >
               <MenuItem>1</MenuItem>
               <MenuItem>2</MenuItem>
-            </TextField> */}
+            </TextField>
           </Stack>
           
           <Stack
@@ -175,7 +173,7 @@ const InterestPointMenu = ({
             justifyContent="space-between"
             spacing={2}
           >
-            {/* <TextField
+            <TextField
               fullWidth
               select
               label="Documents"
@@ -199,14 +197,14 @@ const InterestPointMenu = ({
             >
               {" "}
               Ajouter
-            </Button> */}
+            </Button>
           </Stack>
 
           <TextField
             fullWidth
             label="Description"
             multiline
-            rows={10}
+            rows={8}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             style={{ marginBottom: 25 }}

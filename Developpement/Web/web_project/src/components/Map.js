@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { GoogleMap, LoadScript, Marker, Polyline } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  Polyline,
+} from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import { CircularProgress } from "@mui/material";
 import palette from "./../theme/palette";
@@ -8,12 +13,12 @@ import StepMenu from "./StepMenu";
 import MapModeSwitch from "./MapModeSwitch";
 import RouteMenu from "./RouteMenu";
 import TravelRequests from "../requests/TravelRequests";
-import { useQuery, useQueryClient, useMutation } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from "react-query";
 import PointRequests from "../requests/PointRequests";
 import StepRequests from "../requests/StepRequests";
 import { useParams } from "react-router-dom";
 import StepTimeline from "./StepTimeline";
-
+import Loading from "../utils/Loading";
 
 const containerStyle = {
   position: "relative",
@@ -21,16 +26,18 @@ const containerStyle = {
   height: "100%",
 };
 
-const position = {
-  lat: 48.5734053,
-  lng: 7.7521113,
-};
 
-export const Map = ({ }) => {
+
+export const Map = ({}) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
+
+  const [position, setPosition] = useState({
+    lat: 48.5734053,
+    lng: 7.7521113,
+  });
 
   const [isEdition, setIsEdition] = useState(false);
   const [switchText, setSwitchText] = useState("Navigation");
@@ -40,12 +47,22 @@ export const Map = ({ }) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
-  const { isLoading: isLoadingS, isError: isErrorS, error: errorS, data: steps } = useQuery(
-    ['getSteps', idTravel], () => TravelRequests.getStepsOfTravel(idTravel)
+  const {
+    isLoading: isLoadingS,
+    isError: isErrorS,
+    error: errorS,
+    data: steps,
+  } = useQuery(["getSteps", idTravel], () =>
+    TravelRequests.getStepsOfTravel(idTravel)
   );
 
-  const { isLoading: isLoadingP, isError: isErrorP, error: errorP, data: interestPoints } = useQuery(
-    ['getPoints', idTravel], () => TravelRequests.getPointsOfTravel(idTravel)
+  const {
+    isLoading: isLoadingP,
+    isError: isErrorP,
+    error: errorP,
+    data: interestPoints,
+  } = useQuery(["getPoints", idTravel], () =>
+    TravelRequests.getPointsOfTravel(idTravel)
   );
 
   //const [routes, setRoutes] = useState([]);
@@ -54,7 +71,8 @@ export const Map = ({ }) => {
   const [error, setError] = useState(false);
 
   const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const InterestPointIcon = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+  const interestPointIcon =
+    "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
@@ -105,61 +123,74 @@ export const Map = ({ }) => {
   );
 
   const addPoint = useMutation(TravelRequests.addPoint, {
-    onSuccess: point => queryClient.setQueryData(
-      ['getPoints', idTravel],
-      interestPoints => [...interestPoints, point]
-    )
+    onSuccess: (point) =>
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+        ...interestPoints,
+        point,
+      ]),
   });
 
   const addStep = useMutation(TravelRequests.addStep, {
-    onSuccess: step => queryClient.setQueryData(
-      ['getSteps', idTravel],
-      steps => [...steps, step]
-    )
+    onSuccess: (step) =>
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]),
   });
 
-  const updateLocationPoint = useMutation(PointRequests.updatePointLocationById, {
-    onSuccess: point => queryClient.setQueryData(
-      ['getPoints', idTravel],
-      interestPoints => [...interestPoints, point],
-    )
-  });
+  const updateLocationPoint = useMutation(
+    PointRequests.updatePointLocationById,
+    {
+      onSuccess: (point) => {
+        queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+          ...interestPoints,
+          point,
+        ]);
+        queryClient.invalidateQueries("getPoints");
+      },
+    }
+  );
 
   const updateInfoPoint = useMutation(PointRequests.updatePointInfoById, {
-    onSuccess: point => queryClient.setQueryData(
-      ['getPoints', idTravel],
-      interestPoints => [...interestPoints, point],
-    )
+    onSuccess: (point) =>
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+        ...interestPoints,
+        point,
+      ]),
   });
 
   const updateLocationStep = useMutation(StepRequests.updateStepLocationById, {
-    onSuccess: step => queryClient.setQueryData(
-      ['getSteps', idTravel],
-      steps => [...steps, step]
-    )
+    onSuccess: (step) => {
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]);
+      queryClient.invalidateQueries("getSteps");
+    },
   });
 
   const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
-    onSuccess: step => queryClient.setQueryData(
-      ['getSteps', idTravel],
-      steps => [...steps, step]
-    )
+    onSuccess: (step) =>
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]),
   });
 
   //Suppression de point
   const deletePoint = useMutation(TravelRequests.removePoint, {
-    onSuccess: (_, id) => queryClient.setQueryData(
-      ['getPoints', idTravel],
-      interestPoints => interestPoints.filter(e => e.id !== id)
-    )
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) =>
+        interestPoints.filter((e) => e.id !== id)
+      ),
   });
 
   //Suppression d'étape
   const deleteStep = useMutation(TravelRequests.removeStep, {
-    onSuccess: (_, id) => queryClient.setQueryData(
-      ['getSteps', idTravel],
-      steps => steps.filter(e => e.id !== id)
-    )
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getSteps", idTravel], (steps) =>
+        steps.filter((e) => e.id !== id)
+      ),
   });
 
   const onMapClick = (e) => {
@@ -167,11 +198,9 @@ export const Map = ({ }) => {
     if (isEdition) {
       if (selectedMarker !== null) {
         setSelectedMarker(null);
-      } 
-      else if (selectedRoute !== null) {
+      } else if (selectedRoute !== null) {
         setSelectedRoute(null);
-      } 
-      else {
+      } else {
         if (editionMode === "stepOnlyEdit") {
           if (!error) {
             addStepPoint(e);
@@ -203,22 +232,22 @@ export const Map = ({ }) => {
       description: "",
       category: "",
       duration: 1,
-      TravelId: idTravel
-    }
+      TravelId: idTravel,
+    };
     addStep.mutate(newStep);
-};
+  };
 
-   // Fonction qui permet d'ajouter un point d'interet
-   const addInterestPoint = (e) => {
-      const newPoint = {
-        title: "",
-        latitude: parseFloat(e.latLng.lat()),
-        longitude: parseFloat(e.latLng.lng()),
-        description: "",
-        category: "",
-        TravelId: idTravel
-      }
-      addPoint.mutate(newPoint);
+  // Fonction qui permet d'ajouter un point d'interet
+  const addInterestPoint = (e) => {
+    const newPoint = {
+      title: "",
+      latitude: parseFloat(e.latLng.lat()),
+      longitude: parseFloat(e.latLng.lng()),
+      description: "",
+      category: "",
+      TravelId: idTravel,
+    };
+    addPoint.mutate(newPoint);
   };
 
   // Fonction qui met a jour la position d'un point d'interet
@@ -227,9 +256,9 @@ export const Map = ({ }) => {
       const newPoint = {
         latitude: parseFloat(e.latLng.lat()),
         longitude: parseFloat(e.latLng.lng()),
-        idPoint: interestPoint.id
+        idPoint: interestPoint.id,
       };
-        updateLocationPoint.mutate(newPoint)
+      updateLocationPoint.mutate(newPoint);
     }
   };
 
@@ -239,10 +268,10 @@ export const Map = ({ }) => {
       const newPoint = {
         latitude: parseFloat(e.latLng.lat()),
         longitude: parseFloat(e.latLng.lng()),
-        idPoint: step.id
+        idPoint: step.id,
       };
-      
-        updateLocationStep.mutate(newPoint)
+
+      updateLocationStep.mutate(newPoint);
     }
   };
 
@@ -271,7 +300,11 @@ export const Map = ({ }) => {
           {(markerFilter === "stepOnlyNav" ||
             markerFilter === "stepOnlyEdit" ||
             markerFilter === "all") &&
-            isLoadingS ? 'Chargement...' : isErrorS ? <p style={{ color: 'red' }}>{errorS.message}</p> :
+          isLoadingS ? (
+            <Loading/>
+          ) : isErrorS ? (
+            <p style={{ color: "red" }}>{errorS.message}</p>
+          ) : (
             steps.map((step, index) => (
               <Marker
                 key={index}
@@ -281,22 +314,31 @@ export const Map = ({ }) => {
                 onClick={() => {
                   setSelectedMarker({ marker: step, type: "Step" });
                   setSelectedRoute(null);
+                  setPosition({ lat: step.latitude, lng: step.longitude });
                 }}
                 onRightClick={() => {
                   if (!error && isEdition) {
-                    deleteStep.mutate(step.id); setSelectedMarker(null)
+                    deleteStep.mutate(step.id);
+                    setSelectedMarker(null);
                   }
                 }}
-                onDragEnd= {updateStepLocation(step)}
-
-                icon={stepIcon}
+                onDragEnd={updateStepLocation(step)}
+                icon={selectedMarker?.marker.id == step.id ? null : stepIcon}
+                
+                // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                
               ></Marker>
-            ))}
+            ))
+          )}
 
           {(markerFilter === "interestPointOnlyNav" ||
             markerFilter === "interestPointOnlyEdit" ||
             markerFilter === "all") &&
-            isLoadingP ? 'Chargement...' : isErrorP ? <p style={{ color: 'red' }}>{errorP.message}</p> :
+          isLoadingP ? (
+            "Chargement..."
+          ) : isErrorP ? (
+            <p style={{ color: "red" }}>{errorP.message}</p>
+          ) : (
             interestPoints.map((interestPoint, index) => (
               <Marker
                 key={index}
@@ -313,18 +355,23 @@ export const Map = ({ }) => {
                 }}
                 onRightClick={() => {
                   if (!error && isEdition) {
-                    deletePoint.mutate(interestPoint.id); setSelectedMarker(null)
+                    deletePoint.mutate(interestPoint.id);
+                    setSelectedMarker(null);
                   }
                 }}
-                onDragEnd= {updateInterestPointLocation(interestPoint)}
-                icon={InterestPointIcon}
+                onDragEnd={updateInterestPointLocation(interestPoint)}
+                icon={interestPointIcon}
               ></Marker>
-            ))}
+            ))
+          )}
 
-          {isLoadingS ? 'Chargement...' : isErrorS ? <p style={{ color: 'red' }}>{errorS.message}</p> :
+          {isLoadingS ? (
+            "Chargement..."
+          ) : isErrorS ? (
+            <p style={{ color: "red" }}>{errorS.message}</p>
+          ) : (
             steps.length >= 2 &&
-            !(!isEdition && markerFilter === "interestPointOnlyNav") &&
-            (
+            !(!isEdition && markerFilter === "interestPointOnlyNav") && (
               <>
                 {steps.map((step, index) => (
                   <>
@@ -356,38 +403,51 @@ export const Map = ({ }) => {
                   </>
                 ))}
               </>
-            )}
+            )
+          )}
         </GoogleMap>
       </LoadScript>
-      <StepTimeline steps={steps} isLoadingS={isLoadingS} isErrorS={isErrorS} errorS={errorS}></StepTimeline>
+      <StepTimeline
+        steps={steps}
+        isLoadingS={isLoadingS}
+        isErrorS={isErrorS}
+        errorS={errorS}
+        setPosition={setPosition}
+      ></StepTimeline>
       {selectedMarker &&
-        (selectedMarker.type === "Point" ? isLoadingP ? 'Chargement...' : isErrorP ? <p style={{ color: 'red' }}>{errorP.message}</p> : (
-          <InterestPointMenu
-            selectedMarker={selectedMarker.marker}
-            setSelectedMarker={setSelectedMarker}
-            deletePoint={deletePoint}
-            updateInfoPoint= {updateInfoPoint}
-            isEdition = {isEdition}
-          ></InterestPointMenu>
-        ) : (
-          selectedMarker.type === "Step" && isLoadingS ? 'Chargement...' : isErrorS ? <p style={{ color: 'red' }}>{errorS.message}</p> : (
-            <StepMenu
+        (selectedMarker.type === "Point" ? (
+          isLoadingP ? (
+            "Chargement..."
+          ) : isErrorP ? (
+            <p style={{ color: "red" }}>{errorP.message}</p>
+          ) : (
+            <InterestPointMenu
               selectedMarker={selectedMarker.marker}
               setSelectedMarker={setSelectedMarker}
-              deleteStep={deleteStep}
-              updateInfoStep = {updateInfoStep}
-              isEdition = {isEdition}
-            ></StepMenu>
+              deletePoint={deletePoint}
+              updateInfoPoint={updateInfoPoint}
+              isEdition={isEdition}
+            ></InterestPointMenu>
           )
+        ) : selectedMarker.type === "Step" && isLoadingS ? (
+          "Chargement..."
+        ) : isErrorS ? (
+          <p style={{ color: "red" }}>{errorS.message}</p>
+        ) : (
+          <StepMenu
+            selectedMarker={selectedMarker.marker}
+            setSelectedMarker={setSelectedMarker}
+            deleteStep={deleteStep}
+            updateInfoStep={updateInfoStep}
+            isEdition={isEdition}
+          ></StepMenu>
         ))}
-      {
-        selectedRoute && (
-          <RouteMenu
-            selectedRoute={selectedRoute}
-            setSelectedRoute={setSelectedRoute}
-          ></RouteMenu>
-        )
-      }
+      {selectedRoute && (
+        <RouteMenu
+          selectedRoute={selectedRoute}
+          setSelectedRoute={setSelectedRoute}
+        ></RouteMenu>
+      )}
     </>
   );
 };

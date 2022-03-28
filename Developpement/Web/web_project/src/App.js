@@ -14,6 +14,7 @@ import Members from "./routes/Members";
 import TripSelection from "./routes/TripSelection";
 import Steps from "./routes/Steps";
 
+
 const queryClient = new QueryClient();
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
               <Route path=":idTravel/members" element={<Members />} />
             </Route>
           </Routes>
-          {/* <ReactQueryDevtools /> */}
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </BrowserRouter>
     </>

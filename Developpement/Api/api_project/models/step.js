@@ -6,6 +6,7 @@ module.exports = sequelize => {
 		static associate(db) {
 			//Step.OneToMany(db.Task, {through : 'TaskStep'} );
 			Step.belongsTo(db.Travel);
+			Step.hasMany(db.Point, { onDelete: 'cascade' });
 		}
 	}
 

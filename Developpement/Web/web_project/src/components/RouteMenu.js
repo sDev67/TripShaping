@@ -60,7 +60,7 @@ const RouteMenu = ({
 
   return (
     <>
-      <Card style={{ right: 60, top: 30, width: 400, position: "fixed" }}>
+      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height:"90%" }}>
         <CardMedia
           component="img"
           height="194"

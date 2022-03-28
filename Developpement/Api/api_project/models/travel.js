@@ -7,10 +7,8 @@ module.exports = sequelize => {
 
 			Travel.hasMany(db.Point, { onDelete: 'cascade' });
 			Travel.hasMany(db.Step, { onDelete: 'cascade' });
-
-			/* Travel.OneToMany(db.Task, {through : 'TravelTask'} );
-			* Travel.OneToMany(db.Label, {through : 'TravelLabel'} );
-			*/
+			Travel.hasMany(db.Route, { onDelete: 'cascade' });
+			Travel.hasMany(db.Member, { onDelete: 'cascade' });
 		}
 	}
 

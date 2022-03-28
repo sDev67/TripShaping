@@ -28,6 +28,16 @@ module.exports = [
 		func: travel_ctrl.get_steps_of_travel
 	},
 	{
+		url: '/travel/:travel_id/routes',
+		method: 'get',
+		func: travel_ctrl.get_routes_of_travel
+	},
+	{
+		url: '/travel/:travel_id/members',
+		method: 'get',
+		func: travel_ctrl.get_members_of_travel
+	},
+	{
 		url: '/travel/:travel_id',
 		method: 'put',
 		func: travel_ctrl.update_by_id

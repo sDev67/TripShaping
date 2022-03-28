@@ -21,6 +21,7 @@ import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
+import DirectionsWalkRoundedIcon from '@mui/icons-material/DirectionsWalkRounded';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
 
@@ -36,7 +37,7 @@ const NavigationBar = () => {
 
 
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState("/trip/" + idTravel + "/map");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -102,33 +103,41 @@ const NavigationBar = () => {
             icon={<MapRoundedIcon />}
             iconPosition="start"
             label="Carte"
-            value={"/trip/map/" + idTravel}
+            value={"/trip/" + idTravel + "/map"}
             component={Link}
-            to={"/trip/map/" + idTravel}
+            to={"/trip/" + idTravel + "/map"}
+          />
+          <Tab
+            icon={<DirectionsWalkRoundedIcon />}
+            iconPosition="start"
+            label="Etapes"
+            value={"/trip/" + idTravel + "/steps"}
+            component={Link}
+            to={"/trip/" + idTravel + "/steps"}
           />
           <Tab
             icon={<AssignmentRoundedIcon />}
             iconPosition="start"
             label="Tâches"
-            value={"/trip/todolist/" + idTravel}
+            value={"/trip/" + idTravel + "/todolist"}
             component={Link}
-            to={"/trip/todolist/" + idTravel}
+            to={"/trip/" + idTravel + "/todolist"}
           />
           <Tab
             icon={<TextSnippetRoundedIcon />}
             iconPosition="start"
             label="Informations"
-            value={"/trip/informations/" + idTravel}
+            value={"/trip/" + idTravel + "/informations"}
             component={Link}
-            to={"/trip/informations/" + idTravel}
+            to={"/trip/" + idTravel + "/informations"}
           />
           <Tab
             icon={<GroupsRoundedIcon />}
             iconPosition="start"
             label="Membres"
-            value={"/trip/members/" + idTravel}
+            value={"/trip/" + idTravel + "/members"}
             component={Link}
-            to={"/trip/members/" + idTravel}
+            to={"/trip/" + idTravel + "/members"}
           />
         </Tabs>
 

@@ -29,7 +29,7 @@ import Editor from '../components/RichTextEditor'
 
 const Informations = () => {
 
-  const [switchText, setSwitchText] = React.useState("Lecture");
+
   const [switchState, setSwitchState] = React.useState(false)
   const queryClient = useQueryClient();
   const [value, setValue] = React.useState();
@@ -38,18 +38,6 @@ const Informations = () => {
   const { isLoading: isLoading, isError: isError, error: error, data: travelDatas } = useQuery(
     ['getInfos', idTravel], () => TravelRequests.getTravel(idTravel)
   );
-
-  const handleSwitch = (event) => {
-    setSwitchState(event.target.checked)
-
-    if(switchState)
-    {
-      setSwitchState("Écriture");
-    }
-    else{
-      setSwitchState("Lecture");
-    }
-  }
 
 
   const handleChange = () => {
@@ -106,30 +94,8 @@ const Informations = () => {
           
           !isError ?
           <>
-         <FormControlLabel
-                  value={switchText}
-                  control={<Switch color="primary" />}
-                  label={switchText}
-                  labelPlacement="left"
-                  onChange={handleSwitch}
-                  checked={switchState}
-                  position="absolute"
-                />
-
-          {
-            !switchState ? 
-            
-            <TextField value={travelDatas.infos}/> : 
-            <>
               <Editor setValue={setValue} value={travelDatas.infos}/>
-              <Button disabled={value === travelDatas.infos ? true : false}  onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>
-            
-            </>
-     
-          }
-       
-         
-         
+              <Button disabled={value === travelDatas.infos ? true : false}  onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>        
           </>
           
         :

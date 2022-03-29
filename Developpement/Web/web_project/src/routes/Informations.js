@@ -20,27 +20,29 @@ import {
   Icon,
   Typography,
   IconButton,
+  Switch,
 } from "@mui/material";
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
-import { useParams } from "react-router-dom";
 
 import Editor from '../components/RichTextEditor'
 
 const Informations = () => {
 
+
+  const [switchState, setSwitchState] = React.useState(false)
   const queryClient = useQueryClient();
-  const [value, setValue] = React.useState("");
-  
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
+  const [value, setValue] = React.useState();
+  const idTravel = 1;
 
   const { isLoading: isLoading, isError: isError, error: error, data: travelDatas } = useQuery(
     ['getInfos', idTravel], () => TravelRequests.getTravel(idTravel)
   );
 
+
   const handleChange = () => {
     
+    console.log(value);
     var newTravel = 
     {
       TravelId:idTravel,
@@ -53,14 +55,14 @@ const Informations = () => {
     }
 
     updateInformation.mutate(newTravel);
+    console.log('Infos updated ! ' + newTravel.infos);
   };
 
-  
-
   const updateInformation = useMutation(TravelRequests.updateTravel,{
-    onSuccess: infos => queryClient.setQueryData(
+    onSuccess: travels => queryClient.setQueryData(
       ['getInfos', idTravel],
-      setValue(infos.infos)
+      travelDatas => [...travelDatas, travels],
+      value => [...value, travelDatas.infos],
       )
     }
   )
@@ -78,7 +80,7 @@ const Informations = () => {
           Informations
         </Typography>
         {
-          isLoading ? 
+          isLoading  ? 
           <Typography
             color="error"
             variant="h5"
@@ -86,30 +88,18 @@ const Informations = () => {
             marginTop={4}>
               Chargement...
           </Typography>
+         
 
         :
           
           !isError ?
           <>
-
-            {/*<TextField
-            style={{margin:"30px"}}
-            label="Informations"
-            placeholder="Ajouter des informations sur le voyage"
-            multiline
-            rows={30}
-            value={travelDatas.infos}
-            onChange={(e) => setValue(e.target.value)}
-            InputLabelProps={{
-            shrink: true,
-            }}
-          />*/}
-          <Editor/>
-          <Button onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>s
+              <Editor setValue={setValue} value={travelDatas.infos}/>
+              <Button disabled={value === travelDatas.infos ? true : false}  onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>        
           </>
           
         :
-        console.log({error})
+        <p style={{ color: 'red' }}>{error.message}</p> 
       }
         
 

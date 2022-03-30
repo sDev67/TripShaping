@@ -26,8 +26,6 @@ const containerStyle = {
   height: "100%",
 };
 
-
-
 export const Map = ({ }) => {
   const queryClient = useQueryClient();
 
@@ -46,6 +44,8 @@ export const Map = ({ }) => {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
+
+  const [stepAdded, setStepAdded] = useState(false);
 
   // Etapes
   const {
@@ -86,6 +86,15 @@ export const Map = ({ }) => {
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
   }, [markerFilter]);
+
+  useEffect(() => {
+    if (!isLoadingS && !isErrorS) {
+      if (steps.length >= 2 && stepAdded) {
+        addRoute({ idStart: steps[steps.length - 2].id, idFinish: steps[steps.length - 1].id });
+        setStepAdded(false);
+      }
+    }
+  }, [steps]);
 
   // Lorsqu'on change de choix dans la box Navigation :
   // - Tout
@@ -144,7 +153,7 @@ export const Map = ({ }) => {
       queryClient.setQueryData(["getSteps", idTravel], (steps) => [
         ...steps,
         step,
-      ])
+      ]);
     }
   });
 
@@ -218,7 +227,7 @@ export const Map = ({ }) => {
   //Suppression de route
   const deleteRoute = useMutation(TravelRequests.removeRoute, {
     onSuccess: (_, id) =>
-      queryClient.setQueryData(["getRoute", idTravel], (routes) =>
+      queryClient.setQueryData(["getRoutes", idTravel], (routes) =>
         routes.filter((e) => e.id !== id)
       ),
   });
@@ -265,9 +274,7 @@ export const Map = ({ }) => {
       TravelId: idTravel,
     };
     addStep.mutate(newStep);
-    if (steps.length >= 2) {
-      addRoute({ idStart: steps[steps.length - 2].id, idFinish: steps[steps.length - 1].id });
-    }
+    setStepAdded(true);
   };
 
   const addRoute = ({ idStart, idFinish }) => {
@@ -362,12 +369,15 @@ export const Map = ({ }) => {
                     if (!error && isEdition) {
                       if (steps.length > 1 && !isLoadingR && !isErrorR) {
                         if (step.id === steps[steps.length - 1].id) {
-                          //deleteRoute.mutate(routes[routes.length - 1].id)
+                          // Si on supprime la dernière étape
+                          deleteRoute.mutate(routes[routes.length - 1].id)
                         }
                         else if (step.id === steps[0].id) {
+                          // Si on supprime la première étape
                           deleteRoute.mutate(routes[0].id)
                         }
                         else {
+                          // Si on supprime une étape intermédiaire
                           deleteRoute.mutate(routes[index - 1].id)
                           deleteRoute.mutate(routes[index].id)
                           addRoute({ idStart: steps[index - 1].id, idFinish: steps[index + 1].id });
@@ -434,7 +444,8 @@ export const Map = ({ }) => {
                         geodesic={true}
                         clickable={true}
                         onClick={() => {
-                          setSelectedRoute(index);
+                          setSelectedRoute(null);
+                          setSelectedRoute({ route: routes[index - 1], start: steps[index - 1], finish: step });
                           setSelectedMarker(null);
                         }}
                         path={[
@@ -497,7 +508,9 @@ export const Map = ({ }) => {
         ))}
       {selectedRoute && (
         <RouteMenu
-          selectedRoute={selectedRoute}
+          selectedRoute={selectedRoute.route}
+          start={selectedRoute.start}
+          finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
         ></RouteMenu>
       )}

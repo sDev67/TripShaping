@@ -392,7 +392,7 @@ export const Map = ({ }) => {
                     }
                   }}
                   onDragEnd={updateStepLocation(step)}
-                  icon={selectedMarker?.marker.id == step.id ? selectedStepIcon : stepIcon}
+                  icon={selectedMarker?.marker.id == step.id && selectedMarker?.type=="Step" ? selectedStepIcon : stepIcon}
                 ></Marker>
               )))
           )}
@@ -424,7 +424,7 @@ export const Map = ({ }) => {
                     }
                   }}
                   onDragEnd={updateInterestPointLocation(interestPoint)}
-                  icon={selectedMarker?.marker.id == interestPoint.id ? selectedInterestPointIcon : interestPointIcon}
+                  icon={selectedMarker?.marker.id == interestPoint.id && selectedMarker?.type=="Point" ? selectedInterestPointIcon : interestPointIcon}
                 ></Marker>
               )))
           )}

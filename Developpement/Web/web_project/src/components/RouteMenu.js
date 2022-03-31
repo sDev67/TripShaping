@@ -59,18 +59,23 @@ const RouteMenu = ({
   const categ = [
     {
       value: 'DRIVING',
+      label: 'Voiture'
     },
     {
       value: 'WALKING',
+      label: 'À pied'
     },
     {
       value: 'BICYCLING',
+      label: 'À vélo'
     },
     {
       value: 'TRANSIT',
+      label: 'En transports'
     },
     {
       value: 'Autre',
+      label: 'Autre'
     },
   ];
 
@@ -135,7 +140,7 @@ const RouteMenu = ({
           >
             {categ.map((option) => (
               <MenuItem key={option.value} value={option.value}>
-                {option.value}
+                {option.label}
               </MenuItem>
             ))}
           </TextField>

@@ -94,7 +94,7 @@ const Informations = () => {
           
           !isError ?
           <>
-              <Editor setValue={setValue} value={travelDatas.infos}/>
+              <Editor setValue={setValue} value={travelDatas.infos != undefined ? travelDatas.infos : undefined}/>
               <Button disabled={value === travelDatas.infos ? true : false}  onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>        
           </>
           

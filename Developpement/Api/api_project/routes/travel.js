@@ -540,11 +540,129 @@ module.exports = [
 	func: travel_ctrl.delete_by_id
 },
 
+
+/**
+ * @swagger
+ * /travel/{travel_id}/routes:
+ *   get:
+ *     tags:
+ *     - Travel
+ *     summary: Retourne les informations d'un trajet entre deux étapes.
+ *     description: Retourne les informations d'un trajet.
+ *     parameters:
+ *      - in: path
+ *        name: travel_id
+ *        example: 1
+ *        required: true
+ *        schema:
+ *          type: integer     
+ *           
+ *     responses:
+ *       200:
+ *         description: Retourne les points d'étapes d'un voyage dont l'id est passé en paramètre.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: Id du trajet.  
+ *                   example: 1
+ *                 travelType: 
+ *                   type: string
+ *                   description: Type de voyage.
+ *                   example: DRIVING
+ *                 createdAt:                    
+ *                   type: string                   
+ *                   description: Date de création du point.                   
+ *                   example: 2022-03-17T15:17:42.282Z
+ *                 updateAt:   
+ *                   type: string
+ *                   description: Date de modification du point.
+ *                   example: 2022-03-17T15:17:42.282Z
+ *                 start: 
+ *                   type: integer
+ *                   description: Id du point de départ du trajet.
+ *                   example: 1
+ *                 finish:
+ *                   type: integer
+ *                   description: Id du point d'arrivé du trajet.
+ *                   example: 2
+ *                 TravelId:    
+ *                   type: integer 
+ *                   description: Id du voyage passé en paramètre.
+ *                   example: 1    
+ *       404:  
+ *         description: L'id que vous avez passé n'existe pas. Voyage non trouvé.
+ *            
+ *                      
+ */
+
 {
 	url: '/travel/:travel_id/routes',
 	method: 'get',
 	func: travel_ctrl.get_routes_of_travel
 },
+
+/**
+ * @swagger
+ * /travel/{travel_id}/members:
+ *   get:
+ *     tags:
+ *     - Travel
+ *     summary: Retourne les membres d'un voyage.
+ *     description: Retourne tout les membres appartenant à un voyage.
+ *     parameters:
+ *      - in: path
+ *        name: travel_id
+ *        example: 1
+ *        required: true
+ *        schema:
+ *          type: integer     
+ *           
+ *     responses:
+ *       200:
+ *         description: Retourne tout les membres d'un voyage dont l'id du voyage est passé en paramètre.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: Id du membre.  
+ *                   example: 5
+ *                 lastname: 
+ *                   type: string
+ *                   description: Nom du membre.
+ *                   example: Deveci
+ *                 firstname: 
+ *                   type: string
+ *                   description: Prénom du membre.
+ *                   example: Serkan
+ *                 fictive: 
+ *                   type: string
+ *                   description: Indique si le membre est fictif ou non.
+ *                   example: false
+ *                 createdAt:                    
+ *                   type: string                   
+ *                   description: Date de création du point.                   
+ *                   example: 2022-03-17T15:17:42.282Z
+ *                 updateAt:   
+ *                   type: string
+ *                   description: Date de modification du point.
+ *                   example: 2022-03-17T15:17:42.282Z
+ *                 TravelId:    
+ *                   type: integer 
+ *                   description: Id du voyage passé en paramètre.
+ *                   example: 1    
+ *       404:  
+ *         description: L'id que vous avez passé n'existe pas. Voyage non trouvé.
+ *            
+ *                      
+ */
+
 {
 	url: '/travel/:travel_id/members',
 	method: 'get',

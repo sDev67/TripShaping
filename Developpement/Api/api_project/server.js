@@ -24,8 +24,9 @@ swaggerDefinition: {
   },
   servers: [
     {
-      url: 'http://localhost:4200',
-      description: 'Serveur de Prod',
+      url: 'http://cdad181.iutrs.unistra.fr:4200',
+      description: 'Serveur de Production',     
+
     },
   ],
   tags: [
@@ -53,7 +54,7 @@ const swaggerUI = require('swagger-ui-express');
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
+app.use('/atlas-documentation', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 // register routes
 require('./routes')(app);

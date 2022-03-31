@@ -44,7 +44,7 @@ module.exports = [
  *       example:
  *         id: 14 
  *         title: Iut Robert Schuman
- *         description: Ecole très répondu au Grand Est
+ *         description: Ecole très répandue au Grand Est
  *         latitude: 48.53088834964869
  *         longitude: 7.7356207021928824
  *         duration: 3
@@ -63,11 +63,11 @@ module.exports = [
  *   get:
  *     tags:
  *     - Step
- *     summary: Retourne tout les points d'étapes d'un trajet.
- *     description: Retourne tout les points d'étape d'un trajet dont l'id est unique.
+ *     summary: Retourne tout les points d'étapes d'un voyage.
+ *     description: Retourne tout les points d'étape d'un voyage dont l'id est unique.
  *     responses:
  *       200:
- *         description: Retourne tout les points d'étape d'un trajet.
+ *         description: Retourne tout les points d'étape d'un voyage.
  *         content:
  *           application/json:
  *             schema:
@@ -146,7 +146,7 @@ module.exports = [
  *               description:
  *                 type: string 
  *                 description: Description du nouveau point crée.
- *                 example: Ecole très répondu au Grand Est
+ *                 example: Ecole très répandue au Grand Est
  *               latitude:
  *                 type: number
  *                 format: float
@@ -188,7 +188,7 @@ module.exports = [
  *                 description:
  *                   type: string 
  *                   description: Description du nouveau point crée.
- *                   example: Ecole très répondu au Grand Est
+ *                   example: Ecole très répandue au Grand Est
  *                 latitude:
  *                   type: number
  *                   format: float
@@ -236,7 +236,7 @@ module.exports = [
  *     tags:
  *     - Step
  *     summary: Retourne un point d'étape dont l'id est passé en paramètre.
- *     description: Retourne le point d'étape demandé d'un trajet avec l'id passé en paramètre.
+ *     description: Retourne le point d'étape demandé d'un voyage avec l'id passé en paramètre.
  *     parameters:
  *      - in: path
  *        name: step_id
@@ -350,7 +350,7 @@ module.exports = [
  *               description:
  *                 type: string 
  *                 description: Description du nouveau point crée.
- *                 example: Ecole très répondu au Grand Est
+ *                 example: Ecole très répandue au Grand Est
  *               category:
  *                 type: string 
  *                 description: Catégorie du nouveau point crée.

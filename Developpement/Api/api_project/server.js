@@ -12,14 +12,14 @@ swaggerDefinition: {
     title: 'ATLAS',
     version: '1.0.0',
     description:
-      'Api développé pour le projet Acrobatt.',
+      'Api développée pour le projet Acrobatt.',
     contact: {
       name: 'Visitez notre application',
       url: 'https://google.com',
     },
   },
   externalDocs :{
-    description: "Deveci Serkan, Flejou Baptiste, Gallier Benjamin, Granpre Philippe, Mazzarella Enzo, Riehl Vivien",
+    description: "Deveci Serkan, Flejou Baptiste, Gallier Benjamin, Granpré Philippe, Mazzarella Enzo, Riehl Vivien",
     url:"https://google.com"
   },
   servers: [

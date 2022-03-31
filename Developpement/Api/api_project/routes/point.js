@@ -56,11 +56,11 @@ module.exports = [
  *   get:
  *     tags:
  *     - Point
- *     summary: Retourne tout les points d'un trajet.
- *     description: Retourne tout les points d'un trajet dont l'id est unique.
+ *     summary: Retourne tout les points de la base de données.
+ *     description: Retourne tout les points de la base de données dont l'id est unique.
  *     responses:
  *       200:
- *         description: Retourne tout les points d'un trajet.
+ *         description: Retourne tout les points de la base de données.
  *         content:
  *           application/json:
  *             schema:
@@ -145,7 +145,7 @@ module.exports = [
  *               description:
  *                 type: string 
  *                 description: Description du nouveau point crée.
- *                 example: Ecole très répondu au Grand Est
+ *                 example: Ecole très répandue au Grand Est
  *               category:
  *                 type: string 
  *                 description: Catégorie du nouveau point crée.
@@ -183,7 +183,7 @@ module.exports = [
  *                 description:
  *                   type: string 
  *                   description: Description du nouveau point crée.
- *                   example: Ecole très répondu au Grand Est
+ *                   example: Ecole très répandue au Grand Est
  *                 category:
  *                   type: string 
  *                   description: Catégorie du nouveau point crée.
@@ -217,7 +217,7 @@ module.exports = [
  *     tags:
  *     - Point
  *     summary: Retourne un point dont l'id est passé en paramètre.
- *     description: Retourne le point demandé d'un trajet avec l'id passé en paramètre.
+ *     description: Retourne le point demandé d'un voyage avec l'id passé en paramètre.
  *     parameters:
  *      - in: path
  *        name: point_id
@@ -289,7 +289,7 @@ module.exports = [
  *     tags:
  *     - Point
  *     summary: Update infos point d'intérêt.
- *     description: Met à jour les infos d'un point d'intérêt dont l'id du point à modifier est passé en l'id passé en paramètre.
+ *     description: Met à jour les infos d'un point d'intérêt dont l'id du point à modifier est passé en paramètre.
  *     parameters:
  *      - in: path
  *        name: point_id
@@ -322,7 +322,7 @@ module.exports = [
  *               description:
  *                 type: string 
  *                 description: Description du nouveau point crée.
- *                 example: Ecole très répondu au Grand Est
+ *                 example: Ecole très répandue au Grand Est
  *               category:
  *                 type: string 
  *                 description: Catégorie du nouveau point crée.

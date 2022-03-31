@@ -59,18 +59,23 @@ const RouteMenu = ({
   const categ = [
     {
       value: 'DRIVING',
+      label: 'Voiture'
     },
     {
       value: 'WALKING',
+      label: 'À pied'
     },
     {
       value: 'BICYCLING',
+      label: 'À vélo'
     },
     {
       value: 'TRANSIT',
+      label: 'En transports'
     },
     {
       value: 'Autre',
+      label: 'Autre'
     },
   ];
 
@@ -135,7 +140,7 @@ const RouteMenu = ({
           >
             {categ.map((option) => (
               <MenuItem key={option.value} value={option.value}>
-                {option.value}
+                {option.label}
               </MenuItem>
             ))}
           </TextField>
@@ -173,6 +178,7 @@ const RouteMenu = ({
 
           <Stack style={{ border: "1px solid black", margin: 5, marginBottom: 10, height: 425 }}>
             <GoogleMap
+              options={{mapTypeControl:false, fullscreenControl:false}}
               mapContainerStyle={containerStyle}
               center={position}
               zoom={6}>

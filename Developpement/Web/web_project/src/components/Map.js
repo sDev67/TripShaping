@@ -20,6 +20,12 @@ import { useParams } from "react-router-dom";
 import StepTimeline from "./StepTimeline";
 import Loading from "../utils/Loading";
 
+import stepIcon from "../assets/stepIcon.png"
+import selectedStepIcon from "../assets/selectedStepIcon.png"
+
+import interestPointIcon from "../assets/interestPointIcon.png"
+import selectedInterestPointIcon from "../assets/selectedInterestPointIcon.png"
+
 const containerStyle = {
   position: "relative",
   width: "100%",
@@ -80,8 +86,6 @@ export const Map = ({ }) => {
   //const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
 
-  const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const interestPointIcon = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
@@ -388,10 +392,7 @@ export const Map = ({ }) => {
                     }
                   }}
                   onDragEnd={updateStepLocation(step)}
-                  icon={selectedMarker?.marker.id == step.id ? null : stepIcon}
-
-                // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
-
+                  icon={selectedMarker?.marker.id == step.id && selectedMarker?.type=="Step" ? selectedStepIcon : stepIcon}
                 ></Marker>
               )))
           )}
@@ -423,7 +424,7 @@ export const Map = ({ }) => {
                     }
                   }}
                   onDragEnd={updateInterestPointLocation(interestPoint)}
-                  icon={interestPointIcon}
+                  icon={selectedMarker?.marker.id == interestPoint.id && selectedMarker?.type=="Point" ? selectedInterestPointIcon : interestPointIcon}
                 ></Marker>
               )))
           )}
@@ -477,6 +478,7 @@ export const Map = ({ }) => {
         isErrorS={isErrorS}
         errorS={errorS}
         setPosition={setPosition}
+        setSelectedMarker={setSelectedMarker}
       ></StepTimeline>
       {selectedMarker &&
         (selectedMarker.type === "Point" ? (

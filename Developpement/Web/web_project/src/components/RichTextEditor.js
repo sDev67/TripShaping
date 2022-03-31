@@ -19,7 +19,7 @@ const RichTextEditor = ({setValue, value}) =>
 
   useEffect(() => {
 
-    if(content !== undefined){
+    if(content !== null){
   
       setState({editorState:EditorState.createWithContent(convertFromRaw(JSON.parse(content)))});
 

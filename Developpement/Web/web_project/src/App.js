@@ -13,6 +13,7 @@ import Informations from "./routes/Informations";
 import Members from "./routes/Members";
 import TripSelection from "./routes/TripSelection";
 import Steps from "./routes/Steps";
+import Login from "./routes/Login";
 
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/mytrips" element={<TripSelection />} />
             <Route path="/trip" element={<NavigationBar />}>
               <Route path=":idTravel/map" element={<Itinerary />} />

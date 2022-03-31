@@ -2,7 +2,7 @@ import { checkStatus, url_prefix } from "../utils";
 
 const TravelRequests = {
 
-    getAllTravel: ()=>{
+    getAllTravel: () => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel`, {
             // headers: {
@@ -24,7 +24,7 @@ const TravelRequests = {
             .then(res => res.json())
     },
 
-    createTravel: ({name}) => {
+    createTravel: ({ name }) => {
         //const token = window.localStorage.getItem('token');
         console.log(name)
         return fetch(`${url_prefix}/travel`, {
@@ -53,6 +53,17 @@ const TravelRequests = {
     getStepsOfTravel: idTravel => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/steps`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
+    getRoutesOfTravel: idTravel => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${idTravel}/routes`, {
             // headers: {
             //     Authorization: 'Bearer ' + token
             // }
@@ -99,7 +110,22 @@ const TravelRequests = {
             .then(checkStatus)
             .then(res => res.json());
     },
-    updateTravel: ({TravelId, name, picture, activated, budget, infos, finished }) => {
+
+    addRoute: ({ travelType, start, finish, TravelId }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/route`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                //Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ travelType, start, finish, TravelId })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
+    },
+
+    updateTravel: ({ TravelId, name, picture, activated, budget, infos, finished }) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${TravelId}`, {
             method: 'PUT',
@@ -107,21 +133,21 @@ const TravelRequests = {
                 'Content-Type': 'application/json',
                 //Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({TravelId, name, picture, activated, budget, infos, finished })
+            body: JSON.stringify({ TravelId, name, picture, activated, budget, infos, finished })
         })
             .then(checkStatus)
             .then(res => res.json());
     },
-    
+
     getTravel: TravelId => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${TravelId}`, {
-           
+
             //headers: {
             //    'Content-Type': 'application/json',
-                //Authorization: 'Bearer ' + token
+            //Authorization: 'Bearer ' + token
             //},
-           
+
         })
             .then(checkStatus)
             .then(res => res.json());
@@ -141,6 +167,17 @@ const TravelRequests = {
     removeStep: idStep => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/step/${idStep}`, {
+            method: 'DELETE',
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // },
+        })
+            .then(checkStatus);
+    },
+
+    removeRoute: idRoute => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/route/${idRoute}`, {
             method: 'DELETE',
             // headers: {
             //     Authorization: 'Bearer ' + token

@@ -37,7 +37,7 @@ const NavigationBar = () => {
 
 
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState("/trip/" + idTravel + "/map");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

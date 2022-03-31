@@ -57,6 +57,18 @@ module.exports = {
 			.catch(err => next(err));
 	},
 
+	get_routes_of_travel: (req, res, next) => {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
+					throw { status: 404, message: 'Travel not found' };
+				}
+				return travel.getRoutes();
+			})
+			.then(steps => res.json(steps))
+			.catch(err => next(err));
+	},
+
 	get_members_of_travel: (req, res, next) => {
 		return db.Travel.findByPk(req.params.travel_id)
 			.then(travel => {

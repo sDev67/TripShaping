@@ -23,13 +23,15 @@ import {
   IconButton,
 } from "@mui/material";
 import Loading from "../utils/Loading";
+import palette from "../theme/palette";
 
-const StepTimeline = ({ steps, isLoadingS, isErrorS, errorS, setPosition }) => {
+const StepTimeline = ({ steps, isLoadingS, isErrorS, errorS, setPosition, setSelectedMarker }) => {
 
   const [selectedTimeLineItem, setSelectedTimeLineItem] = useState(null);
   const handleOnClick = (step, index) =>{
     setPosition({ lat: step.latitude, lng: step.longitude })
     setSelectedTimeLineItem(index);
+    setSelectedMarker({ marker: step, type: "Step" });
     console.log(index)
   };
 
@@ -38,7 +40,7 @@ const StepTimeline = ({ steps, isLoadingS, isErrorS, errorS, setPosition }) => {
       style={{
         right: "3%",
         top: "5%",
-        width: 400,
+        width: 225,
         position: "fixed",
         overflowY: "scroll",
         height: "90%",
@@ -51,7 +53,7 @@ const StepTimeline = ({ steps, isLoadingS, isErrorS, errorS, setPosition }) => {
       ) : (
         <Timeline position="alternate" style={{}}>
           {steps.map((step, index) => (
-            <Button key={index} onClick={() => handleOnClick(step, index)} style={ selectedTimeLineItem === index ? { backgroundColor:"green"} : {}} >
+            <Button key={index} onClick={() => handleOnClick(step, index)} style={ selectedTimeLineItem === index ? { backgroundColor: palette.primary.lighter} : {}} >
               <TimelineItem >
                 <TimelineSeparator>
                   <TimelineConnector sx={{ bgcolor: "primary.light" }} />

@@ -20,15 +20,19 @@ import { useParams } from "react-router-dom";
 import StepTimeline from "./StepTimeline";
 import Loading from "../utils/Loading";
 
+import stepIcon from "../assets/stepIcon.png"
+import selectedStepIcon from "../assets/selectedStepIcon.png"
+
+import interestPointIcon from "../assets/interestPointIcon.png"
+import selectedInterestPointIcon from "../assets/selectedInterestPointIcon.png"
+
 const containerStyle = {
   position: "relative",
   width: "100%",
   height: "100%",
 };
 
-
-
-export const Map = ({}) => {
+export const Map = ({ }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -47,6 +51,9 @@ export const Map = ({}) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
+  const [stepAdded, setStepAdded] = useState(false);
+
+  // Etapes
   const {
     isLoading: isLoadingS,
     isError: isErrorS,
@@ -56,6 +63,7 @@ export const Map = ({}) => {
     TravelRequests.getStepsOfTravel(idTravel)
   );
 
+  // Points
   const {
     isLoading: isLoadingP,
     isError: isErrorP,
@@ -65,18 +73,32 @@ export const Map = ({}) => {
     TravelRequests.getPointsOfTravel(idTravel)
   );
 
-  //const [routes, setRoutes] = useState([]);
+  // Trajets
+  const {
+    isLoading: isLoadingR,
+    isError: isErrorR,
+    error: errorR,
+    data: routes,
+  } = useQuery(["getRoutes", idTravel], () =>
+    TravelRequests.getRoutesOfTravel(idTravel)
+  );
 
   //const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
 
-  const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const interestPointIcon =
-    "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
   }, [markerFilter]);
+
+  useEffect(() => {
+    if (!isLoadingS && !isErrorS) {
+      if (steps.length >= 2 && stepAdded) {
+        addRoute({ idStart: steps[steps.length - 2].id, idFinish: steps[steps.length - 1].id });
+        setStepAdded(false);
+      }
+    }
+  }, [steps]);
 
   // Lorsqu'on change de choix dans la box Navigation :
   // - Tout
@@ -131,10 +153,19 @@ export const Map = ({}) => {
   });
 
   const addStep = useMutation(TravelRequests.addStep, {
-    onSuccess: (step) =>
+    onSuccess: (step) => {
       queryClient.setQueryData(["getSteps", idTravel], (steps) => [
         ...steps,
         step,
+      ]);
+    }
+  });
+
+  const createRoute = useMutation(TravelRequests.addRoute, {
+    onSuccess: (route) =>
+      queryClient.setQueryData(["getRoutes", idTravel], (routes) => [
+        ...routes,
+        route,
       ]),
   });
 
@@ -146,17 +177,19 @@ export const Map = ({}) => {
           ...interestPoints,
           point,
         ]);
-        queryClient.invalidateQueries("getPoints");
+        queryClient.invalidateQueries(["getPoints", idTravel]);
       },
     }
   );
 
   const updateInfoPoint = useMutation(PointRequests.updatePointInfoById, {
-    onSuccess: (point) =>
+    onSuccess: (point) => {
       queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
         ...interestPoints,
         point,
-      ]),
+      ]);
+      queryClient.invalidateQueries(["getPoints", idTravel]);
+    }
   });
 
   const updateLocationStep = useMutation(StepRequests.updateStepLocationById, {
@@ -165,16 +198,18 @@ export const Map = ({}) => {
         ...steps,
         step,
       ]);
-      queryClient.invalidateQueries("getSteps");
+      queryClient.invalidateQueries(["getSteps", idTravel]);
     },
   });
 
   const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
-    onSuccess: (step) =>
+    onSuccess: (step) => {
       queryClient.setQueryData(["getSteps", idTravel], (steps) => [
         ...steps,
         step,
-      ]),
+      ]);
+      queryClient.invalidateQueries(["getSteps", idTravel]);
+    }
   });
 
   //Suppression de point
@@ -190,6 +225,14 @@ export const Map = ({}) => {
     onSuccess: (_, id) =>
       queryClient.setQueryData(["getSteps", idTravel], (steps) =>
         steps.filter((e) => e.id !== id)
+      ),
+  });
+
+  //Suppression de route
+  const deleteRoute = useMutation(TravelRequests.removeRoute, {
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getRoutes", idTravel], (routes) =>
+        routes.filter((e) => e.id !== id)
       ),
   });
 
@@ -235,6 +278,17 @@ export const Map = ({}) => {
       TravelId: idTravel,
     };
     addStep.mutate(newStep);
+    setStepAdded(true);
+  };
+
+  const addRoute = ({ idStart, idFinish }) => {
+    const newRoute = {
+      travelType: "",
+      start: idStart,
+      finish: idFinish,
+      TravelId: idTravel
+    };
+    createRoute.mutate(newRoute);
   };
 
   // Fonction qui permet d'ajouter un point d'interet
@@ -297,72 +351,82 @@ export const Map = ({}) => {
             editionMode={editionMode}
           ></MapModeSwitch>
 
-          {(markerFilter === "stepOnlyNav" ||
-            markerFilter === "stepOnlyEdit" ||
-            markerFilter === "all") &&
-          isLoadingS ? (
-            <Loading/>
+          {isLoadingS ? (
+            <Loading />
           ) : isErrorS ? (
             <p style={{ color: "red" }}>{errorS.message}</p>
           ) : (
-            steps.map((step, index) => (
-              <Marker
-                key={index}
-                position={{ lat: step.latitude, lng: step.longitude }}
-                draggable={!error && isEdition}
-                clickable={true}
-                onClick={() => {
-                  setSelectedMarker({ marker: step, type: "Step" });
-                  setSelectedRoute(null);
-                  setPosition({ lat: step.latitude, lng: step.longitude });
-                }}
-                onRightClick={() => {
-                  if (!error && isEdition) {
-                    deleteStep.mutate(step.id);
+            !(!isEdition && markerFilter === "interestPointOnlyNav") && (
+              steps.map((step, index) => (
+                <Marker
+                  key={index}
+                  position={{ lat: step.latitude, lng: step.longitude }}
+                  draggable={!error && isEdition}
+                  clickable={true}
+                  onClick={() => {
                     setSelectedMarker(null);
-                  }
-                }}
-                onDragEnd={updateStepLocation(step)}
-                icon={selectedMarker?.marker.id == step.id ? null : stepIcon}
-                
-                // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
-                
-              ></Marker>
-            ))
+                    setSelectedMarker({ marker: step, type: "Step" });
+                    setSelectedRoute(null);
+                    setPosition({ lat: step.latitude, lng: step.longitude });
+                  }}
+                  onRightClick={() => {
+                    if (!error && isEdition) {
+                      if (steps.length > 1 && !isLoadingR && !isErrorR) {
+                        if (step.id === steps[steps.length - 1].id) {
+                          // Si on supprime la dernière étape
+                          deleteRoute.mutate(routes[routes.length - 1].id)
+                        }
+                        else if (step.id === steps[0].id) {
+                          // Si on supprime la première étape
+                          deleteRoute.mutate(routes[0].id)
+                        }
+                        else {
+                          // Si on supprime une étape intermédiaire
+                          deleteRoute.mutate(routes[index - 1].id)
+                          deleteRoute.mutate(routes[index].id)
+                          addRoute({ idStart: steps[index - 1].id, idFinish: steps[index + 1].id });
+                        }
+                      }
+                      deleteStep.mutate(step.id);
+                      setSelectedMarker(null);
+                    }
+                  }}
+                  onDragEnd={updateStepLocation(step)}
+                  icon={selectedMarker?.marker.id == step.id ? selectedStepIcon : stepIcon}
+                ></Marker>
+              )))
           )}
 
-          {(markerFilter === "interestPointOnlyNav" ||
-            markerFilter === "interestPointOnlyEdit" ||
-            markerFilter === "all") &&
-          isLoadingP ? (
+          {isLoadingP ? (
             "Chargement..."
           ) : isErrorP ? (
             <p style={{ color: "red" }}>{errorP.message}</p>
           ) : (
-            interestPoints.map((interestPoint, index) => (
-              <Marker
-                key={index}
-                name="Point"
-                position={{
-                  lat: interestPoint.latitude,
-                  lng: interestPoint.longitude,
-                }}
-                draggable={!error && isEdition}
-                clickable={true}
-                onClick={() => {
-                  setSelectedMarker({ marker: interestPoint, type: "Point" });
-                  setSelectedRoute(null);
-                }}
-                onRightClick={() => {
-                  if (!error && isEdition) {
-                    deletePoint.mutate(interestPoint.id);
+            !(!isEdition && markerFilter === "stepOnlyNav") && (
+              interestPoints.map((interestPoint, index) => (
+                <Marker
+                  key={index}
+                  position={{
+                    lat: interestPoint.latitude,
+                    lng: interestPoint.longitude,
+                  }}
+                  draggable={!error && isEdition}
+                  clickable={true}
+                  onClick={() => {
                     setSelectedMarker(null);
-                  }
-                }}
-                onDragEnd={updateInterestPointLocation(interestPoint)}
-                icon={interestPointIcon}
-              ></Marker>
-            ))
+                    setSelectedMarker({ marker: interestPoint, type: "Point" });
+                    setSelectedRoute(null);
+                  }}
+                  onRightClick={() => {
+                    if (!error && isEdition) {
+                      deletePoint.mutate(interestPoint.id);
+                      setSelectedMarker(null);
+                    }
+                  }}
+                  onDragEnd={updateInterestPointLocation(interestPoint)}
+                  icon={selectedMarker?.marker.id == interestPoint.id ? selectedInterestPointIcon : interestPointIcon}
+                ></Marker>
+              )))
           )}
 
           {isLoadingS ? (
@@ -381,7 +445,8 @@ export const Map = ({}) => {
                         geodesic={true}
                         clickable={true}
                         onClick={() => {
-                          setSelectedRoute(index);
+                          setSelectedRoute(null);
+                          setSelectedRoute({ route: routes[index - 1], start: steps[index - 1], finish: step });
                           setSelectedMarker(null);
                         }}
                         path={[
@@ -413,6 +478,7 @@ export const Map = ({}) => {
         isErrorS={isErrorS}
         errorS={errorS}
         setPosition={setPosition}
+        setSelectedMarker={setSelectedMarker}
       ></StepTimeline>
       {selectedMarker &&
         (selectedMarker.type === "Point" ? (
@@ -444,7 +510,9 @@ export const Map = ({}) => {
         ))}
       {selectedRoute && (
         <RouteMenu
-          selectedRoute={selectedRoute}
+          selectedRoute={selectedRoute.route}
+          start={selectedRoute.start}
+          finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
         ></RouteMenu>
       )}

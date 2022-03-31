@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Timeline from "@mui/lab/Timeline";
 import TimelineItem from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
@@ -25,14 +25,20 @@ import {
 import Loading from "../utils/Loading";
 import palette from "../theme/palette";
 
-const StepTimeline = ({ steps, isLoadingS, isErrorS, errorS, setPosition, setSelectedMarker }) => {
-
+const StepTimeline = ({
+  steps,
+  isLoadingS,
+  isErrorS,
+  errorS,
+  setPosition,
+  setSelectedMarker,
+}) => {
   const [selectedTimeLineItem, setSelectedTimeLineItem] = useState(null);
-  const handleOnClick = (step, index) =>{
-    setPosition({ lat: step.latitude, lng: step.longitude })
+  const handleOnClick = (step, index) => {
+    setPosition({ lat: step.latitude, lng: step.longitude });
     setSelectedTimeLineItem(index);
     setSelectedMarker({ marker: step, type: "Step" });
-    console.log(index)
+    console.log(index);
   };
 
   return (
@@ -51,10 +57,18 @@ const StepTimeline = ({ steps, isLoadingS, isErrorS, errorS, setPosition, setSel
       ) : isErrorS ? (
         <p style={{ color: "red" }}>{errorS.message}</p>
       ) : (
-        <Timeline position="alternate" style={{}}>
+        <Timeline>
           {steps.map((step, index) => (
-            <Button key={index} onClick={() => handleOnClick(step, index)} style={ selectedTimeLineItem === index ? { backgroundColor: palette.primary.lighter} : {}} >
-              <TimelineItem >
+            <Button key={index}
+            onClick={() => handleOnClick(step, index)}
+            style={
+              selectedTimeLineItem === index
+                ? { backgroundColor: palette.primary.lighter }
+                : {position:"relative"}
+            }>
+              <TimelineItem
+                
+              >
                 <TimelineSeparator>
                   <TimelineConnector sx={{ bgcolor: "primary.light" }} />
                   <TimelineDot color="error">

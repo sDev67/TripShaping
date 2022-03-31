@@ -26,6 +26,7 @@ import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
 
 import Editor from '../components/RichTextEditor'
+import { useParams } from "react-router-dom";
 
 const Informations = () => {
 
@@ -33,10 +34,11 @@ const Informations = () => {
   const [switchState, setSwitchState] = React.useState(false)
   const queryClient = useQueryClient();
   const [value, setValue] = React.useState();
-  const idTravel = 1;
+  let {idTravel} = useParams();
+  idTravel = parseInt(idTravel);
 
   const { isLoading: isLoading, isError: isError, error: error, data: travelDatas } = useQuery(
-    ['getInfos', idTravel], () => TravelRequests.getTravel(idTravel)
+    ['getInfos', idTravel], () => TravelRequests.getTravelByid(idTravel)
   );
 
 
@@ -94,7 +96,7 @@ const Informations = () => {
           
           !isError ?
           <>
-              <Editor setValue={setValue} value={travelDatas.infos != undefined ? travelDatas.infos : undefined}/>
+              <Editor setValue={setValue} value={travelDatas.infos !== null ? travelDatas.infos : null}/>
               <Button disabled={value === travelDatas.infos ? true : false}  onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>        
           </>
           

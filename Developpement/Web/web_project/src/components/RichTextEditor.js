@@ -19,34 +19,35 @@ const RichTextEditor = ({setValue, value}) =>
 
   useEffect(() => {
 
-    if(content){
+    if(content !== undefined){
+  
       setState({editorState:EditorState.createWithContent(convertFromRaw(JSON.parse(content)))});
 
     }
     else{
-      setState({editorState:EditorState.createEmpty});
+
+      setState({editorState:EditorState.createEmpty()});
+
     }
 
   }, [content])
 
-    
   
    
 
  
    const onChange = (editorState) =>{
+   
     const contentState = editorState.getCurrentContent();
     saveContent(contentState);
     setState({
       editorState,
   });
    }
-
    const saveContent = (content) => {
       //window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
       setValue(JSON.stringify(convertToRaw(content)));
   }
-
     return (
         <div>
           <div style={{ border: "1px solid black", padding: '2px', minHeight: '400px' }}>

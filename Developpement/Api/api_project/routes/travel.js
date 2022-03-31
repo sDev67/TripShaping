@@ -538,6 +538,17 @@ module.exports = [
 	url: '/travel/:travel_id',
 	method: 'delete',
 	func: travel_ctrl.delete_by_id
+},
+
+{
+	url: '/travel/:travel_id/routes',
+	method: 'get',
+	func: travel_ctrl.get_routes_of_travel
+},
+{
+	url: '/travel/:travel_id/members',
+	method: 'get',
+	func: travel_ctrl.get_members_of_travel
 }
 
 ];

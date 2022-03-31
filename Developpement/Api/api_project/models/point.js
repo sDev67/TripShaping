@@ -5,6 +5,7 @@ module.exports = sequelize => {
 	class Point extends Sequelize.Model {
 		static associate(db) {
 			Point.belongsTo(db.Travel);
+			Point.belongsTo(db.Step);
 		}
 	}
 
@@ -13,7 +14,8 @@ module.exports = sequelize => {
 		latitude: DataTypes.FLOAT,
 		longitude: DataTypes.FLOAT,
 		description: DataTypes.STRING,
-		category: DataTypes.STRING
+		category: DataTypes.STRING,
+		day: DataTypes.INTEGER
 	}, {
 		sequelize,
 		modelName: 'Point'

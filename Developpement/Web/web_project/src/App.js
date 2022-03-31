@@ -12,6 +12,8 @@ import NavigationBar from "./components/NavigationBar";
 import Informations from "./routes/Informations";
 import Members from "./routes/Members";
 import TripSelection from "./routes/TripSelection";
+import Steps from "./routes/Steps";
+
 
 const queryClient = new QueryClient();
 
@@ -24,13 +26,14 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/mytrips" element={<TripSelection />} />
             <Route path="/trip" element={<NavigationBar />}>
-              <Route path="map/:idTravel" element={<Itinerary/>} />
-              <Route path="todolist" element={<TodoList />} />
-              <Route path="informations" element={<Informations />} />
-              <Route path="members" element={<Members />} />
+              <Route path=":idTravel/map" element={<Itinerary />} />
+              <Route path=":idTravel/steps" element={<Steps />} />
+              <Route path=":idTravel/todolist" element={<TodoList />} />
+              <Route path=":idTravel/informations" element={<Informations />} />
+              <Route path=":idTravel/members" element={<Members />} />
             </Route>
           </Routes>
-          {/* <ReactQueryDevtools /> */}
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </BrowserRouter>
     </>

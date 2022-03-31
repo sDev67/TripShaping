@@ -15,6 +15,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import TripForm from "../components/TripForm";
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
+import Loading from './../utils/Loading';
 
 
 const TripSelection = () => {
@@ -56,11 +57,11 @@ const TripSelection = () => {
           spacing={10}
         >
           {
-          isLoadingT ? 'Chargement...' : isErrorT ? <p style={{ color: 'red' }}>{errorT.message}</p> :
+          isLoadingT ? <Loading/> : isErrorT ? <p style={{ color: 'red' }}>{errorT.message}</p> :
           travels.map((travel, index) => (
             <Grid key={index} item xs={4}>
               <Card>
-                <CardActionArea component={Link} to={"/trip/map/" + travel.id}>
+                <CardActionArea component={Link} to={"/trip/" + travel.id + "/map"}>
                   <CardContent>
                     <Stack
                       direction="row"
@@ -113,7 +114,7 @@ const TripSelection = () => {
         </div>
       </Stack>
       <Dialog open={tripFormOpen} onClose={() => setTripFormOpen(false)}>
-        <TripForm></TripForm>
+        <TripForm setTripFormOpen={setTripFormOpen}></TripForm>
       </Dialog>
     </> 
   );

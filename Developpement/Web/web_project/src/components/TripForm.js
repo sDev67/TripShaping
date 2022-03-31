@@ -14,7 +14,7 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
 
-const TripForm = () => {
+const TripForm = ({setTripFormOpen}) => {
   const queryClient = useQueryClient();
 
   const [name, setName] = useState("");
@@ -31,11 +31,11 @@ const TripForm = () => {
   });
 
   const handleSubmit = () => {
-    const newStep = {
+    const newTravel = {
       name: name.trim()
     }
-    creationTravel.mutate(newStep);
-
+    creationTravel.mutate(newTravel);
+    setTripFormOpen(false);
   };
 
   return (

@@ -51,13 +51,11 @@ const StepMenu = ({
     {
       value: 'Autre',
     },
-    
-    
   ];
 
   // Fonction qui met a jour les propriétés d'un point d'interet
   const updateStepInfo = (step) => (e) => {
-    if(isEdition){
+    if (isEdition) {
       const newPoint = {
         title: title,
         category: category,
@@ -66,12 +64,12 @@ const StepMenu = ({
       };
       updateInfoStep.mutate(newPoint);
       setSelectedMarker(null);
-    }  
+    }
   };
 
   return (
     <>
-      <Card style={{ right: 60, top: 30, width: 400, position: "fixed" }}>
+      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height: "90%" }}>
         <CardMedia
           component="img"
           height="194"
@@ -90,14 +88,14 @@ const StepMenu = ({
             fullWidth
             label="Nom"
             value={title}
-            onChange={(e) =>setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
             }}
             disabled={!isEdition}
           />
-         <TextField
+          <TextField
             fullWidth
             select
             label="Catégorie"
@@ -111,10 +109,10 @@ const StepMenu = ({
 
           >
             {categ.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.value}
-            </MenuItem>
-          ))}
+              <MenuItem key={option.value} value={option.value}>
+                {option.value}
+              </MenuItem>
+            ))}
           </TextField>
           <TextField
             fullWidth
@@ -178,26 +176,26 @@ const StepMenu = ({
           />
 
           <Stack direction="row" justifyContent="space-between">
-          {isEdition && <>
+            {isEdition && <>
 
-            <Button
-              variant="outlined"
-              color="error"
-              startIcon={<DeleteRounded />}
-              onClick={() => { deleteStep.mutate(selectedMarker.id); setSelectedMarker(null) }}
-            >
-              Supprimer
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<DoneRounded />}
-              onClick={updateStepInfo(selectedMarker)}
-            >
-              Enregistrer
-            </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<DeleteRounded />}
+                onClick={() => { deleteStep.mutate(selectedMarker.id); setSelectedMarker(null) }}
+              >
+                Supprimer
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<DoneRounded />}
+                onClick={updateStepInfo(selectedMarker)}
+              >
+                Enregistrer
+              </Button>
             </>
-          }
+            }
           </Stack>
         </CardContent>
       </Card>

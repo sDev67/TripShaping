@@ -3,7 +3,7 @@ const user_ctrl = require('../controllers/user');
 module.exports = [
 
 	{
-		url: '/user',
+		url: '/users',
 		method: 'get',
 		func: user_ctrl.get_all
 	},

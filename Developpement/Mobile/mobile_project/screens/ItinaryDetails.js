@@ -8,11 +8,13 @@ import { useEffect, useState } from 'react';
 
 const ItinaryDetails = ({ route, navigation }) => {
 
-    const { step, stepBefore } = route.params;
+    const { step, stepBefore, itinairary } = route.params;
+
+    console.log(itinairary);
 
     const [distance, setDistance] = useState(null);
     const [duration, setDuration] = useState(null);
-    const [deplacement, setDeplacement] = useState("DRIVING");
+    const [deplacement, setDeplacement] = useState(itinairary.travelType);
 
     let heureDec = 0;
     let heure = 0;
@@ -65,7 +67,6 @@ const ItinaryDetails = ({ route, navigation }) => {
                     <Text style={{ marginLeft: 10 }}>{duration < 60 ? (Math.round(duration) + " min") : (heure + " h " + min + " min")}</Text>
                     <Text style={styles.font}>Distance</Text>
                     <Text style={{ marginLeft: 10 }}>{Math.round(distance * 100) / 100} km</Text>
-                    <Text style={styles.font}>Description</Text>
                     <Text style={styles.font}>Documents</Text>
                 </ScrollView>
             </SafeAreaView>
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
     map: {
         flex: 1,
         width: Dimensions.get('window').width,
-        height: "25%",
+        height: "50%",
     }
 });
 

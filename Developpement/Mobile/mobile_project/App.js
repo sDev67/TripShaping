@@ -47,7 +47,7 @@ const TabScreen = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          if (route.name === 'Altas') {
+          if (route.name === 'Atlas') {
             return <Image source={iconMaps} style={{ width: 30, height: 30, tintColor: color }} />;
           }
           else if (route.name === "Journal") {

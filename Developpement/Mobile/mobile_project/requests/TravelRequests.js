@@ -22,6 +22,17 @@ const TravelRequests = {
             .then(checkStatus)
             .then(res => res.json())
     },
+
+    getRoutesOfTravel: idTravel => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${idTravel}/routes`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    }
 };
 
 export default TravelRequests;

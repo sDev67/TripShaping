@@ -96,7 +96,7 @@ const Informations = () => {
           
           !isError ?
           <>
-              <Editor setValue={setValue} value={travelDatas.infos !== null ? travelDatas.infos : null}/>
+              <Editor setValue={setValue} value={travelDatas.infos !== null ? travelDatas.infos : null} minH='500px'/>
               <Button disabled={value === travelDatas.infos ? true : false}  onClick={(e) => handleChange()} variant="contained">Sauvegarder les informations</Button>        
           </>
           

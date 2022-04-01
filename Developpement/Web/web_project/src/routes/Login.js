@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -13,6 +13,8 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import { Link, Outlet, useParams } from "react-router-dom";
 const Login = () => 
 {
     const [values, setValues] = React.useState({
@@ -39,6 +41,7 @@ const Login = () =>
         event.preventDefault();
       };
 
+      
 
     return(
     <>
@@ -52,23 +55,21 @@ const Login = () =>
             Login
             </Typography>
 
-            <Stack marginTop='15vh'>
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+            <Stack marginTop='5vh' border='solid' borderRadius='5%' color='green' width='40%' heigth='100%' alignItems='center' justifyContent='space-around'>
+                <FormControl sx={{ m: 1, width: '25ch', marginTop:'10vh', width:'80%' }} variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Mail address</InputLabel>
                     <OutlinedInput
-
+                        error={false}            
                         type={'email'}
                         value={values.mail}
                         onChange={handleChange('mail')}
-
                         label="Mail Address"
                     />
                 </FormControl>
-
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                <Typography style={{}} color='error'>Email non répertoriée ou incorrect..</Typography>
+                <FormControl sx={{ m: 1, width: '25ch', width:'80%'}} variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                     <OutlinedInput
-                        id="outlined-adornment-password"
                         type={values.showPassword ? 'text' : 'password'}
                         value={values.password}
                         onChange={handleChange('password')}
@@ -87,6 +88,25 @@ const Login = () =>
                         label="Password"
                     />
                 </FormControl>
+                <Typography style={{ marginBottom:'10vh'}} color='error'>Mot de passe incorrect..</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size='large'
+                  style={{marginBottom:'10vh'}}
+                  startIcon={<AccountCircleRoundedIcon />} 
+                >
+
+                  Enregistrer
+
+              </Button>
+              <Typography variant="body" 
+                value={"/mytrips"}
+                component={Link}
+                to={"/mytrips"}>
+                
+                test</Typography>
+       
             </Stack>
             
            

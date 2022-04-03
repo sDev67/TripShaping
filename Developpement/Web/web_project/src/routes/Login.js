@@ -52,7 +52,7 @@ const Login = () =>
             textAlign="center"
             marginTop={4}
             >
-            Login
+            Connexion
             </Typography>
 
             <Stack marginTop='5vh' border='solid' borderRadius='5%' color='green' width='40%' heigth='100%' alignItems='center' justifyContent='space-around'>
@@ -66,7 +66,7 @@ const Login = () =>
                         label="Mail Address"
                     />
                 </FormControl>
-                <Typography style={{}} color='error'>Email non répertoriée ou incorrect..</Typography>
+                <Typography style={{}} color='error'>Email non répertoriée ou incorrect.</Typography>
                 <FormControl sx={{ m: 1, width: '25ch', width:'80%'}} variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                     <OutlinedInput
@@ -88,24 +88,24 @@ const Login = () =>
                         label="Password"
                     />
                 </FormControl>
-                <Typography style={{ marginBottom:'10vh'}} color='error'>Mot de passe incorrect..</Typography>
+                <Typography style={{ marginBottom:'10vh'}} color='error'>Mot de passe incorrect.</Typography>
                 <Button
                   variant="contained"
                   color="primary"
                   size='large'
-                  style={{marginBottom:'10vh'}}
                   startIcon={<AccountCircleRoundedIcon />} 
                 >
 
-                  Enregistrer
+                  Se connecter
 
               </Button>
               <Typography variant="body" 
-                value={"/mytrips"}
+                value={"/signup"}
                 component={Link}
-                to={"/mytrips"}>
+                to={"/signup"}
+                style={{marginBottom:'10vh'}}>
                 
-                test</Typography>
+               Pas de compte ? Inscrivez-vous ici.</Typography>
        
             </Stack>
             

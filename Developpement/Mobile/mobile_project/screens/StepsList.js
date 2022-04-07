@@ -24,9 +24,6 @@ export default StepsList = ({ navigation }) => {
         ['getPoints', idTravel], () => TravelRequests.getPointsOfTravel(idTravel)
     );
 
-    console.log(points)
-
-
     const [showModal, setShowModal] = useState(false);
     const documents = [{ title: "Billet cathédrale", url: "https://www.portailentreprises.sncf.com/design/b2b/css/page/colonneC/img/Confirmation_e_billet.jpg" }, { title: "Plan cathédrale", url: "https://s3.us-east-2.amazonaws.com/us-east-2.files.campus.edublogs.org/blogs.furman.edu/dist/2/109/files/2014/12/Strasbourg-3.jpg" }]
 
@@ -62,7 +59,6 @@ export default StepsList = ({ navigation }) => {
                 {steps.map((step, idx) => {
                     var tabDays = [];
                     FillTab(step.duration, tabDays);
-                    console.log(tabDays)
                     return (<ScrollView contentContainerStyle={{ paddingTop: 0 }} key={idx}>
                         <TouchableOpacity onPress={() => toggleExpanded(idx)}>
                             <View style={styles.header}>
@@ -93,7 +89,7 @@ export default StepsList = ({ navigation }) => {
                                         <View style={{ marginTop: 5, flexDirection: "row" }}>
                                             {points.map((point, id) => {
                                                 if (point.StepId === step.id && point.day === i + 1) {
-                                                    return <View key={id}>
+                                                    return <View key={id} style={{ flexDirection: "row" }}>
                                                         <Image source={marker} style={{ width: 20, height: 20, tintColor: "red" }} />
                                                         <Text>{point.title}</Text>
                                                         <Pressable onPress={() => setShowModal(true)}><Image source={iconFiles} style={{ width: 20, height: 20, marginLeft: 10 }} /></Pressable>

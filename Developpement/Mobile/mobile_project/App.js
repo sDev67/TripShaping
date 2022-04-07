@@ -17,12 +17,14 @@ import StepsList from './screens/StepsList';
 import ItinaryDetails from './screens/ItinaryDetails';
 import StepDetails from './screens/StepDetails';
 import PointDetails from './screens/PointDetails';
+import Spending from './screens/Spending';
 
 import iconMaps from './assets/navigation_icons/icon_maps.png';
 import iconJournal from './assets/navigation_icons/icon_journal.png';
 import iconPhoto from './assets/navigation_icons/icon_photo.png';
 import iconFiles from './assets/navigation_icons/icon_files.png';
 import iconStepsList from './assets/navigation_icons/icon_stepsList.png';
+import iconSpending from './assets/navigation_icons/icon_spending.png';
 
 import TravelRequests from "./requests/TravelRequests";
 
@@ -59,16 +61,20 @@ const TabScreen = () => {
           else if (route.name === "Etapes") {
             return <Image source={iconStepsList} style={{ width: 30, height: 30, tintColor: color }} />
           }
+          else if (route.name === "Spending") {
+            return <Image source={iconSpending} style={{ width: 30, height: 30, tintColor: color }} />
+          }
         },
         tabBarActiveTintColor: '#3498DB',
         tabBarInactiveTintColor: 'black',
         tabBarShowLabel: false
       })}
     >
-      <Tab.Screen name="Altas" component={Maps} />
+      <Tab.Screen name="Atlas" component={Maps} />
       <Tab.Screen name="Etapes" component={StepsList} />
       <Tab.Screen name="Journal" children={() => <Journal messages={messages} setMessages={setMessages} />} />
       <Tab.Screen name="Photo" component={Photo} />
+      <Tab.Screen name="Spending" component={Spending} options={{ title: "Gestion des dépenses" }} />
     </Tab.Navigator>
 
   );

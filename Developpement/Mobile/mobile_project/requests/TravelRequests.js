@@ -32,7 +32,19 @@ const TravelRequests = {
         })
             .then(checkStatus)
             .then(res => res.json())
-    }
+    },
+
+    getMembersOfTravel: idTravel => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${idTravel}/members`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
 };
 
 export default TravelRequests;

@@ -73,7 +73,7 @@ const TasksItemGrid = ({ tasks, OnRemoveLabelToTask, OnSelectTask }) => {
                           size="medium"
                           onDelete={OnRemoveLabelToTask}
                           onClick={OnRemoveLabelToTask}
-                          color="primary"
+                          color="secondary"
                           label={label.title}
                         />
                       </>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Radio,
   RadioGroup,
@@ -21,26 +21,33 @@ import {
   Typography,
   IconButton,
   CardHeader,
-  Tooltip
+  Tooltip,
 } from "@mui/material";
-import { styled } from '@mui/material/styles';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { styled } from "@mui/material/styles";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+import stepIcon from "../assets/stepIcon.png";
+import interestPointIcon from "../assets/interestPointIcon.png";
+import stepInterestPointIcon from "../assets/stepInterestPointIcon.png";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
+  transform: !expand ? "rotate(180deg)" : "rotate(0deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
   }),
 }));
 
-const MapModeSwitch = ({ switchText, handleSwitch, isEdition, markerFilter, handleChangeSelectModeEdit, handleChangeSelectModeNav, editionMode }) => {
-  const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
-  const interestPointIcon = "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-
+const MapModeSwitch = ({
+  handleSwitch,
+  isEdition,
+  markerFilter,
+  handleChangeSelectModeEdit,
+  handleChangeSelectModeNav,
+  editionMode,
+}) => {
   const [expanded, setExpanded] = React.useState(true);
 
   const handleExpandClick = () => {
@@ -61,10 +68,10 @@ const MapModeSwitch = ({ switchText, handleSwitch, isEdition, markerFilter, hand
         title={
           <>
             <FormControlLabel
-              value={switchText}
+              value="Édition"
               control={<Switch color="primary" />}
-              label={switchText}
-              labelPlacement="top"
+              label="Édition"
+              labelPlacement="start"
               onChange={handleSwitch}
               checked={isEdition}
               position="absolute"
@@ -93,20 +100,35 @@ const MapModeSwitch = ({ switchText, handleSwitch, isEdition, markerFilter, hand
                 <FormControlLabel
                   value="all"
                   control={<Radio />}
-                  label="Tout"
+                  label={
+                    <Stack direction="row" alignItems="center">
+                      <img style={{width:"25px", height:"25px"}}src={stepInterestPointIcon}></img>
+                      
+                      <p>Tout</p>
+                    </Stack>
+                  }
                 />
                 <FormControlLabel
                   value="stepOnlyNav"
                   control={<Radio />}
-                  label="Etapes"
+                  label={
+                    <Stack direction="row" alignItems="center">
+                      <img style={{width:"25px", height:"25px"}}src={stepIcon}></img>
+                      <p>Étapes</p>
+                    </Stack>
+                  }
                 />
-                <Tooltip title="Points d'intérêt" placement='right'>
-                  <FormControlLabel
-                    value="interestPointOnlyNav"
-                    control={<Radio />}
-                    label="POI"
-                  />
-                </Tooltip>
+
+                <FormControlLabel
+                  value="interestPointOnlyNav"
+                  control={<Radio />}
+                  label={
+                    <Stack direction="row" alignItems="center">
+                      <img style={{width:"25px", height:"25px"}}src={interestPointIcon}></img>
+                      <p>POI</p>
+                    </Stack>
+                  }
+                />
               </RadioGroup>
             </FormControl>
           )}
@@ -123,24 +145,32 @@ const MapModeSwitch = ({ switchText, handleSwitch, isEdition, markerFilter, hand
                   <FormControlLabel
                     value="stepOnlyEdit"
                     control={<Radio />}
-                    label="Etapes"
+                    label={
+                      <Stack direction="row" alignItems="center">
+                        <img style={{width:"25px", height:"25px"}}src={stepIcon}></img>
+                        <p>Étapes</p>
+                      </Stack>
+                    }
                   />
-                  <Tooltip title="Points d'intérêt" placement='right' style={{ backgroundColor: "white" }}>
-                    <FormControlLabel
-                      value="interestPointOnlyEdit"
-                      control={<Radio />}
-                      label="POI"
-                    />
-                  </Tooltip>
+
+                  <FormControlLabel
+                    value="interestPointOnlyEdit"
+                    control={<Radio />}
+                    label={
+                      <Stack direction="row" alignItems="center">
+                        <img style={{width:"25px", height:"25px"}}src={interestPointIcon}></img>
+                        <p>POI</p>
+                      </Stack>
+                    }
+                  />
                 </RadioGroup>
               </FormControl>
             </>
           )}
         </CardContent>
       </Collapse>
-
     </Card>
-  )
-}
+  );
+};
 
-export default MapModeSwitch
+export default MapModeSwitch;

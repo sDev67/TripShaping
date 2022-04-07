@@ -11,11 +11,12 @@ import HotelIcon from "@mui/icons-material/Hotel";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import Typography from "@mui/material/Typography";
 import CancelRounded from "@mui/icons-material/CancelRounded";
+import { styled } from "@mui/material/styles";
 import {
   Card,
-  TextField,
+  Box,
+  Slide,
   Stack,
-  CardMedia,
   CardContent,
   Dialog,
   MenuItem,
@@ -24,6 +25,8 @@ import {
 } from "@mui/material";
 import Loading from "../utils/Loading";
 import palette from "../theme/palette";
+import { textTruncation } from "../utils/TextTruncation";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const StepTimeline = ({
   steps,
@@ -32,74 +35,88 @@ const StepTimeline = ({
   errorS,
   setPosition,
   setSelectedMarker,
+  setExpanded,
+  expanded,
 }) => {
   const [selectedTimeLineItem, setSelectedTimeLineItem] = useState(null);
   const handleOnClick = (step, index) => {
     setPosition({ lat: step.latitude, lng: step.longitude });
     setSelectedTimeLineItem(index);
-    setSelectedMarker({ marker: step, type: "Step" });
     console.log(index);
   };
 
-  return (
-    <Card
-      style={{
-        right: "3%",
-        top: "5%",
-        width: 225,
-        position: "fixed",
-        overflowY: "scroll",
-        height: "90%",
-      }}
-    >
-      {isLoadingS ? (
-        <Loading></Loading>
-      ) : isErrorS ? (
-        <p style={{ color: "red" }}>{errorS.message}</p>
-      ) : (
-        <Timeline>
-          {steps.map((step, index) => (
-            <Button key={index}
-            onClick={() => handleOnClick(step, index)}
-            style={
-              selectedTimeLineItem === index
-                ? { backgroundColor: palette.primary.lighter }
-                : {position:"relative"}
-            }>
-              <TimelineItem
-                
-              >
-                <TimelineSeparator>
-                  <TimelineConnector sx={{ bgcolor: "primary.light" }} />
-                  <TimelineDot color="error">
-                    <LocationOnRoundedIcon />
-                  </TimelineDot>
-                  <TimelineConnector sx={{ bgcolor: "primary.light" }} />
-                </TimelineSeparator>
+  const containerRef = React.useRef(null);
 
-                <TimelineContent sx={{ py: "12px", px: 2 }}>
-                  <Typography
-                    variant="h6"
-                    component="span"
-                    color="primary.main"
+  return (
+    <>
+      <Stack
+        direction="row"
+        alignItems="center"
+        sx={{
+          right: "0%",
+          height: "100%",
+          position: "fixed",
+        }}
+      >
+        <Slide direction="left" in={expanded} container={containerRef.current}>
+          <Box
+            sx={{
+              overflowY: "scroll",
+              backgroundColor: "white",
+              height: "100%",
+              width: "250px",
+            }}
+          >
+            {isLoadingS ? (
+              <Loading></Loading>
+            ) : isErrorS ? (
+              <p style={{ color: "red" }}>{errorS.message}</p>
+            ) : (
+              <Timeline style={{ width: 40 }}>
+                {steps.map((step, index) => (
+                  <TimelineItem
+                    onClick={() => handleOnClick(step, index)}
+                    style={
+                      selectedTimeLineItem === index
+                        ? { backgroundColor: palette.primary.main }
+                        : {}
+                    }
+                    onMouseOver={(e) => (e.target.style.cursor = "pointer")}
                   >
-                    {step.title}
-                  </Typography>
-                  <Typography
-                    sx={{ m: "auto 0" }}
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    {step.duration} jours
-                  </Typography>
-                  {/* <Typography color="text.secondary">{step.category}</Typography> */}
-                </TimelineContent>
-              </TimelineItem>
-            </Button>
-          ))}
-        </Timeline>
-      )}
-    </Card>
+                    <TimelineSeparator>
+                      <TimelineConnector sx={{ bgcolor: "primary.light" }} />
+                      <TimelineDot color="error">
+                        <LocationOnRoundedIcon />
+                      </TimelineDot>
+                      <TimelineConnector sx={{ bgcolor: "primary.light" }} />
+                    </TimelineSeparator>
+
+                    <TimelineContent sx={{ py: "12px", px: 2 }}>
+                      <Typography
+                        variant="h6"
+                        style={{ width: "100%" }}
+                        color="primary.main"
+                      >
+                        {step.title ? textTruncation(step.title, 10) : "Étape"}
+                      </Typography>
+                      <Typography
+                        style={{ width: "100%" }}
+                        variant="body2"
+                        color="text.secondary"
+                        noWrap="true"
+                      >
+                        {step.duration} jours
+                      </Typography>
+                      {/* <Typography color="text.secondary">{step.category}</Typography> */}
+                    </TimelineContent>
+                  </TimelineItem>
+                ))}
+              </Timeline>
+            )}
+          </Box>
+        </Slide>
+      </Stack>
+    </>
   );
 };
 

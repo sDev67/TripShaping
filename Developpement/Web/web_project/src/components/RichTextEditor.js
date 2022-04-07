@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {  Editor } from "react-draft-wysiwyg";
-import { EditorState, ContentState, convertToRaw, convertFromRaw } from "draft-js";
+import { EditorState, ContentState, convertToRaw, convertFromRaw, CompositeDecorator } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { TextField } from "@mui/material";
 
 
 
-const RichTextEditor = ({setValue, value}) => 
+const RichTextEditor = ({setValue, value, limitedEditor=false, minH, isReadOnly=false}) => 
 {
+
+
   const [state, setState] = useState([
     {
       editorState:EditorState.createEmpty
@@ -26,8 +28,10 @@ const RichTextEditor = ({setValue, value}) =>
     }
     else{
 
-      setState({editorState:EditorState.createEmpty()});
-
+     /* setState({editorState:EditorState.createEmpty()});*/
+     setState({editorState:EditorState.createEmpty()});
+      
+    
     }
 
   }, [content])
@@ -50,10 +54,19 @@ const RichTextEditor = ({setValue, value}) =>
   }
     return (
         <div>
-          <div style={{ border: "1px solid black", padding: '2px', minHeight: '400px' }}>
+          <div style={{ border: "1px solid black", padding: '2px', minHeight: {minH} , overflowY: "auto",}}>
             <Editor
+              readOnly={isReadOnly}
               editorState={state.editorState}
-              onEditorStateChange={onChange} />
+              onEditorStateChange={onChange}
+              toolbar={ limitedEditor ? {
+                options: ['inline', 'blockType', 'fontSize', 'list', 'history'],
+                inline: { inDropdown: true },
+                list: { inDropdown: true },
+     
+                link: { inDropdown: true },
+                history: { inDropdown: true },
+            } : ""}/>
           </div>
         </div>
         );

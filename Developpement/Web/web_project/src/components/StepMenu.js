@@ -17,7 +17,7 @@ import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
 import { useQueryClient } from 'react-query';
-
+import RichTextEditor from "./RichTextEditor";
 
 const StepMenu = ({
   deleteStep,
@@ -160,7 +160,7 @@ const StepMenu = ({
             </Button> */}
           </Stack>
 
-          <TextField
+         {/* <TextField
             fullWidth
             label="Description"
             multiline
@@ -173,7 +173,16 @@ const StepMenu = ({
             }}
             disabled={!isEdition}
 
-          />
+          />*/}
+
+          <Stack 
+          fullWidth
+          style={{ marginBottom: 25 }}>
+
+            <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='300px' isReadOnly={!isEdition}/>
+
+
+          </Stack>
 
           <Stack direction="row" justifyContent="space-between">
             {isEdition && <>

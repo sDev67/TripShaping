@@ -14,6 +14,7 @@ import Members from "./routes/Members";
 import TripSelection from "./routes/TripSelection";
 import Steps from "./routes/Steps";
 import Login from "./routes/Login";
+import Signup from "./routes/Signup";
 
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/mytrips" element={<TripSelection />} />
             <Route path="/trip" element={<NavigationBar />}>
               <Route path=":idTravel/map" element={<Itinerary />} />

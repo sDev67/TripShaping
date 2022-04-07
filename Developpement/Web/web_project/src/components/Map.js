@@ -273,7 +273,20 @@ export const Map = ({}) => {
       title: "",
       latitude: parseFloat(e.latLng.lat()),
       longitude: parseFloat(e.latLng.lng()),
-      description: "",
+      description: JSON.stringify({
+        blocks: [
+          {
+            key: "1j7kh",
+            text: "",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+        entityMap: {},
+      }),
       category: "",
       duration: 1,
       TravelId: idTravel,
@@ -298,7 +311,20 @@ export const Map = ({}) => {
       title: "",
       latitude: parseFloat(e.latLng.lat()),
       longitude: parseFloat(e.latLng.lng()),
-      description: "",
+      description: JSON.stringify({
+        blocks: [
+          {
+            key: "1j7kh",
+            text: "",
+            type: "unstyled",
+            depth: 0,
+            inlineStyleRanges: [],
+            entityRanges: [],
+            data: {},
+          },
+        ],
+        entityMap: {},
+      }),
       category: "",
       TravelId: idTravel,
     };

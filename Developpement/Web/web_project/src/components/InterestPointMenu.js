@@ -17,7 +17,7 @@ import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
 import { useQueryClient } from 'react-query';
-
+import RichTextEditor from "./RichTextEditor";
 const InterestPointMenu = ({
   deletePoint,
   selectedMarker,
@@ -103,7 +103,12 @@ const InterestPointMenu = ({
           <CancelRounded />
         </IconButton>
 
-        <CardContent>
+        <CardContent 
+        style={{
+  
+          overflowY: "auto",
+          height:'100%'
+        }}>
           <TextField
             fullWidth
             label="Nom"
@@ -200,7 +205,7 @@ const InterestPointMenu = ({
             </Button>
           </Stack>
 
-          <TextField
+          {/*<TextField
             fullWidth
             label="Description"
             multiline
@@ -213,8 +218,11 @@ const InterestPointMenu = ({
             }}
             disabled={!isEdition}
 
-          />
+          />*/}
 
+            <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='10px' isReadOnly={!isEdition}/>
+
+         
           <Stack direction="row" justifyContent="space-between">
             {isEdition && <>
               <Button

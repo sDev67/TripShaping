@@ -15,6 +15,7 @@ import TripSelection from "./routes/TripSelection";
 import Steps from "./routes/Steps";
 import Signin from "./routes/Signin";
 import Signup from "./routes/Signup";
+import Documents from "./routes/Documents";
 import { AuthProvider } from "./Authentication/auth";
 
 
@@ -37,6 +38,7 @@ function App() {
               <Route path=":idTravel/todolist" element={<TodoList />} />
               <Route path=":idTravel/informations" element={<Informations />} />
               <Route path=":idTravel/members" element={<Members />} />
+              <Route path=":idTravel/documents" element={<Documents />} />
             </Route>
           </Routes>
           <ReactQueryDevtools />

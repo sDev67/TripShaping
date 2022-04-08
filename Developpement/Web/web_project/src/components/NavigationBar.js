@@ -24,7 +24,7 @@ import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRound
 import DirectionsWalkRoundedIcon from '@mui/icons-material/DirectionsWalkRounded';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
-
+import TopicRoundedIcon from '@mui/icons-material/TopicRounded';
 
 
 const NavigationBar = () => {
@@ -139,8 +139,16 @@ const NavigationBar = () => {
             component={Link}
             to={"/trip/" + idTravel + "/members"}
           />
-        </Tabs>
 
+            <Tab
+            icon={<TopicRoundedIcon />}
+            iconPosition="start"
+            label="Documents"
+            value={"/trip/" + idTravel + "/documents"}
+            component={Link}
+            to={"/trip/" + idTravel + "/documents"}
+          />
+        </Tabs>
 
         <Stack
           direction="row"

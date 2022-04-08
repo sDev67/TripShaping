@@ -239,7 +239,7 @@ const NavigationBar = () => {
               }
               value="Carte"
               component={Link}
-              to={"/trip/" + idTravel + "/map"}
+              to={"/album/" + 17 + "/map"}
             />
             <Tab
               icon={<DirectionsWalkRoundedIcon />}
@@ -251,12 +251,12 @@ const NavigationBar = () => {
                   justifyContent="flex-start"
                   marginLeft={1}
                 >
-                  <Typography variant="button">Étapes</Typography>
+                  <Typography variant="button">Photos</Typography>
                 </Stack>
               }
-              value="Étapes"
+              value="Photos"
               component={Link}
-              to={"/trip/" + idTravel + "/steps"}
+              to={"/album/photos"}
             />
             <Tab
               icon={<AssignmentRoundedIcon />}
@@ -268,50 +268,16 @@ const NavigationBar = () => {
                   justifyContent="flex-start"
                   marginLeft={1}
                 >
-                  <Typography variant="button">Tâches</Typography>
+                  <Typography variant="button">Journal</Typography>
                 </Stack>
               }
-              value="Tâches"
+              value="Journal"
               component={Link}
-              to={"/trip/" + idTravel + "/todolist"}
-            />
-            <Tab
-              icon={<TextSnippetRoundedIcon />}
-              iconPosition="start"
-              label={
-                <Stack
-                  style={{ minWidth: "200px" }}
-                  direction="row"
-                  justifyContent="flex-start"
-                  marginLeft={1}
-                >
-                  <Typography variant="button">Informations</Typography>
-                </Stack>
-              }
-              value="Informations"
-              component={Link}
-              to={"/trip/" + idTravel + "/informations"}
-            />
-            <Tab
-              icon={<GroupsRoundedIcon />}
-              iconPosition="start"
-              label={
-                <Stack
-                  style={{ minWidth: "200px" }}
-                  direction="row"
-                  justifyContent="flex-start"
-                  marginLeft={1}
-                >
-                  <Typography variant="button">Membres</Typography>
-                </Stack>
-              }
-              value="Membres"
-              component={Link}
-              to={"/trip/" + idTravel + "/members"}
+              to={"/album/logbook"}
             />
           </Tabs>
         </Drawer>
-        <main className={classes.content}>
+        <main class={classes.content}>
           <div style={{ height: "6.85%" }}></div>
           <Outlet />
         </main>

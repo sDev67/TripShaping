@@ -132,19 +132,6 @@ export const Map = ({}) => {
     setEditionMode(event.target.value);
   };
 
-  const mapLoading = (
-    <div
-      style={{
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    >
-      <CircularProgress color="primary" />
-    </div>
-  );
-
   const addPoint = useMutation(TravelRequests.addPoint, {
     onSuccess: (point) =>
       queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
@@ -357,10 +344,10 @@ export const Map = ({}) => {
   };
 
   return (
-    <>
+    <div style={{ height: "93.15%" }}>
       <LoadScript
         googleMapsApiKey={GOOGLE_MAPS_APIKEY}
-        loadingElement={mapLoading}
+        loadingElement={<Loading />}
       >
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -571,6 +558,6 @@ export const Map = ({}) => {
           setSelectedRoute={setSelectedRoute}
         ></RouteMenu>
       )}
-    </>
+    </div>
   );
 };

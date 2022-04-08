@@ -71,42 +71,42 @@ const Informations = () => {
 
   return (
     <>
-      <Stack direction="column" width="100%">
-        <Typography
-          color="primary"
-          variant="h2"
-          textAlign="center"
-          marginTop={4}
+      <Stack height="93.15%" width="100%" direction="column">
+        <Stack
+          width="90%"
+          marginLeft="5%"
+          paddingY="1%"
+          direction="column"
+          height="100%"
         >
-          Informations
-        </Typography>
-        {isLoading ? (
-          <Typography
-            color="error"
-            variant="h5"
-            textAlign="center"
-            marginTop={4}
-          >
-            Chargement...
-          </Typography>
-        ) : !isError ? (
-          <>
-            <Editor
-              setValue={setValue}
-              value={travelDatas.infos !== null ? travelDatas.infos : null}
-              minH="500px"
-            />
-            <Button
-              disabled={value === travelDatas.infos ? true : false}
-              onClick={(e) => handleChange()}
-              variant="contained"
+          {isLoading ? (
+            <Typography
+              color="error"
+              variant="h5"
+              textAlign="center"
+              marginTop={4}
             >
-              Sauvegarder les informations
-            </Button>
-          </>
-        ) : (
-          <p style={{ color: "red" }}>{error.message}</p>
-        )}
+              Chargement...
+            </Typography>
+          ) : !isError ? (
+            <>
+              <Editor
+                setValue={setValue}
+                value={travelDatas.infos !== null ? travelDatas.infos : null}
+                minH="500px"
+              />
+              <Button
+                disabled={value === travelDatas.infos ? true : false}
+                onClick={(e) => handleChange()}
+                variant="contained"
+              >
+                Sauvegarder les informations
+              </Button>
+            </>
+          ) : (
+            <p style={{ color: "red" }}>{error.message}</p>
+          )}
+        </Stack>
       </Stack>
     </>
   );

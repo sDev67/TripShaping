@@ -18,7 +18,6 @@ import StepList from "../components/StepList";
 import StepTimeline from "../components/StepTimeline";
 
 const Steps = () => {
-
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
@@ -50,24 +49,25 @@ const Steps = () => {
 
   return (
     <>
-      <Stack height="100%" width="100%" direction="column" style={{overflowY:"scroll"}} >
-        <Typography
-          color="primary"
-          variant="h2"
-          textAlign="center"
-          marginTop={4}
+      <Stack
+        height="93.15%"
+        width="100%"
+        direction="column"
+        style={{ overflowY: "scroll" }}
+      >
+        <Stack
+          width="90%"
+          marginLeft="5%"
+          paddingY="1%"
+          direction="column"
+          height="100%"
         >
-          Etapes
-        </Typography>
-      
-        <Stack width="90%" marginLeft="5%" direction="column" height="85%"  >
           {isLoadingS ? (
             <Loading></Loading>
           ) : isErrorS ? (
             <p style={{ color: "red" }}>{errorS.message}</p>
           ) : (
             <div>
-              
               <Stack
                 direction="row"
                 alignItems="center"

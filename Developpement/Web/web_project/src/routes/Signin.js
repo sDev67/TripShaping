@@ -25,23 +25,24 @@ import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link, Outlet, useParams } from "react-router-dom";
 import AlertError from "../utils/AlertError";
-import palette from "./../theme/palette";
 
-const Signup = () => {
-  const { signup } = useAuth();
+const theme = createTheme();
+
+const Signin = () => {
+  const { signin } = useAuth();
 
   const [username, setUsername] = useState("");
+
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [passwordCheck, setPasswordCheck] = useState("");
+
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signup({ username, password }).catch((err) => {
+    signin({ username, password }).catch((err) => {
       setUsername("");
       setPassword("");
-      setPasswordCheck("");
       setMessage(err.message);
     });
   };
@@ -49,8 +50,6 @@ const Signup = () => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
-  const formValid = username && password && password === passwordCheck;
 
   return (
     <>
@@ -81,9 +80,9 @@ const Signup = () => {
             <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
-            <Typography variant="h5">Inscription</Typography>
+            <Typography variant="h5">Connexion</Typography>
             <Stack marginTop="10%" direction="column" width="100%" spacing={5}>
-              <FormControl fullWidth required variant="outlined">
+              <FormControl variant="outlined" required fullWidth>
                 <InputLabel htmlFor="outlined-adornment-password">
                   Nom d'utilisateur
                 </InputLabel>
@@ -96,7 +95,7 @@ const Signup = () => {
                 />
               </FormControl>
 
-              <FormControl fullWidth required variant="outlined">
+              <FormControl variant="outlined" required fullWidth>
                 <InputLabel htmlFor="outlined-adornment-password">
                   Mot de passe
                 </InputLabel>
@@ -119,50 +118,27 @@ const Signup = () => {
                   label="Mot de passe"
                 />
               </FormControl>
-              <FormControl fullWidth required variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Confirmez le mot de passe
-                </InputLabel>
-                <OutlinedInput
-                  type={showPassword ? "text" : "password"}
-                  value={passwordCheck}
-                  onChange={(e) => setPasswordCheck(e.target.value)}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowPassword(!showPassword)}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Mot de passe"
-                />
-              </FormControl>
             </Stack>
             <Stack direction="column" marginY={5}>
               <Button
-                variant="contained"
                 color="primary"
+                variant="contained"
                 size="large"
                 startIcon={<AccountCircleRoundedIcon />}
-                onClick={(e) => handleSubmit(e)}
                 sx={{ mb: 1 }}
-                disabled={formValid ? false : true}
+                onClick={(e) => handleSubmit(e)}
               >
-                S'INSCRIRE
+                CONNEXION
               </Button>
+
               <Typography
+                textAlign="center"
                 variant="body2"
-                value={"/signin"}
+                value={"/signup"}
                 component={Link}
-                to={"/signin"}
-                style={{ marginBottom: "10vh" }}
+                to={"/signup"}
               >
-                Déjà inscrit ? Connectez-vous ici.
+                Pas de compte ? Inscrivez-vous ici.
               </Typography>
             </Stack>
             {message && <AlertError message={message}></AlertError>}
@@ -173,4 +149,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;

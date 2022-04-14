@@ -76,9 +76,7 @@ const TabScreen = () => {
       <Tab.Screen name="Journal" children={() => <Journal messages={messages} setMessages={setMessages} />} />
       <Tab.Screen name="Photo" component={Photo} />
       <Tab.Screen name="Spending" component={Spending} options={{ title: "Gestion des dépenses" }} />
-      <Tab.Screen name="SpendingHistory" component={SpendingHistory} options={{ title: "Historique des dépenses" }} />
     </Tab.Navigator>
-
   );
 }
 
@@ -94,6 +92,7 @@ function MapStackScreen() {
         <Stack.Screen name="PointDetails" component={PointDetails} options={{ title: "Point d'intérêt" }} />
         <Stack.Screen name="Cameras" component={Cameras} options={{ headerShown: false }} />
         <Stack.Screen name='Documents' component={Files} />
+        <Tab.Screen name="SpendingHistory" component={SpendingHistory} options={{ title: "Historique des dépenses" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

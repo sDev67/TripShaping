@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Dimensions, ScrollView, Pressable, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, NativeBaseProvider, Select, CheckIcon, Checkbox } from 'native-base';
+import { View, Text, TextInput, StyleSheet, Dimensions, ScrollView, Image, TouchableOpacity, Pressable } from 'react-native';
 
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient } from 'react-query';
 
-const Spending = () => {
+import iconHistory from "../assets/navigation_icons/icon_history.png"
+
+const Spending = ({ navigation }) => {
     const idTravel = 1;
+
+    const [showAlert, setShowAlert] = useState(false);
 
     // Membres 
     const { isLoading: isLoading, isError: isError, error: error, data: members } = useQuery(["getMembers", idTravel], () => TravelRequests.getMembersOfTravel(idTravel));
@@ -32,7 +34,15 @@ const Spending = () => {
     const [listVisible, setListVisible] = useState(false)
 
     // Historique
-    const [history, setHistory] = useState([])
+    let [history, setHistory] = useState([]);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: (() =>
+                <Pressable onPress={() => navigation.navigate('SpendingHistory', { history: history })}><Image source={iconHistory} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center" }} /></Pressable>
+            )
+        });
+    }, [])
 
     useEffect(() => {
 
@@ -50,52 +60,52 @@ const Spending = () => {
 
     const spend = () => {
 
-        let author = "";
-        let dest = "";
-        members.map((member, idx) => {
-            if (donateur == member.id) {
-                author = member.firstname + " " + member.lastname
-            }
-            selectedItems.map((item, i) => {
-                if (item == member.id) {
-                    dest = member.firstname + " " + member.lastname
+        if (donateur !== "" && destinataires !== null && selectedItems.length !== 0 && montant !== null && category !== "") {
+            let author = "";
+            let dest = "";
+            members.map((member, idx) => {
+                if (donateur == member.id) {
+                    author = member.firstname + " " + member.lastname
                 }
             })
-        })
 
+            const newHistory = { author: author, category: category, dest: destinataires, montant: montant };
+            history.push(newHistory);
 
-        const newHistory = { author: author, category: category, dest: dest, montant: montant }
-        setHistory(history => [...history, newHistory])
+            const nbDest = selectedItems.length;
+            const part = Math.round(montant / nbDest, 2);
 
-        const nbDest = selectedItems.length
-        const part = Math.round(montant / nbDest, 2)
-
-        const tab = [];
-        balances.map((balance, idx) => {
-            if (donateur == balance.id) {
-                var nb = parseInt(balance.balance);
-                var m = parseInt(montant);
-                tab.push({ id: balance.id, balance: nb + m })
-            }
-            selectedItems.map((item, i) => {
-                if (item == balance.id) {
-                    tab.push({ id: balance.id, balance: balance.balance -= part })
+            const tab = [];
+            balances.map((balance, idx) => {
+                if (donateur == balance.id) {
+                    var nb = parseInt(balance.balance);
+                    var m = parseInt(montant);
+                    tab.push({ id: balance.id, balance: nb + m })
                 }
+                selectedItems.map((item, i) => {
+                    if (item == balance.id) {
+                        tab.push({ id: balance.id, balance: balance.balance -= part })
+                    }
+                })
             })
-        })
 
-        tab.map((t, i) => {
-            setBalances(old => old.map((elem) => elem.id != t.id ? elem :
-                {
-                    ...elem,
-                    balance: t.balance
-                }));
-        })
+            tab.map((t, i) => {
+                setBalances(old => old.map((elem) => elem.id != t.id ? elem :
+                    {
+                        ...elem,
+                        balance: t.balance
+                    }));
+            })
 
-        setDonateur("")
-        setDestinataires(null)
-        setMontant(null)
-        setCategory("")
+            setDonateur("")
+            setDestinataires(null)
+            setSelectedItems([])
+            setMontant(null)
+            setCategory("")
+        } else {
+            setShowAlert(true)
+        }
+
     }
 
     return (
@@ -189,6 +199,7 @@ const styles = StyleSheet.create({
         borderColor: "#E6EFF4",
         padding: 10,
         flex: 4,
+        color: "black"
     }
 
 

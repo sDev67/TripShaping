@@ -32,7 +32,7 @@ const containerStyle = {
   height: "100%",
 };
 
-export const Map = ({}) => {
+export const Map = ({ }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -433,7 +433,7 @@ export const Map = ({}) => {
                 onDragEnd={updateStepLocation(step)}
                 icon={
                   selectedMarker?.marker.id == step.id &&
-                  selectedMarker?.type == "Step"
+                    selectedMarker?.type == "Step"
                     ? selectedStepIcon
                     : stepIcon
                 }
@@ -470,7 +470,7 @@ export const Map = ({}) => {
                 onDragEnd={updateInterestPointLocation(interestPoint)}
                 icon={
                   selectedMarker?.marker.id == interestPoint.id &&
-                  selectedMarker?.type == "Point"
+                    selectedMarker?.type == "Point"
                     ? selectedInterestPointIcon
                     : interestPointIcon
                 }
@@ -548,6 +548,7 @@ export const Map = ({}) => {
               deletePoint={deletePoint}
               updateInfoPoint={updateInfoPoint}
               isEdition={isEdition}
+              steps={steps}
             ></InterestPointMenu>
           )
         ) : selectedMarker.type === "Step" && isLoadingS ? (

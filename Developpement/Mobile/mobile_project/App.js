@@ -18,6 +18,7 @@ import ItinaryDetails from './screens/ItinaryDetails';
 import StepDetails from './screens/StepDetails';
 import PointDetails from './screens/PointDetails';
 import Spending from './screens/Spending';
+import SpendingHistory from './screens/SpendingHistory';
 
 import iconMaps from './assets/navigation_icons/icon_maps.png';
 import iconJournal from './assets/navigation_icons/icon_journal.png';
@@ -75,6 +76,7 @@ const TabScreen = () => {
       <Tab.Screen name="Journal" children={() => <Journal messages={messages} setMessages={setMessages} />} />
       <Tab.Screen name="Photo" component={Photo} />
       <Tab.Screen name="Spending" component={Spending} options={{ title: "Gestion des dépenses" }} />
+      <Tab.Screen name="SpendingHistory" component={SpendingHistory} options={{ title: "Historique des dépenses" }} />
     </Tab.Navigator>
 
   );

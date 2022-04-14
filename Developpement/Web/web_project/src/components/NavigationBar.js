@@ -139,6 +139,14 @@ const NavigationBar = () => {
             component={Link}
             to={"/trip/" + idTravel + "/members"}
           />
+          <Tab
+            icon={<SettingsRoundedIcon />}
+            iconPosition="start"
+            label="Options du voyage"
+            value={"/trip/" + idTravel + "/tripsettings"}
+            component={Link}
+            to={"/trip/" + idTravel + "/tripsettings"}
+          />
         </Tabs>
 
 

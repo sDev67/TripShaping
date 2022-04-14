@@ -15,6 +15,7 @@ import TripSelection from "./routes/TripSelection";
 import Steps from "./routes/Steps";
 import Login from "./routes/Login";
 import Signup from "./routes/Signup";
+import TripSettings from "./routes/TripSettings";
 
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ function App() {
               <Route path=":idTravel/todolist" element={<TodoList />} />
               <Route path=":idTravel/informations" element={<Informations />} />
               <Route path=":idTravel/members" element={<Members />} />
+              <Route path=":idTravel/tripsettings" element={<TripSettings />} />
             </Route>
           </Routes>
           {/* <ReactQueryDevtools /> */}

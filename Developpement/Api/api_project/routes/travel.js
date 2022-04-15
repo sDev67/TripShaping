@@ -28,6 +28,21 @@ module.exports = [
 		func: travel_ctrl.get_steps_of_travel
 	},
 	{
+		url: '/travel/:travel_id/tasks',
+		method: 'get',
+		func: travel_ctrl.get_tasks_of_travel
+	},
+	{
+		url: '/travel/:travel_id/labels',
+		method: 'get',
+		func: travel_ctrl.get_labels_of_travel
+	},
+	{
+		url: '/travel/:travel_id/routes',
+		method: 'get',
+		func: travel_ctrl.get_routes_of_travel
+	},
+	{
 		url: '/travel/:travel_id/members',
 		method: 'get',
 		func: travel_ctrl.get_members_of_travel

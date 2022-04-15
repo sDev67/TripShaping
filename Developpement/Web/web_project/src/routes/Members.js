@@ -36,36 +36,22 @@ const Members = () => {
     data: users,
   } = useQuery(["getUsers"], () => UserRequests.getAllUsers());
 
- 
-
   const deleteMember = useMutation(MemberRequests.removeMember, {
-    onSuccess: (_, id) => queryClient.setQueryData(
-      ['getMembers', idTravel],
-      members => members.filter(e => e.id !== id)
-    )
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getMembers", idTravel], (members) =>
+        members.filter((e) => e.id !== id)
+      ),
   });
-
- 
-
-
 
   return (
     <>
-      <Stack height="100%" width="100%" direction="column">
-        <Typography
-          color="primary"
-          variant="h2"
-          textAlign="center"
-          marginTop={4}
-        >
-          Membres
-        </Typography>
+      <Stack height="93.15%" width="100%" direction="column">
         <Stack
           width="90%"
           marginLeft="5%"
+          paddingY="1%"
           direction="column"
-          justifyContent="space-between"
-          height="85%"
+          height="100%"
         >
           <Stack height="85%">
             <Typography variant="h4" marginY={1}>
@@ -83,10 +69,7 @@ const Members = () => {
               />
             )}
           </Stack>
-          <MemberForm
-            users={users}
-           
-          />
+          <MemberForm users={users} />
         </Stack>
       </Stack>
     </>

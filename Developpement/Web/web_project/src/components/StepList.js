@@ -30,27 +30,15 @@ const StepList = ({ steps }) => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
-  const [titles, setTitles] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [descriptions, setDescriptions] = useState([]);
-  const [durations, setDurations] = useState([]);
-
   const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
-    onSuccess: (step) =>
-    {
+    onSuccess: (step) => {
       queryClient.setQueryData(["getSteps", idTravel], (steps) => [
         ...steps,
         step,
-
       ]);
-      queryClient.invalidateQueries('getSteps');
-    }
-    
-      
+      queryClient.invalidateQueries("getSteps");
+    },
   });
-  
-
-
 
   // // const handleCategoryChange = (index) => (e) => {
   // //   let newCategories = [...categories];
@@ -86,7 +74,11 @@ const StepList = ({ steps }) => {
   return (
     <Box id="test" marginBottom={5}>
       {steps.map((step, index) => (
-        <StepItem step={step} index={index} updateInfoStep={updateInfoStep}></StepItem>
+        <StepItem
+          step={step}
+          index={index}
+          updateInfoStep={updateInfoStep}
+        ></StepItem>
       ))}
     </Box>
   );

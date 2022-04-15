@@ -354,21 +354,10 @@ const TodoList = () => {
               <Chip
                 style={{ margin: 5 }}
                 size="medium"
-                color="primary"
+                color="secondary"
                 label="Benjamin"
               />
-              <Chip
-                style={{ margin: 5 }}
-                size="medium"
-                color="primary"
-                label="Benjamin"
-              />
-              <Chip
-                style={{ margin: 5 }}
-                size="medium"
-                color="primary"
-                label="Benjamin"
-              />
+              
             </Stack>
           </Stack>
           <Divider></Divider>

@@ -17,8 +17,16 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import { Link, Outlet, useParams } from "react-router-dom";
+import { useState } from "react";
 
 const TripSettings = () => {
+    const [currentDate, setCurrentDate] = useState("");
+
+
+    const handleDateChange = (newDate) => {
+        setCurrentDate(newDate);
+    };
+
     const handleSwitch = () => {
         // setExpanded(!expanded);
     };
@@ -66,6 +74,17 @@ const TripSettings = () => {
                 Supprimer le voyage
             </Button>
             <hr />
+            <TextField
+                id="date"
+                label="Date de départ prévue"
+                type="date"
+                onChange={(e) => handleDateChange(e.target.value)}
+                sx={{ width: 220, margin: "5px" }}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+            />
+
             <Button
                 variant="contained"
                 color="primary"

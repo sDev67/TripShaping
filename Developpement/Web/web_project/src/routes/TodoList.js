@@ -12,293 +12,88 @@ import IconButton from "@mui/material/IconButton";
 import TaskForm from "../components/TaskForm";
 import LabelForm from "../components/LabelForm";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import TravelRequests from "../requests/TravelRequests";
+import TodoListRequest from "../requests/TodoListRequest";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
 
 const TodoList = () => {
-  const [currentLabel, setCurrentLabel] = useState();
-  const [currentTask, setCurrentTask] = useState();
-  const [allTasks, setAllTasks] = useState([
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-        {
-          title: "Benjamin",
-        },
-        {
-          title: "Benjamin",
-        },
-        {
-          title: "Benjamin",
-        },
-        {
-          title: "Benjamin",
-        },
-        {
-          title: "Benjamin",
-        },
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les valises",
-      executionDate: "2022-07-07",
-      labels: [
-        {
-          title: "Serkan",
-        },
-        {
-          title: "Vivien",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les valises",
-      executionDate: "2022-07-07",
-      labels: [
-        {
-          title: "Serkan",
-        },
-        {
-          title: "Vivien",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les papiers",
-      executionDate: "2022-05-07",
-      labels: [
-        {
-          title: "Benjamin",
-        },
-      ],
-    },
-    {
-      title: "Faire les valises",
-      executionDate: "2022-07-07",
-      labels: [
-        {
-          title: "Serkan",
-        },
-        {
-          title: "Vivien",
-        },
-      ],
-    },
-    {
-      title: "Organiser les repas",
-      executionDate: "2022-05-14",
-      labels: [
-        {
-          title: "Nourriture",
-        },
-        {
-          title: "Philippe",
-        },
-        {
-          title: "Courses",
-        },
-      ],
-    },
-    {
-      title: "Préparer psychologiquement les enfants",
-      executionDate: "2022-04-07",
-      labels: [
-        {
-          title: "Baptiste",
-        },
-      ],
-    },
-    {
-      title: "Faire les valises",
-      executionDate: "2022-07-07",
-      labels: [
-        {
-          title: "Serkan",
-        },
-        {
-          title: "Vivien",
-        },
-      ],
-    },
-    {
-      title: "Faire les valises",
-      executionDate: "2022-07-07",
-      labels: [
-        {
-          title: "Serkan",
-        },
-        {
-          title: "Vivien",
-        },
-      ],
-    },
-    {
-      title: "Trouver une voiture de location",
-      executionDate: "2022-04-07",
-      labels: [
-        {
-          title: "Réservation",
-        },
-        {
-          title: "Enzo",
-        },
-      ],
-    },
-  ]);
-  const [allLabels, setAllLabels] = useState([
-    {
-      id:1,
-      title: "Benjamin",
-    },
-    {
-      id:2,
-      title: "Vivien",
-    },
-    {
-      id:3,
-      title: "Serkan",
-    },
-    {
-      id:4,
-      title: "Baptiste",
-    },
-    {
-      id:5,
-      title: "Enzo",
-    },
-    {
-      id:6,
-      title: "Philippe",
-    },
-    {
-      id:7,
-      title: "Nourriture",
-    },
-    {
-      id:8,
-      title: "Réservation",
-    },
-    {
-      id:9,
-      title: "Administration",
-    },
-    {
-      id:10,
-      title: "Passeport",
-    },
-    {
-      id:11,
-      title: "Courses",
-    },
-  ]);
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
+  const queryClient = useQueryClient();
+
+  const {
+    isLoading: isLoadingT,
+    isError: isErrorT,
+    error: errorT,
+    data: tasks,
+  } = useQuery(["getTasks", idTravel], () =>
+    TravelRequests.getTasksOfTravel(idTravel)
+  );
+  const {
+    isLoading: isLoadingL,
+    isError: isErrorL,
+    error: errorL,
+    data: labels,
+  } = useQuery(["getLabels", idTravel], () =>
+    TravelRequests.getLabelsOfTravel(idTravel)
+  );
+
+  const updateTask = useMutation(TodoListRequest.updateTaskById, {
+    onSuccess: (task) =>
+      queryClient.setQueryData(["getTasks", idTravel], (tasks) => [
+        ...tasks,
+        task,
+      ]),
+  });
+  const updateLabel = useMutation(TodoListRequest.updateLabelById, {
+    onSuccess: (label) =>
+      queryClient.setQueryData(["getLabels", idTravel], (labels) => [
+        ...labels,
+        label,
+      ]),
+  });
+
+  const addTask = useMutation(TravelRequests.addTask, {
+    onSuccess: (task) =>
+      queryClient.setQueryData(["getTasks", idTravel], (tasks) => [
+        ...tasks,
+        task,
+      ]),
+  });
+  const addLabel = useMutation(TravelRequests.addLabel, {
+    onSuccess: (label) =>
+      queryClient.setQueryData(["getLabels", idTravel], (labels) => [
+        ...labels,
+        label,
+      ]),
+  });
 
   const [taskFormOpen, setTaskFormOpen] = useState(false);
   const [labelFormOpen, setLabelFormOpen] = useState(false);
 
-  const OnAddLabel = ({ label }) => {
-    setAllLabels(...allLabels, label);
-  };
+  const OnAddLabel = ({ title }) => {
+    const newLabel = {
+      title: title,
+      TravelId: idTravel,
+    };
 
-  const addLabel = (title) => {
-    // console.log("AJouter un label");
-    // setAllLabels((oldArray) => [...oldArray,
-    // {
-    //     title:"caca"
-    // }])
+    addLabel.useMutation(newLabel);
   };
 
   const OnSelectTask = (task) => {
-    setCurrentTask(task);
+    //setCurrentTask(task);
   };
 
-  const OnAddTask = ({ label }) => {
-    setAllTasks(...allTasks, label);
+  const OnAddTask = ({ title, date }) => {
+    const newTask = {
+      title: title,
+      date: date,
+      TravelId: idTravel,
+    };
+
+    addTask.mutate(newTask);
   };
 
   const OnRemoveTask = ({ task }) => {};
@@ -313,16 +108,8 @@ const TodoList = () => {
 
   return (
     <>
-      <Stack height="100%" width="100%" direction="row">
+      <Stack height="93.15%" width="100%" direction="row">
         <Stack direction="column" width="100%">
-          <Typography
-            color="primary"
-            variant="h2"
-            textAlign="center"
-            marginTop={4}
-          >
-            Tâches
-          </Typography>
           <Stack
             marginLeft="5%"
             width="90%"
@@ -330,7 +117,7 @@ const TodoList = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="h3">Liste des tâches</Typography>
+            <Typography variant="h4">Liste des tâches</Typography>
             <IconButton
               aria-label="Add"
               color="primary"
@@ -339,34 +126,40 @@ const TodoList = () => {
               <AddCircleIcon sx={{ fontSize: "60px" }} />
             </IconButton>
           </Stack>
-          <Stack
-            marginLeft="5%"
-            marginY={2}
-            width="90%"
-            direction="row"
-            alignItems="center"
-            justifyContent="flex-start"
-          >
-            <Typography variant="h5" marginLeft={5} marginRight={10}>
-              Filtrer
-            </Typography>
-            <Stack direction="row">
-              <Chip
-                style={{ margin: 5 }}
-                size="medium"
-                color="secondary"
-                label="Benjamin"
+          {isLoadingT ? (
+            <Typography>Chargement...</Typography>
+          ) : isErrorT ? (
+            <Typography>{errorT}</Typography>
+          ) : (
+            <>
+              <Stack
+                marginLeft="5%"
+                marginY={2}
+                width="90%"
+                direction="row"
+                alignItems="center"
+                justifyContent="flex-start"
+              >
+                <Typography variant="h5" marginLeft={5} marginRight={10}>
+                  Filtrer
+                </Typography>
+                <Stack direction="row">
+                  <Chip
+                    style={{ margin: 5 }}
+                    size="medium"
+                    color="secondary"
+                    label="Benjamin"
+                  />
+                </Stack>
+              </Stack>
+              <Divider></Divider>
+              <TasksItemGrid
+                tasks={tasks}
+                OnRemoveLabelToTask={OnRemoveLabelToTask}
+                OnSelectTask={OnSelectTask}
               />
-              
-            </Stack>
-          </Stack>
-          <Divider></Divider>
-          <TasksItemGrid
-            tasks={allTasks}
-            OnRemoveLabelToTask={OnRemoveLabelToTask}
-            OnSelectTask={OnSelectTask}
-          />
-       
+            </>
+          )}
         </Stack>
         <Stack direction="column" width="25%">
           <Stack
@@ -377,7 +170,7 @@ const TodoList = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="h3">Labels</Typography>
+            <Typography variant="h4">Labels</Typography>
             <IconButton
               aria-label="Add"
               color="secondary"
@@ -387,45 +180,57 @@ const TodoList = () => {
             </IconButton>
           </Stack>
           <Divider></Divider>
-
-          <DragDropContext>
-            <Droppable droppableId="labels" direction="vertical">
-              {(provided) => (
-                <Stack direction="column" alignItems="center" spacing={1}
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  
-                  sx={{
-                    padding: 1,
-                    
-                  }}
-                >
-                  {allLabels.map((label, index) => {
-                    return (
-                      <Draggable key={`draggable-${label.id}`} draggableId={`draggable-${label.id}`} index={index}>
-                        {(provided) => (
-                          <Chip
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            size="medium"
-                            color="secondary"
-                            label={label.title}
-                          />
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </Stack>
-              )}
-            </Droppable>
-          </DragDropContext>
+          {isLoadingL ? (
+            <Typography>Chargement...</Typography>
+          ) : isErrorL ? (
+            <Typography>{errorL}</Typography>
+          ) : (
+            <>
+              <DragDropContext>
+                <Droppable droppableId="labels" direction="vertical">
+                  {(provided) => (
+                    <Stack
+                      direction="column"
+                      alignItems="center"
+                      spacing={1}
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      sx={{
+                        padding: 1,
+                      }}
+                    >
+                      {labels.map((label, index) => {
+                        return (
+                          <Draggable
+                            key={`draggable-${label.id}`}
+                            draggableId={`draggable-${label.id}`}
+                            index={index}
+                          >
+                            {(provided) => (
+                              <Chip
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                size="medium"
+                                color="secondary"
+                                label={label.title}
+                              />
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </Stack>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            </>
+          )}
         </Stack>
       </Stack>
 
       <Dialog open={taskFormOpen} onClose={() => setTaskFormOpen(false)}>
-        <TaskForm></TaskForm>
+        <TaskForm task={undefined} OnAddTask={OnAddTask}></TaskForm>
       </Dialog>
       <Dialog open={labelFormOpen} onClose={() => setLabelFormOpen(false)}>
         <LabelForm addLabel={addLabel}></LabelForm>

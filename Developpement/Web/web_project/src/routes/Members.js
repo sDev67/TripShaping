@@ -30,11 +30,13 @@ const Members = () => {
   );
 
   const {
-    isLoading: isLoadingA,
-    isError: isErrorA,
-    error: errorA,
+    isLoading: isLoadingU,
+    isError: isErrorU,
+    error: errorU,
     data: users,
   } = useQuery(["getUsers"], () => UserRequests.getAllUsers());
+
+  console.log(users);
 
   const deleteMember = useMutation(MemberRequests.removeMember, {
     onSuccess: (_, id) =>
@@ -48,9 +50,10 @@ const Members = () => {
       <Stack height="93.15%" width="100%" direction="column">
         <Stack
           width="90%"
-          marginLeft="5%"
           paddingY="1%"
+          marginLeft="5%"
           direction="column"
+          justifyContent="space-between"
           height="100%"
         >
           <Stack height="85%">
@@ -69,7 +72,13 @@ const Members = () => {
               />
             )}
           </Stack>
-          <MemberForm users={users} />
+          {isLoadingU ? (
+            <Loading />
+          ) : isErrorU ? (
+            <p style={{ color: "red" }}>{errorU.message}</p>
+          ) : (
+            <MemberForm users={users} />
+          )}
         </Stack>
       </Stack>
     </>

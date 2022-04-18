@@ -20,6 +20,7 @@ import Photos from "./routes/Photos";
 import LogBook from "./routes/LogBook";
 import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
+import Documents from "./routes/Documents";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ function App() {
                   path=":idTravel/informations"
                   element={<Informations />}
                 />
+                <Route path=":idTravel/documents" element={<Documents />} />
                 <Route path=":idTravel/members" element={<Members />} />
               </Route>
               <Route path="/album" element={<NavigationBarAlbum />}>

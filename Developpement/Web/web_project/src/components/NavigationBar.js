@@ -293,6 +293,23 @@ const NavigationBar = () => {
               to={"/trip/" + idTravel + "/informations"}
             />
             <Tab
+              icon={<TextSnippetRoundedIcon />}
+              iconPosition="start"
+              label={
+                <Stack
+                  style={{ minWidth: "200px" }}
+                  direction="row"
+                  justifyContent="flex-start"
+                  marginLeft={1}
+                >
+                  <Typography variant="button">Documents</Typography>
+                </Stack>
+              }
+              value="Documents"
+              component={Link}
+              to={"/trip/" + idTravel + "/documents"}
+            />
+            <Tab
               icon={<GroupsRoundedIcon />}
               iconPosition="start"
               label={

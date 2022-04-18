@@ -64,7 +64,7 @@ module.exports = {
 				}
 				return travel.getTasks();
 			})
-			.then(steps => res.json(steps))
+			.then(tasks => res.json(tasks))
 			.catch(err => next(err));
 	},
 	get_labels_of_travel: (req, res, next) => {

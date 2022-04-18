@@ -11,38 +11,12 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
-const TaskForm = ({ task }) => {
+const TaskForm = ({ task, OnAddTask }) => {
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentLabels, setCurrentLabels] = useState([]);
 
   const [currentDate, setCurrentDate] = useState("");
 
-  // useEffect(() =>
-  // {
-  //     if(task.title !== undefined)
-  //     {
-  //         setCurrentTitle(task.title);
-  //     }
-  //     else{
-  //         setCurrentTitle("Title");
-  //     }
-
-  //     if(task.labels !== undefined)
-  //     {
-  //         setCurrentLabels(task.labels);
-  //     }
-  //     else{
-  //         setCurrentLabels([]);
-  //     }
-  //     if(task.executionDate !== undefined){
-
-  //         setCurrentDate(task.executionDate);
-  //     }
-  //     else{
-  //         setCurrentDate(Date.now());
-  //     }
-
-  // }, [task])
 
   const handleDateChange = (newDate) => {
     setCurrentDate(newDate);
@@ -53,10 +27,13 @@ const TaskForm = ({ task }) => {
   };
 
   const handleSubmit = () => {
-    if (task.title !== undefined) {
+    if (task !== undefined) {
       // Vérifié si la tâche n'est pas nouvelle
       // Mettre à jour la nouvelle tâche
     } else {
+
+
+      OnAddTask({title:currentTitle, date:currentDate});
       // on la créer
     }
   };
@@ -94,7 +71,7 @@ const TaskForm = ({ task }) => {
             variant="contained"
             color="primary"
             startIcon={<DoneRounded />}
-          >
+            onClick={handleSubmit}>
             Enregistrer
           </Button>
         </Stack>

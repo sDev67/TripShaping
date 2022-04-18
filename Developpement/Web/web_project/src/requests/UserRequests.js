@@ -4,13 +4,14 @@ const UserRequests = {
 
     getAllUsers: ()=>{
         //const token = window.localStorage.getItem('token');
-        return fetch(`${url_prefix}/users`, {
+        return fetch(`${url_prefix}/user`, {
             // headers: {
             //     Authorization: 'Bearer ' + token
             // }
         })
-            .then(checkStatus)
-            .then(res => res.json())
+        .then(checkStatus)
+        .then(res => res.json())
+        .then(res =>console.log( res))
     },
     getUser: ({email, password}) =>
     {

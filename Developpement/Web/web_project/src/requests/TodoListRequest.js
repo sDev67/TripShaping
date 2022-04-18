@@ -12,18 +12,6 @@ const TodoListRequest = {
             .then(checkStatus)
             .then(res => res.json())
     },
-
-    getStepsOfTravel: idTravel => {
-        //const token = window.localStorage.getItem('token');
-        return fetch(`${url_prefix}/travel/${idTravel}/steps`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
-        })
-            .then(checkStatus)
-            .then(res => res.json())
-    },
-
     addLabelToTask : ({title,idTask, idLabel}) => 
     {
         return fetch(`${url_prefix}/${idTask}/label/${idLabel}`, {
@@ -50,7 +38,7 @@ const TodoListRequest = {
             .then(checkStatus)
             .then(res => res.json());
     },
-    deleteLabelOfTask : ({title,idTask, idLabel}) => 
+    deleteLabelOfTask : ({idTask, idLabel}) => 
     {
         return fetch(`${url_prefix}/${idTask}/label/${idLabel}`, {
             method: 'DELETE',
@@ -61,6 +49,32 @@ const TodoListRequest = {
             
         })
         .then(checkStatus)
+    },
+    updateTaskById: ({title, date, idTask }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/task/${idTask}`, {
+            method:'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                //  Authorization: 'Bearer ' + token
+            },
+            body:JSON.stringify({title, date, idTask})
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+    updateLabelById: ({title, idLabel }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/label/${idLabel}`, {
+            method:'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                //  Authorization: 'Bearer ' + token
+            },
+            body:JSON.stringify({title, idLabel})
+        })
+            .then(checkStatus)
+            .then(res => res.json())
     },
 
 };

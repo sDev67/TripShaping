@@ -107,7 +107,7 @@ const MemberForm = ({
 
         <div style={{ width: "50%" }}>
           <Typography variant="h6" marginY={1}>
-            Ajouter un membre non répertorié
+            Ajouter un membre non inscrit
           </Typography>
 
           <Stack direction="row" spacing={1}>

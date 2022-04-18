@@ -1,3 +1,4 @@
+import { Label } from "@mui/icons-material";
 import { checkStatus, url_prefix } from "../utils";
 
 const TravelRequests = {
@@ -185,9 +186,9 @@ const TravelRequests = {
         })
             .then(checkStatus);
     },
-    getAllTask: idTravel => {
+    getTasksOfTravel: idTravel => {
         //const token = window.localStorage.getItem('token');
-        return fetch(`${url_prefix}/travel/${idTravel}/task`, {
+        return fetch(`${url_prefix}/travel/${idTravel}/tasks`, {
             // headers: {
             //     Authorization: 'Bearer ' + token
             // }
@@ -196,7 +197,7 @@ const TravelRequests = {
             .then(res => res.json())
     },
 
-    getAllLabel: idTravel => {
+    getLabelsOfTravel: idTravel => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/labels`, {
             // headers: {
@@ -216,7 +217,7 @@ const TravelRequests = {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({ title,date,TravelId })
+            body: JSON.stringify({ title,date, TravelId })
         })
             .then(checkStatus)
             .then(res => res.json());
@@ -234,6 +235,25 @@ const TravelRequests = {
         })
             .then(checkStatus)
             .then(res => res.json());
+    },
+    
+    removeTask: TaskId => {
+        //const token = window.localStorage.getItem('token');
+     
+        return fetch(`${url_prefix}/task/${TaskId}`, {
+            method: 'DELETE',
+           
+        })
+            .then(checkStatus)
+    },
+    removeLabel: LabelId => {
+        //const token = window.localStorage.getItem('token');
+     
+        return fetch(`${url_prefix}/label/${LabelId}`, {
+            method: 'DELETE',
+           
+        })
+            .then(checkStatus)
     },
 };
 

@@ -5,7 +5,7 @@ module.exports = sequelize => {
 	class Travel extends Sequelize.Model {
 		static associate(db) {
 
-			Travel.hasMany(bd.Task, {onDelete: 'cascade'});
+			Travel.hasMany(db.Task, {onDelete: 'cascade'});
 			Travel.hasMany(db.Label, {onDelete: 'cascade'});
 			Travel.hasMany(db.Point, { onDelete: 'cascade' });
 			Travel.hasMany(db.Step, { onDelete: 'cascade' });

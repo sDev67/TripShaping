@@ -60,6 +60,7 @@ const StepMenu = ({
         title: title,
         category: category,
         description: description,
+        duration: duration,
         idStep: step.id
       };
       updateInfoStep.mutate(newPoint);
@@ -160,7 +161,7 @@ const StepMenu = ({
             </Button> */}
           </Stack>
 
-         {/* <TextField
+          {/* <TextField
             fullWidth
             label="Description"
             multiline
@@ -175,11 +176,11 @@ const StepMenu = ({
 
           />*/}
 
-          <Stack 
-          fullWidth
-          style={{ marginBottom: 25 }}>
+          <Stack
+            fullWidth
+            style={{ marginBottom: 25 }}>
 
-            <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='300px' isReadOnly={!isEdition}/>
+            <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='300px' isReadOnly={!isEdition} />
 
 
           </Stack>

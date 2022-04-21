@@ -21,6 +21,8 @@ import Photos from "./routes/Photos";
 import LogBook from "./routes/LogBook";
 import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
+import TripSettings from "./routes/TripSettings";
+
 
 const queryClient = new QueryClient();
 
@@ -45,6 +47,7 @@ function App() {
                 />
                 <Route path=":idTravel/documents" element={<Documents />} />
                 <Route path=":idTravel/members" element={<Members />} />
+                <Route path=":idTravel/tripsettings" element={<TripSettings />} />
               </Route>
               <Route path="/album" element={<NavigationBarAlbum />}>
                 <Route path=":idTravel/map" element={<MapReview />} />

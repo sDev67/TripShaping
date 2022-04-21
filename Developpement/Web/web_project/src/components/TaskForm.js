@@ -11,7 +11,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
-const TaskForm = ({ task, OnAddTask }) => {
+const TaskForm = ({ task, OnAddTask, UpdateTask }) => {
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentLabels, setCurrentLabels] = useState([]);
 
@@ -26,16 +26,41 @@ const TaskForm = ({ task, OnAddTask }) => {
     setCurrentTitle(newTitle);
   };
 
+  useEffect(() => 
+  {
+    setCurrentTitle('');
+    setCurrentDate(undefined);
+    if(task !== undefined){
+
+        if(task.title
+          !== undefined){
+            setCurrentTitle(task.title);
+        }
+      
+    
+        if(task.date !== undefined)
+        {
+          setCurrentDate(task.date);
+        }
+    }
+   
+  },[task])
+
   const handleSubmit = () => {
     if (task !== undefined) {
-      // Vérifié si la tâche n'est pas nouvelle
-      // Mettre à jour la nouvelle tâche
+      
+      
+      UpdateTask({title:currentTitle, date:currentDate, task});
+
     } else {
 
 
       OnAddTask({title:currentTitle, date:currentDate});
       // on la créer
     }
+
+    setCurrentTitle('');
+    setCurrentDate(undefined);
   };
 
   return (
@@ -53,12 +78,14 @@ const TaskForm = ({ task, OnAddTask }) => {
           <TextField
             id="standard-required"
             label="Nom"
+            value={currentTitle !== undefined ? currentTitle : ''}
             onChange={(e) => handleTitleChange(e.target.value)}
           />
 
           <TextField
             id="date"
             label="Date"
+            value={currentDate !== undefined ? currentDate : undefined}
             type="date"
             onChange={(e) => handleDateChange(e.target.value)}
             sx={{ width: 220 }}

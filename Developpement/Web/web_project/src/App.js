@@ -43,6 +43,7 @@ function App() {
                   path=":idTravel/informations"
                   element={<Informations />}
                 />
+                <Route path=":idTravel/documents" element={<Documents />} />
                 <Route path=":idTravel/members" element={<Members />} />
               </Route>
               <Route path="/album" element={<NavigationBarAlbum />}>

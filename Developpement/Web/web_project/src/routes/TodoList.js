@@ -148,8 +148,7 @@ const TodoList = () => {
 
   const OnRemoveTask = (task) => 
   {
-
-    removeTask.mutate({TaskId:task.id});
+    removeTask.mutate(task.id);
   };
 
   const OnAddLabelToTask = ({ label, task }) => {};
@@ -240,7 +239,6 @@ const TodoList = () => {
             justifyContent="space-between"
           >
           <Typography variant="h3">Labels</Typography>
-            <Typography variant="h4">Labels</Typography>
             <IconButton
               aria-label="Add"
               color="secondary"
@@ -300,7 +298,7 @@ const TodoList = () => {
       </Stack>
 
       <Dialog open={taskFormOpen} onClose={HandleCloseTaskForm}>
-        <TaskForm task={currentTaskSelected} OnAddTask={OnAddTask} UpdateTask={UpdateTask} ></TaskForm>
+        <TaskForm task={currentTaskSelected} OnAddTask={OnAddTask} UpdateTask={UpdateTask} onClose={HandleCloseTaskForm}></TaskForm>
       </Dialog>
       <Dialog open={labelFormOpen} onClose={HandleCloseLabelForm}>
         <LabelForm label={currentLabelSelected} addLabel={OnAddLabel} UpdateLabel={UpdateLabel}></LabelForm>

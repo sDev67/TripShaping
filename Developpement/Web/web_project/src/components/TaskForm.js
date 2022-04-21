@@ -11,7 +11,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
-const TaskForm = ({ task, OnAddTask, UpdateTask }) => {
+const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentLabels, setCurrentLabels] = useState([]);
 
@@ -61,6 +61,8 @@ const TaskForm = ({ task, OnAddTask, UpdateTask }) => {
 
     setCurrentTitle('');
     setCurrentDate(undefined);
+
+    onClose();
   };
 
   return (

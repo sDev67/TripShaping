@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 const StepDetails = ({ route, navigation }) => {
 
-    const { step } = route.params;
+    const { step, isReadOnly } = route.params;
 
     const [image, setImage] = useState(null);
 
@@ -51,17 +51,20 @@ const StepDetails = ({ route, navigation }) => {
                     <Text style={styles.font} >Description</Text>
                     <Text style={{ marginLeft: 10 }}>{step.description}</Text>
                     <Text style={styles.font}>Documents</Text>
-                    <Text style={styles.font} >Journal</Text>
-                    <View>
-                        <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />
-                        <Button style={{ backgroundColor: "#9AD1F5", width: 100, alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
-                    </View>
-                    <Text style={styles.font}>Photo</Text>
-                    {image && <Image source={{ uri: `data:image/gif;base64,${image.base64}` }} style={{ width: image.width / 8, height: image.height / 8 }} alt="photo" />}
-                    <View>
-                        <Button style={{ width: "70%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras")}>Prendre une photo</Button>
-                        <Button style={{ width: "70%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
-                    </View>
+                    {!isReadOnly &&
+                        <View>
+                            <Text style={styles.font} >Journal</Text>
+                            <View>
+                                <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />
+                                <Button style={{ backgroundColor: "#9AD1F5", width: 100, alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
+                            </View>
+                            <Text style={styles.font}>Photo</Text>
+                            {image && <Image source={{ uri: `data:image/gif;base64,${image.base64}` }} style={{ width: image.width / 8, height: image.height / 8 }} alt="photo" />}
+                            <View>
+                                <Button style={{ width: "70%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras")}>Prendre une photo</Button>
+                                <Button style={{ width: "70%", backgroundColor: "#9AD1F5", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
+                            </View>
+                        </View>}
                 </ScrollView>
             </View>
         </NativeBaseProvider>

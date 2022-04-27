@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions, ScrollView, Image, TouchableOpacity, Pressable } from 'react-native';
+import { Button, NativeBaseProvider, Select, CheckIcon, Checkbox, useToast, Center, Box } from 'native-base';
 
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient } from 'react-query';
@@ -8,8 +9,6 @@ import iconHistory from "../assets/navigation_icons/icon_history.png"
 
 const Spending = ({ navigation }) => {
     const idTravel = 1;
-
-    const [showAlert, setShowAlert] = useState(false);
 
     // Membres 
     const { isLoading: isLoading, isError: isError, error: error, data: members } = useQuery(["getMembers", idTravel], () => TravelRequests.getMembersOfTravel(idTravel));
@@ -103,7 +102,7 @@ const Spending = ({ navigation }) => {
             setMontant(null)
             setCategory("")
         } else {
-            setShowAlert(true)
+
         }
 
     }
@@ -170,16 +169,32 @@ const Spending = ({ navigation }) => {
                             </Select>
                         </View>
                     </>
-
-
-
-
                 }
-                <Button style={{ backgroundColor: "#9AD1F5", alignSelf: "center", marginRight: 10, width: "50%" }} onPress={() => spend()}>Ajouter</Button>
+                <CustomButton donateur={donateur} destinataires={destinataires} selectedItems={selectedItems} montant={montant} category={category} spend={spend} />
             </View>
         </NativeBaseProvider>
     )
 }
+
+
+const CustomButton = ({ donateur, destinataires, selectedItems, montant, category, spend }) => {
+    const toast = useToast();
+    return <Center>
+        <Button style={{ backgroundColor: "#9AD1F5", alignSelf: "center", marginRight: 10, width: "50%" }} onPress={() => {
+            (donateur !== "" && destinataires !== null && selectedItems.length !== 0 && montant !== null && category !== "") ? spend() :
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return <Box bg="red.500" px="2" py="1" rounded="sm" mb={20}>
+                            Veuillez renseigner l'ensemble des champs !
+                        </Box>;
+                    }
+                })
+        }}>
+            Ajouter
+        </Button>
+    </Center>;
+};
 
 const styles = StyleSheet.create({
     box: {

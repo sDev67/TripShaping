@@ -10,9 +10,9 @@ import { useQuery, useQueryClient } from 'react-query';
 import marker from '../assets/images/marker.png'
 import iconFiles from '../assets/navigation_icons/icon_files.png';
 
-export default StepsList = ({ navigation }) => {
+export default StepsList = ({ navigation, route }) => {
 
-    const idTravel = 1;
+    const { isReadOnly, idTravel } = route.params;
 
     // Etapes 
     const { isLoading: isLoadingS, isError: isErrorS, error: errorS, data: steps } = useQuery(

@@ -242,7 +242,6 @@ const NavigationBar = () => {
               component={Link}
               to={"/trip/" + idTravel + "/map"}
             />
-<<<<<<< HEAD
             <Tab
               icon={<DirectionsWalkRoundedIcon />}
               iconPosition="start"
@@ -328,6 +327,14 @@ const NavigationBar = () => {
               component={Link}
               to={"/trip/" + idTravel + "/members"}
             />
+            <Tab
+              icon={<SettingsRoundedIcon />}
+              iconPosition="start"
+              label="Options du voyage"
+              value={"/trip/" + idTravel + "/tripsettings"}
+              component={Link}
+              to={"/trip/" + idTravel + "/tripsettings"}
+            />
           </Tabs>
         </Drawer>
         <main className={classes.content}>
@@ -336,94 +343,6 @@ const NavigationBar = () => {
         </main>
       </div>
     </>
-=======
-          </IconButton>
-          <Typography variant="h5" color="primary" textAlign="center">
-            {isLoadingT ? 'Chargement...' : isErrorT ? <p style={{ color: 'red' }}>{errorT.message}</p> :
-              travels.name
-            }
-          </Typography>
-        </Stack>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          orientation="vertical"
-          textColor="primary"
-          indicatorColor="primary"
-        >
-          <Tab
-            icon={<MapRoundedIcon />}
-            iconPosition="start"
-            label="Carte"
-            value={"/trip/" + idTravel + "/map"}
-            component={Link}
-            to={"/trip/" + idTravel + "/map"}
-          />
-          <Tab
-            icon={<DirectionsWalkRoundedIcon />}
-            iconPosition="start"
-            label="Etapes"
-            value={"/trip/" + idTravel + "/steps"}
-            component={Link}
-            to={"/trip/" + idTravel + "/steps"}
-          />
-          <Tab
-            icon={<AssignmentRoundedIcon />}
-            iconPosition="start"
-            label="Tâches"
-            value={"/trip/" + idTravel + "/todolist"}
-            component={Link}
-            to={"/trip/" + idTravel + "/todolist"}
-          />
-          <Tab
-            icon={<TextSnippetRoundedIcon />}
-            iconPosition="start"
-            label="Informations"
-            value={"/trip/" + idTravel + "/informations"}
-            component={Link}
-            to={"/trip/" + idTravel + "/informations"}
-          />
-          <Tab
-            icon={<GroupsRoundedIcon />}
-            iconPosition="start"
-            label="Membres"
-            value={"/trip/" + idTravel + "/members"}
-            component={Link}
-            to={"/trip/" + idTravel + "/members"}
-          />
-          <Tab
-            icon={<SettingsRoundedIcon />}
-            iconPosition="start"
-            label="Options du voyage"
-            value={"/trip/" + idTravel + "/tripsettings"}
-            component={Link}
-            to={"/trip/" + idTravel + "/tripsettings"}
-          />
-        </Tabs>
-
-
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          spacing={1}
-          marginBottom={3}
-        >
-          <Avatar {...stringAvatar("Lara Croft")} />
-          <Typography variant="h6" textAlign="center">
-            Lara Croft
-          </Typography>
-          <IconButton>
-            <SettingsRoundedIcon sx={{ fontSize: "35px" }} />
-          </IconButton>
-        </Stack>
-      </Stack>
-
-      <Stack style={{ width: "100%" }}>
-        <Outlet></Outlet>
-      </Stack>
-    </Stack>
->>>>>>> dev_web_baptiste
   );
 };
 

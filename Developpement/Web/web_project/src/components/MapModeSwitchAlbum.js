@@ -40,7 +40,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const MapModeSwitch = ({
+const MapModeSwitchAlbum = ({
   handleSwitch,
   isEdition,
   markerFilter,
@@ -66,16 +66,8 @@ const MapModeSwitch = ({
       <CardHeader
         style={{ textAlign: "center", padding: "5px 5px 0px 5px" }}
         title={
-          <>
-            <FormControlLabel
-              value="Édition"
-              control={<Switch color="primary" />}
-              label="Édition"
-              labelPlacement="start"
-              onChange={handleSwitch}
-              checked={isEdition}
-              position="absolute"
-            />
+          <Stack direction="row" alignItems="center">
+            <Typography>Filtrer</Typography>
             <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
@@ -84,7 +76,7 @@ const MapModeSwitch = ({
             >
               <ExpandMoreIcon />
             </ExpandMore>
-          </>
+          </Stack>
         }
       ></CardHeader>
       <Collapse in={expanded}>
@@ -102,8 +94,11 @@ const MapModeSwitch = ({
                   control={<Radio />}
                   label={
                     <Stack direction="row" alignItems="center">
-                      <img style={{width:"25px", height:"25px"}}src={stepInterestPointIcon}></img>
-                      
+                      <img
+                        style={{ width: "25px", height: "25px" }}
+                        src={stepInterestPointIcon}
+                      ></img>
+
                       <p>Tout</p>
                     </Stack>
                   }
@@ -113,7 +108,10 @@ const MapModeSwitch = ({
                   control={<Radio />}
                   label={
                     <Stack direction="row" alignItems="center">
-                      <img style={{width:"25px", height:"25px"}}src={stepIcon}></img>
+                      <img
+                        style={{ width: "25px", height: "25px" }}
+                        src={stepIcon}
+                      ></img>
                       <p>Étapes</p>
                     </Stack>
                   }
@@ -124,7 +122,10 @@ const MapModeSwitch = ({
                   control={<Radio />}
                   label={
                     <Stack direction="row" alignItems="center">
-                      <img style={{width:"25px", height:"25px"}}src={interestPointIcon}></img>
+                      <img
+                        style={{ width: "25px", height: "25px" }}
+                        src={interestPointIcon}
+                      ></img>
                       <p>POI</p>
                     </Stack>
                   }
@@ -147,7 +148,10 @@ const MapModeSwitch = ({
                     control={<Radio />}
                     label={
                       <Stack direction="row" alignItems="center">
-                        <img style={{width:"25px", height:"25px"}}src={stepIcon}></img>
+                        <img
+                          style={{ width: "25px", height: "25px" }}
+                          src={stepIcon}
+                        ></img>
                         <p>Étapes</p>
                       </Stack>
                     }
@@ -158,7 +162,10 @@ const MapModeSwitch = ({
                     control={<Radio />}
                     label={
                       <Stack direction="row" alignItems="center">
-                        <img style={{width:"25px", height:"25px"}}src={interestPointIcon}></img>
+                        <img
+                          style={{ width: "25px", height: "25px" }}
+                          src={interestPointIcon}
+                        ></img>
                         <p>POI</p>
                       </Stack>
                     }
@@ -173,4 +180,4 @@ const MapModeSwitch = ({
   );
 };
 
-export default MapModeSwitch;
+export default MapModeSwitchAlbum;

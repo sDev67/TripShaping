@@ -56,7 +56,28 @@ module.exports = {
 			.then(steps => res.json(steps))
 			.catch(err => next(err));
 	},
-
+	get_tasks_of_travel: (req, res, next) => {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
+					throw { status: 404, message: 'Travel not found' };
+				}
+				return travel.getTasks();
+			})
+			.then(tasks => res.json(tasks))
+			.catch(err => next(err));
+	},
+	get_labels_of_travel: (req, res, next) => {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
+					throw { status: 404, message: 'Travel not found' };
+				}
+				return travel.getLabels();
+			})
+			.then(steps => res.json(steps))
+			.catch(err => next(err));
+	},
 	get_routes_of_travel: (req, res, next) => {
 		return db.Travel.findByPk(req.params.travel_id)
 			.then(travel => {

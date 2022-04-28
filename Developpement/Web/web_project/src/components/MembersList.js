@@ -49,7 +49,7 @@ const MembersList = ({ members, deleteMember }) => {
                   </>
                 }
                 secondary={<i>
-                {member.fictive ? "Non Répertorié" :""}
+                {member.fictive ? "Non Inscrit" :""}
                 </i>}
               />
             </ListItemButton>

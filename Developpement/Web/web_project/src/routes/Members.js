@@ -30,9 +30,9 @@ const Members = () => {
   );
 
   const {
-    isLoading: isLoadingA,
-    isError: isErrorA,
-    error: errorA,
+    isLoading: isLoadingU,
+    isError: isErrorU,
+    error: errorU,
     data: users,
   } = useQuery(["getUsers"], () => UserRequests.getAllUsers());
 
@@ -62,10 +62,11 @@ const Members = () => {
         </Typography>
         <Stack
           width="90%"
+          paddingY="1%"
           marginLeft="5%"
           direction="column"
           justifyContent="space-between"
-          height="85%"
+          height="100%"
         >
           <Stack height="85%">
             <Typography variant="h4" marginY={1}>
@@ -83,10 +84,13 @@ const Members = () => {
               />
             )}
           </Stack>
-          <MemberForm
-            users={users}
-           
-          />
+          {isLoadingU ? (
+            <Loading />
+          ) : isErrorU ? (
+            <p style={{ color: "red" }}>{errorU.message}</p>
+          ) : (
+            <MemberForm users={users} />
+          )}
         </Stack>
       </Stack>
     </>

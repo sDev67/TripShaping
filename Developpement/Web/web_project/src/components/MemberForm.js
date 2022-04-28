@@ -9,14 +9,11 @@ import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import MemberRequests from "../requests/MemberRequests";
 
-const MemberForm = ({
-  users,
-}) => {
+const MemberForm = ({ users }) => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
   const queryClient = useQueryClient();
-
 
   const [selectedMember, setSelectedMember] = useState({});
   const [firstname, setFirstname] = useState("");
@@ -38,16 +35,12 @@ const MemberForm = ({
       TravelId: idTravel,
     };
     addMember.mutate(newMember);
-    if(fictive)
-    {
+    if (fictive) {
       setFirstname("");
       setLastname("");
-    }
-    else
-    {
+    } else {
       setSelectedMember({});
     }
-    
   };
 
   return (
@@ -97,7 +90,11 @@ const MemberForm = ({
               style={{ width: "25%" }}
               variant="contained"
               onClick={(e) => {
-                OnAddMember(selectedMember.firstname, selectedMember.lastname, false);
+                OnAddMember(
+                  selectedMember.firstname,
+                  selectedMember.lastname,
+                  false
+                );
               }}
             >
               Ajouter
@@ -107,7 +104,7 @@ const MemberForm = ({
 
         <div style={{ width: "50%" }}>
           <Typography variant="h6" marginY={1}>
-            Ajouter un membre non répertorié
+            Ajouter un membre non inscrit
           </Typography>
 
           <Stack direction="row" spacing={1}>

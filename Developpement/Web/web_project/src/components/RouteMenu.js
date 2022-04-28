@@ -54,6 +54,9 @@ const RouteMenu = ({
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
 
+  const distance = response?.routes[0].legs[0].distance.text;
+  const duration = response?.routes[0].legs[0].duration.text;
+
   const stepIcon = "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
 
   const categ = [
@@ -130,7 +133,7 @@ const RouteMenu = ({
           <TextField
             fullWidth
             select
-            label="Catégorie"
+            label="Type de transport"
             value={travelType}
             onChange={(e) => setTravelType(e.target.value)}
             style={{ marginBottom: 25 }}
@@ -175,6 +178,29 @@ const RouteMenu = ({
               Ajouter
             </Button>
           </Stack>
+
+          {response && distance && duration &&
+            <Stack direction="row">
+              <TextField
+                fullWidth
+                label="Distance"
+                value={distance}
+                style={{ marginBottom: 25 }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                disabled={true}
+              /><TextField
+                fullWidth
+                label="Temps"
+                value={duration}
+                style={{ marginBottom: 25 }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                disabled={true}
+              />
+            </Stack>}
 
           <Stack style={{ border: "1px solid black", margin: 5, marginBottom: 10, height: 425 }}>
             <GoogleMap

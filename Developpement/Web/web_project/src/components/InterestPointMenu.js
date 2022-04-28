@@ -10,13 +10,21 @@ import {
   Button,
   Typography,
   IconButton,
+  FormControl,
+  FormGroup,
 } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
-import { useQueryClient } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+import TravelRequests from "../requests/TravelRequests";
+import Loading from "../utils/Loading";
+import DocumentRequest from "../requests/DocumentRequest";
+
+
 
 const InterestPointMenu = ({
   deletePoint,
@@ -27,12 +35,28 @@ const InterestPointMenu = ({
 }) => {
   const queryClient = useQueryClient();
 
-  const [files, setFiles] = useState([]);
+
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
+  // Documents by id
+  const {
+    isLoading: isLoadingD,
+    isError: isErrorD,
+    error: errorD,
+    data: documents,
+  } = useQuery(["getDocuments", idTravel], () =>
+    TravelRequests.getAllDocumentsByTravelId(idTravel)
+  );
+
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
   const [lengthOfStay, setLengthOfStay] = useState(selectedMarker.duration);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+
+  const [file, setFile] = useState([]);
 
   const categ = [
     {
@@ -68,13 +92,13 @@ const InterestPointMenu = ({
     {
       value: 'Autre',
     },
-    
-    
+
+
   ];
 
- // Fonction qui met a jour les propriétés d'un point d'interet
+  // Fonction qui met a jour les propriétés d'un point d'interet
   const updateInterestPointInfo = (pointId) => (e) => {
-    if(isEdition){
+    if (isEdition) {
       const newPoint = {
         title: title,
         category: category,
@@ -83,13 +107,31 @@ const InterestPointMenu = ({
       };
       updateInfoPoint.mutate(newPoint);
       setSelectedMarker(null);
-    }  
+    }
   };
-  
+
+  const addFile = (e) => {
+
+    const formData = new FormData();
+    formData.append('title', file)
+    formData.append('TravelId', idTravel)
+
+    console.log(...formData);
+
+    DocumentRequest.uploadFile(formData)
+    setDialogOpen(false);
+
+  }
+
+  const displayDocuments = (idDocument) => {
+    let url = encodeURI("http://localhost:4200/document/file/" + idDocument)
+    window.open(url);
+  }
+
 
   return (
     <>
-      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height:"90%" }}>
+      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height: "90%" }}>
         <CardMedia
           component="img"
           height="194"
@@ -108,7 +150,7 @@ const InterestPointMenu = ({
             fullWidth
             label="Nom"
             value={title}
-            onChange={(e) =>setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
               shrink: true,
@@ -130,10 +172,10 @@ const InterestPointMenu = ({
 
           >
             {categ.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.value}
-            </MenuItem>
-          ))}
+              <MenuItem key={option.value} value={option.value}>
+                {option.value}
+              </MenuItem>
+            ))}
           </TextField>
           <Stack
             style={{ marginBottom: 25 }}
@@ -145,7 +187,7 @@ const InterestPointMenu = ({
               fullWidth
               select
               label="Etape associée"
-              
+
               InputLabelProps={{
                 shrink: true,
               }}
@@ -157,7 +199,7 @@ const InterestPointMenu = ({
               fullWidth
               select
               label="Jour"
-              
+
               InputLabelProps={{
                 shrink: true,
               }}
@@ -166,27 +208,23 @@ const InterestPointMenu = ({
               <MenuItem>2</MenuItem>
             </TextField>
           </Stack>
-          
+
           <Stack
             style={{ marginBottom: 25 }}
             direction="row"
             justifyContent="space-between"
             spacing={2}
           >
-            <TextField
-              fullWidth
-              select
-              label="Documents"
-              value=""
-              //value={selectedMarker.location.files}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            >
-              {files.map((file, index) => (
-                <MenuItem key={index}>{file.name}</MenuItem>
-              ))}
-            </TextField>
+            {isLoadingD ? (
+              <Loading />
+            ) : isErrorD ? (
+              <p style={{ color: "red" }}>{errorD.message}</p>
+            ) : (
+              documents.map((document, index) => (
+                <Button variant="contained" onClick={() => displayDocuments(document.id)}>{document.title}</Button>
+
+              )))
+            }
 
             <Button
               style={{ paddingLeft: 32, paddingRight: 32 }}
@@ -199,6 +237,19 @@ const InterestPointMenu = ({
               Ajouter
             </Button>
           </Stack>
+
+
+          {/* <Stack>
+            {isLoadingD ? (
+              <Loading />
+            ) : isErrorD ? (
+              <p style={{ color: "red" }}>{errorD.message}</p>
+            ) : (
+              documents.map((document, index) => (
+                <p>{document.title}</p>
+              )))
+            }
+          </Stack> */}
 
           <TextField
             fullWidth
@@ -224,8 +275,8 @@ const InterestPointMenu = ({
                 onClick={() => { deletePoint.mutate(selectedMarker.id); setSelectedMarker(null) }}
               >
                 Supprimer
-              </Button>            
-            
+              </Button>
+
               <Button
                 variant="contained"
                 color="primary"
@@ -236,9 +287,9 @@ const InterestPointMenu = ({
               >
                 Enregistrer
               </Button>
-              </>
+            </>
             }
-            
+
           </Stack>
         </CardContent>
       </Card>
@@ -248,9 +299,23 @@ const InterestPointMenu = ({
           <Typography variant="h3" marginY={2}>
             Ajouter un fichier
           </Typography>
-          <FileUploader
-            handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
-          />
+          {/* <FileUploader
+          //handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
+          /> */}
+          <div class="form-group">
+            <label for="titre">Fichiers :</label> <br />
+            <input type="file" id="title" placeholder="Choose file" name="title" onChange={(e) => {
+              setFile(e.target.files[0])
+              console.log(e.target.files[0])
+            }}
+              required />
+          </div>
+          <br />
+
+          <Button variant="contained" type="submit" onClick={addFile}>
+            Ajouter
+          </Button>
+
         </div>
       </Dialog>
     </>
@@ -258,3 +323,7 @@ const InterestPointMenu = ({
 };
 
 export default InterestPointMenu;
+/*
+
+
+*/

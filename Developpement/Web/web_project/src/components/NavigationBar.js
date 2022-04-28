@@ -9,8 +9,6 @@ import {
   IconButton,
   Avatar,
 } from "@mui/material";
-
-
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
@@ -24,8 +22,6 @@ import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRound
 import DirectionsWalkRoundedIcon from '@mui/icons-material/DirectionsWalkRounded';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
-
-
 
 const NavigationBar = () => {
   let { idTravel } = useParams();

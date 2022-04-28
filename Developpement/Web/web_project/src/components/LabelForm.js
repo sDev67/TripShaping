@@ -3,7 +3,7 @@ import { TextField, Button, Typography } from "@mui/material";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import { useEffect, useState } from "react";
 
-const LabelForm = ( {addLabel} ) => {
+const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
   const [currentTitle, setCurrentTitle] = useState("");
 
   //   useEffect(() => {
@@ -12,7 +12,16 @@ const LabelForm = ( {addLabel} ) => {
   //     }
   //   }, [label]);
 
+  const handleClick = () => {
+    if (label != undefined) {
+      updateLabel({ title: currentTitle, labelId: label.id });
+    }
 
+    if (currentTitle !== undefined) {
+      addLabel({ title: currentTitle });
+    }
+    onClose();
+  };
 
   return (
     <>
@@ -34,7 +43,7 @@ const LabelForm = ( {addLabel} ) => {
             variant="contained"
             color="primary"
             startIcon={<DoneRounded />}
-            onClick={addLabel(currentTitle)}
+            onClick={handleClick}
           >
             Enregistrer
           </Button>

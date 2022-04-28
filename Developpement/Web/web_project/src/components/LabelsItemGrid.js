@@ -15,22 +15,15 @@ const LabelsItemGrid = ({
   return (
     <>
       {labels.map((label, index) => (
-        <> 
-          <Draggable key={`draggable-${index}`} draggableId={`draggable-${index}`} index={index}>
-            {(provided) => (
-              <Chip
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                style={{ margin: 5 }}
-                size="medium"
-                onDelete={OnDeleteLabel}
-                onClick={OnSelectLabel}
-                color="secondary"
-                label={label.title}
-              />
-            )}
-          </Draggable>
+        <>
+          <Chip
+            style={{ margin: 5 }}
+            size="medium"
+            onDelete={OnDeleteLabel}
+            onClick={OnSelectLabel}
+            color="secondary"
+            label={label.title}
+          />
         </>
       ))}
     </>

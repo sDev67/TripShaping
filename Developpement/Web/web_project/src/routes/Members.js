@@ -36,8 +36,6 @@ const Members = () => {
     data: users,
   } = useQuery(["getUsers"], () => UserRequests.getAllUsers());
 
-  console.log(users);
-
   const deleteMember = useMutation(MemberRequests.removeMember, {
     onSuccess: (_, id) =>
       queryClient.setQueryData(["getMembers", idTravel], (members) =>
@@ -47,7 +45,7 @@ const Members = () => {
 
   return (
     <>
-      <Stack height="93.15%" width="100%" direction="column">
+      <Stack height="93.15%" width="100%" direction="row">
         <Stack
           width="90%"
           paddingY="1%"

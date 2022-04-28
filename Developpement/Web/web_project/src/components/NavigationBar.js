@@ -40,6 +40,7 @@ import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRound
 import DirectionsWalkRoundedIcon from "@mui/icons-material/DirectionsWalkRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
+import TopicRoundedIcon from '@mui/icons-material/TopicRounded';
 
 const drawerWidth = 170;
 

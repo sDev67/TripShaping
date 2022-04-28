@@ -15,12 +15,12 @@ import TripSelection from "./routes/TripSelection";
 import Steps from "./routes/Steps";
 import Signin from "./routes/Signin";
 import Signup from "./routes/Signup";
+import Documents from "./routes/Documents";
 import NavigationBarAlbum from "./components/NavigationBarAlbum";
 import Photos from "./routes/Photos";
 import LogBook from "./routes/LogBook";
 import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
-import Documents from "./routes/Documents";
 
 const queryClient = new QueryClient();
 

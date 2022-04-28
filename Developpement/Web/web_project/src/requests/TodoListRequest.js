@@ -50,7 +50,7 @@ const TodoListRequest = {
         })
         .then(checkStatus)
     },
-    updateTaskById: ({title, date, idTask }) => {
+    updateTaskById: ({title, date, idTask, idTravel}) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/task/${idTask}`, {
             method:'PUT',
@@ -58,12 +58,12 @@ const TodoListRequest = {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body:JSON.stringify({title, date, idTask})
+            body:JSON.stringify({title, date, idTask, idTravel})
         })
             .then(checkStatus)
             .then(res => res.json())
     },
-    updateLabelById: ({title, idLabel }) => {
+    updateLabelById: ({title, idLabel,idTravel }) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/label/${idLabel}`, {
             method:'PUT',
@@ -71,7 +71,7 @@ const TodoListRequest = {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body:JSON.stringify({title, idLabel})
+            body:JSON.stringify({title, idLabel, idTravel})
         })
             .then(checkStatus)
             .then(res => res.json())

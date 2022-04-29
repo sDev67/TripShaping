@@ -205,59 +205,62 @@ const AppShowcase = () => {
           alignItems="flex-start"
           height="100%"
           style={{
-            backgroundImage: `url(${require("../assets/appshowcase_2.jpg")})`,
+            backgroundImage: `url(${require("../assets/appshowcase_3.jpg")})`,
             backgroundSize: "cover",
             height: "100%",
           }}
         >
-          <Stack
-            direction="column"
-            marginLeft="20%"
-            marginTop="10%"
-            width="30%"
-            spacing={2}
+          <Card
+            style={{
+              backgroundColor: "#FFC300",
+              marginLeft: "5%",
+              marginTop: "10%",
+              width: "30%",
+            }}
           >
-            <Typography variant="h2" textAlign="start" color="primary">
-              Explore a world of Trip!
-            </Typography>
-            <Typography
-              style={{ fontWeight: "normal" }}
-              color="grey.600"
-              variant="h4"
-              align="justify"
-            >
-              Lorem ipsum dolor sit amet. Vel totam nemo ut nisi cumque qui
-              consectetur ducimus At dolore harum aut similique repudiandae et
-              quidem eaque. Ab veniam harum qui quia itaque in sequi dolores sed
-              nulla incidunt quo laboriosam velit ut exercitationem aperiam.
-            </Typography>
-            <Stack direction="row" paddingTop={2} justifyContent="space-evenly">
-              <Button
-                color="primary"
-                variant="contained"
-                style={{
-                  paddingLeft: "25px",
-                  paddingRight: "25px",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
-                }}
+            <CardContent>
+              <Typography variant="h3" textAlign="start" color="grey.0">
+                Follow your trip live !
+              </Typography>
+              <Typography
+                style={{ fontWeight: "normal" }}
+                color="grey.0"
+                variant="h4"
+                align="justify"
               >
-                Explorer les voyages
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                style={{
-                  paddingLeft: "25px",
-                  paddingRight: "25px",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
-                }}
+                Lorem ipsum dolor sit amet. Vel totam nemo ut nisi cumque qui
+                consectetur ducimus At dolore harum aut similique repudiandae et
+                quidem eaque. Ab veniam harum qui quia itaque in sequi dolores
+                sed nulla incidunt quo laboriosam velit ut exercitationem
+                aperiam.
+              </Typography>
+            </CardContent>
+          </Card>
+          <Card
+            style={{
+              backgroundColor: "#63b1fa",
+              marginLeft: "65%",
+              width: "30%",
+            }}
+          >
+            <CardContent>
+              <Typography variant="h3" textAlign="start" color="grey.0">
+                Follow your trip live !
+              </Typography>
+              <Typography
+                style={{ fontWeight: "normal" }}
+                color="grey.0"
+                variant="h4"
+                align="justify"
               >
-                Créer vos voyages
-              </Button>
-            </Stack>
-          </Stack>
+                Lorem ipsum dolor sit amet. Vel totam nemo ut nisi cumque qui
+                consectetur ducimus At dolore harum aut similique repudiandae et
+                quidem eaque. Ab veniam harum qui quia itaque in sequi dolores
+                sed nulla incidunt quo laboriosam velit ut exercitationem
+                aperiam.
+              </Typography>
+            </CardContent>
+          </Card>
         </Stack>
       </main>
     </>

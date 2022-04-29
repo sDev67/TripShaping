@@ -26,7 +26,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { useEffect, useState } from "react";
 
-const TasksItemGrid = ({ tasks, OnRemoveLabelToTask, OnSelectTask }) => {
+const TasksItemGrid = ({ tasks,OnRemoveTask, OnRemoveLabelToTask, OnEditTask }) => {
   return (
     <>
       <Grid
@@ -41,48 +41,49 @@ const TasksItemGrid = ({ tasks, OnRemoveLabelToTask, OnSelectTask }) => {
           overflow: "auto",
         }}
       >
-        {tasks.map(
-          (task, index) =>
-            task.labels.filter((e) => e.title === "Benjamin").length > 0 && (
-              <Grid key={index} item xs={4}>
-                <Card>
-                  <CardHeader
-                    action={
-                      <IconButton color="error">
-                        <HighlightOffIcon sx={{ fontSize: "30px" }} />
-                      </IconButton>
-                    }
-                    title={
-                      <>
-                        {task.title}
-                        <Tooltip title="Editer" placement="right" arrow>
-                          <IconButton>
-                            <EditRoundedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </>
-                    }
-                    subheader={task.executionDate}
-                  />
-                  <CardContent>
-                    {task.labels.map((label) => (
-                      <>
-                        <Chip
-                          key={label.toString()}
-                          style={{ margin: 5 }}
-                          size="medium"
-                          onDelete={OnRemoveLabelToTask}
-                          onClick={OnRemoveLabelToTask}
-                          color="secondary"
-                          label={label.title}
-                        />
-                      </>
-                    ))}
-                  </CardContent>
-                </Card>
-              </Grid>
-            )
-        )}
+        {
+          tasks.map((task, index) => (
+            // task.labels.filter((e) => e.title === "Benjamin").length > 0 && (
+            <Grid key={index} item xs={4}>
+              <Card>
+                <CardHeader
+                  action={
+                    <IconButton color="error" onClick={(e) => OnRemoveTask(task)}>
+                      <HighlightOffIcon sx={{ fontSize: "30px" }} />
+                    </IconButton>
+                  }
+                  title={
+                    <>
+                      {task.title}
+                      <Tooltip title="Editer" placement="right" arrow>
+                        <IconButton onClick={(e) => OnEditTask(task)}>
+                          <EditRoundedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </>
+                  }
+                  subheader={task.date}
+                />
+                <CardContent>
+                  {/* {task.labels.map((label) => (
+                    <>
+                      <Chip
+                        key={label.toString()}
+                        style={{ margin: 5 }}
+                        size="medium"
+                        onDelete={OnRemoveLabelToTask}
+                        onClick={OnRemoveLabelToTask}
+                        color="secondary"
+                        label={label.title}
+                      />
+                    </>
+                  ))} */}
+                </CardContent>
+              </Card>
+            </Grid>
+          ))
+          // )
+        }
       </Grid>
     </>
   );

@@ -9,7 +9,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import TripForm from "../components/TripForm";
@@ -24,6 +24,12 @@ const TripSelection = () => {
     ['getTravels'], () => TravelRequests.getAllTravel()
   );
 
+  const navigate = useNavigate();
+
+  const handleOnclickRedirectToVitrine = () =>
+  {
+      
+  }
 
   const [tripFormOpen, setTripFormOpen] = useState(false);
 
@@ -76,6 +82,7 @@ const TripSelection = () => {
                               textAlign="center"
                             >
                               {travel.name}
+                           
                             </Typography>
                             <Typography
                               variant="body2"
@@ -83,6 +90,7 @@ const TripSelection = () => {
                               marginLeft={1}
                             >
                               {travel.activated ? <p>Active</p> : <p>Inactive</p>} <br></br>
+                              {travel.toPublish ? <p>{travel.toPublish}</p> : <p> non</p> }
 
                             </Typography>
                           </Stack>
@@ -117,7 +125,7 @@ const TripSelection = () => {
             style={{ paddingLeft: "25px", paddingRight: "25px", paddingTop: "10px", paddingBottom: "10px" }}
             variant="contained"
             color="primary"
-            onClick={() => setTripFormOpen(true)}
+            onClick={() => navigate('/vitrine')}
 
           >
             <Typography variant="h3">Explorer des voyages</Typography>

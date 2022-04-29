@@ -7,7 +7,7 @@ module.exports = [
 	{
 		url: '/task/:task_id/label',
 		method: 'get',
-		func: [task_ctrl.load_by_id ,task_label_ctrl.get_all_task_by_label_id]
+		func: [task_ctrl.load_by_id ,task_label_ctrl.get_all_label_by_task_id]
 	},
 	{
 		url: '/label/:label_id/task',

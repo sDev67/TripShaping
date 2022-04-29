@@ -9,14 +9,11 @@ import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import MemberRequests from "../requests/MemberRequests";
 
-const MemberForm = ({
-  users,
-}) => {
+const MemberForm = ({ users }) => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
   const queryClient = useQueryClient();
-
 
   const [selectedMember, setSelectedMember] = useState({});
   const [firstname, setFirstname] = useState("");
@@ -38,16 +35,12 @@ const MemberForm = ({
       TravelId: idTravel,
     };
     addMember.mutate(newMember);
-    if(fictive)
-    {
+    if (fictive) {
       setFirstname("");
       setLastname("");
-    }
-    else
-    {
+    } else {
       setSelectedMember({});
     }
-    
   };
 
   return (
@@ -97,7 +90,11 @@ const MemberForm = ({
               style={{ width: "25%" }}
               variant="contained"
               onClick={(e) => {
-                OnAddMember(selectedMember.firstname, selectedMember.lastname, false);
+                OnAddMember(
+                  selectedMember.firstname,
+                  selectedMember.lastname,
+                  false
+                );
               }}
             >
               Ajouter

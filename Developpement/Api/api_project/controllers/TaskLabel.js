@@ -33,6 +33,18 @@ module.exports = {
 			.then(res.status(200).send("Label supprimé"))
 			.catch(next);
 	},
+	update_label_by_task_id: (req, res, next) => {
+		return db.Travel.findByPk(req.params.task_id)
+			.then(task => {
+				if (!task) {
+					throw { status: 404, message: 'Requested Group not found' };
+				}
+				Object.assign(task, req.body);
+				return task.save();
+			})
+			.then(task => res.json(task))
+			.catch(next);
+	},
 
 
 };

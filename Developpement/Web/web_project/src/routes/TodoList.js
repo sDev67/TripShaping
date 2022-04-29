@@ -161,11 +161,7 @@ const TodoList = () => {
 
   const OnAddLabelToTask = ({ label, task }) => {};
 
-  const OnRemoveLabelToTask = ({ label, task }) => {
-    //allTasks[task].labels
-  };
-
-  const OnDeleteLabel = ({ label }) => {
+  const OnRemoveLabelToTask = (label) => {
     removeLabel.mutate(label.id);
   };
 

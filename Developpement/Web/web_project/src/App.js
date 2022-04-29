@@ -21,6 +21,7 @@ import Photos from "./routes/Photos";
 import LogBook from "./routes/LogBook";
 import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
+import AppShowcase from "./routes/AppShowcase";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,7 @@ function App() {
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<AppShowcase />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/mytrips" element={<TripSelection />} />

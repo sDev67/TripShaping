@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TodoListRequest from "../requests/TodoListRequest";
+import Loading from "../utils/Loading";
 
 const TasksItemGrid = ({
   tasks,
@@ -86,7 +87,6 @@ const Task = ({ task, OnRemoveTask, OnRemoveLabelToTask, OnEditTask }) => {
   } = useQuery(["getLabelOfTask", task.id], () =>
     TodoListRequest.getLabelOfTask(task.id)
   );
-  console.log(labels);
 
   return (
     <Grid item xs={4}>
@@ -110,7 +110,7 @@ const Task = ({ task, OnRemoveTask, OnRemoveLabelToTask, OnEditTask }) => {
           subheader={task.date}
         />
         {isLoadingL ? (
-          <Typography>Chargement...</Typography>
+          <Loading></Loading>
         ) : isErrorL ? (
           <Typography>{errorL}</Typography>
         ) : (
@@ -121,8 +121,7 @@ const Task = ({ task, OnRemoveTask, OnRemoveLabelToTask, OnEditTask }) => {
                   key={index}
                   style={{ margin: 5 }}
                   size="medium"
-                  onDelete={OnRemoveLabelToTask}
-                  onClick={OnRemoveLabelToTask}
+                  onDelete={(e) => OnRemoveLabelToTask(label)}
                   color="secondary"
                   label={label.title}
                 />

@@ -22,6 +22,7 @@ import LogBook from "./routes/LogBook";
 import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
 import TripSettings from "./routes/TripSettings";
+import Exploration from "./routes/Exploration";
 
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ function App() {
           <QueryClientProvider client={queryClient}>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/vitrine" element={<Exploration/>} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/mytrips" element={<TripSelection />} />

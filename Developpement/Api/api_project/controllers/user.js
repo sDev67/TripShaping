@@ -86,7 +86,16 @@ module.exports = {
   },
 
   whoami: (req, res, next) => {
-    return res.json(req.user);
+    try
+    {
+
+      return res.json(req.user);
+    }
+    catch(err)
+    {
+      next(err);
+    }
+
   },
 
   identify_client: [
@@ -98,7 +107,7 @@ module.exports = {
         }
         req.user = user;
         return next();
-      });
+      }).catch((err) => next(err));
     },
   ],
 };

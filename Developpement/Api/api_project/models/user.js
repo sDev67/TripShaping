@@ -8,7 +8,7 @@ module.exports = sequelize => {
 	class User extends Sequelize.Model {
 		static associate(db) {
 
-		
+			User.HasMany(db.Travel);
 
 		}
 	}

@@ -20,7 +20,8 @@ module.exports = sequelize => {
 		activated: DataTypes.BOOLEAN,
 		budget: DataTypes.DOUBLE,
 		infos: DataTypes.STRING,
-		finished: DataTypes.BOOLEAN
+		finished: DataTypes.BOOLEAN,
+		toPublish: DataTypes.BOOLEAN
 
 	}, {
 		sequelize,

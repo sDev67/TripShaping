@@ -8,6 +8,11 @@ module.exports = [
 		func: travel_ctrl.get_all
 	},
 	{
+		url: '/travelpublished',
+		method: 'get',
+		func: travel_ctrl.get_published
+	},
+	{
 		url: '/travel',
 		method: 'post',
 		func: travel_ctrl.create

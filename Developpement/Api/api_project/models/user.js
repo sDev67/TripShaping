@@ -3,23 +3,21 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 
 module.exports = sequelize => {
-	
-	
+
+
 	class User extends Sequelize.Model {
 		static associate(db) {
 
-			User.HasMany(db.Travel);
-
+			User.hasMany(db.Travel);
+			User.hasMany(db.Member);
 		}
 	}
 
 	User.init(
-	{
-		username: DataTypes.STRING,
-		lastname: DataTypes.STRING,
-		firstname: DataTypes.STRING,
-		password: DataTypes.STRING
-	},{
+		{
+			username: DataTypes.STRING,
+			password: DataTypes.STRING
+		}, {
 		sequelize,
 		modelName: 'User'
 	});

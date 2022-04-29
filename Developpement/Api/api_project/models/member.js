@@ -4,14 +4,16 @@ module.exports = sequelize => {
 
 	class Member extends Sequelize.Model {
 		static associate(db) {
-			//Task.manyToMany(db.Label, { through: 'LabelTask' });
 			Member.belongsTo(db.Travel);
+			Member.belongsTo(db.User);
+
+			Member.hasMany(db.Expense);
+			Member.hasMany(db.JournalEntry);
 		}
 	}
 
 	Member.init({
-		lastname: DataTypes.STRING,
-        firstname: DataTypes.STRING,
+		name: DataTypes.STRING,
 		fictive: DataTypes.BOOLEAN,
 
 	}, {

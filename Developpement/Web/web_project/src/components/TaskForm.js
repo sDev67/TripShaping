@@ -11,38 +11,12 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
-const TaskForm = ({ task }) => {
+const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentLabels, setCurrentLabels] = useState([]);
 
   const [currentDate, setCurrentDate] = useState("");
 
-  // useEffect(() =>
-  // {
-  //     if(task.title !== undefined)
-  //     {
-  //         setCurrentTitle(task.title);
-  //     }
-  //     else{
-  //         setCurrentTitle("Title");
-  //     }
-
-  //     if(task.labels !== undefined)
-  //     {
-  //         setCurrentLabels(task.labels);
-  //     }
-  //     else{
-  //         setCurrentLabels([]);
-  //     }
-  //     if(task.executionDate !== undefined){
-
-  //         setCurrentDate(task.executionDate);
-  //     }
-  //     else{
-  //         setCurrentDate(Date.now());
-  //     }
-
-  // }, [task])
 
   const handleDateChange = (newDate) => {
     setCurrentDate(newDate);
@@ -52,13 +26,43 @@ const TaskForm = ({ task }) => {
     setCurrentTitle(newTitle);
   };
 
+  useEffect(() => 
+  {
+    setCurrentTitle('');
+    setCurrentDate(undefined);
+    if(task !== undefined){
+
+        if(task.title
+          !== undefined){
+            setCurrentTitle(task.title);
+        }
+      
+    
+        if(task.date !== undefined)
+        {
+          setCurrentDate(task.date);
+        }
+    }
+   
+  },[task])
+
   const handleSubmit = () => {
-    if (task.title !== undefined) {
-      // Vérifié si la tâche n'est pas nouvelle
-      // Mettre à jour la nouvelle tâche
+    if (task !== undefined) {
+      
+      
+      UpdateTask({title:currentTitle, date:currentDate, task});
+
     } else {
+
+
+      OnAddTask({title:currentTitle, date:currentDate});
       // on la créer
     }
+
+    setCurrentTitle('');
+    setCurrentDate(undefined);
+
+    onClose();
   };
 
   return (
@@ -76,12 +80,14 @@ const TaskForm = ({ task }) => {
           <TextField
             id="standard-required"
             label="Nom"
+            value={currentTitle !== undefined ? currentTitle : ''}
             onChange={(e) => handleTitleChange(e.target.value)}
           />
 
           <TextField
             id="date"
             label="Date"
+            value={currentDate !== undefined ? currentDate : undefined}
             type="date"
             onChange={(e) => handleDateChange(e.target.value)}
             sx={{ width: 220 }}
@@ -94,7 +100,7 @@ const TaskForm = ({ task }) => {
             variant="contained"
             color="primary"
             startIcon={<DoneRounded />}
-          >
+            onClick={handleSubmit}>
             Enregistrer
           </Button>
         </Stack>

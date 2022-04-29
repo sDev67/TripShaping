@@ -40,7 +40,6 @@ import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRound
 import DirectionsWalkRoundedIcon from "@mui/icons-material/DirectionsWalkRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
-import TopicRoundedIcon from '@mui/icons-material/TopicRounded';
 
 const drawerWidth = 170;
 
@@ -240,7 +239,7 @@ const NavigationBar = () => {
               }
               value="Carte"
               component={Link}
-              to={"/trip/" + idTravel + "/map"}
+              to={"/album/" + 17 + "/map"}
             />
             <Tab
               icon={<DirectionsWalkRoundedIcon />}
@@ -252,12 +251,12 @@ const NavigationBar = () => {
                   justifyContent="flex-start"
                   marginLeft={1}
                 >
-                  <Typography variant="button">Étapes</Typography>
+                  <Typography variant="button">Photos</Typography>
                 </Stack>
               }
-              value="Étapes"
+              value="Photos"
               component={Link}
-              to={"/trip/" + idTravel + "/steps"}
+              to={"/album/photos"}
             />
             <Tab
               icon={<AssignmentRoundedIcon />}
@@ -269,75 +268,16 @@ const NavigationBar = () => {
                   justifyContent="flex-start"
                   marginLeft={1}
                 >
-                  <Typography variant="button">Tâches</Typography>
+                  <Typography variant="button">Journal</Typography>
                 </Stack>
               }
-              value="Tâches"
+              value="Journal"
               component={Link}
-              to={"/trip/" + idTravel + "/todolist"}
-            />
-            <Tab
-              icon={<TextSnippetRoundedIcon />}
-              iconPosition="start"
-              label={
-                <Stack
-                  style={{ minWidth: "200px" }}
-                  direction="row"
-                  justifyContent="flex-start"
-                  marginLeft={1}
-                >
-                  <Typography variant="button">Informations</Typography>
-                </Stack>
-              }
-              value="Informations"
-              component={Link}
-              to={"/trip/" + idTravel + "/informations"}
-            />
-            <Tab
-              icon={<TextSnippetRoundedIcon />}
-              iconPosition="start"
-              label={
-                <Stack
-                  style={{ minWidth: "200px" }}
-                  direction="row"
-                  justifyContent="flex-start"
-                  marginLeft={1}
-                >
-                  <Typography variant="button">Documents</Typography>
-                </Stack>
-              }
-              value="Documents"
-              component={Link}
-              to={"/trip/" + idTravel + "/documents"}
-            />
-            <Tab
-              icon={<GroupsRoundedIcon />}
-              iconPosition="start"
-              label={
-                <Stack
-                  style={{ minWidth: "200px" }}
-                  direction="row"
-                  justifyContent="flex-start"
-                  marginLeft={1}
-                >
-                  <Typography variant="button">Membres</Typography>
-                </Stack>
-              }
-              value="Membres"
-              component={Link}
-              to={"/trip/" + idTravel + "/members"}
-            />
-            <Tab
-              icon={<SettingsRoundedIcon />}
-              iconPosition="start"
-              label="Options du voyage"
-              value={"/trip/" + idTravel + "/tripsettings"}
-              component={Link}
-              to={"/trip/" + idTravel + "/tripsettings"}
+              to={"/album/logbook"}
             />
           </Tabs>
         </Drawer>
-        <main className={classes.content}>
+        <main class={classes.content}>
           <div style={{ height: "6.85%" }}></div>
           <Outlet />
         </main>

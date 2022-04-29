@@ -134,7 +134,7 @@ const StepMenu = ({
             justifyContent="space-between"
             spacing={2}
           >
-            {/* <TextField
+            <TextField
               fullWidth
               select
               label="Documents"
@@ -144,7 +144,7 @@ const StepMenu = ({
                 shrink: true,
               }}
             >
-              {/* {files.map((file, index) => (
+              {files.map((file, index) => (
                 <MenuItem key={index}>{file.name}</MenuItem>
               ))}
             </TextField>
@@ -158,7 +158,7 @@ const StepMenu = ({
             >
               {" "}
               Ajouter
-            </Button> */}
+            </Button>
           </Stack>
 
           {/* <TextField

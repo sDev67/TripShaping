@@ -10,13 +10,20 @@ import {
   Button,
   Typography,
   IconButton,
+  FormControl,
+  FormGroup,
 } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
-import { useQueryClient, useQuery } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+import TravelRequests from "../requests/TravelRequests";
+import Loading from "../utils/Loading";
+import DocumentRequest from "../requests/DocumentRequest";
+
 import RichTextEditor from "./RichTextEditor";
 import StepRequests from "../requests/StepRequests";
 
@@ -30,7 +37,20 @@ const InterestPointMenu = ({
 }) => {
   const queryClient = useQueryClient();
 
-  const [files, setFiles] = useState([]);
+
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
+  // Documents by id
+  const {
+    isLoading: isLoadingD,
+    isError: isErrorD,
+    error: errorD,
+    data: documents,
+  } = useQuery(["getDocuments", idTravel], () =>
+    TravelRequests.getAllDocumentsByTravelId(idTravel)
+  );
+
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
@@ -40,6 +60,9 @@ const InterestPointMenu = ({
   const [days, setDays] = useState([]);
   const [dayStep, setDayStep] = useState(selectedMarker.day);
   const listSteps = steps;
+
+
+  const [file, setFile] = useState([]);
 
   const categ = [
     {
@@ -120,6 +143,24 @@ const InterestPointMenu = ({
       setSelectedMarker(null);
     }
   };
+
+  const addFile = (e) => {
+
+    const formData = new FormData();
+    formData.append('title', file)
+    formData.append('TravelId', idTravel)
+
+    console.log(...formData);
+
+    DocumentRequest.uploadFile(formData)
+    setDialogOpen(false);
+
+  }
+
+  const displayDocuments = (idDocument) => {
+    let url = encodeURI("http://localhost:4200/document/file/" + idDocument)
+    window.open(url);
+  }
 
 
   return (
@@ -222,20 +263,16 @@ const InterestPointMenu = ({
             justifyContent="space-between"
             spacing={2}
           >
-            <TextField
-              fullWidth
-              select
-              label="Documents"
-              value=""
-              //value={selectedMarker.location.files}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            >
-              {files.map((file, index) => (
-                <MenuItem key={index}>{file.name}</MenuItem>
-              ))}
-            </TextField>
+            {isLoadingD ? (
+              <Loading />
+            ) : isErrorD ? (
+              <p style={{ color: "red" }}>{errorD.message}</p>
+            ) : (
+              documents.map((document, index) => (
+                <Button variant="contained" onClick={() => displayDocuments(document.id)}>{document.title}</Button>
+
+              )))
+            }
 
             <Button
               style={{ paddingLeft: 32, paddingRight: 32 }}
@@ -248,6 +285,19 @@ const InterestPointMenu = ({
               Ajouter
             </Button>
           </Stack>
+
+
+          {/* <Stack>
+            {isLoadingD ? (
+              <Loading />
+            ) : isErrorD ? (
+              <p style={{ color: "red" }}>{errorD.message}</p>
+            ) : (
+              documents.map((document, index) => (
+                <p>{document.title}</p>
+              )))
+            }
+          </Stack> */}
 
           {/*<TextField
             fullWidth
@@ -297,9 +347,23 @@ const InterestPointMenu = ({
           <Typography variant="h3" marginY={2}>
             Ajouter un fichier
           </Typography>
-          <FileUploader
-            handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
-          />
+          {/* <FileUploader
+          //handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
+          /> */}
+          <div class="form-group">
+            <label for="titre">Fichiers :</label> <br />
+            <input type="file" id="title" placeholder="Choose file" name="title" onChange={(e) => {
+              setFile(e.target.files[0])
+              console.log(e.target.files[0])
+            }}
+              required />
+          </div>
+          <br />
+
+          <Button variant="contained" type="submit" onClick={addFile}>
+            Ajouter
+          </Button>
+
         </div>
       </Dialog>
     </>
@@ -307,3 +371,7 @@ const InterestPointMenu = ({
 };
 
 export default InterestPointMenu;
+/*
+
+
+*/

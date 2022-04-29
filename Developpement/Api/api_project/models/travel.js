@@ -11,6 +11,9 @@ module.exports = sequelize => {
 			Travel.hasMany(db.Step, { onDelete: 'cascade' });
 			Travel.hasMany(db.Route, { onDelete: 'cascade' });
 			Travel.hasMany(db.Member, { onDelete: 'cascade' });
+			Travel.hasMany(db.Expense, { onDelete: 'cascade' });
+			Travel.hasMany(db.Document, { onDelete: 'cascade' });
+
 		}
 	}
 

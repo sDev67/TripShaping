@@ -93,6 +93,17 @@ const TravelRequests = {
             .then(res => res.json())
     },
 
+    getAllDocumentsByTravelId: idTravel => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${idTravel}/documents`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
     addPoint: ({ title, latitude, longitude, description, category, TravelId }) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/point`, {

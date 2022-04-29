@@ -114,7 +114,32 @@ module.exports = {
 			.then(members => res.json(members))
 			.catch(err => next(err));
 	},
-
+	get_all_documents_by_travel_id: async (req, res, next) => {
+		return db.Travel.findByPk(req.params.travel_id)
+			.then(travel => {
+				if (!travel) {
+					throw { status: 404, message: 'Travel not found' };
+				}
+				return travel.getDocuments({
+					attributes: { exclude: ['dataFile'] } // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
+				});
+			})
+			.then(steps => res.json(steps))
+			.catch(err => next(err));
+	},
+	// get_all_documents_by_travel_point_id: async (req, res, next) => {
+	// 	return db.Travel.findByPk(req.params.travel_id)
+	// 		.then(travel => {
+	// 			if (!travel) {
+	// 				throw { status: 404, message: 'Travel not found' };
+	// 			}
+	// 			return travel.getDocuments({
+	// 				attributes: { exclude: ['dataFile'] }
+	// 			});
+	// 		})
+	// 		.then(steps => res.json(steps))
+	// 		.catch(err => next(err));
+	// },
 	create: (req, res, next) => {
 		return db.Travel.create(req.body)
 			.then(travel => res.json(travel))

@@ -2,7 +2,7 @@ import { checkStatus, url_prefix } from "../utils";
 
 const MemberRequests = {
 
-    getAllMembers: ()=>{
+    getAllMembers: () => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/members`, {
             // headers: {
@@ -13,7 +13,7 @@ const MemberRequests = {
             .then(res => res.json())
     },
 
-    addMember: ({firstname, lastname, fictive, TravelId}) => {
+    addMember: ({ name, userLogin, TravelId }) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/member`, {
             method: 'POST',
@@ -21,7 +21,7 @@ const MemberRequests = {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({firstname, lastname, fictive, TravelId})
+            body: JSON.stringify({ name, userLogin, TravelId })
         })
             .then(checkStatus)
             .then(res => res.json());

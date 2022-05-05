@@ -22,11 +22,15 @@ module.exports = sequelize => {
 	Travel.init({
 		name: DataTypes.STRING,
 		picture: DataTypes.TEXT,
-		activated: DataTypes.BOOLEAN,
-		budget: DataTypes.DOUBLE,
+		status: {
+			type: Sequelize.INTEGER,
+			defaultValue: 0,
+		},
 		infos: DataTypes.STRING,
-		finished: DataTypes.BOOLEAN,
-		toPublish: DataTypes.BOOLEAN,
+		toPublish: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: 0,
+		},
 		startDate: DataTypes.DATE
 	}, {
 		sequelize,

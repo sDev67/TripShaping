@@ -39,17 +39,17 @@ const MembersList = ({ members, deleteMember }) => {
             <ListItemButton>
               <ListItemAvatar>
                 <Avatar
-                  {...stringAvatar(member.firstname + " " + member.lastname)}
+                  {...stringAvatar(member.name)}
                 />
               </ListItemAvatar>
               <ListItemText
                 primary={
                   <>
-                    {member.firstname} {member.lastname}
+                    {member.name}
                   </>
                 }
                 secondary={<i>
-                {member.fictive ? "Non Inscrit" :""}
+                  {!member.UserId ? "Non Inscrit" : ""}
                 </i>}
               />
             </ListItemButton>

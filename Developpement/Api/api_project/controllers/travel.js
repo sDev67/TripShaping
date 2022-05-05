@@ -11,11 +11,11 @@ module.exports = {
 			.catch(next);
 	},
 	get_published: (req, res, next) => {
-		return db.Travel.findAll({			
+		return db.Travel.findAll({
 			where:
 			{
-				finished:'true',
-				toPublish:'true'
+				status: 2,
+				toPublish: 'true'
 			},
 			order: ['name']
 		})

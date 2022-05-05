@@ -34,9 +34,36 @@ module.exports = {
 	},
 
 	create: (req, res, next) => {
-		return db.Member.create(req.body)
-			.then(member => res.json(member))
-			.catch(next);
+		if (req.params.UserLogin == ! "") {
+			db.User.findAll({
+				attributes: [
+					'username'
+				],
+				where: {
+					username: req.params.UserLogin
+				}
+			})
+				.then(resp => {
+					if (resp == "") {
+						return res.status(404).send('Username does not exist');
+					}
+					else {
+						return db.Member.create({
+							name: req.params.name,
+							UserId: resp[0].id,
+							TravelId: req.params.TravelId,
+							userLogin: req.params.userLogin
+						})
+							.then(member => res.json(member))
+							.catch(next);
+					}
+				})
+		}
+		else {
+			return db.Member.create(req.body)
+				.then(member => res.json(member))
+				.catch(next);
+		}
 	},
 
 	update_by_id: (req, res, next) => {

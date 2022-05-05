@@ -5,7 +5,7 @@ module.exports = sequelize => {
 	class Member extends Sequelize.Model {
 		static associate(db) {
 			Member.belongsTo(db.Travel);
-			Member.belongsTo(db.User);
+			// Member.belongsTo(db.User, references: { model: "User", key: "username" });
 
 			Member.hasMany(db.Expense);
 			Member.hasMany(db.JournalEntry);
@@ -14,8 +14,13 @@ module.exports = sequelize => {
 
 	Member.init({
 		name: DataTypes.STRING,
-		fictive: DataTypes.BOOLEAN,
-
+		userLogin: {
+			type: Sequelize.STRING,
+			references: {
+				model: 'Users',
+				key: 'username'
+			}
+		}
 	}, {
 		sequelize,
 		modelName: 'Member'

@@ -23,7 +23,7 @@ const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
     {
       addLabel({title:currentTitle});
     }
-  }
+  
     onClose();
   };
 

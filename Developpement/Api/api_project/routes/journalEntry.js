@@ -1,4 +1,4 @@
-const journal_entry_ctrl = require('../controllers/journal_entry');
+const journal_entry_ctrl = require('../controllers/journalEntry');
 
 module.exports = [
 

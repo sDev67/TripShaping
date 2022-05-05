@@ -2,7 +2,16 @@ import "../Styles/ButtonStyles.css";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import PlaylistAddCheckOutlinedIcon from "@mui/icons-material/PlaylistAddCheckOutlined";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Stack, Divider, Typography, Dialog, Chip, Box } from "@mui/material";
+import {
+  Stack,
+  Divider,
+  Typography,
+  Dialog,
+  Chip,
+  Autocomplete,
+  TextField,
+  Button,
+} from "@mui/material";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import { useState } from "react";
 import "../App.css";
@@ -16,6 +25,7 @@ import TravelRequests from "../requests/TravelRequests";
 import TodoListRequest from "../requests/TodoListRequest";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
 const TodoList = () => {
   
@@ -26,6 +36,9 @@ const TodoList = () => {
 
   const [currentTaskSelected, setCurrentTask] = useState();
   const [currentLabelSelected, setCurrentLabel] = useState();
+
+  const [filterLabels, setFilterLabels] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState({});
 
   const {
     isLoading: isLoadingT,
@@ -102,16 +115,17 @@ const TodoList = () => {
     addLabel.mutate(newLabel);
   };
 
-  const UpdateLabel = ({ title, labelId }) => 
-  {
+  const UpdateLabel = ({ title, labelId }) => {
     const newLabel = {
       title: title,
-      labelId:labelId,
+      labelId: labelId,
       TravelId: idTravel,
     };
 
     updateLabel.mutate(newLabel);
-  }
+  };
+
+
 
   const UpdateTask = ({ title, date, task }) => 
   {
@@ -123,7 +137,7 @@ const TodoList = () => {
     };
 
     updateTask.mutate(newTask);
-  }
+  };
 
   const OnSelectTask = (task) => {
     setCurrentTask(task);
@@ -153,8 +167,8 @@ const TodoList = () => {
 
   const OnAddLabelToTask = ({ label, task }) => {};
 
-  const OnRemoveLabelToTask = ({ label, task }) => {
-    //allTasks[task].labels
+  const OnRemoveLabelToTask = (label) => {
+    removeLabel.mutate(label.id);
   };
 
   const OnDeleteLabel = ({ label }) => 
@@ -203,23 +217,77 @@ const TodoList = () => {
                 marginY={2}
                 width="90%"
                 direction="row"
-                alignItems="center"
                 justifyContent="flex-start"
+                spacing={1}
               >
-                <Typography variant="h5" marginLeft={5} marginRight={10}>
+                <Autocomplete
+                  style={{ width: "75%" }}
+                  noOptionsText={"Aucun label trouvé"}
+                  options={labels}
+                  fullWidth
+                  onChange={(event, value) => {
+                    setSelectedFilter(value);
+                  }}
+                  autoHighlight
+                  getOptionLabel={(option) => option.title}
+                  renderOption={(props, option) => (
+                    <Stack
+                      direction="row"
+                      component="li"
+                      {...props}
+                      alignItems="center"
+                      spacing={1}
+                    >
+                      <Typography>{option.title}</Typography>
+                    </Stack>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  )}
+                />
+                <Button
+                  style={{ width: "25%" }}
+                  variant="contained"
+                  onClick={(e) => {
+                    setFilterLabels((oldArray) => [
+                      ...oldArray,
+                      selectedFilter,
+                    ]);
+                  }}
+                >
                   Filtrer
-                </Typography>
-                <Stack direction="row">
-                  <Chip
-                    style={{ margin: 5 }}
-                    size="medium"
-                    color="secondary"
-                    label="Benjamin"
-                  />
-                </Stack>
+                </Button>
+              </Stack>
+              <Stack
+                direction="horizontal"
+                alignItems="center"
+                sx={{
+                  padding: 1,
+                }}
+              >
+                {filterLabels.map((label, index) => {
+                  return (
+                    <Chip
+                      style={{ margin: 5 }}
+                      color="secondary"
+                      label={label?.title}
+                      onDelete={() =>
+                        setFilterLabels(
+                          filterLabels.filter((item) => item.id !== label.id)
+                        )
+                      }
+                    />
+                  );
+                })}
               </Stack>
               <Divider></Divider>
               <TasksItemGrid
+                filterLabels={filterLabels}
                 tasks={tasks}
                 OnRemoveLabelToTask={OnRemoveLabelToTask}
                 OnSelectTask={OnSelectTask}
@@ -254,54 +322,40 @@ const TodoList = () => {
             <Typography>{errorL}</Typography>
           ) : (
             <>
-              <DragDropContext>
-                <Droppable droppableId="labels" direction="vertical">
-                  {(provided) => (
-                    <Stack
-                      direction="column"
-                      alignItems="center"
-                      spacing={1}
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      sx={{
-                        padding: 1,
-                      }}
-                    >
-                      {labels.map((label, index) => {
-                        return (
-                          <Draggable
-                            key={`draggable-${label.id}`}
-                            draggableId={`draggable-${label.id}`}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <Chip
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                size="medium"
-                                color="secondary"
-                                label={label.title}
-                              />
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </Stack>
-                  )}
-                </Droppable>
-              </DragDropContext>
+              <Stack
+                direction="column"
+                alignItems="center"
+                spacing={1}
+                sx={{
+                  padding: 1,
+                }}
+              >
+                {labels.map((label, index) => {
+                  return (
+                    <Chip size="medium" color="secondary" label={label.title} />
+                  );
+                })}
+              </Stack>
             </>
           )}
         </Stack>
       </Stack>
 
       <Dialog open={taskFormOpen} onClose={HandleCloseTaskForm}>
-        <TaskForm task={currentTaskSelected} OnAddTask={OnAddTask} UpdateTask={UpdateTask} onClose={HandleCloseTaskForm}></TaskForm>
+        <TaskForm
+          task={currentTaskSelected}
+          OnAddTask={OnAddTask}
+          UpdateTask={UpdateTask}
+          onClose={HandleCloseTaskForm}
+        ></TaskForm>
       </Dialog>
       <Dialog open={labelFormOpen} onClose={HandleCloseLabelForm}>
-        <LabelForm label={currentLabelSelected} addLabel={OnAddLabel} UpdateLabel={UpdateLabel}></LabelForm>
+        <LabelForm
+          label={currentLabelSelected}
+          addLabel={OnAddLabel}
+          UpdateLabel={UpdateLabel}
+          onClose={HandleCloseLabelForm}
+        ></LabelForm>
       </Dialog>
     </>
   );

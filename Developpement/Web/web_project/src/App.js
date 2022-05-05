@@ -24,6 +24,7 @@ import { AuthProvider } from "./Authentication/auth";
 import TripSettings from "./routes/TripSettings";
 import Exploration from "./routes/Exploration";
 
+import AppShowcase from "./routes/AppShowcase";
 
 const queryClient = new QueryClient();
 
@@ -34,8 +35,8 @@ function App() {
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             <Routes>
-              <Route path="/" element={<Home />} />
               <Route path="/vitrine" element={<Exploration/>} />
+              <Route path="/" element={<AppShowcase />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/mytrips" element={<TripSelection />} />

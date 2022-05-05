@@ -20,6 +20,10 @@ const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
     if (currentTitle !== undefined) {
       addLabel({ title: currentTitle });
     }
+
+    if (currentTitle !== undefined) {
+      addLabel({ title: currentTitle });
+    }
     onClose();
   };
 

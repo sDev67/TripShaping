@@ -60,6 +60,7 @@ const StepMenu = ({
         title: title,
         category: category,
         description: description,
+        duration: duration,
         idStep: step.id
       };
       updateInfoStep.mutate(newPoint);
@@ -133,7 +134,7 @@ const StepMenu = ({
             justifyContent="space-between"
             spacing={2}
           >
-            {/* <TextField
+            <TextField
               fullWidth
               select
               label="Documents"
@@ -143,7 +144,7 @@ const StepMenu = ({
                 shrink: true,
               }}
             >
-              {/* {files.map((file, index) => (
+              {files.map((file, index) => (
                 <MenuItem key={index}>{file.name}</MenuItem>
               ))}
             </TextField>
@@ -157,10 +158,10 @@ const StepMenu = ({
             >
               {" "}
               Ajouter
-            </Button> */}
+            </Button>
           </Stack>
 
-         {/* <TextField
+          {/* <TextField
             fullWidth
             label="Description"
             multiline
@@ -175,11 +176,11 @@ const StepMenu = ({
 
           />*/}
 
-          <Stack 
-          fullWidth
-          style={{ marginBottom: 25 }}>
+          <Stack
+            fullWidth
+            style={{ marginBottom: 25 }}>
 
-            <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='300px' isReadOnly={!isEdition}/>
+            <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='300px' isReadOnly={!isEdition} />
 
 
           </Stack>

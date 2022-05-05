@@ -1,5 +1,7 @@
 package-lock.json
 
+data.sqlite
+
 # Logs
 logs
 *.log

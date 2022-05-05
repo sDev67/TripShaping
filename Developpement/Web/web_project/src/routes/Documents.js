@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Stack, Divider, Typography, Chip } from "@mui/material";
+import { Stack, Divider, Typography, Dialog } from "@mui/material";
 import DocumentsList from "../components/DocumentsList";
 import { FileUploader } from "react-drag-drop-files";
 

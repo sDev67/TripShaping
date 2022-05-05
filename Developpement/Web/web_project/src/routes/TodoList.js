@@ -165,11 +165,14 @@ const TodoList = () => {
     removeLabel.mutate(label.id);
   };
 
+  const OnDeleteLabel = ({ label }) => {
+    removeLabel.mutate(label.id);
+  };
+
   const HandleCloseTaskForm = () => {
     setTaskFormOpen(false);
     setCurrentTask(undefined);
   };
-
   const HandleCloseLabelForm = () => {
     setLabelFormOpen(false);
     setCurrentLabel(undefined);

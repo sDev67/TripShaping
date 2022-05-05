@@ -4,6 +4,7 @@ const label_ctrl = require("../controllers/label");
 
 module.exports = [
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 	{
 		url: '/task/:task_id/label',
@@ -27,6 +28,8 @@ module.exports = [
 	}
 
 =======
+=======
+>>>>>>> 3723a12b488b324305b1e25c1f4e2d27fd6036a4
   {
     url: "/task/:task_id/label",
     method: "get",
@@ -47,5 +50,8 @@ module.exports = [
     method: "delete",
     func: [label_ctrl.load_by_id, task_label_ctrl.delete_label_id_by_task_id],
   },
+<<<<<<< HEAD
 >>>>>>> 14a2ae37d833c19f7b491c8b7005f0505a62a01b
+=======
+>>>>>>> 3723a12b488b324305b1e25c1f4e2d27fd6036a4
 ];

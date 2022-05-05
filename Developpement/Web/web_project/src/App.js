@@ -23,7 +23,6 @@ import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
 import TripSettings from "./routes/TripSettings";
 import Exploration from "./routes/Exploration";
-
 import AppShowcase from "./routes/AppShowcase";
 
 const queryClient = new QueryClient();
@@ -37,6 +36,7 @@ function App() {
             <Routes>
               <Route path="/vitrine" element={<Exploration/>} />
               <Route path="/" element={<AppShowcase />} />
+              <Route path="/discover" element={<Exploration />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/mytrips" element={<TripSelection />} />
@@ -50,7 +50,10 @@ function App() {
                 />
                 <Route path=":idTravel/documents" element={<Documents />} />
                 <Route path=":idTravel/members" element={<Members />} />
-                <Route path=":idTravel/tripsettings" element={<TripSettings />} />
+                <Route
+                  path=":idTravel/tripsettings"
+                  element={<TripSettings />}
+                />
               </Route>
               <Route path="/album" element={<NavigationBarAlbum />}>
                 <Route path=":idTravel/map" element={<MapReview />} />

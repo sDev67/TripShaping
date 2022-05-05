@@ -28,7 +28,6 @@ import { useParams } from "react-router-dom";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
 const TodoList = () => {
-  
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
@@ -144,7 +143,6 @@ const TodoList = () => {
     setTaskFormOpen(true);
   };
 
-  
   const OnSelectLabel = (label) => {
     setCurrentLabel(label);
     setLabelFormOpen(true);

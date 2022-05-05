@@ -36,18 +36,12 @@ const Members = () => {
     data: users,
   } = useQuery(["getUsers"], () => UserRequests.getAllUsers());
 
- 
-
   const deleteMember = useMutation(MemberRequests.removeMember, {
-    onSuccess: (_, id) => queryClient.setQueryData(
-      ['getMembers', idTravel],
-      members => members.filter(e => e.id !== id)
-    )
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getMembers", idTravel], (members) =>
+        members.filter((e) => e.id !== id)
+      ),
   });
-
- 
-
-
 
   return (
     <>

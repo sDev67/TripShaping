@@ -58,7 +58,7 @@ const StepTimeline = ({
           position: "fixed",
         }}
       >
-        <Slide direction="left" in={expanded} container={containerRef.current}>
+        <Slide direction="left" in={true} container={containerRef.current}>
           <Box
             sx={{
               overflowY: "scroll",

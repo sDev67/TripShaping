@@ -13,7 +13,16 @@ const TravelRequests = {
             .then(checkStatus)
             .then(res => res.json())
     },
-
+    getPublishedTravel: () => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travelpublished`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
     getTravelByid: idTravel => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}`, {
@@ -76,6 +85,17 @@ const TravelRequests = {
     getMembersOfTravel: idTravel => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/members`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
+    getAllDocumentsByTravelId: idTravel => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${idTravel}/documents`, {
             // headers: {
             //     Authorization: 'Bearer ' + token
             // }

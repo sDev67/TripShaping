@@ -6,6 +6,9 @@ module.exports = sequelize => {
 		static associate(db) {
 			Point.belongsTo(db.Travel);
 			Point.belongsTo(db.Step);
+
+			Point.hasMany(db.Document, { onDelete: 'cascade' });
+
 		}
 	}
 

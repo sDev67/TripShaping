@@ -11,6 +11,9 @@ module.exports = sequelize => {
 			Travel.hasMany(db.Step, { onDelete: 'cascade' });
 			Travel.hasMany(db.Route, { onDelete: 'cascade' });
 			Travel.hasMany(db.Member, { onDelete: 'cascade' });
+			Travel.hasMany(db.Expense, { onDelete: 'cascade' });
+			Travel.hasMany(db.Document, { onDelete: 'cascade' });
+
 		}
 	}
 
@@ -20,7 +23,8 @@ module.exports = sequelize => {
 		activated: DataTypes.BOOLEAN,
 		budget: DataTypes.DOUBLE,
 		infos: DataTypes.STRING,
-		finished: DataTypes.BOOLEAN
+		finished: DataTypes.BOOLEAN,
+		toPublish: DataTypes.BOOLEAN
 
 	}, {
 		sequelize,

@@ -25,7 +25,7 @@ import {
   CardContent,
   CardHeader,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import TripForm from "../components/TripForm";
@@ -116,6 +116,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AppShowcase = () => {
+  const navigate = useNavigate();
+
   const classes = useStyles();
   return (
     <>
@@ -124,20 +126,25 @@ const AppShowcase = () => {
         <AppBar style={{ height: "6.85%" }}>
           <Toolbar className={classes.toolbar}>
             <Typography
-              component="h1"
-              variant="h3"
-              color="inherit"
-              noWrap
               className={classes.title}
+              color="inherit"
+              variant="h3"
+              onClick={() => navigate("/")}
+              style={{ cursor: "pointer" }}
+              width="5%"
             >
               Atlas
             </Typography>
-            <Button color="inherit" to={"/signin"} component={Link}>
-              Se connecter
-            </Button>
-            <Button color="inherit" to={"/signup"} component={Link}>
-              S'inscrire
-            </Button>
+            <Stack width="80%"></Stack>
+
+            <Stack direction="row" width="15%" justifyContent="flex-end">
+              <Button color="inherit" to={"/signin"} component={Link}>
+                Se connecter
+              </Button>
+              <Button color="inherit" to={"/signup"} component={Link}>
+                S'inscrire
+              </Button>
+            </Stack>
           </Toolbar>
         </AppBar>
       </Box>

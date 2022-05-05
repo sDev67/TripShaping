@@ -16,7 +16,7 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from "react-query";
 import RichTextEditor from "./RichTextEditor";
 
 const StepMenu = ({
@@ -24,7 +24,7 @@ const StepMenu = ({
   selectedMarker,
   setSelectedMarker,
   updateInfoStep,
-  isEdition
+  isEdition,
 }) => {
   const queryClient = useQueryClient();
 
@@ -37,19 +37,19 @@ const StepMenu = ({
 
   const categ = [
     {
-      value: 'Hôtel',
+      value: "Hôtel",
     },
     {
-      value: 'Gîtes',
+      value: "Gîtes",
     },
     {
-      value: 'Camping',
+      value: "Camping",
     },
     {
-      value: 'Palace',
+      value: "Palace",
     },
     {
-      value: 'Autre',
+      value: "Autre",
     },
   ];
 
@@ -61,7 +61,7 @@ const StepMenu = ({
         category: category,
         description: description,
         duration: duration,
-        idStep: step.id
+        idStep: step.id,
       };
       updateInfoStep.mutate(newPoint);
       setSelectedMarker(null);
@@ -70,10 +70,18 @@ const StepMenu = ({
 
   return (
     <>
-      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height: "90%" }}>
+      <Card
+        style={{
+          right: "3%",
+          top: "8%",
+          width: 400,
+          position: "fixed",
+          height: "90%",
+        }}
+      >
         <CardMedia
           component="img"
-          height="194"
+          height="120"
           image={require("../assets/etapes.png")}
         />
         <IconButton
@@ -107,7 +115,6 @@ const StepMenu = ({
               shrink: true,
             }}
             disabled={!isEdition}
-
           >
             {categ.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -126,7 +133,6 @@ const StepMenu = ({
               shrink: true,
             }}
             disabled={!isEdition}
-
           />
           <Stack
             style={{ marginBottom: 25 }}
@@ -176,36 +182,40 @@ const StepMenu = ({
 
           />*/}
 
-          <Stack
-            fullWidth
-            style={{ marginBottom: 25 }}>
-
-            <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='300px' isReadOnly={!isEdition} />
-
-
+          <Stack fullWidth style={{ marginBottom: 25 }}>
+            <RichTextEditor
+              setValue={setDescription}
+              value={description}
+              limitedEditor={true}
+              minH="300px"
+              isReadOnly={!isEdition}
+            />
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
-            {isEdition && <>
-
-              <Button
-                variant="outlined"
-                color="error"
-                startIcon={<DeleteRounded />}
-                onClick={() => { deleteStep.mutate(selectedMarker.id); setSelectedMarker(null) }}
-              >
-                Supprimer
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<DoneRounded />}
-                onClick={updateStepInfo(selectedMarker)}
-              >
-                Enregistrer
-              </Button>
-            </>
-            }
+            {isEdition && (
+              <>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<DeleteRounded />}
+                  onClick={() => {
+                    deleteStep.mutate(selectedMarker.id);
+                    setSelectedMarker(null);
+                  }}
+                >
+                  Supprimer
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<DoneRounded />}
+                  onClick={updateStepInfo(selectedMarker)}
+                >
+                  Enregistrer
+                </Button>
+              </>
+            )}
           </Stack>
         </CardContent>
       </Card>

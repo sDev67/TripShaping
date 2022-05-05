@@ -10,7 +10,7 @@ import {
   Button,
   Typography,
   IconButton,
-  FormControl,
+  CardHeader,
   FormGroup,
 } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
@@ -33,10 +33,9 @@ const InterestPointMenu = ({
   setSelectedMarker,
   updateInfoPoint,
   isEdition,
-  steps
+  steps,
 }) => {
   const queryClient = useQueryClient();
-
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
@@ -61,42 +60,41 @@ const InterestPointMenu = ({
   const [dayStep, setDayStep] = useState(selectedMarker.day);
   const listSteps = steps;
 
-
   const [file, setFile] = useState([]);
 
   const categ = [
     {
-      value: 'Parc',
+      value: "Parc",
     },
     {
-      value: 'Musée',
+      value: "Musée",
     },
     {
-      value: 'Cinéma',
+      value: "Cinéma",
     },
     {
-      value: 'Stade',
+      value: "Stade",
     },
     {
-      value: 'Magasin',
+      value: "Magasin",
     },
     {
-      value: 'Monument historique',
+      value: "Monument historique",
     },
     {
-      value: 'Restaurant',
+      value: "Restaurant",
     },
     {
-      value: 'Spectacle',
+      value: "Spectacle",
     },
     {
-      value: 'Nature',
+      value: "Nature",
     },
     {
-      value: 'Port',
+      value: "Port",
     },
     {
-      value: 'Autre',
+      value: "Autre",
     },
   ];
 
@@ -104,18 +102,18 @@ const InterestPointMenu = ({
     if (selectedStep) {
       setDays([]);
       for (let i = 0; i < selectedStep.duration; i++) {
-        let day = { date: "Jour " + (i + 1), value: i + 1 }
-        setDays(days => [...days, day]);
+        let day = { date: "Jour " + (i + 1), value: i + 1 };
+        setDays((days) => [...days, day]);
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (stepId) {
       if (listSteps) {
-        listSteps.forEach(step => {
+        listSteps.forEach((step) => {
           if (step.id === stepId) {
-            setSelectedStep(step)
+            setSelectedStep(step);
           }
         });
       }
@@ -124,7 +122,7 @@ const InterestPointMenu = ({
 
   useEffect(() => {
     if (selectedStep) {
-      fillDays()
+      fillDays();
     }
   }, [selectedStep]);
 
@@ -137,7 +135,7 @@ const InterestPointMenu = ({
         description: description,
         idPoint: pointId.id,
         StepId: selectedStep?.id,
-        day: dayStep
+        day: dayStep,
       };
       updateInfoPoint.mutate(newPoint);
       setSelectedMarker(null);
@@ -145,30 +143,35 @@ const InterestPointMenu = ({
   };
 
   const addFile = (e) => {
-
     const formData = new FormData();
-    formData.append('title', file)
-    formData.append('TravelId', idTravel)
+    formData.append("title", file);
+    formData.append("TravelId", idTravel);
 
     console.log(...formData);
 
-    DocumentRequest.uploadFile(formData)
+    DocumentRequest.uploadFile(formData);
     setDialogOpen(false);
-
-  }
+  };
 
   const displayDocuments = (idDocument) => {
-    let url = encodeURI("http://localhost:4200/document/file/" + idDocument)
+    let url = encodeURI("http://localhost:4200/document/file/" + idDocument);
     window.open(url);
-  }
-
+  };
 
   return (
     <>
-      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height: "90%" }}>
+      <Card
+        style={{
+          right: "3%",
+          top: "8%",
+          width: 400,
+          position: "fixed",
+          height: "90%",
+        }}
+      >
         <CardMedia
           component="img"
-          height="194"
+          height="120"
           image={require("../assets/pointInterets.JPG")}
         />
         <IconButton
@@ -182,8 +185,9 @@ const InterestPointMenu = ({
         <CardContent
           style={{
             overflowY: "auto",
-            height: '100%'
-          }}>
+            height: "100%",
+          }}
+        >
           <TextField
             fullWidth
             label="Nom"
@@ -194,7 +198,6 @@ const InterestPointMenu = ({
               shrink: true,
             }}
             disabled={!isEdition}
-
           />
           <TextField
             fullWidth
@@ -226,7 +229,6 @@ const InterestPointMenu = ({
               label="Etape associée"
               value={selectedStep}
               onChange={(e) => setSelectedStep(e.target.value)}
-
               InputLabelProps={{
                 shrink: true,
               }}
@@ -234,9 +236,10 @@ const InterestPointMenu = ({
             >
               {listSteps &&
                 listSteps.map((step, index) => (
-                  <MenuItem key={index} value={step}>{step.title}</MenuItem>
-                ))
-              }
+                  <MenuItem key={index} value={step}>
+                    {step.title}
+                  </MenuItem>
+                ))}
             </TextField>
             <TextField
               fullWidth
@@ -244,16 +247,16 @@ const InterestPointMenu = ({
               label="Jour associé"
               value={dayStep}
               onChange={(e) => setDayStep(e.target.value)}
-
               InputLabelProps={{
                 shrink: true,
               }}
               disabled={isEdition && selectedStep ? false : true}
             >
               {days.map((day, index) => (
-                <MenuItem key={index} value={day.value}>{day.date}</MenuItem>
-              ))
-              }
+                <MenuItem key={index} value={day.value}>
+                  {day.date}
+                </MenuItem>
+              ))}
             </TextField>
           </Stack>
 
@@ -269,10 +272,14 @@ const InterestPointMenu = ({
               <p style={{ color: "red" }}>{errorD.message}</p>
             ) : (
               documents.map((document, index) => (
-                <Button variant="contained" onClick={() => displayDocuments(document.id)}>{document.title}</Button>
-
-              )))
-            }
+                <Button
+                  variant="contained"
+                  onClick={() => displayDocuments(document.id)}
+                >
+                  {document.title}
+                </Button>
+              ))
+            )}
 
             <Button
               style={{ paddingLeft: 32, paddingRight: 32 }}
@@ -285,7 +292,6 @@ const InterestPointMenu = ({
               Ajouter
             </Button>
           </Stack>
-
 
           {/* <Stack>
             {isLoadingD ? (
@@ -314,30 +320,39 @@ const InterestPointMenu = ({
 
           />*/}
 
-          <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='10px' isReadOnly={!isEdition} />
-
+          <RichTextEditor
+            setValue={setDescription}
+            value={description}
+            limitedEditor={true}
+            minH="10px"
+            isReadOnly={!isEdition}
+          />
 
           <Stack direction="row" justifyContent="space-between">
-            {isEdition && <>
-              <Button
-                variant="outlined"
-                color="error"
-                startIcon={<DeleteRounded />}
-                onClick={() => { deletePoint.mutate(selectedMarker.id); setSelectedMarker(null) }}
-              >
-                Supprimer
-              </Button>
+            {isEdition && (
+              <>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<DeleteRounded />}
+                  onClick={() => {
+                    deletePoint.mutate(selectedMarker.id);
+                    setSelectedMarker(null);
+                  }}
+                >
+                  Supprimer
+                </Button>
 
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<DoneRounded />}
-                onClick={updateInterestPointInfo(selectedMarker)}
-              >
-                Enregistrer
-              </Button>
-            </>
-            }
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<DoneRounded />}
+                  onClick={updateInterestPointInfo(selectedMarker)}
+                >
+                  Enregistrer
+                </Button>
+              </>
+            )}
           </Stack>
         </CardContent>
       </Card>
@@ -352,18 +367,23 @@ const InterestPointMenu = ({
           /> */}
           <div class="form-group">
             <label for="titre">Fichiers :</label> <br />
-            <input type="file" id="title" placeholder="Choose file" name="title" onChange={(e) => {
-              setFile(e.target.files[0])
-              console.log(e.target.files[0])
-            }}
-              required />
+            <input
+              type="file"
+              id="title"
+              placeholder="Choose file"
+              name="title"
+              onChange={(e) => {
+                setFile(e.target.files[0]);
+                console.log(e.target.files[0]);
+              }}
+              required
+            />
           </div>
           <br />
 
           <Button variant="contained" type="submit" onClick={addFile}>
             Ajouter
           </Button>
-
         </div>
       </Dialog>
     </>

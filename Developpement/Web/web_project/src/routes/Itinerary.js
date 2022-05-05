@@ -14,7 +14,6 @@ import {
 const Itinerary = () => {
   return (
     <>
-      <Stack direction="row"></Stack>
       <Map></Map>
     </>
   );

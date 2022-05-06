@@ -203,6 +203,7 @@ const StepMenu = ({
                     deleteStep.mutate(selectedMarker.id);
                     setSelectedMarker(null);
                   }}
+                  disabled={!isEdition}
                 >
                   Supprimer
                 </Button>
@@ -211,6 +212,7 @@ const StepMenu = ({
                   color="primary"
                   startIcon={<DoneRounded />}
                   onClick={updateStepInfo(selectedMarker)}
+                  disabled={!isEdition}
                 >
                   Enregistrer
                 </Button>

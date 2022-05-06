@@ -26,6 +26,7 @@ import DocumentRequest from "../requests/DocumentRequest";
 
 import RichTextEditor from "./RichTextEditor";
 import StepRequests from "../requests/StepRequests";
+import DocumentsList from "./DocumentsList";
 
 const InterestPointMenu = ({
   deletePoint,
@@ -59,8 +60,6 @@ const InterestPointMenu = ({
   const [days, setDays] = useState([]);
   const [dayStep, setDayStep] = useState(selectedMarker.day);
   const listSteps = steps;
-
-  const [file, setFile] = useState([]);
 
   const categ = [
     {
@@ -142,7 +141,7 @@ const InterestPointMenu = ({
     }
   };
 
-  const addFile = (e) => {
+  const addFile = (file) => {
     const formData = new FormData();
     formData.append("title", file);
     formData.append("TravelId", idTravel);
@@ -151,11 +150,6 @@ const InterestPointMenu = ({
 
     DocumentRequest.uploadFile(formData);
     setDialogOpen(false);
-  };
-
-  const displayDocuments = (idDocument) => {
-    let url = encodeURI("http://localhost:4200/document/file/" + idDocument);
-    window.open(url);
   };
 
   return (
@@ -185,7 +179,6 @@ const InterestPointMenu = ({
         <CardContent
           style={{
             overflowY: "auto",
-            height: "100%",
           }}
         >
           <TextField
@@ -262,35 +255,43 @@ const InterestPointMenu = ({
 
           <Stack
             style={{ marginBottom: 25 }}
-            direction="row"
-            justifyContent="space-between"
-            spacing={2}
+            spacing={1}
+            direction="column"
+            height="160px"
           >
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography variant="h6" color="primary">
+                Documents
+              </Typography>
+              <Button
+                style={{ paddingLeft: 32, paddingRight: 32 }}
+                startIcon={<UploadFileRounded />}
+                variant="contained"
+                component="label"
+                disabled={!isEdition}
+              >
+                Ajouter
+                <input
+                  type="file"
+                  hidden
+                  onChange={(e) => {
+                    addFile(e.target.files[0]);
+                  }}
+                  required
+                />
+              </Button>
+            </Stack>
             {isLoadingD ? (
               <Loading />
             ) : isErrorD ? (
               <p style={{ color: "red" }}>{errorD.message}</p>
             ) : (
-              documents.map((document, index) => (
-                <Button
-                  variant="contained"
-                  onClick={() => displayDocuments(document.id)}
-                >
-                  {document.title}
-                </Button>
-              ))
+              <DocumentsList documents={documents}></DocumentsList>
             )}
-
-            <Button
-              style={{ paddingLeft: 32, paddingRight: 32 }}
-              variant="contained"
-              color="primary"
-              startIcon={<UploadFileRounded />}
-              onClick={() => setDialogOpen(true)}
-            >
-              {" "}
-              Ajouter
-            </Button>
           </Stack>
 
           {/* <Stack>
@@ -319,40 +320,39 @@ const InterestPointMenu = ({
             disabled={!isEdition}
 
           />*/}
-
-          <RichTextEditor
-            setValue={setDescription}
-            value={description}
-            limitedEditor={true}
-            minH="10px"
-            isReadOnly={!isEdition}
-          />
+          <div style={{ marginBottom: 25 }}>
+            <RichTextEditor
+              setValue={setDescription}
+              value={description}
+              limitedEditor={true}
+              minH={"200px"}
+              isReadOnly={!isEdition}
+              maxH={"200px"}
+            />
+          </div>
 
           <Stack direction="row" justifyContent="space-between">
-            {isEdition && (
-              <>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  startIcon={<DeleteRounded />}
-                  onClick={() => {
-                    deletePoint.mutate(selectedMarker.id);
-                    setSelectedMarker(null);
-                  }}
-                >
-                  Supprimer
-                </Button>
-
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<DoneRounded />}
-                  onClick={updateInterestPointInfo(selectedMarker)}
-                >
-                  Enregistrer
-                </Button>
-              </>
-            )}
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteRounded />}
+              onClick={() => {
+                deletePoint.mutate(selectedMarker.id);
+                setSelectedMarker(null);
+              }}
+              disabled={!isEdition}
+            >
+              Supprimer
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<DoneRounded />}
+              onClick={updateInterestPointInfo(selectedMarker)}
+              disabled={!isEdition}
+            >
+              Enregistrer
+            </Button>
           </Stack>
         </CardContent>
       </Card>
@@ -367,17 +367,6 @@ const InterestPointMenu = ({
           /> */}
           <div class="form-group">
             <label for="titre">Fichiers :</label> <br />
-            <input
-              type="file"
-              id="title"
-              placeholder="Choose file"
-              name="title"
-              onChange={(e) => {
-                setFile(e.target.files[0]);
-                console.log(e.target.files[0]);
-              }}
-              required
-            />
           </div>
           <br />
 

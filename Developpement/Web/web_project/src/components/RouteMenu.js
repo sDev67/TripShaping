@@ -42,7 +42,13 @@ const containerStyle = {
   height: "100%",
 };
 
-const RouteMenu = ({ selectedRoute, start, finish, setSelectedRoute }) => {
+const RouteMenu = ({
+  selectedRoute,
+  start,
+  finish,
+  setSelectedRoute,
+  isEdition,
+}) => {
   const [files, setFiles] = useState([]);
   const [travelType, setTravelType] = useState(selectedRoute.travelType);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -295,6 +301,7 @@ const RouteMenu = ({ selectedRoute, start, finish, setSelectedRoute }) => {
               color="primary"
               startIcon={<DoneRounded />}
               // onClick={updateProperties(selectedRoute)}
+              disabled={!isEdition}
             >
               Enregistrer
             </Button>

@@ -5,6 +5,7 @@ import { FileUploader } from "react-drag-drop-files";
 
 const Documents = () => {
   const [documents, setDocuments] = useState([]);
+
   return (
     <Stack height="93.15%" width="100%" direction="column">
       <Stack

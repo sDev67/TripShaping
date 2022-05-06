@@ -15,6 +15,11 @@ import { stringAvatar } from "../utils/AvatarColorPicker";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
 
 const DocumentsList = ({ documents }) => {
+  const displayDocument = (idDocument) => {
+    let url = encodeURI("http://localhost:4200/document/file/" + idDocument);
+    window.open(url);
+  };
+
   return (
     <>
       <Divider></Divider>
@@ -34,11 +39,11 @@ const DocumentsList = ({ documents }) => {
               </IconButton>
             }
           >
-            <ListItemButton>
+            <ListItemButton onClick={() => displayDocument(document.id)}>
               <ListItemAvatar>
                 <InsertDriveFileRoundedIcon color="primary" />
               </ListItemAvatar>
-              <ListItemText primary={<>{document.name}</>} />
+              <ListItemText primary={<>{document.title}</>} />
             </ListItemButton>
           </ListItem>
         ))}

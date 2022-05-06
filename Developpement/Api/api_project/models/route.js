@@ -9,6 +9,7 @@ module.exports = sequelize => {
             Route.belongsTo(db.Travel, { foreignKey: 'TravelId' });
 
             Route.hasMany(db.Document, { onDelete: 'cascade' });
+            Route.hasMany(db.Photo, { onDelete: 'cascade' });
 
 
         }

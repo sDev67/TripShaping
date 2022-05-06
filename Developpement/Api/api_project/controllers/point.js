@@ -62,6 +62,20 @@ module.exports = {
 			})
 			.then(() => res.status(200).end())
 			.catch(next);
-	}
+	},
+
+	get_all_documents_by_point_id: async (req, res, next) => {
+		return db.Point.findByPk(req.params.point_id)
+			.then(point => {
+				if (!point) {
+					throw { status: 404, message: 'Point not found' };
+				}
+				return point.getDocuments({
+					attributes: { exclude: ['dataFile'] } // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
+				});
+			})
+			.then(steps => res.json(steps))
+			.catch(err => next(err));
+	},
 
 };

@@ -111,6 +111,22 @@ const TripSettings = () => {
               position="relative"
             />
           </Stack>
+          <Stack direction="row" marginBottom={5} justifyContent="space-evenly">
+            <FormControlLabel
+              sx={{ width: "58%" }}
+              value="track"
+              control={<Switch color="primary" />}
+              label={
+                <Typography variant="h6" color="primary">
+                  Rendre l'itinéraire public à la fin du voyage
+                </Typography>
+              }
+              labelPlacement="start"
+              onChange={handleSwitch}
+              position="relative"
+            />
+          </Stack>
+
           <Stack>
             <Button
               variant="contained"

@@ -23,6 +23,11 @@ module.exports = [
         func: route_ctrl.update_by_id
     },
     {
+        url: '/route/:route_id/documents',
+        method: 'get',
+        func: route_ctrl.get_all_documents_by_route_id
+    },
+    {
         url: '/route/:route_id',
         method: 'delete',
         func: route_ctrl.delete_by_id

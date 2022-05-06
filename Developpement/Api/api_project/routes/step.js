@@ -450,6 +450,12 @@ module.exports = [
 	},
 
 	{
+		url: '/step/:step_id/points',
+		method: 'get',
+		func: step_ctrl.get_points_of_step
+	},
+
+	{
 		url: '/step/:step_id',
 		method: 'delete',
 		func: step_ctrl.delete_by_id

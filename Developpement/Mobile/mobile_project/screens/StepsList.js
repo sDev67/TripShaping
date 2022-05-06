@@ -113,7 +113,7 @@ export default StepsList = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#00AB55',
         paddingTop: Constants.statusBarHeight,
     },
     title: {
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     header: {
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#00AB55',
         padding: 10,
     },
     headerText: {

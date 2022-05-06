@@ -1,16 +1,19 @@
-import { NativeBaseProvider, ScrollView, Select, CheckIcon, ArrowForwardIcon } from 'native-base';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { NativeBaseProvider, Select, CheckIcon, ArrowForwardIcon, Image } from 'native-base';
+import { Dimensions, StyleSheet, Text, View, ScrollView, Pressable } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import { useEffect, useState } from 'react';
 
+import file from '../assets/navigation_icons/icon_file.png';
+
+import TravelRequests from '../requests/TravelRequests';
+import { useQuery, useQueryClient } from 'react-query';
+
 const ItinaryDetails = ({ route, navigation }) => {
 
-    const { step, stepBefore, itinairary } = route.params;
-
-    console.log(itinairary);
+    const { step, stepBefore, itinairary, idTravel } = route.params;
 
     const [distance, setDistance] = useState(null);
     const [duration, setDuration] = useState(null);
@@ -28,9 +31,9 @@ const ItinaryDetails = ({ route, navigation }) => {
         min = Math.round(dec * 60);
     }
 
-    useEffect(() => {
-        console.log(deplacement)
-    }, [deplacement])
+    // Documents 
+    const { isLoading, isError, error, data } = useQuery(["getDocuments", idTravel], () => TravelRequests.getDocumentsByTravelId(idTravel));
+    let count = 0;
 
     return (
         <NativeBaseProvider >
@@ -68,6 +71,21 @@ const ItinaryDetails = ({ route, navigation }) => {
                     <Text style={styles.font}>Distance</Text>
                     <Text style={{ marginLeft: 10 }}>{Math.round(distance * 100) / 100} km</Text>
                     <Text style={styles.font}>Documents</Text>
+                    <ScrollView style={{ height: "30%" }}>
+                        {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :
+                            data.map((doc, idx) => {
+                                if (doc.RouteId === itinairary.id) {
+                                    count++;
+                                    return (
+                                        <Pressable style={{ marginBottom: 10 }} key={idx} onPress={() => { navigation.navigate("Documents", { document: doc }) }}><View style={{ flexDirection: "row", marginLeft: 10 }}><Image alt="icon_file" source={file} style={{ width: 30, height: 30 }} /><Text style={{ marginTop: 5, marginLeft: 5 }}>{doc.title}</Text></View></Pressable>)
+                                }
+                                else {
+                                    return null;
+                                }
+
+                            })}
+                        {count === 0 && <Text style={{ marginLeft: 10 }}>Aucun document</Text>}
+                    </ScrollView>
                 </ScrollView>
             </SafeAreaView>
         </NativeBaseProvider >

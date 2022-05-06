@@ -7,7 +7,7 @@ const JournalBox = ({ message }) => {
 
     return (
         <View style={{ marginBottom: 10 }}>
-            <View style={{ backgroundColor: "#9AD1F5", width: "97%", marginTop: 5, marginHorizontal: 5, borderRadius: 5 }}>
+            <View style={{ backgroundColor: "#00AB55", width: "97%", marginTop: 5, marginHorizontal: 5, borderRadius: 5 }}>
                 <Text style={{ margin: 5 }}>{message.body}</Text>
             </View>
             <View style={{ marginLeft: 5 }}>

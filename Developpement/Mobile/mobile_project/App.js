@@ -7,6 +7,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator();
 
+import Signin from './screens/Signin';
+import Signup from './screens/Signup';
+
 import Travels from './screens/Travels';
 
 import Maps from './screens/Maps';
@@ -33,6 +36,7 @@ import iconSpending from './assets/navigation_icons/icon_spending.png';
 
 import TravelRequests from "./requests/TravelRequests";
 
+import { AuthProvider } from './requests/Auth';
 import { useQuery, useQueryClient } from 'react-query';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
@@ -69,7 +73,7 @@ const TabScreen = ({ route }) => {
             return <Image source={iconSpending} style={{ width: 30, height: 30, tintColor: color }} />
           }
         },
-        tabBarActiveTintColor: '#3498DB',
+        tabBarActiveTintColor: '#00AB55',
         tabBarInactiveTintColor: 'black',
         tabBarShowLabel: false
       })}
@@ -77,7 +81,7 @@ const TabScreen = ({ route }) => {
       <Tab.Screen name="Atlas" component={Maps} initialParams={{ isReadOnly: isReadOnly, idTravel: idTravel }} />
       <Tab.Screen name="Etapes" component={StepsList} initialParams={{ isReadOnly: isReadOnly, idTravel: idTravel }} />
       {!isReadOnly && <Tab.Screen name="Journal" children={() => <Journal messages={messages} setMessages={setMessages} />} />}
-      {!isReadOnly && <Tab.Screen name="Photo" component={Photo} />}
+      {!isReadOnly && <Tab.Screen name="Photo" component={Photo} initialParams={{ photo: null }} />}
       <Tab.Screen name="Folder" component={Folder} options={{ title: "Documents" }} initialParams={{ isReadOnly: isReadOnly, idTravel: idTravel }} />
       {!isReadOnly && <Tab.Screen name="Spending" component={Spending} options={{ title: "Gestion des dépenses" }} />}
     </Tab.Navigator>
@@ -88,19 +92,23 @@ const Stack = createNativeStackNavigator();
 
 function MapStackScreen() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Travels" component={Travels} options={{ title: "Mes voyages" }} />
-        <Stack.Screen name="Map" component={TabScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Itinéraire" component={ItinaryDetails} />
-        <Stack.Screen name="StepDetails" component={StepDetails} options={{ title: "Etape" }} />
-        <Stack.Screen name="PointDetails" component={PointDetails} options={{ title: "Point d'intérêt" }} />
-        <Stack.Screen name="Cameras" component={Cameras} options={{ headerShown: false }} />
-        <Stack.Screen name='Documents' component={Files} />
-        <Stack.Screen name="SpendingHistory" component={SpendingHistory} options={{ title: "Historique des dépenses" }} />
-        <Stack.Screen name="Information" component={Information} options={{ title: "Informations" }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }} />
+          <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+          <Stack.Screen name="Travels" component={Travels} options={{ title: "Mes voyages" }} />
+          <Stack.Screen name="Map" component={TabScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Itinéraire" component={ItinaryDetails} />
+          <Stack.Screen name="StepDetails" component={StepDetails} options={{ title: "Etape" }} />
+          <Stack.Screen name="PointDetails" component={PointDetails} options={{ title: "Point d'intérêt" }} />
+          <Stack.Screen name="Cameras" component={Cameras} options={{ headerShown: false }} />
+          <Stack.Screen name='Documents' component={Files} options={{ title: "Document" }} />
+          <Stack.Screen name="SpendingHistory" component={SpendingHistory} options={{ title: "Historique des dépenses" }} />
+          <Stack.Screen name="Information" component={Information} options={{ title: "Informations" }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 

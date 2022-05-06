@@ -4,7 +4,9 @@ import { Camera } from 'expo-camera'
 
 let camera = Camera;
 
-const Cameras = ({ navigation }) => {
+const Cameras = ({ navigation, route }) => {
+
+    const { parent, point, idReadOnly, idTravel } = route.params;
 
     const [startCamera, setStartCamera] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false)
@@ -56,7 +58,16 @@ const Cameras = ({ navigation }) => {
 
     const save = () => {
         setStartCamera(false);
-        navigation.goBack();
+
+        if (parent === "global") {
+            navigation.navigate("Photo", { photo: capturedImage })
+        }
+        if (parent === "step") {
+            navigation.navigate("StepDetails", { photo: capturedImage, step: point, idReadOnly: idReadOnly, idTravel: idTravel })
+        }
+        if (parent === "poi") {
+            navigation.navigate("PointDetails", { photo: capturedImage, point: point, idReadOnly: idReadOnly, idTravel: idTravel })
+        }
     }
 
     return (
@@ -107,12 +118,12 @@ const CameraPreview = ({ photo, retakePicture, save }) => {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <TouchableOpacity onPress={retakePicture} style={{ width: 130, height: 40, alignItems: 'center', borderRadius: 4 }}>
                             <Text style={{ color: '#fff', fontSize: 20 }}>
-                                Re-take
+                                Reprendre
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={save} style={{ width: 130, height: 40, alignItems: 'center', borderRadius: 4 }}>
                             <Text style={{ color: '#fff', fontSize: 20 }}>
-                                Save
+                                Sauvegarder
                             </Text>
                         </TouchableOpacity>
                     </View>

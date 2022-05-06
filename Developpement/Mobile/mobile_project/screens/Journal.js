@@ -35,7 +35,7 @@ const Journal = ({ messages, setMessages }) => {
                     </ScrollView>
                     <View style={{ justifyContent: "flex-end", marginBottom: 10 }}>
                         <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />
-                        <Button style={{ backgroundColor: "#9AD1F5", width: 100, justifyContent: "center", alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
+                        <Button style={{ backgroundColor: "#00AB55", width: 100, justifyContent: "center", alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
                     </View>
 
                 </SafeAreaView>

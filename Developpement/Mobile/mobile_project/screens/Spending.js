@@ -180,7 +180,7 @@ const Spending = ({ navigation }) => {
 const CustomButton = ({ donateur, destinataires, selectedItems, montant, category, spend }) => {
     const toast = useToast();
     return <Center>
-        <Button style={{ backgroundColor: "#9AD1F5", alignSelf: "center", marginRight: 10, width: "50%" }} onPress={() => {
+        <Button style={{ backgroundColor: "#00AB55", alignSelf: "center", marginRight: 10, width: "50%" }} onPress={() => {
             (donateur !== "" && destinataires !== null && selectedItems.length !== 0 && montant !== null && category !== "") ? spend() :
                 toast.show({
                     placement: "top",

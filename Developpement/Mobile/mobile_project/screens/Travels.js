@@ -27,7 +27,7 @@ const Alert = ({ isOpen, setIsOpen, name, id, isReadOnly, navigation }) => {
                         <Button variant="unstyled" colorScheme="coolGray" onPress={onClose} ref={cancelRef}>
                             Annuler
                         </Button>
-                        <Button colorScheme="danger" onPress={() => activatedTravel(id, isReadOnly, navigation)}>
+                        <Button style={{ backgroundColor: "#00AB55" }} onPress={() => activatedTravel(id, isReadOnly, navigation)}>
                             Activer
                         </Button>
                     </Button.Group>
@@ -76,7 +76,7 @@ const Travels = ({ navigation }) => {
                                         <Text style={{ textAlign: 'center' }}>{travel.name}</Text>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 7 }}>
                                             <Button colorScheme='blue' style={{ width: 100 }} onPress={() => visualizedTravel(travel.id)}>Visualiser</Button>
-                                            <Button colorScheme='red' style={{ width: 100 }} onPress={() => askForValidate(travel.name, travel.id)}>Activer</Button>
+                                            <Button style={{ width: 100, backgroundColor: "#00AB55" }} onPress={() => askForValidate(travel.name, travel.id)}>Activer</Button>
                                         </View>
                                     </View>
                                 )

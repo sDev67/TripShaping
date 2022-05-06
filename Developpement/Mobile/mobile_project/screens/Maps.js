@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DefaultTheme, RadioButton } from 'react-native-paper';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, Pressable, Image } from 'react-native';
 import * as Location from 'expo-location';
 import { NativeBaseProvider, Select, CheckIcon } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,7 +10,17 @@ import TravelRequests from "../requests/TravelRequests";
 
 import { useQuery, useQueryClient } from 'react-query';
 
+import iconBackTravel from "../assets/navigation_icons/icon_backVoyage.png"
+
 const Maps = ({ navigation, route }) => {
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: (() =>
+                <Pressable onPress={() => navigation.navigate('Travels')}><Image source={iconBackTravel} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center" }} /></Pressable>
+            )
+        });
+    }, [])
 
     const { isReadOnly, idTravel } = route.params;
 
@@ -79,7 +89,9 @@ const Maps = ({ navigation, route }) => {
                                         <Marker key={index} coordinate={{ latitude: step.latitude, longitude: step.longitude }} onPress={() => {
                                             navigation.navigate('StepDetails', {
                                                 step: step,
-                                                isReadOnly: isReadOnly
+                                                isReadOnly: isReadOnly,
+                                                idTravel: idTravel,
+                                                photo: null
                                             })
                                         }
                                         } />
@@ -100,7 +112,7 @@ const Maps = ({ navigation, route }) => {
                                                             { latitude: steps[index - 1].latitude, longitude: steps[index - 1].longitude },
                                                             { latitude: step.latitude, longitude: step.longitude }
                                                         ]}
-                                                        onPress={() => navigation.navigate('Itinéraire', { isReadOnly: isReadOnly, itinairary: routes[index - 1], step: step, stepBefore: steps[index - 1] })}
+                                                        onPress={() => navigation.navigate('Itinéraire', { isReadOnly: isReadOnly, itinairary: routes[index - 1], step: step, stepBefore: steps[index - 1], idTravel: idTravel })}
                                                     />
                                                 )}
                                             </>
@@ -113,7 +125,9 @@ const Maps = ({ navigation, route }) => {
                                     <Marker key={index} pinColor='blue' coordinate={{ latitude: point.latitude, longitude: point.longitude }} onPress={() => {
                                         navigation.navigate('PointDetails', {
                                             point: point,
-                                            isReadOnly: isReadOnly
+                                            isReadOnly: isReadOnly,
+                                            idTravel: idTravel,
+                                            photo: null
                                         })
                                     }}>
                                     </Marker>)

@@ -34,7 +34,11 @@ import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
-import { FileUploader } from "react-drag-drop-files";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+import DocumentRequest from "../requests/DocumentRequest";
+import DocumentsList from "./DocumentsList";
+import Loading from "../utils/Loading";
 
 const containerStyle = {
   position: "relative",
@@ -49,11 +53,22 @@ const RouteMenu = ({
   setSelectedRoute,
   isEdition,
 }) => {
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
   const [files, setFiles] = useState([]);
   const [travelType, setTravelType] = useState(selectedRoute.travelType);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
+
+  const {
+    isLoading: isLoadingD,
+    isError: isErrorD,
+    error: errorD,
+    data: documents,
+  } = useQuery(["getDocumentsOfRoute", selectedRoute.id], () =>
+    DocumentRequest.getDocumentsByRouteId(selectedRoute.id)
+  );
 
   const distance = response?.routes[0].legs[0].distance.text;
   const duration = response?.routes[0].legs[0].duration.text;
@@ -105,6 +120,17 @@ const RouteMenu = ({
   //   };
   //   setInterestPoints(newInterestPoint);
   // };
+
+  const addFile = (file) => {
+    const formData = new FormData();
+    formData.append("title", file);
+    formData.append("TravelId", idTravel);
+    formData.append("RouteId", selectedRoute.id);
+
+    console.log(...formData);
+
+    DocumentRequest.uploadFile(formData);
+  };
 
   const directionsCallback = useCallback((res) => {
     if (res !== null && res.status === "OK") {
@@ -158,34 +184,48 @@ const RouteMenu = ({
           </TextField>
           <Stack
             style={{ marginBottom: 25 }}
-            direction="row"
-            justifyContent="space-between"
-            spacing={2}
+            spacing={1}
+            direction="column"
+            height="160px"
           >
-            <TextField
-              fullWidth
-              select
-              label="Documents"
-              // value={selectedRoute.location.files}
-              InputLabelProps={{
-                shrink: true,
-              }}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              {files.map((file, index) => (
-                <MenuItem key={index}>{file.name}</MenuItem>
-              ))}
-            </TextField>
-
-            <Button
-              style={{ paddingLeft: 32, paddingRight: 32 }}
-              variant="contained"
-              color="primary"
-              startIcon={<UploadFileRounded />}
-              onClick={() => setDialogOpen(true)}
-            >
-              {" "}
-              Ajouter
-            </Button>
+              <Typography variant="h6" color="primary">
+                Documents
+              </Typography>
+              <Button
+                style={{ paddingLeft: 32, paddingRight: 32 }}
+                startIcon={<UploadFileRounded />}
+                variant="contained"
+                component="label"
+                disabled={!isEdition}
+              >
+                Ajouter
+                <input
+                  type="file"
+                  hidden
+                  onChange={(e) => {
+                    addFile(e.target.files[0]);
+                  }}
+                  required
+                />
+              </Button>
+            </Stack>
+            {isLoadingD ? (
+              <Loading />
+            ) : isErrorD ? (
+              <p style={{ color: "red" }}>{errorD.message}</p>
+            ) : (
+              <DocumentsList
+                documents={documents}
+                requestKeyTitle="getDocumentsOfPoint"
+                requestKeyValue={selectedRoute.id}
+                isEdition={isEdition}
+              ></DocumentsList>
+            )}
           </Stack>
 
           {response && distance && duration && (
@@ -308,17 +348,6 @@ const RouteMenu = ({
           </Stack>
         </CardContent>
       </Card>
-
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <div style={{ margin: 10, marginTop: 0 }}>
-          <Typography variant="h3" marginY={2}>
-            Ajouter un fichier
-          </Typography>
-          <FileUploader
-            handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
-          />
-        </div>
-      </Dialog>
     </>
   );
 };

@@ -47,14 +47,13 @@ const InterestPointMenu = ({
     isError: isErrorD,
     error: errorD,
     data: documents,
-  } = useQuery(["getDocumentsOfPoints", selectedMarker.id], () =>
-    TravelRequests.getAllDocumentsByPointId(selectedMarker.id)
+  } = useQuery(["getDocumentsOfPoint", selectedMarker.id], () =>
+    DocumentRequest.getDocumentsByPointId(selectedMarker.id)
   );
 
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [stepId, setStepId] = useState(selectedMarker.StepId);
   const [selectedStep, setSelectedStep] = useState(null);
   const [days, setDays] = useState([]);
@@ -150,7 +149,6 @@ const InterestPointMenu = ({
     console.log(...formData);
 
     DocumentRequest.uploadFile(formData);
-    setDialogOpen(false);
   };
 
   return (
@@ -291,7 +289,12 @@ const InterestPointMenu = ({
             ) : isErrorD ? (
               <p style={{ color: "red" }}>{errorD.message}</p>
             ) : (
-              <DocumentsList documents={documents}></DocumentsList>
+              <DocumentsList
+                documents={documents}
+                requestKeyTitle="getDocumentsOfPoint"
+                requestKeyValue={selectedMarker.id}
+                isEdition={isEdition}
+              ></DocumentsList>
             )}
           </Stack>
 
@@ -357,25 +360,6 @@ const InterestPointMenu = ({
           </Stack>
         </CardContent>
       </Card>
-
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <div style={{ margin: 10, marginTop: 0 }}>
-          <Typography variant="h3" marginY={2}>
-            Ajouter un fichier
-          </Typography>
-          {/* <FileUploader
-          //handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
-          /> */}
-          <div class="form-group">
-            <label for="titre">Fichiers :</label> <br />
-          </div>
-          <br />
-
-          <Button variant="contained" type="submit" onClick={addFile}>
-            Ajouter
-          </Button>
-        </div>
-      </Dialog>
     </>
   );
 };

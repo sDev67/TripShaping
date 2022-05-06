@@ -13,11 +13,31 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import DocumentRequest from "../requests/DocumentRequest";
 
-const DocumentsList = ({ documents }) => {
+const DocumentsList = ({
+  documents,
+  requestKeyTitle,
+  requestKeyValue,
+  isEdition,
+}) => {
+  const queryClient = useQueryClient();
+
   const displayDocument = (idDocument) => {
     let url = encodeURI("http://localhost:4200/document/file/" + idDocument);
     window.open(url);
+  };
+
+  const removeDocument = useMutation(DocumentRequest.removeDocument, {
+    onSuccess: (_, id) =>
+      queryClient.setQueryData([requestKeyTitle, requestKeyValue], (tasks) =>
+        tasks.filter((e) => e.id !== id)
+      ),
+  });
+
+  const OnRemoveDocument = (documentId) => {
+    removeDocument.mutate(documentId);
   };
 
   return (
@@ -34,7 +54,11 @@ const DocumentsList = ({ documents }) => {
             key={document.toString()}
             disablePadding
             secondaryAction={
-              <IconButton color="error">
+              <IconButton
+                color="error"
+                onClick={() => OnRemoveDocument(document.id)}
+                disabled={!isEdition}
+              >
                 <ClearIcon />
               </IconButton>
             }

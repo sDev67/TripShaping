@@ -7,6 +7,9 @@ module.exports = sequelize => {
 			//Step.OneToMany(db.Task, {through : 'TaskStep'} );
 			Step.belongsTo(db.Travel);
 			Step.hasMany(db.Point, { onDelete: 'cascade' });
+			Step.hasMany(db.Document, { onDelete: 'cascade' });
+			Step.hasMany(db.Photo, { onDelete: 'cascade' });
+
 		}
 	}
 

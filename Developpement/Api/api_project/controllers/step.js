@@ -62,6 +62,20 @@ module.exports = {
 			})
 			.then(() => res.status(200).end())
 			.catch(next);
-	}
+	},
+
+	get_all_documents_by_step_id: async (req, res, next) => {
+		return db.Step.findByPk(req.params.step_id)
+			.then(step => {
+				if (!step) {
+					throw { status: 404, message: 'Step not found' };
+				}
+				return step.getDocuments({
+					attributes: { exclude: ['dataFile'] } // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
+				});
+			})
+			.then(steps => res.json(steps))
+			.catch(err => next(err));
+	},
 
 };

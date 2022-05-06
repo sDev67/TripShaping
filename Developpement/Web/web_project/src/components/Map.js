@@ -50,6 +50,8 @@ export const Map = ({}) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
 
+  const [showTimeline, setShowTimeline] = useState(false);
+
   const [stepAdded, setStepAdded] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
@@ -131,19 +133,6 @@ export const Map = ({}) => {
   const handleChangeSelectModeEdit = (event) => {
     setEditionMode(event.target.value);
   };
-
-  const mapLoading = (
-    <div
-      style={{
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
-    >
-      <CircularProgress color="primary" />
-    </div>
-  );
 
   const addPoint = useMutation(TravelRequests.addPoint, {
     onSuccess: (point) =>
@@ -357,10 +346,10 @@ export const Map = ({}) => {
   };
 
   return (
-    <>
+    <div style={{ height: "93.15%" }}>
       <LoadScript
         googleMapsApiKey={GOOGLE_MAPS_APIKEY}
-        loadingElement={mapLoading}
+        loadingElement={<Loading />}
       >
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -376,18 +365,32 @@ export const Map = ({}) => {
             handleChangeSelectModeNav={handleChangeSelectModeNav}
             editionMode={editionMode}
           ></MapModeSwitch>
-          <Button
-            onClick={() => setExpanded(!expanded)}
-            variant="contained"
-            style={{
-              position: "absolute",
-              top: "1%",
-              left: "12%",
-              // height: "100px"
-            }}
-          >
-            Liste Étapes
-          </Button>
+          {showTimeline ? (
+            <Button
+              onClick={() => setShowTimeline(!showTimeline)}
+              variant="outlined"
+              style={{
+                position: "absolute",
+                top: "1%",
+                left: "12%",
+                backgroundColor: "white",
+              }}
+            >
+              Liste Étapes
+            </Button>
+          ) : (
+            <Button
+              onClick={() => setShowTimeline(!showTimeline)}
+              variant="contained"
+              style={{
+                position: "absolute",
+                top: "1%",
+                left: "12%",
+              }}
+            >
+              Liste Étapes
+            </Button>
+          )}
 
           {isLoadingS ? (
             <Loading />
@@ -525,16 +528,7 @@ export const Map = ({}) => {
           )}
         </GoogleMap>
       </LoadScript>
-      <StepTimeline
-        steps={steps}
-        isLoadingS={isLoadingS}
-        isErrorS={isErrorS}
-        errorS={errorS}
-        setPosition={setPosition}
-        setSelectedMarker={setSelectedMarker}
-        expanded={expanded}
-        setExpanded={setExpanded}
-      ></StepTimeline>
+
       {selectedMarker &&
         (selectedMarker.type === "Point" ? (
           isLoadingP ? (
@@ -548,6 +542,7 @@ export const Map = ({}) => {
               deletePoint={deletePoint}
               updateInfoPoint={updateInfoPoint}
               isEdition={isEdition}
+              steps={steps}
             ></InterestPointMenu>
           )
         ) : selectedMarker.type === "Step" && isLoadingS ? (
@@ -571,6 +566,19 @@ export const Map = ({}) => {
           setSelectedRoute={setSelectedRoute}
         ></RouteMenu>
       )}
-    </>
+      {showTimeline && (
+        <StepTimeline
+          steps={steps}
+          isLoadingS={isLoadingS}
+          isErrorS={isErrorS}
+          errorS={errorS}
+          setPosition={setPosition}
+          setSelectedMarker={setSelectedMarker}
+          expanded={expanded}
+          setExpanded={setExpanded}
+          setShowTimeline={setShowTimeline}
+        ></StepTimeline>
+      )}
+    </div>
   );
 };

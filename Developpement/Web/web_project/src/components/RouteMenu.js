@@ -27,7 +27,7 @@ import {
   Marker,
   Polyline,
   DirectionsRenderer,
-  DirectionsService
+  DirectionsService,
 } from "@react-google-maps/api";
 import palette from "./../theme/palette";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
@@ -42,12 +42,7 @@ const containerStyle = {
   height: "100%",
 };
 
-const RouteMenu = ({
-  selectedRoute,
-  start,
-  finish,
-  setSelectedRoute
-}) => {
+const RouteMenu = ({ selectedRoute, start, finish, setSelectedRoute }) => {
   const [files, setFiles] = useState([]);
   const [travelType, setTravelType] = useState(selectedRoute.travelType);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -61,24 +56,24 @@ const RouteMenu = ({
 
   const categ = [
     {
-      value: 'DRIVING',
-      label: 'Voiture'
+      value: "DRIVING",
+      label: "Voiture",
     },
     {
-      value: 'WALKING',
-      label: 'À pied'
+      value: "WALKING",
+      label: "À pied",
     },
     {
-      value: 'BICYCLING',
-      label: 'À vélo'
+      value: "BICYCLING",
+      label: "À vélo",
     },
     {
-      value: 'TRANSIT',
-      label: 'En transports'
+      value: "TRANSIT",
+      label: "En transports",
     },
     {
-      value: 'Autre',
-      label: 'Autre'
+      value: "Autre",
+      label: "Autre",
     },
   ];
 
@@ -115,10 +110,18 @@ const RouteMenu = ({
 
   return (
     <>
-      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height: "90%" }}>
+      <Card
+        style={{
+          right: "3%",
+          top: "8%",
+          width: 400,
+          position: "fixed",
+          height: "90%",
+        }}
+      >
         <CardMedia
           component="img"
-          height="194"
+          height="120"
           image={require("../assets/routes.png")}
         />
         <IconButton
@@ -179,7 +182,7 @@ const RouteMenu = ({
             </Button>
           </Stack>
 
-          {response && distance && duration &&
+          {response && distance && duration && (
             <Stack direction="row">
               <TextField
                 fullWidth
@@ -190,7 +193,8 @@ const RouteMenu = ({
                   shrink: true,
                 }}
                 disabled={true}
-              /><TextField
+              />
+              <TextField
                 fullWidth
                 label="Temps"
                 value={duration}
@@ -200,48 +204,58 @@ const RouteMenu = ({
                 }}
                 disabled={true}
               />
-            </Stack>}
+            </Stack>
+          )}
 
-          <Stack style={{ border: "1px solid black", margin: 5, marginBottom: 10, height: 425 }}>
+          <Stack
+            style={{
+              border: "1px solid black",
+              margin: 5,
+              marginBottom: 10,
+              height: 425,
+            }}
+          >
             <GoogleMap
-              options={{mapTypeControl:false, fullscreenControl:false}}
+              options={{ mapTypeControl: false, fullscreenControl: false }}
               mapContainerStyle={containerStyle}
               center={position}
-              zoom={6}>
+              zoom={6}
+            >
               <Marker
                 key={1}
                 position={{ lat: start.latitude, lng: start.longitude }}
                 icon={stepIcon}
-              // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
               ></Marker>
               <Marker
                 key={2}
                 position={{ lat: finish.latitude, lng: finish.longitude }}
                 icon={stepIcon}
-              // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
               ></Marker>
 
               <>
-                {(travelType === "Autre" || error) ? <>
-                  <Polyline
-                    geodesic={true}
-                    path={[
-                      {
-                        lat: start.latitude,
-                        lng: start.longitude,
-                      },
-                      {
-                        lat: finish.latitude,
-                        lng: finish.longitude,
-                      },
-                    ]}
-                    options={{
-                      strokeColor: palette.primary.main,
-                      strokeWeight: 4,
-                    }}
-                  ></Polyline>
-                </>
-                  :
+                {travelType === "Autre" || error ? (
+                  <>
+                    <Polyline
+                      geodesic={true}
+                      path={[
+                        {
+                          lat: start.latitude,
+                          lng: start.longitude,
+                        },
+                        {
+                          lat: finish.latitude,
+                          lng: finish.longitude,
+                        },
+                      ]}
+                      options={{
+                        strokeColor: palette.primary.main,
+                        strokeWeight: 4,
+                      }}
+                    ></Polyline>
+                  </>
+                ) : (
                   <>
                     <DirectionsService
                       options={{
@@ -254,7 +268,7 @@ const RouteMenu = ({
                           lng: finish.longitude,
                         },
 
-                        travelMode: travelType.toString()
+                        travelMode: travelType.toString(),
                       }}
                       callback={directionsCallback}
                     />
@@ -269,18 +283,18 @@ const RouteMenu = ({
                         },
                       }}
                     />
-                  </>}
+                  </>
+                )}
               </>
             </GoogleMap>
           </Stack>
-
 
           <Stack direction="row" justifyContent="flex-end">
             <Button
               variant="contained"
               color="primary"
               startIcon={<DoneRounded />}
-            // onClick={updateProperties(selectedRoute)}
+              // onClick={updateProperties(selectedRoute)}
             >
               Enregistrer
             </Button>

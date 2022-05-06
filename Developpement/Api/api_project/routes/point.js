@@ -412,6 +412,11 @@ module.exports = [
 	 *                      
 	 */
 
+	{
+		url: '/point/:point_id/documents',
+		method: 'get',
+		func: point_ctrl.get_all_documents_by_point_id
+	},
 
 	{
 		url: '/point/:point_id',

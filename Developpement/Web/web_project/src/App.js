@@ -61,7 +61,7 @@ function App() {
                 <Route path="logbook" element={<LogBook />} />
               </Route>
             </Routes>
-            {/* <ReactQueryDevtools /> */}
+            <ReactQueryDevtools /> 
           </QueryClientProvider>
         </AuthProvider>
       </BrowserRouter>

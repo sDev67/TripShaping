@@ -28,6 +28,7 @@ import { useParams } from "react-router-dom";
 import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 
 const TodoList = () => {
+
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
@@ -35,8 +36,10 @@ const TodoList = () => {
 
   const [currentTaskSelected, setCurrentTask] = useState();
   const [currentLabelSelected, setCurrentLabel] = useState();
+  const [taskToAdd, OnSelectTaskToAddLabel] = useState();
 
   const [filterLabels, setFilterLabels] = useState([]);
+  const [filteredTask, setFilteredTask] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState({});
 
   const {
@@ -79,6 +82,36 @@ const TodoList = () => {
         ...tasks,
         task,
       ]),
+  });
+
+  
+  const addLabelToTask = useMutation(TodoListRequest.addLabelToTask, {
+    
+    onSuccess: (taskLabel) =>
+    {
+        queryClient.setQueryData(["getLabelOfTask", taskLabel.task.id], (taskLabels) => [
+          ...taskLabels,
+          taskLabel.label,
+        ]);
+       
+    }
+      
+  });
+
+  const deleteLabelToTask = useMutation(TodoListRequest.deleteLabelOfTask, {
+    
+    onSuccess: (taskLabel) =>
+    {
+        queryClient.setQueryData(["getLabelOfTask", taskLabel.task.id], (taskLabels) =>  
+        taskLabels.filter((e) => e.id !== taskLabel.label.id));     
+    }
+      
+  });
+
+  const filterTask = useMutation(TodoListRequest.getTaskByLabelId, {
+    onSuccess: (task) =>
+      queryClient.setQueryData(["getFilteredTasks", idTravel], (tasks) =>
+       [...tasks, task])
   });
 
   const removeTask = useMutation(TravelRequests.removeTask, {
@@ -124,8 +157,6 @@ const TodoList = () => {
     updateLabel.mutate(newLabel);
   };
 
-
-
   const UpdateTask = ({ title, date, task }) => 
   {
     const newTask = {
@@ -163,16 +194,34 @@ const TodoList = () => {
     removeTask.mutate(task.id);
   };
 
-  const OnAddLabelToTask = ({ label, task }) => {};
-
-  const OnRemoveLabelToTask = (label) => {
-    removeLabel.mutate(label.id);
+  const OnAddLabelToTask = (task,label) =>
+  {
+    const taskLabel = 
+    {
+      task:task,
+      label:label
+    }
+    addLabelToTask.mutate(taskLabel);
   };
 
-  const OnDeleteLabel = ({ label }) => 
+  const OnRemoveLabelToTask = (task, label) => {
+    const taskLabel = 
+    {
+      task:task,
+      label:label
+    }
+    deleteLabelToTask.mutate(taskLabel);
+  };
+
+  const OnRemoveLabel = (label) => 
   {
     removeLabel.mutate(label.id);
   };
+
+  const FilterTask = () => 
+  {
+    filterLabels.map((e) => filterTask.mutate(e.id))
+  }
 
   const HandleCloseTaskForm = () =>
   {
@@ -225,6 +274,7 @@ const TodoList = () => {
                   fullWidth
                   onChange={(event, value) => {
                     setSelectedFilter(value);
+                    FilterTask();
                   }}
                   autoHighlight
                   getOptionLabel={(option) => option.title}
@@ -252,10 +302,13 @@ const TodoList = () => {
                   style={{ width: "25%" }}
                   variant="contained"
                   onClick={(e) => {
-                    setFilterLabels((oldArray) => [
-                      ...oldArray,
-                      selectedFilter,
-                    ]);
+                    if(!filterLabels.includes(selectedFilter) && selectedFilter !== undefined)
+                    {
+                        setFilterLabels((oldArray) => [
+                          ...oldArray,
+                          selectedFilter,
+                        ]);
+                    }
                   }}
                 >
                   Filtrer
@@ -287,10 +340,15 @@ const TodoList = () => {
               <TasksItemGrid
                 filterLabels={filterLabels}
                 tasks={tasks}
+                filteredLabel={filterLabels}
+                existingLabels={labels}
                 OnRemoveLabelToTask={OnRemoveLabelToTask}
                 OnSelectTask={OnSelectTask}
                 OnRemoveTask={OnRemoveTask}
+               
                 OnEditTask={OnSelectTask}
+                AddLabel={OnAddLabelToTask}
+                OnSelectTaskToAddLabel={OnSelectTaskToAddLabel}
               />
             </>
           )}
@@ -330,7 +388,7 @@ const TodoList = () => {
               >
                 {labels.map((label, index) => {
                   return (
-                    <Chip size="medium" color="secondary" label={label.title} />
+                    <Chip size="medium" color="secondary" label={label.title} onDelete={() => OnRemoveLabel(label)} />
                   );
                 })}
               </Stack>

@@ -230,7 +230,7 @@ const TravelRequests = {
 
     addTask: ({ title, date, TravelId}) => {
         //const token = window.localStorage.getItem('token');
-     
+        console.log(JSON.stringify({ title,date, TravelId }))
         return fetch(`${url_prefix}/task`, {
             method: 'POST',
             headers: {

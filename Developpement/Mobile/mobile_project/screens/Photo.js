@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, ScrollView, Button, Center, Image } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
-import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
-import { arrayBufferToBlob } from "blob-util";
-
-
 import noImage from "../assets/images/image.png"
-import { decode, encode } from 'base64-arraybuffer';
+
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import PhotoRequests from '../requests/PhotoRequests';
 
 const Photo = ({ navigation, route }) => {
 
+    const queryClient = useQueryClient();
+
     const [image, setImage] = useState(null);
-    const { photo } = route.params;
+    const { photo, idTravel, location } = route.params;
 
     const pickImage = async () => {
         setImage(null)
@@ -30,7 +30,18 @@ const Photo = ({ navigation, route }) => {
         }
     };
 
+    // Envoi de la photo en BDD
+    const addPhoto = useMutation(PhotoRequests.sendPhoto, {
+        onSuccess: newPhoto => queryClient.setQueryData(
+            ['photos', idTravel],
+            photos => [...photos, newPhoto]
+        )
+    });
+
+
     async function savePicture() {
+        const newPhoto = { idTravel: idTravel, date: Date.now(), dataFile: photo.base64, latitude: location.coords.latitude, longitude: location.coords.longitude };
+        addPhoto.mutate(newPhoto);
 
     }
 

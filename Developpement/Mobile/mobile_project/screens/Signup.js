@@ -11,8 +11,6 @@ const Signup = (props) => {
     const { signup } = useAuth();
 
     const [username, setUsername] = useState("");
-    const [firstname, setFirstname] = useState("");
-    const [lastname, setLastname] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -20,15 +18,13 @@ const Signup = (props) => {
     const [alertMessage, setAlertMessage] = useState("")
 
     const handleSubmit = () => {
-        if (username != "" && firstname != "" && lastname != "" && password != "" && password === confirmPassword) {
+        if (username != "" && password != "" && password === confirmPassword) {
             signup({ username, password })
                 .then(() => {
                     props.navigation.navigate('Signin');
                 })
                 .catch((err) => {
                     setUsername('');
-                    setFirstname('');
-                    setLastname('');
                     setPassword('');
                     setConfirmPassword('');
                     setAlertMessage("L'utilisateur n'a pas pu être créé !");
@@ -59,10 +55,6 @@ const Signup = (props) => {
                                 <VStack space={3}>
                                     <Text>Pseudo : </Text>
                                     <TextInput style={styles.input} textContentType="username" keyboardType="default" value={username} onChangeText={(text) => setUsername(text)} />
-                                    <Text style={styles.text}>Prénom : </Text>
-                                    <TextInput style={styles.input} value={firstname} onChangeText={(text) => setFirstname(text)} />
-                                    <Text style={styles.text}>Nom : </Text>
-                                    <TextInput style={styles.input} value={lastname} onChangeText={(text) => setLastname(text)} />
                                     <Text style={styles.text}>Mot de passe : </Text>
                                     <TextInput style={styles.input} secureTextEntry={true} value={password} onChangeText={(text) => setPassword(text)} />
                                     <Text style={styles.text}>Confirmation du mot de passe : </Text>

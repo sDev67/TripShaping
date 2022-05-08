@@ -10,3 +10,5 @@ export const checkStatus = res => {
 };
 
 export const url_prefix = 'http://cdad181.iutrs.unistra.fr:4200';
+
+

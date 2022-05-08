@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, ImageBackground } from "react-native";
 import { Camera } from 'expo-camera'
+import * as Location from 'expo-location';
 
 let camera = Camera;
 
@@ -8,6 +9,7 @@ const Cameras = ({ navigation, route }) => {
 
     const { parent, point, idReadOnly, idTravel } = route.params;
 
+    const [location, setLocation] = useState(null);
     const [startCamera, setStartCamera] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null)
@@ -56,17 +58,25 @@ const Cameras = ({ navigation, route }) => {
         }
     }
 
-    const save = () => {
+    async function save() {
         setStartCamera(false);
 
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+
         if (parent === "global") {
-            navigation.navigate("Photo", { photo: capturedImage })
+            navigation.navigate("Photo", { photo: capturedImage, location: location })
         }
         if (parent === "step") {
-            navigation.navigate("StepDetails", { photo: capturedImage, step: point, idReadOnly: idReadOnly, idTravel: idTravel })
+            navigation.navigate("StepDetails", { photo: capturedImage, step: point, idReadOnly: idReadOnly, idTravel: idTravel, location: location })
         }
         if (parent === "poi") {
-            navigation.navigate("PointDetails", { photo: capturedImage, point: point, idReadOnly: idReadOnly, idTravel: idTravel })
+            navigation.navigate("PointDetails", { photo: capturedImage, point: point, idReadOnly: idReadOnly, idTravel: idTravel, location: location })
         }
     }
 

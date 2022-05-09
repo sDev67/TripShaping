@@ -18,13 +18,18 @@ const MemberForm = () => {
   const [name, setName] = useState("");
   const [login, setLogin] = useState("");
   const [registeredMember, setRegiteredMember] = useState(false);
+  const [error, setError] = useState(null)
 
   const addMember = useMutation(MemberRequests.addMember, {
-    onSuccess: (member) =>
+    onSuccess: (member) => {
       queryClient.setQueryData(["getMembers", idTravel], (members) => [
         ...members,
         member,
-      ]),
+      ]);
+      setError(null)
+    },
+    onError: (error) =>
+      setError(error.message),
   });
 
   const OnAddMember = (name, login, fictive) => {
@@ -72,9 +77,12 @@ const MemberForm = () => {
         />
         {!registeredMember ? (
           <div style={{ width: "50%" }}>
-            <Typography variant="h6" marginY={1}>
-              Ajouter un membre du site
-            </Typography>
+            <Stack direction="row" justifyContent="center" >
+              <Typography variant="h6" marginY={1} marginX={2}>
+                Ajouter un membre du site
+              </Typography>
+              {error && <Typography variant="h6" marginY={1} marginX={2} style={{ color: "red" }}>{error}</Typography>}
+            </Stack>
             <Stack direction="row" spacing={1}>
               <Stack direction="row" spacing={1} style={{ width: "75%" }}>
                 <TextField
@@ -110,10 +118,11 @@ const MemberForm = () => {
           </div>
         ) : (
           <div style={{ width: "50%" }}>
-            <Typography variant="h6" marginY={1}>
-              Ajouter un membre non inscrit
-            </Typography>
-
+            <Stack direction="row" justifyContent="space-around">
+              <Typography variant="h6" marginY={1}>
+                Ajouter un membre non inscrit
+              </Typography>
+            </Stack>
             <Stack direction="row" spacing={1}>
               <Stack direction="row" spacing={1} style={{ width: "75%" }}>
                 <TextField

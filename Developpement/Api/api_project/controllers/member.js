@@ -40,29 +40,18 @@ module.exports = {
           username: req.body.userLogin,
         },
       }).then((resp) => {
-        // console.log(resp[0].uniqno)
         if (resp == "") {
           return res.status(404).send("Username does not exist");
         }
         else {
-          return db.Member.create({
-            name: req.body.name,
-            UserId: resp[0].id,
-            TravelId: req.body.TravelId,
-            userLogin: req.body.userLogin,
-          })
+          return db.Member.create({ name: req.body.name, UserId: resp[0].id, TravelId: req.body.TravelId, userLogin: req.body.userLogin })
             .then((member) => res.json(member))
             .catch(next);
         }
       });
     }
     else {
-      return db.Member.create({
-        name: req.body.name,
-        UserId: null,
-        TravelId: req.body.TravelId,
-        userLogin: null,
-      })
+      return db.Member.create({ name: req.body.name, UserId: null, TravelId: req.body.TravelId, userLogin: null })
         .then((member) => res.json(member))
         .catch(next);
     }

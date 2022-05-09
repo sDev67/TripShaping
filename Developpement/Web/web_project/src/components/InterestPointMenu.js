@@ -46,8 +46,8 @@ const InterestPointMenu = ({
     isError: isErrorD,
     error: errorD,
     data: documents,
-  } = useQuery(["getDocuments", idTravel], () =>
-    TravelRequests.getAllDocumentsByTravelId(idTravel)
+  } = useQuery(["getDocumentsOfPoints", selectedMarker.id], () =>
+    TravelRequests.getAllDocumentsByPointId(selectedMarker.id)
   );
 
   const [title, setTitle] = useState(selectedMarker.title);
@@ -146,6 +146,7 @@ const InterestPointMenu = ({
     const formData = new FormData();
     formData.append("title", file);
     formData.append("TravelId", idTravel);
+    formData.append("PointId", selectedMarker.id)
 
     console.log(...formData);
 

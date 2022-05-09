@@ -9,13 +9,17 @@ module.exports = sequelize => {
     static associate(db) {
 
       User.hasMany(db.Travel);
-      User.hasMany(db.Member);
+      User.hasMany(db.Member, { onDelete: 'cascade' });
     }
   }
 
   User.init(
     {
-      username: DataTypes.STRING,
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+      },
       password: DataTypes.STRING
     }, {
     sequelize,

@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import MemberRequests from "../requests/MemberRequests";
 
-const MemberForm = ({ users }) => {
+const MemberForm = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
@@ -33,6 +33,7 @@ const MemberForm = ({ users }) => {
         name: name,
         userLogin: login,
         TravelId: idTravel,
+        UserId: null
       };
       addMember.mutate(newMember);
     } else {
@@ -40,6 +41,7 @@ const MemberForm = ({ users }) => {
         name: name,
         userLogin: "",
         TravelId: idTravel,
+        UserId: null
       };
       addMember.mutate(newMember);
     }

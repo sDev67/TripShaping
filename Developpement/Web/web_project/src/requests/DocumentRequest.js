@@ -90,9 +90,15 @@ const DocumentRequest = {
             .then(res => res.text());
     },
 
-
-
-
+    removeDocument: (idDocument) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/document/${idDocument}`, {
+            method: "DELETE",
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // },
+        }).then(checkStatus);
+    },
 };
 
 export default DocumentRequest;

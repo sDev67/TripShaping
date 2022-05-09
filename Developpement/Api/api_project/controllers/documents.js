@@ -118,11 +118,13 @@ const disp_file_by_id = async (req, res, next) => {
 
 
                 fs.readFile(filePath, function (err, data) {
-                    if (extension == 'pdf') {
+                    if (extension == 'pdf' || extension == 'PDF') {
                         res.contentType("application/pdf");
                         res.send(data);
                     }
-                    else if (extension == 'png' || extension == 'jpg' || extension == 'jpeg') {
+                    else if (extension == 'png' || extension == 'PNG' ||
+                        extension == 'jpg' || extension == 'JPG' ||
+                        extension == 'jpeg' || extension == 'JPEG') {
                         res.contentType("image/" + extension);
                         res.send(data);
                     }

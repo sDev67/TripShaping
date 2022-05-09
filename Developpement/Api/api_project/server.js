@@ -24,7 +24,8 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://cdad181.iutrs.unistra.fr:4200',
+        //url: 'http://cdad181.iutrs.unistra.fr:4200',
+        url: 'http://localhost:4200',
         description: 'Serveur de Production',
 
       },
@@ -41,6 +42,10 @@ const swaggerOptions = {
       {
         name: 'Travel',
         description: 'Route concernant les Voyages',
+      },
+      {
+        name: 'Document',
+        description: 'Route concernant les documents (image et pdf)',
       },
     ],
   },

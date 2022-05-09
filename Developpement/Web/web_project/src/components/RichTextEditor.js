@@ -60,7 +60,7 @@ const RichTextEditor = ({setValue, value, limitedEditor=false, minH, isReadOnly=
               editorState={state.editorState}
               onEditorStateChange={onChange}
               toolbar={ limitedEditor ? {
-                options: ['inline', 'blockType', 'fontSize', 'list', 'history'],
+                options: ['inline', 'fontSize', 'list', 'history'],
                 inline: { inDropdown: true },
                 list: { inDropdown: true },
      

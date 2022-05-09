@@ -13,6 +13,42 @@ const DocumentRequest = {
             .then(res => res.json())
     },
 
+    getDocumentsByPointId: idPoint => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/point/${idPoint}/documents`, {
+
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
+    getDocumentsByStepId: idStep => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/step/${idStep}/documents`, {
+
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
+    getDocumentsByRouteId: idRoute => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/route/${idRoute}/documents`, {
+
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
     checkifDocumentExist: documentName => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/document/check/${documentName}`, {
@@ -54,9 +90,15 @@ const DocumentRequest = {
             .then(res => res.text());
     },
 
-
-
-
+    removeDocument: (idDocument) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/document/${idDocument}`, {
+            method: "DELETE",
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // },
+        }).then(checkStatus);
+    },
 };
 
 export default DocumentRequest;

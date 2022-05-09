@@ -1,9 +1,22 @@
+
 const db = require('../models');
 
 module.exports = {
 
 	get_all: (req, res, next) => {
 		return db.Travel.findAll({
+			order: ['name']
+		})
+			.then(travel => res.json(travel))
+			.catch(next);
+	},
+	get_published: (req, res, next) => {
+		return db.Travel.findAll({
+			where:
+			{
+				status: 2,
+				toPublish: 'true'
+			},
 			order: ['name']
 		})
 			.then(travel => res.json(travel))

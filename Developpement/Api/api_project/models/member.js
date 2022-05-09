@@ -4,16 +4,25 @@ module.exports = sequelize => {
 
 	class Member extends Sequelize.Model {
 		static associate(db) {
-			//Task.manyToMany(db.Label, { through: 'LabelTask' });
 			Member.belongsTo(db.Travel);
+			// Member.belongsTo(db.User, references: { model: "User", key: "username" });
+
+			Member.hasMany(db.Expense);
+			Member.hasMany(db.JournalEntry);
 		}
 	}
 
 	Member.init({
-		lastname: DataTypes.STRING,
-        firstname: DataTypes.STRING,
-		fictive: DataTypes.BOOLEAN,
-
+		name: DataTypes.STRING,
+		userLogin: {
+			type: Sequelize.STRING,
+			references: {
+				model: 'Users',
+				key: 'username',
+				allowNull: true,
+				defaultValue: null,
+			}
+		}
 	}, {
 		sequelize,
 		modelName: 'Member'

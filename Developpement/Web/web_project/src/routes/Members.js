@@ -29,37 +29,16 @@ const Members = () => {
     TravelRequests.getMembersOfTravel(idTravel)
   );
 
-  const {
-    isLoading: isLoadingU,
-    isError: isErrorU,
-    error: errorU,
-    data: users,
-  } = useQuery(["getUsers"], () => UserRequests.getAllUsers());
-
- 
-
   const deleteMember = useMutation(MemberRequests.removeMember, {
-    onSuccess: (_, id) => queryClient.setQueryData(
-      ['getMembers', idTravel],
-      members => members.filter(e => e.id !== id)
-    )
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getMembers", idTravel], (members) =>
+        members.filter((e) => e.id !== id)
+      ),
   });
-
- 
-
-
 
   return (
     <>
-      <Stack height="100%" width="100%" direction="column">
-        <Typography
-          color="primary"
-          variant="h2"
-          textAlign="center"
-          marginTop={4}
-        >
-          Membres
-        </Typography>
+      <Stack height="93.15%" width="100%" direction="row">
         <Stack
           width="90%"
           paddingY="1%"
@@ -84,13 +63,7 @@ const Members = () => {
               />
             )}
           </Stack>
-          {isLoadingU ? (
-            <Loading />
-          ) : isErrorU ? (
-            <p style={{ color: "red" }}>{errorU.message}</p>
-          ) : (
-            <MemberForm users={users} />
-          )}
+          <MemberForm />
         </Stack>
       </Stack>
     </>

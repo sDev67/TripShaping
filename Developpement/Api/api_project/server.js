@@ -12,7 +12,7 @@ const swaggerOptions = {
       title: 'ATLAS',
       version: '1.0.0',
       description:
-        'Api développée pour le projet Acrobatt.',
+        'Api développée pour le projet Acrobatt de fin de Licence Pro.',
       contact: {
         name: 'Visitez notre application',
         url: 'https://google.com',

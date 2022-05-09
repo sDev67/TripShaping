@@ -564,6 +564,7 @@ export const Map = ({}) => {
           start={selectedRoute.start}
           finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
+          isEdition={isEdition}
         ></RouteMenu>
       )}
       {showTimeline && (

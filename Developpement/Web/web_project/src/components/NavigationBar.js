@@ -42,6 +42,7 @@ import DirectionsWalkRoundedIcon from "@mui/icons-material/DirectionsWalkRounded
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 import TopicRoundedIcon from "@mui/icons-material/TopicRounded";
+import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
 
 const drawerWidth = 170;
 
@@ -229,7 +230,7 @@ const NavigationBar = () => {
           >
             <Tab
               style={{ marginTop: "25px", marginBottom: "40px" }}
-              icon={<ArrowCircleLeftRoundedIcon />}
+              icon={<ArrowCircleLeftRoundedIcon color="error" />}
               iconPosition="start"
               label={
                 <Stack
@@ -238,7 +239,9 @@ const NavigationBar = () => {
                   justifyContent="flex-start"
                   marginLeft={1}
                 >
-                  <Typography variant="button">Retour</Typography>
+                  <Typography variant="button" color="error">
+                    Retour
+                  </Typography>
                 </Stack>
               }
               value="Retour"
@@ -314,7 +317,7 @@ const NavigationBar = () => {
               to={"/trip/" + idTravel + "/informations"}
             />
             <Tab
-              icon={<TextSnippetRoundedIcon />}
+              icon={<InsertDriveFileRoundedIcon />}
               iconPosition="start"
               label={
                 <Stack

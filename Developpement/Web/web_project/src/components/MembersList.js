@@ -42,7 +42,7 @@ const MembersList = ({ members, deleteMember }) => {
               </ListItemAvatar>
               <ListItemText
                 primary={<>{member.name}</>}
-                secondary={<i>{!member.UserId ? "Non Inscrit" : ""}</i>}
+                secondary={<i>{!member.userLogin ? "Non Inscrit" : ""}</i>}
               />
             </ListItemButton>
           </ListItem>

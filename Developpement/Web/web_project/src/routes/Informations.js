@@ -24,9 +24,9 @@ import {
 } from "@mui/material";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
-
-import Editor from "../components/RichTextEditor";
 import { useParams } from "react-router-dom";
+import Loading from "../utils/Loading";
+import RichTextEditor from "../components/RichTextEditor";
 
 const Informations = () => {
   const [switchState, setSwitchState] = React.useState(false);
@@ -79,33 +79,38 @@ const Informations = () => {
           direction="column"
           height="100%"
         >
-          {isLoading ? (
-            <Typography
-              color="error"
-              variant="h5"
-              textAlign="center"
-              marginTop={4}
-            >
-              Chargement...
-            </Typography>
-          ) : !isError ? (
-            <>
-              <Editor
-                setValue={setValue}
-                value={travelDatas.infos !== null ? travelDatas.infos : null}
-                minH="500px"
-              />
-              <Button
-                disabled={value === travelDatas.infos ? true : false}
-                onClick={(e) => handleChange()}
-                variant="contained"
-              >
-                Sauvegarder les informations
-              </Button>
-            </>
-          ) : (
-            <p style={{ color: "red" }}>{error.message}</p>
-          )}
+          <Stack height="85%">
+            {isLoading ? (
+              <Loading />
+            ) : !isError ? (
+              <>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography variant="h4" marginY={1}>
+                    Informations liées au voyage
+                  </Typography>
+                  <Button
+                    disabled={value === travelDatas.infos ? true : false}
+                    onClick={(e) => handleChange()}
+                    variant="contained"
+                  >
+                    Enregistrer
+                  </Button>
+                </Stack>
+                <RichTextEditor
+                  setValue={setValue}
+                  value={travelDatas.infos !== null ? travelDatas.infos : null}
+                  minH={"700px"}
+                  maxH={"700px"}
+                />
+              </>
+            ) : (
+              <p style={{ color: "red" }}>{error.message}</p>
+            )}
+          </Stack>
         </Stack>
       </Stack>
     </>

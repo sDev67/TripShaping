@@ -18,7 +18,9 @@ module.exports = sequelize => {
 			type: Sequelize.STRING,
 			references: {
 				model: 'Users',
-				key: 'username'
+				key: 'username',
+				allowNull: true,
+				defaultValue: null,
 			}
 		}
 	}, {

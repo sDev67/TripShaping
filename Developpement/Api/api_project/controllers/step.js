@@ -78,4 +78,16 @@ module.exports = {
 			.catch(err => next(err));
 	},
 
+	get_points_of_step: (req, res, next) => {
+		return db.Step.findByPk(req.params.step_id)
+			.then(step => {
+				if (!step) {
+					throw { status: 404, message: 'Step not found' };
+				}
+				return step.getPoints();
+			})
+			.then(points => res.json(points))
+			.catch(err => next(err));
+	},
+
 };

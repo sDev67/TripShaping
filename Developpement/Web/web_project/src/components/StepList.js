@@ -72,7 +72,7 @@ const StepList = ({ steps }) => {
   ];
 
   return (
-    <Box id="test" marginBottom={5}>
+    <Box marginBottom={5}>
       {steps.map((step, index) => (
         <StepItem
           step={step}

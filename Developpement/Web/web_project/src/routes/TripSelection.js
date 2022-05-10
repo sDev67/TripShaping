@@ -212,7 +212,11 @@ const TripSelection = () => {
                     <Card>
                       <CardActionArea
                         component={Link}
-                        to={"/trip/" + travel.id + "/map"}
+                        to={
+                          travel.status == 2
+                            ? "/album/" + travel.id + "/map"
+                            : "/trip/" + travel.id + "/map"
+                        }
                       >
                         <CardContent>
                           <Stack direction="column">

@@ -11,6 +11,7 @@ import PhotoRequests from '../requests/PhotoRequests';
 
 const Photo = ({ navigation, route }) => {
 
+    const Buffer = require("buffer").Buffer;
     const queryClient = useQueryClient();
 
     const [image, setImage] = useState(null);
@@ -20,8 +21,8 @@ const Photo = ({ navigation, route }) => {
         setImage(null)
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            quality: 1,
-            allowsEditing: true,
+            quality: 0.25,
+            allowsEditing: false,
             base64: true
         });
 
@@ -40,9 +41,26 @@ const Photo = ({ navigation, route }) => {
 
 
     async function savePicture() {
-        const newPhoto = { idTravel: idTravel, date: Date.now(), dataFile: photo.base64, latitude: location.coords.latitude, longitude: location.coords.longitude };
-        addPhoto.mutate(newPhoto);
-
+        if (image != null) {
+            const formData = new FormData();
+            let data = image.base64;
+            let b = Buffer.from(data, 'utf8');
+            formData.append("dataFile", JSON.stringify(b));
+            formData.append("date", Date.now());
+            formData.append("TravelId", idTravel);
+            PhotoRequests.sendPhoto(formData);
+        }
+        else if (photo != null) {
+            const formData = new FormData();
+            let data = photo.base64;
+            let b = Buffer.from(data, 'utf8');
+            formData.append("dataFile", JSON.stringify(b));
+            formData.append("date", Date.now());
+            formData.append("TravelId", idTravel);
+            formData.append("longitude", location.coords.longitude);
+            formData.append("latitude", location.coords.latitude);
+            PhotoRequests.sendPhoto(formData);
+        }
     }
 
     return (

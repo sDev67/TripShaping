@@ -2,14 +2,18 @@ import { checkStatus, url_prefix } from "../utils";
 
 const PhotoRequests = {
 
-    sendPhoto: (credentials) => {
+    sendPhoto: (formData) => {
         return fetch(`${url_prefix}/photo`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(credentials)
+            body: formData,
+            headers: {
+                //  Authorization: 'Bearer ' + token
+            },
         })
             .then(checkStatus)
+            .then((res) => res.text());
     }
 };
 
 export default PhotoRequests;
+'multipart/form-data'

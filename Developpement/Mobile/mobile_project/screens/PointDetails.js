@@ -11,7 +11,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 const PointDetails = ({ route, navigation }) => {
 
-    const { photo, point, isReadOnly, idTravel } = route.params;
+    const { photo, point, isReadOnly, idTravel, location } = route.params;
 
     const [image, setImage] = useState(null);
 
@@ -42,6 +42,32 @@ const PointDetails = ({ route, navigation }) => {
             setImage(result);
         }
     };
+
+    async function savePicture() {
+        if (image != null) {
+            const formData = new FormData();
+            let data = image.base64;
+            let b = Buffer.from(data, 'utf8');
+            formData.append("dataFile", JSON.stringify(b));
+            formData.append("date", Date.now());
+            formData.append("TravelId", idTravel);
+            formData.append("PointId", point.id);
+            formData.append("StepId", step.id);
+            PhotoRequests.sendPhoto(formData);
+        }
+        else if (photo != null) {
+            const formData = new FormData();
+            let data = photo.base64;
+            let b = Buffer.from(data, 'utf8');
+            formData.append("dataFile", JSON.stringify(b));
+            formData.append("date", Date.now());
+            formData.append("TravelId", idTravel);
+            formData.append("PointId", point.id);
+            formData.append("longitude", location.coords.longitude);
+            formData.append("latitude", location.coords.latitude);
+            PhotoRequests.sendPhoto(formData);
+        }
+    }
 
     // Documents 
     const { isLoading, isError, error, data } = useQuery(["getDocuments", idTravel], () => TravelRequests.getDocumentsByTravelId(idTravel));
@@ -77,17 +103,18 @@ const PointDetails = ({ route, navigation }) => {
                     </ScrollView>
                     {!isReadOnly &&
                         <View>
+                            <Text style={styles.font} >Journal</Text>
                             <View>
-                                <Text style={styles.font} >Journal</Text>
-                                <View>
-                                    <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />
-                                    <Button style={{ backgroundColor: "#00AB55", width: 100, alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
-                                </View>
-                                <Text style={styles.font}>Photo</Text>
-                                <View>
-                                    <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras", { parent: "poi", point: point, idReadOnly: isReadOnly, idTravel: idTravel })}>Prendre une photo</Button>
-                                    <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
-                                </View>
+                                <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />
+                                <Button style={{ backgroundColor: "#00AB55", width: 100, alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
+                            </View>
+                            <Text style={styles.font}>Photo</Text>
+                            <View>
+                                <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras", { parent: "poi", point: point, idReadOnly: isReadOnly, idTravel: idTravel })}>Prendre une photo</Button>
+                                <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
+                            </View>
+                            <View style={{ marginBottom: 10, position: "absolute", bottom: 0, alignSelf: "flex-end" }}>
+                                <Button style={{ backgroundColor: "#00AB55", alignSelf: "flex-end", marginRight: 10 }} onPress={() => savePicture()} >Sauvegarder</Button>
                             </View>
                             <View style={{ marginBottom: 10, paddingBottom: "50%" }}>
                                 {image ?

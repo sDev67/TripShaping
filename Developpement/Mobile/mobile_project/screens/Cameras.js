@@ -28,7 +28,7 @@ const Cameras = ({ navigation, route }) => {
     }, [])
 
     const takePicture = async () => {
-        const options = { quality: 0.5, base64: true };
+        const options = { quality: 0.25, base64: true };
         const photo = await camera.takePictureAsync(options)
         setPreviewVisible(true)
         setCapturedImage(photo)

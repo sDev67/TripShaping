@@ -12,7 +12,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 const StepDetails = ({ route, navigation }) => {
 
-    const { photo, step, isReadOnly, idTravel } = route.params;
+    const { photo, step, isReadOnly, idTravel, location } = route.params;
 
     const [image, setImage] = useState(null);
 
@@ -44,6 +44,31 @@ const StepDetails = ({ route, navigation }) => {
             setImage(result);
         }
     };
+
+    async function savePicture() {
+        if (image != null) {
+            const formData = new FormData();
+            let data = image.base64;
+            let b = Buffer.from(data, 'utf8');
+            formData.append("dataFile", JSON.stringify(b));
+            formData.append("date", Date.now());
+            formData.append("TravelId", idTravel);
+            formData.append("StepId", step.id);
+            PhotoRequests.sendPhoto(formData);
+        }
+        else if (photo != null) {
+            const formData = new FormData();
+            let data = photo.base64;
+            let b = Buffer.from(data, 'utf8');
+            formData.append("dataFile", JSON.stringify(b));
+            formData.append("date", Date.now());
+            formData.append("TravelId", idTravel);
+            formData.append("StepId", step.id);
+            formData.append("longitude", location.coords.longitude);
+            formData.append("latitude", location.coords.latitude);
+            PhotoRequests.sendPhoto(formData);
+        }
+    }
 
     // Documents 
     const { isLoading, isError, error, data } = useQuery(["getDocuments", idTravel], () => TravelRequests.getDocumentsByTravelId(idTravel));
@@ -91,6 +116,9 @@ const StepDetails = ({ route, navigation }) => {
                                     <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras", { parent: "step", point: step, idReadOnly: isReadOnly, idTravel: idTravel })}>Prendre une photo</Button>
                                     <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                                 </View >
+                                <View style={{ marginBottom: 10, position: "absolute", bottom: 0, alignSelf: "flex-end" }}>
+                                    <Button style={{ backgroundColor: "#00AB55", alignSelf: "flex-end", marginRight: 10 }} onPress={() => savePicture()} >Sauvegarder</Button>
+                                </View>
                                 <View style={{ marginBottom: 10, paddingBottom: "50%" }}>
                                     {image ?
                                         <Image source={{ uri: `data:image/jpeg;base64,${image.base64}` }} style={{ alignSelf: 'center', width: image.width / 10, height: image.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />

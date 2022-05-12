@@ -59,9 +59,7 @@ const upload = multer({
 }).single('title')
 
 const get_all = async (req, res, next) => {
-    return await db.Photo.findAll({
-        attributes: { exclude: ['dataFile'] }
-    })
+    return await db.Photo.findAll({})
         .then(photo => res.json(photo))
         .catch(next);
 };

@@ -13,7 +13,7 @@ module.exports = sequelize => {
 
     Photo.init({
         dataFile: DataTypes.BLOB("long"),
-        date: DataTypes.DATE,
+        date: DataTypes.STRING,
         latitude: DataTypes.FLOAT,
         longitude: DataTypes.FLOAT
     }, {

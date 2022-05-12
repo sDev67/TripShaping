@@ -10,7 +10,7 @@ module.exports = sequelize => {
     }
 
     JournalEntry.init({
-        date: DataTypes.DATE,
+        date: DataTypes.STRING,
         text: DataTypes.STRING,
     }, {
         sequelize,

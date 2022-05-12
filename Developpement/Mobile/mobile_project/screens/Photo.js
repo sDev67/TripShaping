@@ -3,6 +3,7 @@ import { NativeBaseProvider, ScrollView, Button, Center, Image } from 'native-ba
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { format } from "date-fns";
 
 import noImage from "../assets/images/image.png"
 
@@ -41,12 +42,16 @@ const Photo = ({ navigation, route }) => {
 
 
     async function savePicture() {
+
+        var date = Date.now();
+        var formattedDate = format(date, "dd/MM/yyyy HH:mm");
+
         if (image != null) {
             const formData = new FormData();
             let data = image.base64;
             let b = Buffer.from(data, 'utf8');
             formData.append("dataFile", JSON.stringify(b));
-            formData.append("date", Date.now());
+            formData.append("date", formattedDate.toString());
             formData.append("TravelId", idTravel);
             PhotoRequests.sendPhoto(formData);
         }
@@ -55,12 +60,11 @@ const Photo = ({ navigation, route }) => {
             let data = photo.base64;
             let b = Buffer.from(data, 'utf8');
             formData.append("dataFile", JSON.stringify(b));
-            formData.append("date", Date.now());
+            formData.append("date", formattedDate.toString());
             formData.append("TravelId", idTravel);
             formData.append("longitude", location.coords.longitude);
             formData.append("latitude", location.coords.latitude);
             PhotoRequests.sendPhoto(formData);
-            console.log(Date.now())
         }
     }
 

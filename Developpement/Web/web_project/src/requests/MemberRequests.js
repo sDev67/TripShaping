@@ -24,6 +24,8 @@ const MemberRequests = {
   },
 
   addMember: ({ name, userLogin, TravelId }) => {
+
+    if(name === undefined){name=userLogin}
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/member`, {
       method: "POST",

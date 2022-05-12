@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-
-  Stack,
-  Button,
-  Typography,
-
-} from "@mui/material";
+import { Stack, Button, Typography } from "@mui/material";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 
@@ -63,6 +57,23 @@ const Informations = () => {
           direction="column"
           height="100%"
         >
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h4" marginY={1}>
+              Informations liées au voyage
+            </Typography>
+            <Button
+              disabled={value === travelDatas.infos ? true : false}
+              onClick={(e) => handleChange()}
+              variant="contained"
+            >
+              Enregistrer
+            </Button>
+          </Stack>
+
           {isLoadingI ? (
             <Typography
               color="error"
@@ -79,13 +90,6 @@ const Informations = () => {
                 value={travelDatas.infos !== null ? travelDatas.infos : null}
                 minH="500px"
               />
-              <Button
-                disabled={value === travelDatas.infos ? true : false}
-                onClick={(e) => handleChange()}
-                variant="contained"
-              >
-                Sauvegarder les informations
-              </Button>
             </>
           ) : (
             <p style={{ color: "red" }}>{errorI.message}</p>

@@ -9,6 +9,7 @@ import { useState } from "react";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
+import Loading from "../utils/Loading";
 
 const TripSettings = () => {
   const queryClient = useQueryClient();
@@ -16,58 +17,109 @@ const TripSettings = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
-  const [currentDate, setCurrentDate] = useState("");
+  const {
+    isLoading: isLoadingT,
+    isError: isErrorT,
+    error: errorT,
+    data: travel,
+  } = useQuery(["getTravel", idTravel], () =>
+    TravelRequests.getTravelByid(idTravel)
+  );
 
-  const [publicItinierary, setPublicItinierary] = useState(false);
+  let statusTrip = travel?.status
+  let currentDate = travel?.startDate
+  let publicItinerary = travel?.toPublish
+  let trackPosition = travel?.positionAgree
 
   const handleDateChange = (newDate) => {
-    setCurrentDate(newDate);
+    currentDate = newDate;
+  };
+
+  const handleSwitchPublicItinerary = () => {
+    publicItinerary = !publicItinerary;
+    updateStatusPublished(publicItinerary)
+  };
+
+  const handleSwitchTrackPosition = () => {
+    trackPosition = !trackPosition;
+    updateTrackPosition(trackPosition)
   };
 
   const handleSwitch = () => {
-    // setExpanded(!expanded);
+
   };
 
-  const updateStatus = useMutation(TravelRequests.updateTravelPublishItinerary, {
+  const handleSwitchStartTrip = () => {
+    statusTrip = 1;
+    updateStatusTravel(statusTrip)
+  };
+
+  const updateStatusTravel = (statusTrip) => {
+    const newStatus = {
+      TravelId: idTravel,
+      status: statusTrip,
+    };
+    updatePublic.mutate(newStatus);
+  };
+
+  const updateStatusPublished = (publicItinerary) => {
+    const newStatusPublic = {
+      TravelId: idTravel,
+      toPublish: publicItinerary,
+    };
+    updatePublic.mutate(newStatusPublic);
+  };
+
+  const updateTrackPosition = (trackPosition) => {
+    const newStatusPos = {
+      TravelId: idTravel,
+      positionAgree: trackPosition,
+    };
+    updatePosition.mutate(newStatusPos);
+  };
+
+  const updateStatus = useMutation(TravelRequests.updateTravelStatus, {
+    onSuccess: (status) => {
+      queryClient.setQueryData(["getTravel", idTravel], status);
+      queryClient.invalidateQueries(["getTravel", idTravel]);
+    },
+  });
+
+  const updatePublic = useMutation(TravelRequests.updateTravelPublishItinerary, {
     onSuccess: (publishedStatus) => {
       queryClient.setQueryData(["getTravel", idTravel], publishedStatus);
       queryClient.invalidateQueries(["getTravel", idTravel]);
     },
   });
 
-  // Fonction qui met a jour les propriétés d'un point d'interet
-  const updateStatusPublished = (publicItinierary) => {
-
-    const newStatus = {
-      TravelId: idTravel,
-      toPublish: publicItinierary,
-    };
-    updateStatus.mutate(newStatus);
-
-  };
-
-  const handleSwitchPublicItinerary = () => {
-
-    setPublicItinierary(!publicItinierary);
-    updateStatusPublished(publicItinierary)
-
-
-  };
+  const updatePosition = useMutation(TravelRequests.updateTravelTrackPosition, {
+    onSuccess: (statusPosition) => {
+      queryClient.setQueryData(["getTravel", idTravel], statusPosition);
+      queryClient.invalidateQueries(["getTravel", idTravel]);
+    },
+  });
 
   return (
     <>
-      <Stack height="93.15%" width="100%" direction="column">
-        <Stack
-          width="40%"
-          marginLeft="30%"
-          paddingY="1%"
-          direction="column"
-          height="85%"
-          alignItems="strech"
-          marginTop="5%"
-        >
-          <Stack spacing={5}>
-            <Button
+      {
+        isLoadingT ? (
+          <Loading />
+        ) : isErrorT ? (
+          <p style={{ color: "red" }}>{errorT.message}</p>
+        ) :
+          <Stack height="93.15%" width="100%" direction="column">
+            <Stack
+              width="40%"
+              marginLeft="30%"
+              paddingY="1%"
+              direction="column"
+              height="85%"
+              alignItems="strech"
+              marginTop="5%"
+            >
+              <Stack spacing={5}>
+                {/* <Button
+
               variant="contained"
               color="error"
               startIcon={<DeleteRounded />}
@@ -94,81 +146,86 @@ const TripSettings = () => {
               }}
             >
               Supprimer tous les points d'interet du voyage
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteRounded />}
-              onClick={handleSwitch()}
-              style={{
-                paddingLeft: "25px",
-                paddingRight: "25px",
-                paddingTop: "10px",
-                paddingBottom: "10px",
-              }}
-            >
-              Supprimer le voyage
-            </Button>
-          </Stack>
+            </Button> */}
+                {statusTrip == 0 &&
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    // onClick={handleSwitchStartTrip()}
+                    style={{
+                      paddingLeft: "40px",
+                      paddingRight: "40px",
+                      paddingTop: "25px",
+                      paddingBottom: "25px",
+                    }}
+                  >
+                    Démarrer le voyage
+                  </Button>
+                }
+              </Stack>
 
-          <Stack direction="row" spacing={1} marginTop={10} marginBottom={5}>
-            <TextField
-              sx={{ width: "50%" }}
-              id="date"
-              label="Date de départ prévue"
-              type="date"
-              onChange={(e) => handleDateChange(e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <FormControlLabel
-              sx={{ width: "50%" }}
-              value="track"
-              control={<Switch color="primary" />}
-              label={
-                <Typography variant="h6" color="primary">
-                  Suivre ma position lors du voyage
-                </Typography>
-              }
-              labelPlacement="start"
-              onChange={handleSwitch}
-              position="relative"
-            />
-          </Stack>
-          <Stack direction="row" marginBottom={5} justifyContent="space-evenly">
-            <FormControlLabel
-              sx={{ width: "58%" }}
-              value={publicItinierary}
-              control={<Switch color="primary" />}
-              label={
-                <Typography variant="h6" color="primary">
-                  Rendre l'itinéraire public à la fin du voyage
-                </Typography>
-              }
-              labelPlacement="start"
-              onChange={handleSwitchPublicItinerary}
-              position="relative"
-            />
-          </Stack>
+              <Stack direction="row" spacing={1} marginTop={10} marginBottom={5}>
+                <TextField
+                  sx={{ width: "50%" }}
+                  id="date"
+                  label="Date de départ prévue"
+                  type="date"
+                  onChange={(e) => handleDateChange(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <FormControlLabel
+                  sx={{ width: "50%" }}
+                  value={trackPosition}
+                  checked={trackPosition}
+                  control={<Switch color="primary" />}
+                  label={
+                    <Typography variant="h6" color="primary">
+                      Suivre ma position lors du voyage
+                    </Typography>
+                  }
+                  labelPlacement="start"
+                  onChange={handleSwitchTrackPosition}
+                  position="relative"
+                />
+              </Stack>
+              <Stack direction="row" marginBottom={5} justifyContent="space-evenly">
+                <FormControlLabel
+                  sx={{ width: "58%" }}
+                  value={publicItinerary}
+                  checked={publicItinerary}
+                  control={<Switch color="primary" />}
+                  label={
+                    <Typography variant="h6" color="primary">
+                      Rendre l'itinéraire public à la fin du voyage
+                    </Typography>
+                  }
+                  labelPlacement="start"
+                  onChange={handleSwitchPublicItinerary}
+                  position="relative"
+                />
+              </Stack>
 
-          <Stack>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSwitch()}
-              style={{
-                paddingLeft: "40px",
-                paddingRight: "40px",
-                paddingTop: "25px",
-                paddingBottom: "25px",
-              }}
-            >
-              Démarrer le voyage
-            </Button>
+              <Stack>
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteRounded />}
+                  onClick={handleSwitch()}
+                  style={{
+                    paddingLeft: "25px",
+                    paddingRight: "25px",
+                    paddingTop: "10px",
+                    paddingBottom: "10px",
+                  }}
+                >
+                  Supprimer le voyage
+                </Button>
+              </Stack>
+            </Stack>
           </Stack>
-        </Stack>
-      </Stack>
+      }
     </>
   );
 };

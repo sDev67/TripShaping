@@ -21,7 +21,10 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import TripForm from "../components/TripForm";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
+import UserRequests from "../requests/UserRequests";
 import Loading from "./../utils/Loading";
+import { useAuth } from "../Authentication/auth";
+import TripCard from "../components/TripCard"
 
 const drawerWidth = 170;
 
@@ -105,12 +108,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TripSelection = () => {
+
+  let {user} = useAuth();
+
+  let id = parseInt(user.id);
+
+
+
   const {
     isLoading: isLoadingT,
     isError: isErrorT,
     error: errorT,
-    data: travels,
-  } = useQuery(["getTravels"], () => TravelRequests.getAllTravel());
+    data: members,
+  } = useQuery(["getMembers"], () => UserRequests.getMembers(id));
 
   const classes = useStyles();
 
@@ -118,7 +128,6 @@ const TripSelection = () => {
 
   const [tripFormOpen, setTripFormOpen] = useState(false);
 
-  let isActive = travels?.activated;
 
   return (
     <>
@@ -207,68 +216,9 @@ const TripSelection = () => {
               ) : isErrorT ? (
                 <p style={{ color: "red" }}>{errorT.message}</p>
               ) : (
-                travels.map((travel, index) => (
+                members.map((member, index) => (
                   <Grid key={index} item xs={4}>
-                    <Card>
-                      <CardActionArea
-                        component={Link}
-                        to={
-                          travel.status == 2
-                            ? "/album/" + travel.id + "/map"
-                            : "/trip/" + travel.id + "/map"
-                        }
-                      >
-                        <CardContent>
-                          <Stack direction="column">
-                            <Stack
-                              direction="row"
-                              alignItems="center"
-                              justifyContent="space-between"
-                            >
-                              <Typography
-                                color="primary"
-                                variant="h4"
-                                textAlign="center"
-                              >
-                                {travel.name}
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                marginLeft={1}
-                              >
-                                {travel.toPublish ? (
-                                  <p>Public</p>
-                                ) : (
-                                  <p>Privé</p>
-                                )}
-                              </Typography>
-                            </Stack>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              marginLeft={1}
-                            >
-                              {travel.status == 0 ? (
-                                <p>Préparation</p>
-                              ) : travel.status == 1 ? (
-                                <p>En cours</p>
-                              ) : (
-                                <p>Terminé</p>
-                              )}
-                            </Typography>
-                          </Stack>
-
-                          {/* <AvatarGroup max={4}>
-                        {trip.members.map((member) => (
-                          <>
-                            <Avatar {...stringAvatar(member.name)} />
-                          </>
-                        ))}
-                      </AvatarGroup> */}
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
+                    <TripCard travelId={member.TravelId} />
                   </Grid>
                 ))
               )}

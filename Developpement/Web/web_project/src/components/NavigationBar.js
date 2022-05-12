@@ -43,6 +43,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 import TopicRoundedIcon from "@mui/icons-material/TopicRounded";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
+import { useAuth } from "../Authentication/auth";
 
 const drawerWidth = 170;
 
@@ -128,6 +129,7 @@ const useStyles = makeStyles((theme) => ({
 const NavigationBar = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
+  let { user } = useAuth();
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -192,9 +194,9 @@ const NavigationBar = () => {
                 spacing={1}
               >
                 <Typography variant="button" textAlign="center">
-                  Lara Croft
+                  {user.username}
                 </Typography>
-                <Avatar {...stringAvatar("Lara Croft")} />
+                <Avatar {...stringAvatar(user.username)} />
               </Stack>
             </Toolbar>
           </AppBar>

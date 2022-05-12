@@ -40,6 +40,9 @@ import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRound
 import DirectionsWalkRoundedIcon from "@mui/icons-material/DirectionsWalkRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
+import { useAuth } from "../Authentication/auth";
+import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
+import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
 
 const drawerWidth = 170;
 
@@ -126,6 +129,8 @@ const NavigationBar = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
+  let { user } = useAuth();
+
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
@@ -189,9 +194,9 @@ const NavigationBar = () => {
                 spacing={1}
               >
                 <Typography variant="button" textAlign="center">
-                  Lara Croft
+                  {user.username}
                 </Typography>
-                <Avatar {...stringAvatar("Lara Croft")} />
+                <Avatar {...stringAvatar(user.username)} />
               </Stack>
             </Toolbar>
           </AppBar>
@@ -262,7 +267,7 @@ const NavigationBar = () => {
               to={"/album/" + idTravel + "/map"}
             />
             <Tab
-              icon={<DirectionsWalkRoundedIcon />}
+              icon={<PhotoSizeSelectActualRoundedIcon />}
               iconPosition="start"
               label={
                 <Stack
@@ -279,7 +284,7 @@ const NavigationBar = () => {
               to={"/album/" + idTravel + "/photos"}
             />
             <Tab
-              icon={<AssignmentRoundedIcon />}
+              icon={<NewspaperRoundedIcon />}
               iconPosition="start"
               label={
                 <Stack

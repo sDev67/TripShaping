@@ -34,7 +34,7 @@ function App() {
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             <Routes>
-              <Route path="/vitrine" element={<Exploration/>} />
+              <Route path="/vitrine" element={<Exploration />} />
               <Route path="/" element={<AppShowcase />} />
               <Route path="/discover" element={<Exploration />} />
               <Route path="/signin" element={<Signin />} />
@@ -61,7 +61,7 @@ function App() {
                 <Route path=":idTravel/logbook" element={<LogBook />} />
               </Route>
             </Routes>
-            <ReactQueryDevtools /> 
+            {/* <ReactQueryDevtools />  */}
           </QueryClientProvider>
         </AuthProvider>
       </BrowserRouter>

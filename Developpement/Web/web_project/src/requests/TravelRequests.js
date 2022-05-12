@@ -103,6 +103,17 @@ const TravelRequests = {
       .then((res) => res.json());
   },
 
+  getPhotosOfTravel: (idTravel) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/${idTravel}/photos`, {
+      // headers: {
+      //     Authorization: 'Bearer ' + token
+      // }
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+
   getAllDocumentsByTravelId: (idTravel) => {
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel/${idTravel}/documents`, {

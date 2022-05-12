@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   Stack,
   Box,
@@ -9,8 +8,16 @@ import {
   ImageListItem,
   ImageListItemBar,
 } from "@mui/material";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+import Loading from "../utils/Loading";
+import TravelRequests from "./../requests/TravelRequests";
 
 const Photos = () => {
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
+  let queryClient = useQueryClient();
   const itemData = [
     {
       img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
@@ -74,6 +81,23 @@ const Photos = () => {
     },
   ];
 
+  // const convertToBase64 = (buffer) => {
+  //   // let bufferTest = "<Buffer 54 75 74 6f 72 69 61 6c 73 50 6f 69 6e 74>";
+  //   // let base64 = bufferTest.toString("base64");
+  //   // console.log(base64);
+  // };
+
+  const {
+    isLoading: isLoading,
+    isError: isError,
+    error: error,
+    data: photos,
+  } = useQuery(["getPhotosOfTravel", idTravel], () =>
+    TravelRequests.getPhotosOfTravel(idTravel)
+  );
+
+  console.log(photos);
+
   return (
     <>
       <div style={{ height: "93.15%" }} width="100%">
@@ -84,19 +108,25 @@ const Photos = () => {
           direction="column"
           height="100%"
         >
-          <ImageList>
-            {itemData.map((item) => (
-              <ImageListItem key={item.img}>
-                <img
-                  src={`${item.img}?w=1000&fit=crop&auto=format`}
-                  srcSet={`${item.img}?w=1000&fit=crop&auto=format&dpr=2 2x`}
-                  alt={item.title}
-                  loading="lazy"
-                />
-                <ImageListItemBar title={item.title} subtitle={item.date} />
-              </ImageListItem>
-            ))}
-          </ImageList>
+          {isLoading ? (
+            <Loading />
+          ) : isError ? (
+            <p style={{ color: "red" }}>{error.message}</p>
+          ) : (
+            <ImageList>
+              {itemData.map((item, index) => (
+                <ImageListItem key={index}>
+                  <img
+                    src={`${item.img}?w=1000&fit=crop&auto=format`}
+                    srcSet={`${item.img}?w=1000&fit=crop&auto=format&dpr=2 2x`}
+                    alt={item.title}
+                    loading="lazy"
+                  />
+                  <ImageListItemBar title={item.title} subtitle={item.date} />
+                </ImageListItem>
+              ))}
+            </ImageList>
+          )}
         </Stack>
       </div>
     </>

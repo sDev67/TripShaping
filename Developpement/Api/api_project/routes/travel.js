@@ -710,6 +710,12 @@ module.exports = [
     method: "get",
     func: travel_ctrl.get_all_journal_entries_by_travel_id,
   },
+
+  {
+    url: "/travel/:travel_id/photos",
+    method: "get",
+    func: travel_ctrl.get_all_photos_by_travel_id,
+  },
   // {
   // 	url: '/travel/:travel_id/point/:point_id/documents',
   // 	method: 'get',

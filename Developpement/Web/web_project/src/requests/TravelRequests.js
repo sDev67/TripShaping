@@ -159,6 +159,19 @@ const TravelRequests = {
             .then(checkStatus)
             .then(res => res.json());
     },
+    updateTravelStatus: ({ TravelId, status }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${TravelId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                //Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ status })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
+    },
     updateTravelPublishItinerary: ({ TravelId, toPublish }) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${TravelId}`, {
@@ -168,6 +181,19 @@ const TravelRequests = {
                 //Authorization: 'Bearer ' + token
             },
             body: JSON.stringify({ toPublish })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
+    },
+    updateTravelTrackPosition: ({ TravelId, positionAgree }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${TravelId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                //Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ positionAgree })
         })
             .then(checkStatus)
             .then(res => res.json());

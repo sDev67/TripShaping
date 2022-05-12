@@ -60,6 +60,7 @@ const Photo = ({ navigation, route }) => {
             formData.append("longitude", location.coords.longitude);
             formData.append("latitude", location.coords.latitude);
             PhotoRequests.sendPhoto(formData);
+            console.log(Date.now())
         }
     }
 

@@ -12,8 +12,6 @@ module.exports = sequelize => {
     }
 
     Photo.init({
-        title: DataTypes.STRING,
-        typeFile: DataTypes.STRING,
         dataFile: DataTypes.BLOB("long"),
         date: DataTypes.DATE,
         latitude: DataTypes.FLOAT,

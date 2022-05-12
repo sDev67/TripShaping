@@ -55,6 +55,7 @@ const checkFileExistRoute = async (req, res, next) => {
 
 const upload = multer({
     storage: storage,
+    limits: { fieldSize: 2 * 1024 * 1024 }
 }).single('title')
 
 const get_all = async (req, res, next) => {
@@ -111,22 +112,15 @@ const disp_file_by_id = async (req, res, next) => {
 
 const create = async (req, res) => {
     try {
-        if (req.file == undefined) {
-            return res.send(`You must select a photo.`);
-        }
         db.Photo.create({
-            title: req.file.originalname,
-            typeFile: req.file.mimetype,
-            dataFile: fs.readFileSync(
-                "photos/" + req.file.filename
-            ),
+            dataFile: req.body.dataFile,
             StepId: req.body.StepId,
             TravelId: req.body.TravelId,
             RouteId: req.body.RouteId,
             PointId: req.body.PointId,
-            date: req.body.Date,
-            latitude: req.body.Latitude,
-            longitude: req.body.Longitude
+            date: req.body.date,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude
         })
             .then((image) => {
                 return res.send(`Photo has been uploaded.`);

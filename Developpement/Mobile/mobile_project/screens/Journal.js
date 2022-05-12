@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, ScrollView, Button } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
+import { format } from "date-fns";
 
 import JournalBox from '../components/elements/JournalBox';
 
 import { useAuth } from '../requests/Auth'
 import JournalRequests from '../requests/JournalRequests';
 import MemberRequests from '../requests/MemberRequests';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
 
 const Journal = ({ idTravel }) => {
 
     const { user } = useAuth();
+    const queryClient = useQueryClient();
 
     const [idMember, setIdMember] = useState(null);
     const [newMessage, setNewMessage] = useState('');
@@ -25,27 +27,34 @@ const Journal = ({ idTravel }) => {
         ['getMembers'], () => MemberRequests.getMembers()
     );
 
+    // Envoi du message en BDD
+    const addMessage = useMutation(JournalRequests.sendMessage, {
+        onSuccess: newMes => {
+            queryClient.setQueryData(
+                ['getMessages', idTravel],
+                message => [...message, newMes]
+            )
+            queryClient.invalidateQueries(['getMessages', idTravel])
+        }
 
+    });
 
     const post = () => {
-        if (members != null) {
+        var date = Date.now();
+        var formattedDate = format(date, "dd/MM/yyyy HH:mm");
+        let id = null
+
+        if (members.length !== 0 || members !== null) {
             members.map((member, idx) => {
                 if (member.TravelId == idTravel && member.userLogin == user.username) {
-                    setIdMember(member.id)
+                    id = member.id
                 }
             })
         }
 
-        console.log(idMember);
-        // const dateCourante = new Date();
-        // const date = dateCourante.getDate() + "/" + (dateCourante.getMonth() + 1) + "/" + dateCourante.getFullYear();
-        // const time = dateCourante.getHours() + "h" + dateCourante.getMinutes();
-
-        // if (newMessage != "") {
-        //     const newPost = { body: newMessage, author: user, date: date, time: time, step: null };
-        //     setMessages([...messages, newPost]);
-        //     setNewMessage("");
-        // }
+        const newMes = { date: formattedDate, text: newMessage, TravelId: idTravel, MemberId: id }
+        addMessage.mutate(newMes)
+        setNewMessage("")
     };
 
 

@@ -12,6 +12,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 const PointDetails = ({ route, navigation }) => {
 
+    const Buffer = require("buffer").Buffer;
     const { photo, point, isReadOnly, idTravel, location } = route.params;
 
     const [image, setImage] = useState(null);
@@ -117,19 +118,19 @@ const PointDetails = ({ route, navigation }) => {
                                 <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras", { parent: "poi", point: point, idReadOnly: isReadOnly, idTravel: idTravel })}>Prendre une photo</Button>
                                 <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                             </View>
-                            <View style={{ marginBottom: 10, position: "absolute", bottom: 0, alignSelf: "flex-end" }}>
+                            {image ?
+                                <Image source={{ uri: `data:image/jpeg;base64,${image.base64}` }} style={{ alignSelf: 'center', width: image.width / 10, height: image.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
+                                : photo &&
+                                <Image source={{ uri: `data:image/jpeg;base64,${photo.base64}` }} style={{ alignSelf: 'center', width: photo.width / 10, height: photo.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
+                                // <View style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", borderColor: "#CECECE", borderWidth: 1, borderRadius: 5, backgroundColor: "#E3E3E3", marginHorizontal: "10%", height: "60%", marginTop: "10%" }}>
+                                //     <Image source={noImage} style={{ width: 100, height: 100, tintColor: "#CECECE" }} alt="No Image" />
+                                // </View>
+                            }
+                            <View style={{ marginTop: 10, alignSelf: "flex-end" }}>
                                 <Button style={{ backgroundColor: "#00AB55", alignSelf: "flex-end", marginRight: 10 }} onPress={() => savePicture()} >Sauvegarder</Button>
                             </View>
-                            <View style={{ marginBottom: 10, paddingBottom: "50%" }}>
-                                {image ?
-                                    <Image source={{ uri: `data:image/jpeg;base64,${image.base64}` }} style={{ alignSelf: 'center', width: image.width / 10, height: image.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
-                                    : photo ?
-                                        <Image source={{ uri: `data:image/jpeg;base64,${photo.base64}` }} style={{ alignSelf: 'center', width: photo.width / 10, height: photo.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" /> :
-                                        <View style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", borderColor: "#CECECE", borderWidth: 1, borderRadius: 5, backgroundColor: "#E3E3E3", marginHorizontal: "10%", height: "60%", marginTop: "10%" }}>
-                                            <Image source={noImage} style={{ width: 100, height: 100, tintColor: "#CECECE" }} alt="No Image" />
-                                        </View>}
-                            </View>
                         </View>
+
                     }
                 </ScrollView>
             </View>
@@ -142,7 +143,8 @@ const styles = StyleSheet.create({
         flex: 1,
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        paddingBottom: "20%"
     },
     inputFocused: {
         borderRadius: 5,

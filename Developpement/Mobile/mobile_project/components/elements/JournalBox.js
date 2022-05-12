@@ -12,15 +12,15 @@ const JournalBox = ({ message }) => {
 
 
     const { isLoading: isLoading, isError: isError, error: error, data: step } = useQuery(
-        ['getStep', message.StepId], () => message.StepId !== null && StepRequests.getStepById(message.StepId)
+        ['getStep', message.StepId], () => (message.StepId !== null && message.StepId !== undefined) && StepRequests.getStepById(message.StepId)
     );
 
     const { isLoading: isLoadingP, isError: isErrorP, error: errorP, data: point } = useQuery(
-        ['getPoint', message.PointId], () => message.PointId !== null && PointRequests.getPointById(message.PointId)
+        ['getPoint', message.PointId], () => (message.PointId !== null && message.PointId !== undefined) && PointRequests.getPointById(message.PointId)
     );
 
     const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: member } = useQuery(
-        ['getMember', message.MemberId], () => message.MemberId !== null && MemberRequests.getMemberById(message.MemberId)
+        ['getMember', message.MemberId], () => (message.MemberId !== null && message.MemberId !== undefined) && MemberRequests.getMemberById(message.MemberId)
     );
 
     return (
@@ -50,7 +50,7 @@ const JournalBox = ({ message }) => {
                     </View>) : null
                 }
                 {isLoadingM ? <Text>Chargement...</Text> : isErrorM ? <Text style={{ color: 'red' }}>{errorM.message}</Text> :
-                    <Text style={{ marginTop: 5 }} >Écrit par {member.name} le {message.date.substring(0, 10)} à {message.date.substring(11)}</Text>}
+                    <Text style={{ marginTop: 5 }} >Écrit par {member.name} le {message?.date?.substring(0, 10)} à {message?.date?.substring(11)}</Text>}
             </View>
         </View >)
 }

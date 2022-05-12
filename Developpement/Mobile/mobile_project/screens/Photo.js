@@ -32,15 +32,6 @@ const Photo = ({ navigation, route }) => {
         }
     };
 
-    // Envoi de la photo en BDD
-    const addPhoto = useMutation(PhotoRequests.sendPhoto, {
-        onSuccess: newPhoto => queryClient.setQueryData(
-            ['photos', idTravel],
-            photos => [...photos, newPhoto]
-        )
-    });
-
-
     async function savePicture() {
 
         var date = Date.now();

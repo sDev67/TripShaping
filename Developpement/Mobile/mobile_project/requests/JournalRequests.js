@@ -11,6 +11,15 @@ const JournalRequests = {
             .then(checkStatus)
             .then(res => res.json())
     },
+    sendMessage: (credentials) => {
+
+        return fetch(`${url_prefix}/journal_entry`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(credentials)
+        })
+            .then(checkStatus)
+    }
 };
 
 export default JournalRequests;

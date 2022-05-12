@@ -18,7 +18,7 @@ const Spending = ({ navigation }) => {
     // Membres 
     const { isLoading: isLoading, isError: isError, error: error, data: members } = useQuery(["getMembers", idTravel], () => TravelRequests.getMembersOfTravel(idTravel));
 
-    const [balances, setBalances] = useState([{ id: 1, balance: 0 }, { id: 2, balance: 0 }, { id: 50, balance: 0 }, { id: 51, balance: 0 }]);
+    const [balances, setBalances] = useState([{ id: 1, balance: 0 }, { id: 2, balance: 0 }, { id: 8, balance: 0 }, { id: 4, balance: 0 }]);
     const [categories, setCategories] = useState(["Commerce", "Logement", "Loisir", "Restaurant"])
 
     // Donateur 

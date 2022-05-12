@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { Camera } from 'expo-camera'
 
 import file from '../assets/navigation_icons/icon_file.png';
-import noImage from "../assets/images/image.png"
+import noImage from "../assets/images/NoImage.jpg"
 
 import TravelRequests from '../requests/TravelRequests';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
@@ -78,7 +78,7 @@ const StepDetails = ({ route, navigation }) => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             quality: 0.25,
-            allowsEditing: true,
+            allowsEditing: false,
             base64: true
         });
 
@@ -141,6 +141,7 @@ const StepDetails = ({ route, navigation }) => {
                                         count++;
                                         return (
                                             <Pressable style={{ marginBottom: 10 }} key={idx} onPress={() => { navigation.navigate("Documents", { document: doc }) }}><View style={{ flexDirection: "row", marginLeft: 10 }}><Image alt="icon_file" source={file} style={{ width: 30, height: 30 }} /><Text style={{ marginTop: 5, marginLeft: 5 }}>{doc.title}</Text></View></Pressable>)
+
                                     }
                                     else {
                                         return null;
@@ -161,19 +162,22 @@ const StepDetails = ({ route, navigation }) => {
                                     <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => showCamera()}>Prendre une photo</Button>
                                     <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                                 </View >
-                                <View style={{ marginBottom: 10, position: "absolute", bottom: 0, alignSelf: "flex-end" }}>
+
+
+                                {image ?
+                                    <Image source={{ uri: `data:image/jpeg;base64,${image.base64}` }} style={{ alignSelf: 'center', width: image.width / 10, height: image.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
+                                    : photo ?
+                                        <Image source={{ uri: `data:image/jpeg;base64,${photo.base64}` }} style={{ alignSelf: 'center', width: photo.width / 10, height: photo.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" /> :
+                                        <Image source={noImage} style={{ alignSelf: "center", marginTop: "10%", width: 200, height: 200 }} />
+                                    // <View style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", borderColor: "#CECECE", borderWidth: 1, borderRadius: 5, backgroundColor: "#E3E3E3", marginHorizontal: "10%", height: "60%", marginTop: "10%" }}>
+                                    //     <Image source={noImage} style={{ width: 100, height: 100, tintColor: "#CECECE" }} alt="No Image" />
+                                    // </View>
+                                }
+                                <View style={{ marginTop: 10, alignSelf: "flex-end" }}>
                                     <Button style={{ backgroundColor: "#00AB55", alignSelf: "flex-end", marginRight: 10 }} onPress={() => savePicture()} >Sauvegarder</Button>
                                 </View>
-                                <View style={{ marginBottom: 10, paddingBottom: "50%" }}>
-                                    {image ?
-                                        <Image source={{ uri: `data:image/jpeg;base64,${image.base64}` }} style={{ alignSelf: 'center', width: image.width / 10, height: image.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
-                                        : photo ?
-                                            <Image source={{ uri: `data:image/jpeg;base64,${photo.base64}` }} style={{ alignSelf: 'center', width: photo.width / 10, height: photo.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" /> :
-                                            <View style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", borderColor: "#CECECE", borderWidth: 1, borderRadius: 5, backgroundColor: "#E3E3E3", marginHorizontal: "10%", height: "60%", marginTop: "10%" }}>
-                                                <Image source={noImage} style={{ width: 100, height: 100, tintColor: "#CECECE" }} alt="No Image" />
-                                            </View>}
-                                </View>
-                            </View>}
+                            </View>
+                        }
                     </ScrollView>
                 </View>
             </SafeAreaView>

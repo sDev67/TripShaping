@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { Camera } from 'expo-camera'
 
 import file from '../assets/navigation_icons/icon_file.png';
-import noImage from "../assets/images/image.png"
+import noImage from "../assets/images/NoImage.jpg"
 
 import TravelRequests from '../requests/TravelRequests';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
@@ -68,7 +68,7 @@ const PointDetails = ({ route, navigation }) => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             quality: 0.25,
-            allowsEditing: true,
+            allowsEditing: false,
             base64: true
         });
 
@@ -161,8 +161,9 @@ const PointDetails = ({ route, navigation }) => {
                             </View>
                             {image ?
                                 <Image source={{ uri: `data:image/jpeg;base64,${image.base64}` }} style={{ alignSelf: 'center', width: image.width / 10, height: image.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
-                                : photo &&
-                                <Image source={{ uri: `data:image/jpeg;base64,${photo.base64}` }} style={{ alignSelf: 'center', width: photo.width / 10, height: photo.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
+                                : photo ?
+                                    <Image source={{ uri: `data:image/jpeg;base64,${photo.base64}` }} style={{ alignSelf: 'center', width: photo.width / 10, height: photo.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" /> :
+                                    <Image source={noImage} style={{ alignSelf: "center", marginTop: "10%", width: 200, height: 200 }} />
                                 // <View style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", borderColor: "#CECECE", borderWidth: 1, borderRadius: 5, backgroundColor: "#E3E3E3", marginHorizontal: "10%", height: "60%", marginTop: "10%" }}>
                                 //     <Image source={noImage} style={{ width: 100, height: 100, tintColor: "#CECECE" }} alt="No Image" />
                                 // </View>

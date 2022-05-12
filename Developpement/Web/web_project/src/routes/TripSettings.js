@@ -1,26 +1,24 @@
 import { Button, Stack } from "@mui/material";
 import * as React from "react";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Input from "@mui/material/Input";
-import FilledInput from "@mui/material/FilledInput";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Switch } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import TextField from "@mui/material/TextField";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import { Link, Outlet, useParams } from "react-router-dom";
 import { useState } from "react";
+import TravelRequests from "../requests/TravelRequests";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
 
 const TripSettings = () => {
+  const queryClient = useQueryClient();
+
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
   const [currentDate, setCurrentDate] = useState("");
+
+  const [publicItinierary, setPublicItinierary] = useState(false);
 
   const handleDateChange = (newDate) => {
     setCurrentDate(newDate);
@@ -29,6 +27,33 @@ const TripSettings = () => {
   const handleSwitch = () => {
     // setExpanded(!expanded);
   };
+
+  const updateStatus = useMutation(TravelRequests.updateTravelPublishItinerary, {
+    onSuccess: (publishedStatus) => {
+      queryClient.setQueryData(["getTravel", idTravel], publishedStatus);
+      queryClient.invalidateQueries(["getTravel", idTravel]);
+    },
+  });
+
+  // Fonction qui met a jour les propriétés d'un point d'interet
+  const updateStatusPublished = (publicItinierary) => {
+
+    const newStatus = {
+      TravelId: idTravel,
+      toPublish: publicItinierary,
+    };
+    updateStatus.mutate(newStatus);
+
+  };
+
+  const handleSwitchPublicItinerary = () => {
+
+    setPublicItinierary(!publicItinierary);
+    updateStatusPublished(publicItinierary)
+
+
+  };
+
   return (
     <>
       <Stack height="93.15%" width="100%" direction="column">
@@ -114,7 +139,7 @@ const TripSettings = () => {
           <Stack direction="row" marginBottom={5} justifyContent="space-evenly">
             <FormControlLabel
               sx={{ width: "58%" }}
-              value="track"
+              value={publicItinierary}
               control={<Switch color="primary" />}
               label={
                 <Typography variant="h6" color="primary">
@@ -122,7 +147,7 @@ const TripSettings = () => {
                 </Typography>
               }
               labelPlacement="start"
-              onChange={handleSwitch}
+              onChange={handleSwitchPublicItinerary}
               position="relative"
             />
           </Stack>

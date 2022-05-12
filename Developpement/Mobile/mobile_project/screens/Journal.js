@@ -5,23 +5,38 @@ import { StyleSheet, View, TextInput, Text } from 'react-native';
 
 import JournalBox from '../components/elements/JournalBox';
 
+import { useAuth } from '../requests/Auth'
 import JournalRequests from '../requests/JournalRequests';
+import MemberRequests from '../requests/MemberRequests';
 import { useQuery, useQueryClient } from 'react-query';
 
 const Journal = ({ idTravel }) => {
 
-    const user = "Vivien Riehl"
+    const { user } = useAuth();
 
+    const [idMember, setIdMember] = useState(null);
     const [newMessage, setNewMessage] = useState('');
 
     const { isLoading: isLoading, isError: isError, error: error, data: messages } = useQuery(
-        ['getMessages'], () => JournalRequests.getJournalByTravel(idTravel)
+        ['getMessages', idTravel], () => JournalRequests.getJournalByTravel(idTravel)
     );
 
+    const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: members } = useQuery(
+        ['getMembers'], () => MemberRequests.getMembers()
+    );
+
+
+
     const post = () => {
+        if (members != null) {
+            members.map((member, idx) => {
+                if (member.TravelId == idTravel && member.userLogin == user.username) {
+                    setIdMember(member.id)
+                }
+            })
+        }
 
-
-
+        console.log(idMember);
         // const dateCourante = new Date();
         // const date = dateCourante.getDate() + "/" + (dateCourante.getMonth() + 1) + "/" + dateCourante.getFullYear();
         // const time = dateCourante.getHours() + "h" + dateCourante.getMinutes();

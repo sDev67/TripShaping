@@ -3,7 +3,7 @@ const db = require("../models");
 module.exports = {
   get_all: (req, res, next) => {
     return db.Member.findAll({
-      order: ["lastname"],
+      order: ["name"],
     })
       .then((member) => res.json(member))
       .catch(next);
@@ -13,7 +13,7 @@ module.exports = {
     return db.Member.findByPk(req.params.member_id)
       .then((member) => {
         if (!member) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Requested Member not found" };
         }
         req.member = member;
         return next();
@@ -25,7 +25,7 @@ module.exports = {
     return db.Member.findByPk(req.params.member_id)
       .then((member) => {
         if (!member) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Requested Member not found" };
         }
         return res.json(member);
       })
@@ -61,7 +61,7 @@ module.exports = {
     return db.Member.findByPk(req.params.member_id)
       .then((member) => {
         if (!member) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Requested Member not found" };
         }
         Object.assign(member, req.body);
         return member.save();
@@ -74,7 +74,7 @@ module.exports = {
     return db.Member.findByPk(req.params.member_id)
       .then((member) => {
         if (!member) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Requested Member not found" };
         }
         return member.destroy();
       })

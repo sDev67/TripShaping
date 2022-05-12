@@ -16,8 +16,12 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { FileUploader } from "react-drag-drop-files";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
 import RichTextEditor from "./RichTextEditor";
+import DocumentRequest from "../requests/DocumentRequest";
+import DocumentsList from "./DocumentsList";
+import Loading from "../utils/Loading";
 
 const StepMenu = ({
   deleteStep,
@@ -28,12 +32,23 @@ const StepMenu = ({
 }) => {
   const queryClient = useQueryClient();
 
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
   const [duration, setDuration] = useState(selectedMarker.duration);
-  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const {
+    isLoading: isLoadingD,
+    isError: isErrorD,
+    error: errorD,
+    data: documents,
+  } = useQuery(["getDocumentsOfStep", selectedMarker.id], () =>
+    DocumentRequest.getDocumentsByStepId(selectedMarker.id)
+  );
 
   const categ = [
     {
@@ -66,6 +81,17 @@ const StepMenu = ({
       updateInfoStep.mutate(newPoint);
       setSelectedMarker(null);
     }
+  };
+
+  const addFile = (file) => {
+    const formData = new FormData();
+    formData.append("title", file);
+    formData.append("TravelId", idTravel);
+    formData.append("StepId", selectedMarker.id);
+
+    console.log(...formData);
+
+    DocumentRequest.uploadFile(formData);
   };
 
   return (
@@ -136,35 +162,48 @@ const StepMenu = ({
           />
           <Stack
             style={{ marginBottom: 25 }}
-            direction="row"
-            justifyContent="space-between"
-            spacing={2}
+            spacing={1}
+            direction="column"
+            height="160px"
           >
-            <TextField
-              fullWidth
-              select
-              label="Documents"
-              value=""
-              //value={selectedMarker.location.files}
-              InputLabelProps={{
-                shrink: true,
-              }}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              {files.map((file, index) => (
-                <MenuItem key={index}>{file.name}</MenuItem>
-              ))}
-            </TextField>
-
-            <Button
-              style={{ paddingLeft: 32, paddingRight: 32 }}
-              variant="contained"
-              color="primary"
-              startIcon={<UploadFileRounded />}
-              onClick={() => setDialogOpen(true)}
-            >
-              {" "}
-              Ajouter
-            </Button>
+              <Typography variant="h6" color="primary">
+                Documents
+              </Typography>
+              <Button
+                style={{ paddingLeft: 32, paddingRight: 32 }}
+                startIcon={<UploadFileRounded />}
+                variant="contained"
+                component="label"
+                disabled={!isEdition}
+              >
+                Ajouter
+                <input
+                  type="file"
+                  hidden
+                  onChange={(e) => {
+                    addFile(e.target.files[0]);
+                  }}
+                  required
+                />
+              </Button>
+            </Stack>
+            {isLoadingD ? (
+              <Loading />
+            ) : isErrorD ? (
+              <p style={{ color: "red" }}>{errorD.message}</p>
+            ) : (
+              <DocumentsList
+                documents={documents}
+                requestKeyTitle="getDocumentsOfStep"
+                requestKeyValue={selectedMarker.id}
+                isEdition={isEdition}
+              ></DocumentsList>
+            )}
           </Stack>
 
           {/* <TextField
@@ -182,54 +221,42 @@ const StepMenu = ({
 
           />*/}
 
-          <Stack fullWidth style={{ marginBottom: 25 }}>
+          <div style={{ marginBottom: 25 }}>
             <RichTextEditor
               setValue={setDescription}
               value={description}
               limitedEditor={true}
-              minH="300px"
+              minH={"200px"}
               isReadOnly={!isEdition}
+              maxH={"200px"}
             />
-          </Stack>
+          </div>
 
           <Stack direction="row" justifyContent="space-between">
-            {isEdition && (
-              <>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  startIcon={<DeleteRounded />}
-                  onClick={() => {
-                    deleteStep.mutate(selectedMarker.id);
-                    setSelectedMarker(null);
-                  }}
-                >
-                  Supprimer
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<DoneRounded />}
-                  onClick={updateStepInfo(selectedMarker)}
-                >
-                  Enregistrer
-                </Button>
-              </>
-            )}
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteRounded />}
+              onClick={() => {
+                deleteStep.mutate(selectedMarker.id);
+                setSelectedMarker(null);
+              }}
+              disabled={!isEdition}
+            >
+              Supprimer
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<DoneRounded />}
+              onClick={updateStepInfo(selectedMarker)}
+              disabled={!isEdition}
+            >
+              Enregistrer
+            </Button>
           </Stack>
         </CardContent>
       </Card>
-
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <div style={{ margin: 10, marginTop: 0 }}>
-          <Typography variant="h3" marginY={2}>
-            Ajouter un fichier
-          </Typography>
-          <FileUploader
-            handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
-          />
-        </div>
-      </Dialog>
     </>
   );
 };

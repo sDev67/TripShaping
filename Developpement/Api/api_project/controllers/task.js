@@ -16,7 +16,7 @@ module.exports = {
 				if (!task) {
 					throw { status: 404, message: 'Requested Group not found' };
 				}
-				req.task = task;
+				res.locals.task = task;
 				return next();
 			})
 			.catch(next);

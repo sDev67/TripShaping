@@ -1,31 +1,15 @@
 import React, { useEffect } from "react";
 import {
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  Card,
-  CircularProgress,
-  TextField,
-  Popover,
+
   Stack,
-  CardMedia,
-  CardContent,
-  Dialog,
-  MenuItem,
   Button,
-  Alert,
-  Collapse,
-  DialogTitle,
-  Icon,
   Typography,
-  IconButton,
-  Switch,
+
 } from "@mui/material";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 
-import Editor from "../components/RichTextEditor";
+import RichTextEditor from "../components/RichTextEditor";
 import { useParams } from "react-router-dom";
 
 const Informations = () => {
@@ -36,9 +20,9 @@ const Informations = () => {
   idTravel = parseInt(idTravel);
 
   const {
-    isLoading: isLoading,
-    isError: isError,
-    error: error,
+    isLoading: isLoadingI,
+    isError: isErrorI,
+    error: errorI,
     data: travelDatas,
   } = useQuery(["getInfos", idTravel], () =>
     TravelRequests.getTravelByid(idTravel)
@@ -79,7 +63,7 @@ const Informations = () => {
           direction="column"
           height="100%"
         >
-          {isLoading ? (
+          {isLoadingI ? (
             <Typography
               color="error"
               variant="h5"
@@ -88,9 +72,9 @@ const Informations = () => {
             >
               Chargement...
             </Typography>
-          ) : !isError ? (
+          ) : !isErrorI ? (
             <>
-              <Editor
+              <RichTextEditor
                 setValue={setValue}
                 value={travelDatas.infos !== null ? travelDatas.infos : null}
                 minH="500px"
@@ -104,7 +88,7 @@ const Informations = () => {
               </Button>
             </>
           ) : (
-            <p style={{ color: "red" }}>{error.message}</p>
+            <p style={{ color: "red" }}>{errorI.message}</p>
           )}
         </Stack>
       </Stack>

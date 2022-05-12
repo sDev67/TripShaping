@@ -12,12 +12,10 @@ module.exports = sequelize => {
     }
 
     Photo.init({
-        title: DataTypes.STRING,
-        typeFile: DataTypes.STRING,
-        date: DataTypes.DATE,
+        dataFile: DataTypes.BLOB("long"),
+        date: DataTypes.STRING,
         latitude: DataTypes.FLOAT,
-        longitude: DataTypes.FLOAT,
-        dataFile: DataTypes.BLOB("long")
+        longitude: DataTypes.FLOAT
     }, {
         sequelize,
         modelName: 'Photo'

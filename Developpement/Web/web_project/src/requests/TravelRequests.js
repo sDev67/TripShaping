@@ -215,6 +215,19 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
+  updateTravelPublishItinerary: ({ TravelId, toPublish }) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/${TravelId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        //Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify({ toPublish }),
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
 
   getTravel: (TravelId) => {
     //const token = window.localStorage.getItem('token');
@@ -282,6 +295,21 @@ const TravelRequests = {
   addTask: ({ title, date, TravelId }) => {
     //const token = window.localStorage.getItem('token');
 
+    return fetch(`${url_prefix}/task`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        //  Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify({ title, date, TravelId }),
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+
+  addTask: ({ title, date, TravelId }) => {
+    //const token = window.localStorage.getItem('token');
+    console.log(JSON.stringify({ title, date, TravelId }));
     return fetch(`${url_prefix}/task`, {
       method: "POST",
       headers: {

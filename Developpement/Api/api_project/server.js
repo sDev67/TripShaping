@@ -12,7 +12,7 @@ const swaggerOptions = {
       title: 'ATLAS',
       version: '1.0.0',
       description:
-        'Api développée pour le projet Acrobatt.',
+        'Api développée pour le projet Acrobatt de fin de Licence Pro.',
       contact: {
         name: 'Visitez notre application',
         url: 'https://google.com',
@@ -24,7 +24,8 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://cdad181.iutrs.unistra.fr:4200',
+        //url: 'http://cdad181.iutrs.unistra.fr:4200',
+        url: 'http://localhost:4200',
         description: 'Serveur de Production',
 
       },
@@ -41,6 +42,10 @@ const swaggerOptions = {
       {
         name: 'Travel',
         description: 'Route concernant les Voyages',
+      },
+      {
+        name: 'Document',
+        description: 'Route concernant les documents (image et pdf)',
       },
     ],
   },

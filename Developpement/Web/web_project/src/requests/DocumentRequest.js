@@ -44,7 +44,6 @@ const DocumentRequest = {
       .then(checkStatus)
       .then((res) => res.json());
   },
-
   checkifDocumentExist: (documentName) => {
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/document/check/${documentName}`, {
@@ -55,7 +54,6 @@ const DocumentRequest = {
       .then(checkStatus)
       .then((res) => res.json());
   },
-
   getDisplayedFile: (idDocument) => {
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/document/file/${idDocument}`, {
@@ -66,11 +64,10 @@ const DocumentRequest = {
     //.then(res => res.json())
   },
 
+
   // créer le fichier en base de donnée et dans le répertoire resources
   uploadFile: (formData) => {
     //const token = window.localStorage.getItem('token');
-    // let formData = new FormData();
-    // formData.append("title", title);
     return fetch(`${url_prefix}/document`, {
       method: "POST",
       body: formData,

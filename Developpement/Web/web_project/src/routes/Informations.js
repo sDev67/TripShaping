@@ -1,32 +1,16 @@
 import React, { useEffect } from "react";
 import {
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  Card,
-  CircularProgress,
-  TextField,
-  Popover,
+
   Stack,
-  CardMedia,
-  CardContent,
-  Dialog,
-  MenuItem,
   Button,
-  Alert,
-  Collapse,
-  DialogTitle,
-  Icon,
   Typography,
-  IconButton,
-  Switch,
+
 } from "@mui/material";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
-import { useParams } from "react-router-dom";
-import Loading from "../utils/Loading";
+
 import RichTextEditor from "../components/RichTextEditor";
+import { useParams } from "react-router-dom";
 
 const Informations = () => {
   const [switchState, setSwitchState] = React.useState(false);
@@ -36,9 +20,9 @@ const Informations = () => {
   idTravel = parseInt(idTravel);
 
   const {
-    isLoading: isLoading,
-    isError: isError,
-    error: error,
+    isLoading: isLoadingI,
+    isError: isErrorI,
+    error: errorI,
     data: travelDatas,
   } = useQuery(["getInfos", idTravel], () =>
     TravelRequests.getTravelByid(idTravel)
@@ -79,38 +63,33 @@ const Informations = () => {
           direction="column"
           height="100%"
         >
-          <Stack height="85%">
-            {isLoading ? (
-              <Loading />
-            ) : !isError ? (
-              <>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Typography variant="h4" marginY={1}>
-                    Informations liées au voyage
-                  </Typography>
-                  <Button
-                    disabled={value === travelDatas.infos ? true : false}
-                    onClick={(e) => handleChange()}
-                    variant="contained"
-                  >
-                    Enregistrer
-                  </Button>
-                </Stack>
-                <RichTextEditor
-                  setValue={setValue}
-                  value={travelDatas.infos !== null ? travelDatas.infos : null}
-                  minH={"700px"}
-                  maxH={"700px"}
-                />
-              </>
-            ) : (
-              <p style={{ color: "red" }}>{error.message}</p>
-            )}
-          </Stack>
+          {isLoadingI ? (
+            <Typography
+              color="error"
+              variant="h5"
+              textAlign="center"
+              marginTop={4}
+            >
+              Chargement...
+            </Typography>
+          ) : !isErrorI ? (
+            <>
+              <RichTextEditor
+                setValue={setValue}
+                value={travelDatas.infos !== null ? travelDatas.infos : null}
+                minH="500px"
+              />
+              <Button
+                disabled={value === travelDatas.infos ? true : false}
+                onClick={(e) => handleChange()}
+                variant="contained"
+              >
+                Sauvegarder les informations
+              </Button>
+            </>
+          ) : (
+            <p style={{ color: "red" }}>{errorI.message}</p>
+          )}
         </Stack>
       </Stack>
     </>

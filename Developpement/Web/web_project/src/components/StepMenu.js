@@ -50,6 +50,12 @@ const StepMenu = ({
     DocumentRequest.getDocumentsByStepId(selectedMarker.id)
   );
 
+  const addDocument = useMutation(DocumentRequest.uploadFile, {
+    onSuccess: (document) => {
+      queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
+    },
+  });
+
   const categ = [
     {
       value: "Hôtel",
@@ -91,7 +97,7 @@ const StepMenu = ({
 
     console.log(...formData);
 
-    DocumentRequest.uploadFile(formData);
+    addDocument.mutate(formData);
   };
 
   return (

@@ -77,6 +77,12 @@ const StepItem = ({ step, index, updateInfoStep }) => {
     StepRequests.getPointsOfStep(step.id)
   );
 
+  const addDocument = useMutation(DocumentRequest.uploadFile, {
+    onSuccess: (document) => {
+      queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
+    },
+  });
+
   console.log(points);
 
   const addFile = (file) => {
@@ -87,7 +93,7 @@ const StepItem = ({ step, index, updateInfoStep }) => {
 
     console.log(...formData);
 
-    DocumentRequest.uploadFile(formData);
+    addDocument.mutate(formData);
   };
 
   const updateStepInfo = (id) => (e) => {

@@ -32,6 +32,8 @@ const Documents = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
+  let queryClient = useQueryClient();
+
   const {
     isLoading: isLoadingD,
     isError: isErrorD,
@@ -41,6 +43,12 @@ const Documents = () => {
     DocumentRequest.getDocumentsByTravelId(idTravel)
   );
 
+  const addDocument = useMutation(DocumentRequest.uploadFile, {
+    onSuccess: (document) => {
+      queryClient.invalidateQueries(["getDocumentsOfTravel", idTravel]);
+    },
+  });
+
   const addFile = (file) => {
     const formData = new FormData();
     formData.append("title", file);
@@ -48,7 +56,7 @@ const Documents = () => {
 
     console.log(...formData);
 
-    DocumentRequest.uploadFile(formData);
+    addDocument.mutate(formData);
   };
 
   return (

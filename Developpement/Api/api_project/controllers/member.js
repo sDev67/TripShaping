@@ -33,28 +33,25 @@ module.exports = {
   },
 
   create: (req, res, next) => {
-    if (req.params.UserLogin == !"") {
+    if (req.body.userLogin !== "") {
       db.User.findAll({
-        attributes: ["username"],
+        attributes: ["username", "id"],
         where: {
-          username: req.params.UserLogin,
+          username: req.body.userLogin,
         },
       }).then((resp) => {
         if (resp == "") {
           return res.status(404).send("Username does not exist");
-        } else {
-          return db.Member.create({
-            name: req.params.name,
-            UserId: resp[0].id,
-            TravelId: req.params.TravelId,
-            userLogin: req.params.userLogin,
-          })
+        }
+        else {
+          return db.Member.create({ name: req.body.name, UserId: resp[0].id, TravelId: req.body.TravelId, userLogin: req.body.userLogin })
             .then((member) => res.json(member))
             .catch(next);
         }
       });
-    } else {
-      return db.Member.create(req.body)
+    }
+    else {
+      return db.Member.create({ name: req.body.name, UserId: null, TravelId: req.body.TravelId, userLogin: null })
         .then((member) => res.json(member))
         .catch(next);
     }

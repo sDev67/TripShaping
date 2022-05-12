@@ -29,13 +29,6 @@ const Members = () => {
     TravelRequests.getMembersOfTravel(idTravel)
   );
 
-  const {
-    isLoading: isLoadingU,
-    isError: isErrorU,
-    error: errorU,
-    data: users,
-  } = useQuery(["getUsers"], () => UserRequests.getAllUsers());
-
   const deleteMember = useMutation(MemberRequests.removeMember, {
     onSuccess: (_, id) =>
       queryClient.setQueryData(["getMembers", idTravel], (members) =>
@@ -45,7 +38,7 @@ const Members = () => {
 
   return (
     <>
-      <Stack height="93.15%" width="100%" direction="row">
+      <Stack height="90%" width="100%" direction="column">
         <Stack
           width="90%"
           paddingY="1%"
@@ -54,29 +47,22 @@ const Members = () => {
           justifyContent="space-between"
           height="100%"
         >
-          <Stack height="85%">
-            <Typography variant="h4" marginY={1}>
-              Liste des membres
-            </Typography>
-            {isLoading ? (
-              <Loading />
-            ) : isError ? (
-              <p style={{ color: "red" }}>{error.message}</p>
-            ) : (
-              <MemberList
-                members={membersOfTravel}
-                canBeDelete={true}
-                deleteMember={deleteMember}
-              />
-            )}
-          </Stack>
-          {isLoadingU ? (
+          <Typography variant="h4" marginY={1}>
+            Liste des membres
+          </Typography>
+          {isLoading ? (
             <Loading />
-          ) : isErrorU ? (
-            <p style={{ color: "red" }}>{errorU.message}</p>
+          ) : isError ? (
+            <p style={{ color: "red" }}>{error.message}</p>
           ) : (
-            <MemberForm users={users} />
+            <MemberList
+              members={membersOfTravel}
+              canBeDelete={true}
+              deleteMember={deleteMember}
+            />
           )}
+
+          <MemberForm />
         </Stack>
       </Stack>
     </>

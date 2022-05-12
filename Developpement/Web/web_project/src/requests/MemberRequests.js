@@ -12,6 +12,17 @@ const MemberRequests = {
       .then((res) => res.json());
   },
 
+  getMemberById: (idMember) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/member/${idMember}`, {
+      // headers: {
+      //     Authorization: 'Bearer ' + token
+      // }
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+
   addMember: ({ name, userLogin, TravelId }) => {
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/member`, {

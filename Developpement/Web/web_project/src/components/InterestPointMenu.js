@@ -51,6 +51,12 @@ const InterestPointMenu = ({
     DocumentRequest.getDocumentsByPointId(selectedMarker.id)
   );
 
+  const addDocument = useMutation(DocumentRequest.uploadFile, {
+    onSuccess: (document) => {
+      queryClient.invalidateQueries(["getDocumentsOfPoint", idTravel]);
+    },
+  });
+
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
@@ -145,10 +151,9 @@ const InterestPointMenu = ({
     formData.append("title", file);
     formData.append("TravelId", idTravel);
     formData.append("PointId", selectedMarker.id);
-
     console.log(...formData);
 
-    DocumentRequest.uploadFile(formData);
+    addDocument.mutate(formData);
   };
 
   return (

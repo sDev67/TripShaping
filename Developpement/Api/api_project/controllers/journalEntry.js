@@ -11,7 +11,7 @@ module.exports = {
     },
 
     load_by_id: (req, res, next) => {
-        return db.JournalEntry.findByPk(req.params.journalEntry_id)
+        return db.JournalEntry.findByPk(req.params.journal_entry_id)
             .then(journalEntry => {
                 if (!journalEntry) {
                     throw { status: 404, message: 'Requested Group not found' };
@@ -23,7 +23,7 @@ module.exports = {
     },
 
     get_by_id: (req, res, next) => {
-        return db.JournalEntry.findByPk(req.params.journalEntry_id)
+        return db.JournalEntry.findByPk(req.params.journal_entry_id)
             .then(journalEntry => {
                 if (!journalEntry) {
                     throw { status: 404, message: 'Requested Group not found' };
@@ -40,7 +40,7 @@ module.exports = {
     },
 
     update_by_id: (req, res, next) => {
-        return db.JournalEntry.findByPk(req.params.journalEntry_id)
+        return db.JournalEntry.findByPk(req.params.journal_entry_id)
             .then(journalEntry => {
                 if (!journalEntry) {
                     throw { status: 404, message: 'Requested Group not found' };
@@ -53,7 +53,7 @@ module.exports = {
     },
 
     delete_by_id: (req, res, next) => {
-        return db.JournalEntry.findByPk(req.params.journalEntry_id)
+        return db.JournalEntry.findByPk(req.params.journal_entry_id)
             .then(journalEntry => {
                 if (!journalEntry) {
                     throw { status: 404, message: 'Requested Group not found' };
@@ -63,5 +63,4 @@ module.exports = {
             .then(() => res.status(200).end())
             .catch(next);
     }
-
 };

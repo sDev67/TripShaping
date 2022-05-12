@@ -21,9 +21,9 @@ import Photos from "./routes/Photos";
 import LogBook from "./routes/LogBook";
 import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
-import AppShowcase from "./routes/AppShowcase";
 import TripSettings from "./routes/TripSettings";
 import Exploration from "./routes/Exploration";
+import AppShowcase from "./routes/AppShowcase";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +34,7 @@ function App() {
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             <Routes>
+              <Route path="/vitrine" element={<Exploration/>} />
               <Route path="/" element={<AppShowcase />} />
               <Route path="/discover" element={<Exploration />} />
               <Route path="/signin" element={<Signin />} />
@@ -60,7 +61,7 @@ function App() {
                 <Route path=":idTravel/logbook" element={<LogBook />} />
               </Route>
             </Routes>
-            {/* <ReactQueryDevtools /> */}
+            <ReactQueryDevtools /> 
           </QueryClientProvider>
         </AuthProvider>
       </BrowserRouter>

@@ -3,12 +3,19 @@ import { View, Text, TextInput, StyleSheet, Dimensions, Pressable } from 'react-
 import { NativeBaseProvider, Button, Image, ScrollView } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import { format } from "date-fns";
+import { Camera } from 'expo-camera'
 
 import file from '../assets/navigation_icons/icon_file.png';
 import noImage from "../assets/images/image.png"
 
 import TravelRequests from '../requests/TravelRequests';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+
+import { useAuth } from '../requests/Auth'
+import MemberRequests from '../requests/MemberRequests';
+import JournalRequests from '../requests/JournalRequests';
+import PhotoRequests from '../requests/PhotoRequests';
+
 
 const PointDetails = ({ route, navigation }) => {
 
@@ -17,25 +24,50 @@ const PointDetails = ({ route, navigation }) => {
 
     const [image, setImage] = useState(null);
 
-    const user = "Vivien Riehl"
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+
+    const [idMember, setIdMember] = useState(null);
     const [newMessage, setNewMessage] = useState('');
 
-    const post = () => {
-        const dateCourante = new Date();
-        const date = dateCourante.getDate() + "/" + (dateCourante.getMonth() + 1) + "/" + dateCourante.getFullYear();
-        const time = dateCourante.getHours() + "h" + dateCourante.getMinutes();
+    const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: members } = useQuery(
+        ['getMembers'], () => MemberRequests.getMembers()
+    );
 
-        if (newMessage != "") {
-            const newPost = { body: newMessage, author: user, date: date, time: time, catStep: 1, step: point };
-            setMessages([...messages, newPost]);
-            setNewMessage("");
+    // Envoi du message en BDD
+    const addMessage = useMutation(JournalRequests.sendMessage, {
+        onSuccess: newMes => {
+            queryClient.setQueryData(
+                ['getMessages', idTravel],
+                message => [...message, newMes]
+            )
+            queryClient.invalidateQueries(['getMessages', idTravel])
         }
+    });
+
+    const post = () => {
+        console.log("test")
+        var date = Date.now();
+        var formattedDate = format(date, "dd/MM/yyyy HH:mm");
+        let id = null
+
+        if (members.length !== 0 || members !== null) {
+            members.map((member, idx) => {
+                if (member.TravelId == idTravel && member.userLogin == user.username) {
+                    id = member.id
+                }
+            })
+        }
+
+        const newMes = { date: formattedDate, text: newMessage, TravelId: idTravel, PointId: point.id, MemberId: id }
+        addMessage.mutate(newMes)
+        setNewMessage("")
     };
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            quality: 1,
+            quality: 0.25,
             allowsEditing: true,
             base64: true
         });
@@ -44,6 +76,15 @@ const PointDetails = ({ route, navigation }) => {
             setImage(result);
         }
     };
+
+    const showCamera = async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync()
+        if (status === 'granted') {
+            navigation.navigate("Cameras", { parent: "poi", point: point, idReadOnly: isReadOnly, idTravel: idTravel })
+        } else {
+            Alert.alert('Access denied')
+        }
+    }
 
     async function savePicture() {
         var date = Date.now();
@@ -57,7 +98,7 @@ const PointDetails = ({ route, navigation }) => {
             formData.append("date", formattedDate);
             formData.append("TravelId", idTravel);
             formData.append("PointId", point.id);
-            formData.append("StepId", step.id);
+            formData.append("StepId", point.id);
             PhotoRequests.sendPhoto(formData);
         }
         else if (photo != null) {
@@ -115,7 +156,7 @@ const PointDetails = ({ route, navigation }) => {
                             </View>
                             <Text style={styles.font}>Photo</Text>
                             <View>
-                                <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras", { parent: "poi", point: point, idReadOnly: isReadOnly, idTravel: idTravel })}>Prendre une photo</Button>
+                                <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => showCamera()}>Prendre une photo</Button>
                                 <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                             </View>
                             {image ?
@@ -144,7 +185,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
         backgroundColor: "white",
-        paddingBottom: "20%"
+        paddingBottom: 10
     },
     inputFocused: {
         borderRadius: 5,

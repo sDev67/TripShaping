@@ -36,7 +36,6 @@ const Journal = ({ idTravel }) => {
             )
             queryClient.invalidateQueries(['getMessages', idTravel])
         }
-
     });
 
     const post = () => {

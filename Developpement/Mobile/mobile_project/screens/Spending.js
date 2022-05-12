@@ -3,9 +3,14 @@ import { View, Text, TextInput, StyleSheet, Dimensions, ScrollView, Image, Touch
 import { Button, NativeBaseProvider, Select, CheckIcon, Checkbox, useToast, Center, Box } from 'native-base';
 
 import TravelRequests from "../requests/TravelRequests";
-import { useQuery, useQueryClient } from 'react-query';
 
 import iconHistory from "../assets/navigation_icons/icon_history.png"
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+
+import { useAuth } from '../requests/Auth'
+import MemberRequests from '../requests/MemberRequests';
+import JournalRequests from '../requests/JournalRequests';
+import PhotoRequests from '../requests/PhotoRequests';
 
 const Spending = ({ navigation }) => {
     const idTravel = 1;
@@ -49,7 +54,7 @@ const Spending = ({ navigation }) => {
         selectedItems.map((item, i) => {
             members.map((member, idx) => {
                 if (item == member.id) {
-                    desti.push(member.firstname + " " + member.lastname)
+                    desti.push(member.name)
                 }
             })
         })
@@ -64,7 +69,7 @@ const Spending = ({ navigation }) => {
             let dest = "";
             members.map((member, idx) => {
                 if (donateur == member.id) {
-                    author = member.firstname + " " + member.lastname
+                    author = member.name
                 }
             })
 
@@ -122,7 +127,7 @@ const Spending = ({ navigation }) => {
 
                             return (
                                 <View style={styles.box} key={i}>
-                                    <Text>{member.firstname} {member.lastname}</Text><Text style={{ color: balance > 0 ? "green" : (balance == 0 ? "black" : "red") }}>{" "}{balance > 0 && "+"}{balance}</Text>
+                                    <Text>{member.name}</Text><Text style={{ color: balance > 0 ? "green" : (balance == 0 ? "black" : "red") }}>{" "}{balance > 0 && "+"}{balance}</Text>
                                 </View>
                             )
                         })}
@@ -135,7 +140,7 @@ const Spending = ({ navigation }) => {
                         <View style={{ marginBottom: 10, alignSelf: "center" }} >
                             <Select selectedValue={donateur} width={Dimensions.get('window').width - 20} accessibilityLabel="Choisir un donateur" placeholder="Choisir un donateur" _selectedItem={{ endIcon: <CheckIcon size="5" /> }} mt={1} onValueChange={itemValue => { setDonateur(itemValue) }}>
                                 {members.map((member, i) => {
-                                    return (<Select.Item key={i} label={member.firstname + " " + member.lastname} value={member.id} />)
+                                    return (<Select.Item key={i} label={member.name} value={member.id} />)
                                 })}
                             </Select>
                         </View>
@@ -150,7 +155,7 @@ const Spending = ({ navigation }) => {
                                     <Checkbox.Group onChange={setSelectedItems} value={selectedItems} accessibilityLabel="Choisir les destinataires">
                                         {members.map((member, i) => {
                                             return (<Checkbox colorScheme="rgb(154,209,245)" key={i} value={member.id} my={2} ml={2}>
-                                                {member.firstname + " " + member.lastname}
+                                                {member.name}
                                             </Checkbox>)
                                         })}
                                     </Checkbox.Group>

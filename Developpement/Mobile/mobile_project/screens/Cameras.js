@@ -16,18 +16,6 @@ const Cameras = ({ navigation, route }) => {
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
     const [flashMode, setFlashMode] = useState('off')
 
-    useEffect(() => {
-        (async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync()
-            if (status === 'granted') {
-                setStartCamera(true)
-            } else {
-                Alert.alert('Access denied')
-            }
-        });
-    }, [])
-
-
     const takePicture = async () => {
         const options = { quality: 0.25, base64: true };
         const photo = await camera.takePictureAsync(options)

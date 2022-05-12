@@ -4,39 +4,80 @@ import { View, Text, TextInput, StyleSheet, Dimensions, ScrollView, Pressable } 
 import { NativeBaseProvider, Button, Image } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import { format } from "date-fns";
+import { Camera } from 'expo-camera'
 
 import file from '../assets/navigation_icons/icon_file.png';
 import noImage from "../assets/images/image.png"
 
 import TravelRequests from '../requests/TravelRequests';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+
+import { useAuth } from '../requests/Auth'
+import MemberRequests from '../requests/MemberRequests';
+import JournalRequests from '../requests/JournalRequests';
+import PhotoRequests from '../requests/PhotoRequests';
+
 
 const StepDetails = ({ route, navigation }) => {
 
+    const Buffer = require("buffer").Buffer;
     const { photo, step, isReadOnly, idTravel, location } = route.params;
 
     const [image, setImage] = useState(null);
 
-    const user = "Vivien Riehl"
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+
+    const [idMember, setIdMember] = useState(null);
     const [newMessage, setNewMessage] = useState('');
 
-    const post = () => {
-        const dateCourante = new Date();
-        const date = dateCourante.getDate() + "/" + (dateCourante.getMonth() + 1) + "/" + dateCourante.getFullYear();
-        const time = dateCourante.getHours() + "h" + dateCourante.getMinutes();
+    const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: members } = useQuery(
+        ['getMembers'], () => MemberRequests.getMembers()
+    );
 
-        if (newMessage != "") {
-            const newPost = { body: newMessage, author: user, date: date, time: time, catStep: 2, step: step };
-            setMessages([...messages, newPost]);
-            setNewMessage("");
+    const post = () => {
+        var date = Date.now();
+        var formattedDate = format(date, "dd/MM/yyyy HH:mm");
+        let id = null
+
+        if (members.length !== 0 || members !== null) {
+            members.map((member, idx) => {
+                if (member.TravelId == idTravel && member.userLogin == user.username) {
+                    id = member.id
+                }
+            })
         }
+
+        const newMes = { date: formattedDate, text: newMessage, TravelId: idTravel, StepId: step.id, MemberId: id }
+        addMessage.mutate(newMes)
+        setNewMessage("")
     };
+
+    // Envoi du message en BDD
+    const addMessage = useMutation(JournalRequests.sendMessage, {
+        onSuccess: newMes => {
+            queryClient.setQueryData(
+                ['getMessages', idTravel],
+                message => [...message, newMes]
+            )
+            queryClient.invalidateQueries(['getMessages', idTravel])
+        }
+    });
+
+    const showCamera = async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync()
+        if (status === 'granted') {
+            navigation.navigate("Cameras", { parent: "step", point: step, idReadOnly: isReadOnly, idTravel: idTravel })
+        } else {
+            Alert.alert('Access denied')
+        }
+    }
 
     const pickImage = async () => {
         setImage(null)
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            quality: 1,
+            quality: 0.25,
             allowsEditing: true,
             base64: true
         });
@@ -117,7 +158,7 @@ const StepDetails = ({ route, navigation }) => {
                                 </View>
                                 <Text style={styles.font}>Photo</Text>
                                 <View>
-                                    <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => navigation.navigate("Cameras", { parent: "step", point: step, idReadOnly: isReadOnly, idTravel: idTravel })}>Prendre une photo</Button>
+                                    <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => showCamera()}>Prendre une photo</Button>
                                     <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                                 </View >
                                 <View style={{ marginBottom: 10, position: "absolute", bottom: 0, alignSelf: "flex-end" }}>

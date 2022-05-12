@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet, View, TextInput, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { format } from "date-fns";
+import { Camera } from 'expo-camera'
 
 import noImage from "../assets/images/image.png"
 
 import { useQuery, useQueryClient, useMutation } from 'react-query';
-import PhotoRequests from '../requests/PhotoRequests';
 
 const Photo = ({ navigation, route }) => {
 
@@ -59,12 +59,22 @@ const Photo = ({ navigation, route }) => {
         }
     }
 
+    const showCamera = async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync()
+        if (status === 'granted') {
+            navigation.navigate("Cameras", { parent: "global" })
+            setImage(null)
+        } else {
+            Alert.alert('Access denied')
+        }
+    }
+
     return (
         <>
             <NativeBaseProvider>
                 <SafeAreaView style={{ flex: 1 }}>
                     <View>
-                        <Button style={{ width: "50%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => { navigation.navigate("Cameras", { parent: "global" }), setImage(null) }}>Prendre une photo</Button>
+                        <Button style={{ width: "50%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => showCamera()}>Prendre une photo</Button>
                         <Button style={{ width: "50%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                     </View>
                     <View style={{ marginBottom: 10, position: "absolute", bottom: 0, alignSelf: "flex-end" }}>

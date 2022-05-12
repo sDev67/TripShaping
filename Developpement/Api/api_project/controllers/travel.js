@@ -111,6 +111,17 @@ module.exports = {
       .then((members) => res.json(members))
       .catch((err) => next(err));
   },
+  get_journalEntries_of_travel: (req, res, next) => {
+    return db.Travel.findByPk(req.params.travel_id)
+      .then((travel) => {
+        if (!travel) {
+          throw { status: 404, message: "Travel not found" };
+        }
+        return travel.getJournalEntries();
+      })
+      .then((journalEntries) => res.json(journalEntries))
+      .catch((err) => next(err));
+  },
   get_all_documents_by_travel_id: async (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {

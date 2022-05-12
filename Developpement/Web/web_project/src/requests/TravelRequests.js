@@ -159,6 +159,45 @@ const TravelRequests = {
             .then(checkStatus)
             .then(res => res.json());
     },
+    updateTravelStatus: ({ TravelId, status }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${TravelId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                //Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ status })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
+    },
+    updateTravelPublishItinerary: ({ TravelId, toPublish }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${TravelId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                //Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ toPublish })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
+    },
+    updateTravelTrackPosition: ({ TravelId, positionAgree }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${TravelId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                //Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ positionAgree })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
+    },
 
     getTravel: TravelId => {
         //const token = window.localStorage.getItem('token');
@@ -228,50 +267,50 @@ const TravelRequests = {
             .then(res => res.json())
     },
 
-    addTask: ({ title, date, TravelId}) => {
+    addTask: ({ title, date, TravelId }) => {
         //const token = window.localStorage.getItem('token');
-        console.log(JSON.stringify({ title,date, TravelId }))
+        console.log(JSON.stringify({ title, date, TravelId }))
         return fetch(`${url_prefix}/task`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({ title,date, TravelId })
+            body: JSON.stringify({ title, date, TravelId })
         })
             .then(checkStatus)
             .then(res => res.json());
     },
-    addLabel: ({ title, TravelId}) => {
+    addLabel: ({ title, TravelId }) => {
         //const token = window.localStorage.getItem('token');
-     
+
         return fetch(`${url_prefix}/label`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({ title,TravelId })
+            body: JSON.stringify({ title, TravelId })
         })
             .then(checkStatus)
             .then(res => res.json());
     },
-    
+
     removeTask: TaskId => {
         //const token = window.localStorage.getItem('token');
-     
+
         return fetch(`${url_prefix}/task/${TaskId}`, {
             method: 'DELETE',
-           
+
         })
             .then(checkStatus)
     },
     removeLabel: LabelId => {
         //const token = window.localStorage.getItem('token');
-     
+
         return fetch(`${url_prefix}/label/${LabelId}`, {
             method: 'DELETE',
-           
+
         })
             .then(checkStatus)
     },

@@ -25,6 +25,8 @@ import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link, Outlet, useParams } from "react-router-dom";
 import AlertError from "../utils/AlertError";
+import image from "../assets/rainbow.png";
+import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
 
 const theme = createTheme();
 
@@ -61,7 +63,7 @@ const Signin = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(https://www.thispersondoesnotexist.com/image)",
+            backgroundImage: `url(${image})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -77,10 +79,41 @@ const Signin = () => {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography variant="h5">Connexion</Typography>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              width="100%"
+            >
+              <Button to="/" component={Link}>
+                <ArrowCircleLeftRoundedIcon
+                  color="error"
+                  size="large"
+                  marginRight={1}
+                />
+                <Typography variant="button" color="error">
+                  Retour
+                </Typography>
+              </Button>
+
+              <Stack alignItems="center">
+                <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+                  <LockOutlinedIcon />
+                </Avatar>
+                <Typography variant="h5">Connexion</Typography>
+              </Stack>
+              <Button style={{ visibility: "hidden" }}>
+                <ArrowCircleLeftRoundedIcon
+                  color="error"
+                  size="large"
+                  marginRight={1}
+                />
+                <Typography variant="button" color="error">
+                  Retour
+                </Typography>
+              </Button>
+            </Stack>
+
             <Stack marginTop="10%" direction="column" width="100%" spacing={5}>
               <FormControl variant="outlined" required fullWidth>
                 <InputLabel htmlFor="outlined-adornment-password">

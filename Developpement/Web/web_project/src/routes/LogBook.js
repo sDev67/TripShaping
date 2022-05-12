@@ -12,10 +12,30 @@ import {
   Typography,
   CardContent,
 } from "@mui/material";
-
+import TravelRequests from "../requests/TravelRequests";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+import Loading from "../utils/Loading";
 import { stringAvatar } from "../utils/AvatarColorPicker";
+import Message from "../components/Message";
 
 const LogBook = () => {
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
+  const queryClient = useQueryClient();
+
+  const {
+    isLoading: isLoading,
+    isError: isError,
+    error: error,
+    data: journalEntries,
+  } = useQuery(["getJournalEntries", idTravel], () =>
+    TravelRequests.getJournalEntriesOfTravel(idTravel)
+  );
+
+  console.log(journalEntries);
+
   const days = [
     {
       step: "Etape 1",
@@ -99,7 +119,6 @@ const LogBook = () => {
     },
   ];
 
-  console.log(days);
   return (
     <div style={{ height: "93.15%" }} width="100%">
       <Stack
@@ -109,29 +128,17 @@ const LogBook = () => {
         direction="column"
         height="100%"
       >
-        <Stack spacing={5}>
-          {days.map((day, index) => (
-            <div key={index}>
-              <Typography variant="h4" color="primary">
-                Jour {index + 1} : {day.step}
-              </Typography>
-              <Stack spacing={2}>
-                {day.messages.map((message, index) => (
-                  <Card>
-                    <CardHeader
-                      avatar={<Avatar {...stringAvatar(message.user)} />}
-                      title={message.user}
-                      subheader={message.time}
-                    />
-                    <CardContent>
-                      <Typography variant="body"> {message.content}</Typography>
-                    </CardContent>
-                  </Card>
-                ))}
-              </Stack>
-            </div>
-          ))}
-        </Stack>
+        {isLoading ? (
+          <Loading />
+        ) : isError ? (
+          <p style={{ color: "red" }}>{error.message}</p>
+        ) : (
+          <Stack spacing={5}>
+            {journalEntries.map((journalEntry, index) => (
+              <Message key={index} journalEntry={journalEntry}></Message>
+            ))}
+          </Stack>
+        )}
       </Stack>
     </div>
   );

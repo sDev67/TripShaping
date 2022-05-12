@@ -15,6 +15,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import { Link, Outlet, useParams } from "react-router-dom";
+import image from "../assets/rainbow.png";
 const Login = () => {
   const [values, setValues] = React.useState({
     amount: "",
@@ -51,7 +52,7 @@ const Login = () => {
             sm={4}
             md={7}
             sx={{
-              backgroundImage: "url(https://source.unsplash.com/random)",
+              backgroundImage: `url(${image})`,
               backgroundRepeat: "no-repeat",
               backgroundColor: (t) =>
                 t.palette.mode === "light"

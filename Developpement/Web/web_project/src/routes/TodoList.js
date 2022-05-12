@@ -302,8 +302,9 @@ const TodoList = () => {
                   style={{ width: "25%" }}
                   variant="contained"
                   onClick={(e) => {
-                    if(!filterLabels.includes(selectedFilter) && selectedFilter !== undefined)
+                    if(selectedFilter != null && selectedFilter != {} && selectedFilter != undefined &&!filterLabels.includes(selectedFilter))
                     {
+                      console.log(selectedFilter);
                         setFilterLabels((oldArray) => [
                           ...oldArray,
                           selectedFilter,

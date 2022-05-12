@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {  Editor } from "react-draft-wysiwyg";
 import { EditorState, ContentState, convertToRaw, convertFromRaw, CompositeDecorator } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
 
@@ -58,7 +58,7 @@ const RichTextEditor = ({setValue, value, limitedEditor=false, minH, isReadOnly=
       setValue(JSON.stringify(convertToRaw(content)));
   }
     return (
-        <div>
+        <div class="container">
           <div style={{ border: "1px solid black", padding: '2px', minHeight: {minH} , overflowY: "auto",}}>
             <Editor
               readOnly={isReadOnly}
@@ -75,16 +75,17 @@ const RichTextEditor = ({setValue, value, limitedEditor=false, minH, isReadOnly=
                 history: { inDropdown: true },
             } : ""}/>
             {limitedEditor ?
-             <>
+
               <Button
                 variant="contained"
                 color="primary"
-                style={{padding:0, marginLeft:270}}
+                style={{padding:0}}
+                disabled={isReadOnly}
                 onClick={() => onChange(state.editorState,true)}
               >
                 <DoneRounded />
               </Button>
-            </> :
+             :
              ""}
           </div>
         </div>

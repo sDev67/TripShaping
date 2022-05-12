@@ -73,7 +73,7 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
         style={{ height: "100%", margin: "20px" }}
       >
         <Typography variant="h3" marginBottom={2}>
-          Ajouter une tâche
+          {task != undefined ? "Modifier une tâche" : "Ajouter une tâche"}
         </Typography>
 
         <Stack direction="row" width="100%" spacing={1}>

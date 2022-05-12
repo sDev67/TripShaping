@@ -16,4 +16,3 @@ const PhotoRequests = {
 };
 
 export default PhotoRequests;
-'multipart/form-data'

@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, ScrollView, Button } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, Text } from 'react-native';
 
 import JournalBox from '../components/elements/JournalBox';
 
-const Journal = ({ messages, setMessages }) => {
+import JournalRequests from '../requests/JournalRequests';
+import { useQuery, useQueryClient } from 'react-query';
+
+const Journal = ({ idTravel }) => {
 
     const user = "Vivien Riehl"
 
     const [newMessage, setNewMessage] = useState('');
 
-    const post = () => {
-        const dateCourante = new Date();
-        const date = dateCourante.getDate() + "/" + (dateCourante.getMonth() + 1) + "/" + dateCourante.getFullYear();
-        const time = dateCourante.getHours() + "h" + dateCourante.getMinutes();
+    const { isLoading: isLoading, isError: isError, error: error, data: messages } = useQuery(
+        ['getMessages'], () => JournalRequests.getJournalByTravel(idTravel)
+    );
 
-        if (newMessage != "") {
-            const newPost = { body: newMessage, author: user, date: date, time: time, step: null };
-            setMessages([...messages, newPost]);
-            setNewMessage("");
-        }
+    const post = () => {
+
+
+
+        // const dateCourante = new Date();
+        // const date = dateCourante.getDate() + "/" + (dateCourante.getMonth() + 1) + "/" + dateCourante.getFullYear();
+        // const time = dateCourante.getHours() + "h" + dateCourante.getMinutes();
+
+        // if (newMessage != "") {
+        //     const newPost = { body: newMessage, author: user, date: date, time: time, step: null };
+        //     setMessages([...messages, newPost]);
+        //     setNewMessage("");
+        // }
     };
 
 
@@ -29,9 +39,11 @@ const Journal = ({ messages, setMessages }) => {
             <NativeBaseProvider>
                 <SafeAreaView style={{ flex: 1 }}>
                     <ScrollView>
-                        {messages.map((message, idx) => (
-                            <JournalBox key={idx} message={message} />
-                        ))}
+                        {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :
+                            messages.map((message, idx) => (
+                                <JournalBox key={idx} message={message} />
+                            ))
+                        }
                     </ScrollView>
                     <View style={{ justifyContent: "flex-end", marginBottom: 10 }}>
                         <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />

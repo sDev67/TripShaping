@@ -6,6 +6,8 @@ module.exports = sequelize => {
         static associate(db) {
             JournalEntry.belongsTo(db.Travel);
             JournalEntry.belongsTo(db.Member);
+            JournalEntry.belongsTo(db.Step);
+            JournalEntry.belongsTo(db.Point);
         }
     }
 

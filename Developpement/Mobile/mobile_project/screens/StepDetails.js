@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions, ScrollView, Pressable } from 'react-native';
 import { NativeBaseProvider, Button, Image } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
+import { format } from "date-fns";
 
 import file from '../assets/navigation_icons/icon_file.png';
 import noImage from "../assets/images/image.png"
@@ -46,12 +47,15 @@ const StepDetails = ({ route, navigation }) => {
     };
 
     async function savePicture() {
+        var date = Date.now();
+        var formattedDate = format(date, "dd/MM/yyyy HH:mm");
+
         if (image != null) {
             const formData = new FormData();
             let data = image.base64;
             let b = Buffer.from(data, 'utf8');
             formData.append("dataFile", JSON.stringify(b));
-            formData.append("date", Date.now());
+            formData.append("date", formattedDate);
             formData.append("TravelId", idTravel);
             formData.append("StepId", step.id);
             PhotoRequests.sendPhoto(formData);
@@ -61,7 +65,7 @@ const StepDetails = ({ route, navigation }) => {
             let data = photo.base64;
             let b = Buffer.from(data, 'utf8');
             formData.append("dataFile", JSON.stringify(b));
-            formData.append("date", Date.now());
+            formData.append("date", formattedDate);
             formData.append("TravelId", idTravel);
             formData.append("StepId", step.id);
             formData.append("longitude", location.coords.longitude);

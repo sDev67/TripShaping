@@ -10,7 +10,7 @@ import {
   Button,
   Typography,
   IconButton,
-  FormControl,
+  CardHeader,
   FormGroup,
 } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
@@ -26,6 +26,7 @@ import DocumentRequest from "../requests/DocumentRequest";
 
 import RichTextEditor from "./RichTextEditor";
 import StepRequests from "../requests/StepRequests";
+import DocumentsList from "./DocumentsList";
 
 const InterestPointMenu = ({
   deletePoint,
@@ -33,10 +34,9 @@ const InterestPointMenu = ({
   setSelectedMarker,
   updateInfoPoint,
   isEdition,
-  steps
+  steps,
 }) => {
   const queryClient = useQueryClient();
-
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
@@ -47,56 +47,52 @@ const InterestPointMenu = ({
     isError: isErrorD,
     error: errorD,
     data: documents,
-  } = useQuery(["getDocuments", idTravel], () =>
-    TravelRequests.getAllDocumentsByTravelId(idTravel)
+  } = useQuery(["getDocumentsOfPoint", selectedMarker.id], () =>
+    DocumentRequest.getDocumentsByPointId(selectedMarker.id)
   );
 
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [stepId, setStepId] = useState(selectedMarker.StepId);
   const [selectedStep, setSelectedStep] = useState(null);
   const [days, setDays] = useState([]);
   const [dayStep, setDayStep] = useState(selectedMarker.day);
   const listSteps = steps;
 
-
-  const [file, setFile] = useState([]);
-
   const categ = [
     {
-      value: 'Parc',
+      value: "Parc",
     },
     {
-      value: 'Musée',
+      value: "Musée",
     },
     {
-      value: 'Cinéma',
+      value: "Cinéma",
     },
     {
-      value: 'Stade',
+      value: "Stade",
     },
     {
-      value: 'Magasin',
+      value: "Magasin",
     },
     {
-      value: 'Monument historique',
+      value: "Monument historique",
     },
     {
-      value: 'Restaurant',
+      value: "Restaurant",
     },
     {
-      value: 'Spectacle',
+      value: "Spectacle",
     },
     {
-      value: 'Nature',
+      value: "Nature",
     },
     {
-      value: 'Port',
+      value: "Port",
     },
     {
-      value: 'Autre',
+      value: "Autre",
     },
   ];
 
@@ -104,18 +100,18 @@ const InterestPointMenu = ({
     if (selectedStep) {
       setDays([]);
       for (let i = 0; i < selectedStep.duration; i++) {
-        let day = { date: "Jour " + (i + 1), value: i + 1 }
-        setDays(days => [...days, day]);
+        let day = { date: "Jour " + (i + 1), value: i + 1 };
+        setDays((days) => [...days, day]);
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (stepId) {
       if (listSteps) {
-        listSteps.forEach(step => {
+        listSteps.forEach((step) => {
           if (step.id === stepId) {
-            setSelectedStep(step)
+            setSelectedStep(step);
           }
         });
       }
@@ -124,7 +120,7 @@ const InterestPointMenu = ({
 
   useEffect(() => {
     if (selectedStep) {
-      fillDays()
+      fillDays();
     }
   }, [selectedStep]);
 
@@ -137,38 +133,37 @@ const InterestPointMenu = ({
         description: description,
         idPoint: pointId.id,
         StepId: selectedStep?.id,
-        day: dayStep
+        day: dayStep,
       };
       updateInfoPoint.mutate(newPoint);
       setSelectedMarker(null);
     }
   };
 
-  const addFile = (e) => {
-
+  const addFile = (file) => {
     const formData = new FormData();
-    formData.append('title', file)
-    formData.append('TravelId', idTravel)
-
+    formData.append("title", file);
+    formData.append("TravelId", idTravel);
+    formData.append("PointId", selectedMarker.id);
     console.log(...formData);
 
-    DocumentRequest.uploadFile(formData)
-    setDialogOpen(false);
-
-  }
-
-  const displayDocuments = (idDocument) => {
-    let url = encodeURI("http://localhost:4200/document/file/" + idDocument)
-    window.open(url);
-  }
-
+    DocumentRequest.uploadFile(formData);
+  };
 
   return (
     <>
-      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height: "90%" }}>
+      <Card
+        style={{
+          right: "3%",
+          top: "8%",
+          width: 400,
+          position: "fixed",
+          height: "90%",
+        }}
+      >
         <CardMedia
           component="img"
-          height="194"
+          height="120"
           image={require("../assets/pointInterets.JPG")}
         />
         <IconButton
@@ -182,8 +177,8 @@ const InterestPointMenu = ({
         <CardContent
           style={{
             overflowY: "auto",
-            height: '100%'
-          }}>
+          }}
+        >
           <TextField
             fullWidth
             label="Nom"
@@ -194,7 +189,6 @@ const InterestPointMenu = ({
               shrink: true,
             }}
             disabled={!isEdition}
-
           />
           <TextField
             fullWidth
@@ -226,7 +220,6 @@ const InterestPointMenu = ({
               label="Etape associée"
               value={selectedStep}
               onChange={(e) => setSelectedStep(e.target.value)}
-
               InputLabelProps={{
                 shrink: true,
               }}
@@ -234,9 +227,10 @@ const InterestPointMenu = ({
             >
               {listSteps &&
                 listSteps.map((step, index) => (
-                  <MenuItem key={index} value={step}>{step.title}</MenuItem>
-                ))
-              }
+                  <MenuItem key={index} value={step}>
+                    {step.title}
+                  </MenuItem>
+                ))}
             </TextField>
             <TextField
               fullWidth
@@ -244,48 +238,64 @@ const InterestPointMenu = ({
               label="Jour associé"
               value={dayStep}
               onChange={(e) => setDayStep(e.target.value)}
-
               InputLabelProps={{
                 shrink: true,
               }}
               disabled={isEdition && selectedStep ? false : true}
             >
               {days.map((day, index) => (
-                <MenuItem key={index} value={day.value}>{day.date}</MenuItem>
-              ))
-              }
+                <MenuItem key={index} value={day.value}>
+                  {day.date}
+                </MenuItem>
+              ))}
             </TextField>
           </Stack>
 
           <Stack
             style={{ marginBottom: 25 }}
-            direction="row"
-            justifyContent="space-between"
-            spacing={2}
+            spacing={1}
+            direction="column"
+            height="160px"
           >
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography variant="h6" color="primary">
+                Documents
+              </Typography>
+              <Button
+                style={{ paddingLeft: 32, paddingRight: 32 }}
+                startIcon={<UploadFileRounded />}
+                variant="contained"
+                component="label"
+                disabled={!isEdition}
+              >
+                Ajouter
+                <input
+                  type="file"
+                  hidden
+                  onChange={(e) => {
+                    addFile(e.target.files[0]);
+                  }}
+                  required
+                />
+              </Button>
+            </Stack>
             {isLoadingD ? (
               <Loading />
             ) : isErrorD ? (
               <p style={{ color: "red" }}>{errorD.message}</p>
             ) : (
-              documents.map((document, index) => (
-                <Button variant="contained" onClick={() => displayDocuments(document.id)}>{document.title}</Button>
-
-              )))
-            }
-
-            <Button
-              style={{ paddingLeft: 32, paddingRight: 32 }}
-              variant="contained"
-              color="primary"
-              startIcon={<UploadFileRounded />}
-              onClick={() => setDialogOpen(true)}
-            >
-              {" "}
-              Ajouter
-            </Button>
+              <DocumentsList
+                documents={documents}
+                requestKeyTitle="getDocumentsOfPoint"
+                requestKeyValue={selectedMarker.id}
+                isEdition={isEdition}
+              ></DocumentsList>
+            )}
           </Stack>
-
 
           {/* <Stack>
             {isLoadingD ? (
@@ -313,59 +323,42 @@ const InterestPointMenu = ({
             disabled={!isEdition}
 
           />*/}
-
-          <RichTextEditor setValue={setDescription} value={description} limitedEditor={true} minH='10px' isReadOnly={!isEdition} />
-
+          <div style={{ marginBottom: 25 }}>
+            <RichTextEditor
+              setValue={setDescription}
+              value={description}
+              limitedEditor={true}
+              minH={"200px"}
+              isReadOnly={!isEdition}
+              maxH={"200px"}
+            />
+          </div>
 
           <Stack direction="row" justifyContent="space-between">
-            {isEdition && <>
-              <Button
-                variant="outlined"
-                color="error"
-                startIcon={<DeleteRounded />}
-                onClick={() => { deletePoint.mutate(selectedMarker.id); setSelectedMarker(null) }}
-              >
-                Supprimer
-              </Button>
-
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<DoneRounded />}
-                onClick={updateInterestPointInfo(selectedMarker)}
-              >
-                Enregistrer
-              </Button>
-            </>
-            }
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteRounded />}
+              onClick={() => {
+                deletePoint.mutate(selectedMarker.id);
+                setSelectedMarker(null);
+              }}
+              disabled={!isEdition}
+            >
+              Supprimer
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<DoneRounded />}
+              onClick={updateInterestPointInfo(selectedMarker)}
+              disabled={!isEdition}
+            >
+              Enregistrer
+            </Button>
           </Stack>
         </CardContent>
       </Card>
-
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <div style={{ margin: 10, marginTop: 0 }}>
-          <Typography variant="h3" marginY={2}>
-            Ajouter un fichier
-          </Typography>
-          {/* <FileUploader
-          //handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
-          /> */}
-          <div class="form-group">
-            <label for="titre">Fichiers :</label> <br />
-            <input type="file" id="title" placeholder="Choose file" name="title" onChange={(e) => {
-              setFile(e.target.files[0])
-              console.log(e.target.files[0])
-            }}
-              required />
-          </div>
-          <br />
-
-          <Button variant="contained" type="submit" onClick={addFile}>
-            Ajouter
-          </Button>
-
-        </div>
-      </Dialog>
     </>
   );
 };

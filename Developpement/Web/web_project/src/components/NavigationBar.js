@@ -21,6 +21,7 @@ import {
   Container,
   Grid,
   Paper,
+  Button,
 } from "@mui/material";
 import { mainListItems, secondaryListItems } from "./ListItems";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -40,7 +41,9 @@ import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRound
 import DirectionsWalkRoundedIcon from "@mui/icons-material/DirectionsWalkRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
-import TopicRoundedIcon from '@mui/icons-material/TopicRounded';
+import TopicRoundedIcon from "@mui/icons-material/TopicRounded";
+import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
+import { useAuth } from "../Authentication/auth";
 
 const drawerWidth = 170;
 
@@ -126,9 +129,10 @@ const useStyles = makeStyles((theme) => ({
 const NavigationBar = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
+  let{user} = useAuth();
 
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -190,9 +194,9 @@ const NavigationBar = () => {
                 spacing={1}
               >
                 <Typography variant="button" textAlign="center">
-                  Lara Croft
+                  {user.username}
                 </Typography>
-                <Avatar {...stringAvatar("Lara Croft")} />
+                <Avatar {...stringAvatar("Lara croft")} />
               </Stack>
             </Toolbar>
           </AppBar>
@@ -211,6 +215,7 @@ const NavigationBar = () => {
             </IconButton>
           </div>
           <Divider />
+
           <Tabs
             value={value}
             onChange={handleChange}
@@ -225,6 +230,26 @@ const NavigationBar = () => {
               },
             }}
           >
+            <Tab
+              style={{ marginTop: "25px", marginBottom: "40px" }}
+              icon={<ArrowCircleLeftRoundedIcon color="error" />}
+              iconPosition="start"
+              label={
+                <Stack
+                  style={{ minWidth: "200px" }}
+                  direction="row"
+                  justifyContent="flex-start"
+                  marginLeft={1}
+                >
+                  <Typography variant="button" color="error">
+                    Retour
+                  </Typography>
+                </Stack>
+              }
+              value="Retour"
+              component={Link}
+              to={"/mytrips"}
+            />
             <Tab
               icon={<MapRoundedIcon />}
               iconPosition="start"
@@ -294,7 +319,7 @@ const NavigationBar = () => {
               to={"/trip/" + idTravel + "/informations"}
             />
             <Tab
-              icon={<TextSnippetRoundedIcon />}
+              icon={<InsertDriveFileRoundedIcon />}
               iconPosition="start"
               label={
                 <Stack
@@ -330,8 +355,17 @@ const NavigationBar = () => {
             <Tab
               icon={<SettingsRoundedIcon />}
               iconPosition="start"
-              label="Options du voyage"
-              value={"/trip/" + idTravel + "/tripsettings"}
+              label={
+                <Stack
+                  style={{ minWidth: "200px" }}
+                  direction="row"
+                  justifyContent="flex-start"
+                  marginLeft={1}
+                >
+                  <Typography variant="button">Options</Typography>
+                </Stack>
+              }
+              value={"Options du voyage"}
               component={Link}
               to={"/trip/" + idTravel + "/tripsettings"}
             />

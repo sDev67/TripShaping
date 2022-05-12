@@ -6,11 +6,13 @@ module.exports = sequelize => {
         static associate(db) {
             JournalEntry.belongsTo(db.Travel);
             JournalEntry.belongsTo(db.Member);
+            JournalEntry.belongsTo(db.Step);
+            JournalEntry.belongsTo(db.Point);
         }
     }
 
     JournalEntry.init({
-        date: DataTypes.DATE,
+        date: DataTypes.STRING,
         text: DataTypes.STRING,
     }, {
         sequelize,

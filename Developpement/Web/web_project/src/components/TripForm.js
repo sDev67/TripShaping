@@ -13,9 +13,13 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 import TravelRequests from "../requests/TravelRequests";
+import MemberRequests from "../requests/MemberRequests";
+import { useAuth } from "../Authentication/auth";
 
 const TripForm = ({setTripFormOpen}) => {
   const queryClient = useQueryClient();
+
+  let {user} = useAuth();
 
   const [name, setName] = useState("");
 
@@ -23,16 +27,39 @@ const TripForm = ({setTripFormOpen}) => {
     setName(newName);
   };
 
+const addMember = useMutation(MemberRequests.addMember,{
+  onSuccess: member =>{
+    queryClient.setQueriesData(['getMembers'], members => [...members, member])
+  }
+})
+
   const creationTravel = useMutation(TravelRequests.createTravel, {
-    onSuccess: travel => queryClient.setQueryData(
+    
+    onSuccess: travel =>
+     {
+      const newMember={
+        name:user.name,
+        userLogin:user.username,
+        TravelId:travel.id,
+        UserId:user.id,
+      }
+
+      addMember.mutate(newMember);
+       queryClient.setQueryData(
       ['getTravels'],
       travels => [...travels, travel]
     )
-  });
+    
+      
+  
+  }
+}
+  );
 
   const handleSubmit = () => {
     const newTravel = {
-      name: name.trim()
+      name: name.trim(),
+      UserId: user.id
     }
     creationTravel.mutate(newTravel);
     setTripFormOpen(false);

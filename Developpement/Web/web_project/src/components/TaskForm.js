@@ -26,36 +26,34 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
     setCurrentTitle(newTitle);
   };
 
-  useEffect(() => 
-  {
+  useEffect(() => {
     setCurrentTitle('');
     setCurrentDate(undefined);
-    if(task !== undefined){
+    if (task !== undefined) {
 
-        if(task.title
-          !== undefined){
-            setCurrentTitle(task.title);
-        }
-      
-    
-        if(task.date !== undefined)
-        {
-          setCurrentDate(task.date);
-        }
+      if (task.title
+        !== undefined) {
+        setCurrentTitle(task.title);
+      }
+
+
+      if (task.date !== undefined) {
+        setCurrentDate(task.date);
+      }
     }
-   
-  },[task])
+
+  }, [task])
 
   const handleSubmit = () => {
     if (task !== undefined) {
-      
-      
-      UpdateTask({title:currentTitle, date:currentDate, task});
+
+
+      UpdateTask({ title: currentTitle, date: currentDate, task });
 
     } else {
 
 
-      OnAddTask({title:currentTitle, date:currentDate});
+      OnAddTask({ title: currentTitle, date: currentDate });
       // on la créer
     }
 
@@ -104,18 +102,6 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
             Enregistrer
           </Button>
         </Stack>
-        {/* <Box sx={{width:'75%', maxWidth:'75%', bgColor:'grey', flexDirection:'row'}}>
-                    <Stack component='nav' direction='row' flexWrap='wrap' spacing={0} margin={1}>
-                        {currentLabels !== undefined ? currentLabels.map((label) =>(
-                            <>
-                                <Chip style={{margin:5, padding:10}} size='medium' color='primary' label={label.title} />
-                            </>
-                        )) : ""} 
-                        <IconButton aria-label="Add">
-                            <AddCircleIcon sx={{fontSize:'35px'}} color='primary' />
-                        </IconButton>          
-                    </Stack>            
-                </Box> */}
       </Stack>
     </>
   );

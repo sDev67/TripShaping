@@ -4,22 +4,25 @@ const { Sequelize, DataTypes } = require("sequelize");
 module.exports = (sequelize) => {
   class User extends Sequelize.Model {
     static associate(db) {
+
       User.hasMany(db.Travel);
+      User.hasMany(db.Member, { onDelete: 'cascade' });
+
     }
   }
 
   User.init(
     {
-      username: DataTypes.STRING,
-      lastname: DataTypes.STRING,
-      firstname: DataTypes.STRING,
-      password: DataTypes.STRING,
-    },
-    {
-      sequelize,
-      modelName: "User",
-    }
-  );
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+      },
+      password: DataTypes.STRING
+    }, {
+    sequelize,
+    modelName: 'User'
+  });
 
   User.generate_hash = (password) => bcrypt.hashSync(password, 10);
 

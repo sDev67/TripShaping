@@ -34,7 +34,7 @@ const TravelRequests = {
             .then(res => res.json())
     },
 
-    createTravel: ({ name }) => {
+    createTravel: ({ name, UserId }) => {
         //const token = window.localStorage.getItem('token');
         console.log(name)
         return fetch(`${url_prefix}/travel`, {
@@ -43,7 +43,7 @@ const TravelRequests = {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({ name })
+            body: JSON.stringify({ name,UserId })
         })
             .then(checkStatus)
             .then(res => res.json());

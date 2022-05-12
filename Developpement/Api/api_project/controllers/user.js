@@ -97,6 +97,17 @@ module.exports = {
     }
 
   },
+  load_by_id: (req, res, next) => {
+		return db.User.findByPk(req.params.user_id)
+			.then(user => {
+				if (!user) {
+					throw { status: 404, message: 'User not found' };
+				}
+				res.locals.user = user;
+				return next();
+			})
+			.catch(next);
+	},
 
   identify_client: [
     expressjwt({ secret, algorithms: ["HS256"] }),

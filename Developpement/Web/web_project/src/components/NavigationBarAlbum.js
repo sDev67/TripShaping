@@ -127,7 +127,7 @@ const NavigationBar = () => {
   idTravel = parseInt(idTravel);
 
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -225,6 +225,26 @@ const NavigationBar = () => {
             }}
           >
             <Tab
+              style={{ marginTop: "25px", marginBottom: "40px" }}
+              icon={<ArrowCircleLeftRoundedIcon color="error" />}
+              iconPosition="start"
+              label={
+                <Stack
+                  style={{ minWidth: "200px" }}
+                  direction="row"
+                  justifyContent="flex-start"
+                  marginLeft={1}
+                >
+                  <Typography variant="button" color="error">
+                    Retour
+                  </Typography>
+                </Stack>
+              }
+              value="Retour"
+              component={Link}
+              to={"/mytrips"}
+            />
+            <Tab
               icon={<MapRoundedIcon />}
               iconPosition="start"
               label={
@@ -239,7 +259,7 @@ const NavigationBar = () => {
               }
               value="Carte"
               component={Link}
-              to={"/album/" + 17 + "/map"}
+              to={"/album/" + idTravel + "/map"}
             />
             <Tab
               icon={<DirectionsWalkRoundedIcon />}
@@ -256,7 +276,7 @@ const NavigationBar = () => {
               }
               value="Photos"
               component={Link}
-              to={"/album/photos"}
+              to={"/album/" + idTravel + "/photos"}
             />
             <Tab
               icon={<AssignmentRoundedIcon />}
@@ -273,7 +293,7 @@ const NavigationBar = () => {
               }
               value="Journal"
               component={Link}
-              to={"/album/logbook"}
+              to={"/album/" + idTravel + "/logbook"}
             />
           </Tabs>
         </Drawer>

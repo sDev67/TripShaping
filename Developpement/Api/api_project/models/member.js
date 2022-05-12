@@ -14,8 +14,15 @@ module.exports = sequelize => {
 
 	Member.init({
 		name: DataTypes.STRING,
-		fictive: DataTypes.BOOLEAN,
-
+		userLogin: {
+			type: Sequelize.STRING,
+			references: {
+				model: 'Users',
+				key: 'username',
+				allowNull: true,
+				defaultValue: null,
+			}
+		}
 	}, {
 		sequelize,
 		modelName: 'Member'

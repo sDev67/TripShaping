@@ -15,10 +15,6 @@ import {
   Dialog,
   MenuItem,
   Button,
-  Alert,
-  Collapse,
-  DialogTitle,
-  Icon,
   Typography,
   IconButton,
 } from "@mui/material";
@@ -27,14 +23,18 @@ import {
   Marker,
   Polyline,
   DirectionsRenderer,
-  DirectionsService
+  DirectionsService,
 } from "@react-google-maps/api";
 import palette from "./../theme/palette";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
-import { FileUploader } from "react-drag-drop-files";
+import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+import DocumentRequest from "../requests/DocumentRequest";
+import DocumentsList from "./DocumentsList";
+import Loading from "../utils/Loading";
 
 const containerStyle = {
   position: "relative",
@@ -46,13 +46,25 @@ const RouteMenu = ({
   selectedRoute,
   start,
   finish,
-  setSelectedRoute
+  setSelectedRoute,
+  isEdition,
 }) => {
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
   const [files, setFiles] = useState([]);
   const [travelType, setTravelType] = useState(selectedRoute.travelType);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
+
+  const {
+    isLoading: isLoadingD,
+    isError: isErrorD,
+    error: errorD,
+    data: documents,
+  } = useQuery(["getDocumentsOfRoute", selectedRoute.id], () =>
+    DocumentRequest.getDocumentsByRouteId(selectedRoute.id)
+  );
 
   const distance = response?.routes[0].legs[0].distance.text;
   const duration = response?.routes[0].legs[0].duration.text;
@@ -61,24 +73,24 @@ const RouteMenu = ({
 
   const categ = [
     {
-      value: 'DRIVING',
-      label: 'Voiture'
+      value: "DRIVING",
+      label: "Voiture",
     },
     {
-      value: 'WALKING',
-      label: 'À pied'
+      value: "WALKING",
+      label: "À pied",
     },
     {
-      value: 'BICYCLING',
-      label: 'À vélo'
+      value: "BICYCLING",
+      label: "À vélo",
     },
     {
-      value: 'TRANSIT',
-      label: 'En transports'
+      value: "TRANSIT",
+      label: "En transports",
     },
     {
-      value: 'Autre',
-      label: 'Autre'
+      value: "Autre",
+      label: "Autre",
     },
   ];
 
@@ -105,6 +117,17 @@ const RouteMenu = ({
   //   setInterestPoints(newInterestPoint);
   // };
 
+  const addFile = (file) => {
+    const formData = new FormData();
+    formData.append("title", file);
+    formData.append("TravelId", idTravel);
+    formData.append("RouteId", selectedRoute.id);
+
+    console.log(...formData);
+
+    DocumentRequest.uploadFile(formData);
+  };
+
   const directionsCallback = useCallback((res) => {
     if (res !== null && res.status === "OK") {
       setResponse(res);
@@ -115,10 +138,18 @@ const RouteMenu = ({
 
   return (
     <>
-      <Card style={{ right: "3%", top: "5%", width: 400, position: "fixed", height: "90%" }}>
+      <Card
+        style={{
+          right: "3%",
+          top: "8%",
+          width: 400,
+          position: "fixed",
+          height: "90%",
+        }}
+      >
         <CardMedia
           component="img"
-          height="194"
+          height="120"
           image={require("../assets/routes.png")}
         />
         <IconButton
@@ -149,37 +180,51 @@ const RouteMenu = ({
           </TextField>
           <Stack
             style={{ marginBottom: 25 }}
-            direction="row"
-            justifyContent="space-between"
-            spacing={2}
+            spacing={1}
+            direction="column"
+            height="160px"
           >
-            <TextField
-              fullWidth
-              select
-              label="Documents"
-              // value={selectedRoute.location.files}
-              InputLabelProps={{
-                shrink: true,
-              }}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              {files.map((file, index) => (
-                <MenuItem key={index}>{file.name}</MenuItem>
-              ))}
-            </TextField>
-
-            <Button
-              style={{ paddingLeft: 32, paddingRight: 32 }}
-              variant="contained"
-              color="primary"
-              startIcon={<UploadFileRounded />}
-              onClick={() => setDialogOpen(true)}
-            >
-              {" "}
-              Ajouter
-            </Button>
+              <Typography variant="h6" color="primary">
+                Documents
+              </Typography>
+              <Button
+                style={{ paddingLeft: 32, paddingRight: 32 }}
+                startIcon={<UploadFileRounded />}
+                variant="contained"
+                component="label"
+                disabled={!isEdition}
+              >
+                Ajouter
+                <input
+                  type="file"
+                  hidden
+                  onChange={(e) => {
+                    addFile(e.target.files[0]);
+                  }}
+                  required
+                />
+              </Button>
+            </Stack>
+            {isLoadingD ? (
+              <Loading />
+            ) : isErrorD ? (
+              <p style={{ color: "red" }}>{errorD.message}</p>
+            ) : (
+              <DocumentsList
+                documents={documents}
+                requestKeyTitle="getDocumentsOfPoint"
+                requestKeyValue={selectedRoute.id}
+                isEdition={isEdition}
+              ></DocumentsList>
+            )}
           </Stack>
 
-          {response && distance && duration &&
+          {response && distance && duration && (
             <Stack direction="row">
               <TextField
                 fullWidth
@@ -190,7 +235,8 @@ const RouteMenu = ({
                   shrink: true,
                 }}
                 disabled={true}
-              /><TextField
+              />
+              <TextField
                 fullWidth
                 label="Temps"
                 value={duration}
@@ -200,14 +246,23 @@ const RouteMenu = ({
                 }}
                 disabled={true}
               />
-            </Stack>}
+            </Stack>
+          )}
 
-          <Stack style={{ border: "1px solid black", margin: 5, marginBottom: 10, height: 425 }}>
+          <Stack
+            style={{
+              border: "1px solid black",
+              margin: 5,
+              marginBottom: 10,
+              height: 425,
+            }}
+          >
             <GoogleMap
-              options={{mapTypeControl:false, fullscreenControl:false}}
+              options={{ mapTypeControl: false, fullscreenControl: false }}
               mapContainerStyle={containerStyle}
               center={position}
-              zoom={6}>
+              zoom={6}
+            >
               <Marker
                 key={1}
                 position={{ lat: start.latitude, lng: start.longitude }}
@@ -222,26 +277,27 @@ const RouteMenu = ({
               ></Marker>
 
               <>
-                {(travelType === "Autre" || error) ? <>
-                  <Polyline
-                    geodesic={true}
-                    path={[
-                      {
-                        lat: start.latitude,
-                        lng: start.longitude,
-                      },
-                      {
-                        lat: finish.latitude,
-                        lng: finish.longitude,
-                      },
-                    ]}
-                    options={{
-                      strokeColor: palette.primary.main,
-                      strokeWeight: 4,
-                    }}
-                  ></Polyline>
-                </>
-                  :
+                {travelType === "Autre" || error ? (
+                  <>
+                    <Polyline
+                      geodesic={true}
+                      path={[
+                        {
+                          lat: start.latitude,
+                          lng: start.longitude,
+                        },
+                        {
+                          lat: finish.latitude,
+                          lng: finish.longitude,
+                        },
+                      ]}
+                      options={{
+                        strokeColor: palette.primary.main,
+                        strokeWeight: 4,
+                      }}
+                    ></Polyline>
+                  </>
+                ) : (
                   <>
                     <DirectionsService
                       options={{
@@ -254,7 +310,7 @@ const RouteMenu = ({
                           lng: finish.longitude,
                         },
 
-                        travelMode: travelType.toString()
+                        travelMode: travelType.toString(),
                       }}
                       callback={directionsCallback}
                     />
@@ -269,35 +325,25 @@ const RouteMenu = ({
                         },
                       }}
                     />
-                  </>}
+                  </>
+                )}
               </>
             </GoogleMap>
           </Stack>
-
 
           <Stack direction="row" justifyContent="flex-end">
             <Button
               variant="contained"
               color="primary"
               startIcon={<DoneRounded />}
-            // onClick={updateProperties(selectedRoute)}
+              // onClick={updateProperties(selectedRoute)}
+              disabled={!isEdition}
             >
               Enregistrer
             </Button>
           </Stack>
         </CardContent>
       </Card>
-
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <div style={{ margin: 10, marginTop: 0 }}>
-          <Typography variant="h3" marginY={2}>
-            Ajouter un fichier
-          </Typography>
-          <FileUploader
-            handleChange={(file) => setFiles((oldArray) => [...oldArray, file])}
-          />
-        </div>
-      </Dialog>
     </>
   );
 };

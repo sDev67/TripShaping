@@ -62,6 +62,20 @@ module.exports = {
             })
             .then(() => res.status(200).end())
             .catch(next);
-    }
+    },
+
+    get_all_documents_by_route_id: async (req, res, next) => {
+        return db.Route.findByPk(req.params.route_id)
+            .then(route => {
+                if (!route) {
+                    throw { status: 404, message: 'Route not found' };
+                }
+                return route.getDocuments({
+                    attributes: { exclude: ['dataFile'] } // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
+                });
+            })
+            .then(steps => res.json(steps))
+            .catch(err => next(err));
+    },
 
 };

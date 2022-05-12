@@ -38,7 +38,15 @@ const Members = () => {
 
   return (
     <>
-      <Stack height="93.15%" width="100%" direction="row">
+      <Stack height="100%" width="100%" direction="column">
+        <Typography
+          color="primary"
+          variant="h2"
+          textAlign="center"
+          marginTop={4}
+        >
+          Membres
+        </Typography>
         <Stack
           width="90%"
           paddingY="1%"

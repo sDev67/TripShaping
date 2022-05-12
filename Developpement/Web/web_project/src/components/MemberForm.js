@@ -6,7 +6,6 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
-import Loading from "../utils/Loading";
 import MemberRequests from "../requests/MemberRequests";
 
 const MemberForm = () => {
@@ -33,25 +32,28 @@ const MemberForm = () => {
   });
 
   const OnAddMember = (name, login, fictive) => {
-    if (fictive) {
-      const newMember = {
-        name: name,
-        userLogin: login,
-        TravelId: idTravel,
-        UserId: null
-      };
-      addMember.mutate(newMember);
-    } else {
-      const newMember = {
-        name: name,
-        userLogin: "",
-        TravelId: idTravel,
-        UserId: null
-      };
-      addMember.mutate(newMember);
+    if (name) {
+      if (fictive) {
+        const newMember = {
+          name: name,
+          userLogin: login,
+          TravelId: idTravel,
+          UserId: null
+        };
+        addMember.mutate(newMember);
+      } else {
+        const newMember = {
+          name: name,
+          userLogin: "",
+          TravelId: idTravel,
+          UserId: null
+        };
+        addMember.mutate(newMember);
+      }
+      setName("");
+      setLogin("");
     }
-    setName("");
-    setLogin("");
+
   };
 
   const handleSwitch = () => {

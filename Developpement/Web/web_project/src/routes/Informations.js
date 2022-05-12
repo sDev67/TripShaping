@@ -25,7 +25,7 @@ import {
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 
-import Editor from "../components/RichTextEditor";
+import RichTextEditor from "../components/RichTextEditor";
 import { useParams } from "react-router-dom";
 
 const Informations = () => {
@@ -90,7 +90,7 @@ const Informations = () => {
             </Typography>
           ) : !isError ? (
             <>
-              <Editor
+              <RichTextEditor
                 setValue={setValue}
                 value={travelDatas.infos !== null ? travelDatas.infos : null}
                 minH="500px"

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import {  Editor } from "react-draft-wysiwyg";
 import { EditorState, ContentState, convertToRaw, convertFromRaw, CompositeDecorator } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
+import DoneRounded from "@mui/icons-material/DoneRounded";
 
 
 
@@ -15,14 +16,16 @@ const RichTextEditor = ({setValue, value, limitedEditor=false, minH, isReadOnly=
       editorState:EditorState.createEmpty
     }
   ])
-
+  
   /*const content = window.localStorage.getItem('content');*/
-  const content = value;
+  let content = value;
 
   useEffect(() => {
+  
 
     if(content !== null){
   
+
       setState({editorState:EditorState.createWithContent(convertFromRaw(JSON.parse(content)))});
 
     }
@@ -35,18 +38,20 @@ const RichTextEditor = ({setValue, value, limitedEditor=false, minH, isReadOnly=
     }
 
   }, [content])
-
-  
-   
-
  
-   const onChange = (editorState) =>{
+   const onChange = (editorState, limitedCheck=false) =>{
    
-    const contentState = editorState.getCurrentContent();
-    saveContent(contentState);
-    setState({
-      editorState,
-  });
+     const contentState = editorState.getCurrentContent();
+     
+     if(!limitedEditor || (limitedEditor && limitedCheck))
+     {
+        saveContent(contentState);
+      }
+        setState({
+          editorState,
+      });
+
+
    }
    const saveContent = (content) => {
       //window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
@@ -58,6 +63,8 @@ const RichTextEditor = ({setValue, value, limitedEditor=false, minH, isReadOnly=
             <Editor
               readOnly={isReadOnly}
               editorState={state.editorState}
+              
+              
               onEditorStateChange={onChange}
               toolbar={ limitedEditor ? {
                 options: ['inline', 'fontSize', 'list', 'history'],
@@ -67,6 +74,18 @@ const RichTextEditor = ({setValue, value, limitedEditor=false, minH, isReadOnly=
                 link: { inDropdown: true },
                 history: { inDropdown: true },
             } : ""}/>
+            {limitedEditor ?
+             <>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{padding:0, marginLeft:270}}
+                onClick={() => onChange(state.editorState,true)}
+              >
+                <DoneRounded />
+              </Button>
+            </> :
+             ""}
           </div>
         </div>
         );

@@ -254,7 +254,7 @@ const RouteMenu = ({
               border: "1px solid black",
               margin: 5,
               marginBottom: 10,
-              height: 425,
+              height: 300,
             }}
           >
             <GoogleMap
@@ -267,13 +267,13 @@ const RouteMenu = ({
                 key={1}
                 position={{ lat: start.latitude, lng: start.longitude }}
                 icon={stepIcon}
-              // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
               ></Marker>
               <Marker
                 key={2}
                 position={{ lat: finish.latitude, lng: finish.longitude }}
                 icon={stepIcon}
-              // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                // "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
               ></Marker>
 
               <>

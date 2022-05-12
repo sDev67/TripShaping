@@ -5,6 +5,7 @@ import TravelRequests from "../requests/TravelRequests";
 
 import RichTextEditor from "../components/RichTextEditor";
 import { useParams } from "react-router-dom";
+import Loading from "../utils/Loading";
 
 const Informations = () => {
   const [switchState, setSwitchState] = React.useState(false);
@@ -23,7 +24,6 @@ const Informations = () => {
   );
 
   const handleChange = () => {
-    console.log(value);
     var newTravel = {
       TravelId: idTravel,
       name: travelDatas.name,
@@ -35,7 +35,6 @@ const Informations = () => {
     };
 
     updateInformation.mutate(newTravel);
-    console.log("Infos updated ! " + newTravel.infos);
   };
 
   const updateInformation = useMutation(TravelRequests.updateTravel, {
@@ -57,42 +56,34 @@ const Informations = () => {
           direction="column"
           height="100%"
         >
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography variant="h4" marginY={1}>
-              Informations liées au voyage
-            </Typography>
-            <Button
-              disabled={value === travelDatas.infos ? true : false}
-              onClick={(e) => handleChange()}
-              variant="contained"
-            >
-              Enregistrer
-            </Button>
-          </Stack>
-
           {isLoadingI ? (
-            <Typography
-              color="error"
-              variant="h5"
-              textAlign="center"
-              marginTop={4}
-            >
-              Chargement...
-            </Typography>
-          ) : !isErrorI ? (
+            <Loading />
+          ) : isErrorI ? (
+            <p style={{ color: "red" }}>{errorI.message}</p>
+          ) : (
             <>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="h4" marginY={1}>
+                  Informations liées au voyage
+                </Typography>
+                <Button
+                  disabled={value === travelDatas.infos ? true : false}
+                  onClick={(e) => handleChange()}
+                  variant="contained"
+                >
+                  Enregistrer
+                </Button>
+              </Stack>
               <RichTextEditor
                 setValue={setValue}
                 value={travelDatas.infos !== null ? travelDatas.infos : null}
                 minH="500px"
               />
             </>
-          ) : (
-            <p style={{ color: "red" }}>{errorI.message}</p>
           )}
         </Stack>
       </Stack>

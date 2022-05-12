@@ -621,6 +621,11 @@ module.exports = [
 		method: 'get',
 		func: travel_ctrl.get_routes_of_travel
 	},
+	{
+		url: '/travel/:travel_id/journalEntries',
+		method: 'get',
+		func: travel_ctrl.get_journalEntries_of_travel
+	},
 
 	/**
 	 * @swagger

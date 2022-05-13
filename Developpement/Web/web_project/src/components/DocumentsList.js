@@ -15,6 +15,7 @@ import { stringAvatar } from "../utils/AvatarColorPicker";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import DocumentRequest from "../requests/DocumentRequest";
+import { url_prefix } from "../utils";
 
 const DocumentsList = ({
   documents,
@@ -25,7 +26,9 @@ const DocumentsList = ({
   const queryClient = useQueryClient();
 
   const displayDocument = (idDocument) => {
-    let url = encodeURI("http://localhost:4200/document/file/" + idDocument);
+    let url = encodeURI(
+      "http://cdad181.iutrs.unistra.fr:4200/document/file/" + idDocument
+    );
     window.open(url);
   };
 

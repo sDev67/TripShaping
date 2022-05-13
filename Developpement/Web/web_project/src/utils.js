@@ -1,4 +1,4 @@
-export const GOOGLE_MAPS_APIKEY = 'AIzaSyDEVNIIS4W08GaTEYt_OfJ0mfA4gB0mxgI';
+export const GOOGLE_MAPS_APIKEY = "AIzaSyDEVNIIS4W08GaTEYt_OfJ0mfA4gB0mxgI";
 
 export const checkStatus = (res) => {
   if (res.ok) {
@@ -10,5 +10,5 @@ export const checkStatus = (res) => {
   }
 };
 
-export const url_prefix = "http://localhost:4200";
-//export const url_prefix = 'http://cdad181.iutrs.unistra.fr:4200';
+// export const url_prefix = "http://localhost:4200";
+export const url_prefix = "http://cdad181.iutrs.unistra.fr:4200";

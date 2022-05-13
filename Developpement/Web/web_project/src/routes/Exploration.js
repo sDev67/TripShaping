@@ -167,7 +167,7 @@ const Exploration = () => {
         >
           <Stack direction="row" marginTop={8}>
             <Typography color="primary" variant="h2">
-              Découvrez tout les voyages partagés par les utilisateurs !
+              Découvrez tous les voyages partagés par les utilisateurs !
             </Typography>
           </Stack>
           <Stack direction="column" justifyContent="flex-start" width="90%">

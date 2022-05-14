@@ -27,7 +27,7 @@ const DocumentsList = ({
 
   const displayDocument = (idDocument) => {
     let url = encodeURI(
-      "http://cdad181.iutrs.unistra.fr:4200/document/file/" + idDocument
+      url_prefix + "/document/file/" + idDocument
     );
     window.open(url);
   };

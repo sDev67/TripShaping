@@ -3,6 +3,7 @@ import {
   tabsListUnstyledClasses,
   TextField,
   Typography,
+  Checkbox
 } from "@mui/material";
 import { Stack, Box, Chip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -16,45 +17,50 @@ import TravelRequests from "../requests/TravelRequests";
 import MemberRequests from "../requests/MemberRequests";
 import { useAuth } from "../Authentication/auth";
 
-const TripForm = ({setTripFormOpen}) => {
+const TripForm = ({ setTripFormOpen }) => {
   const queryClient = useQueryClient();
 
-  let {user} = useAuth();
+  let { user } = useAuth();
 
   const [name, setName] = useState("");
+
+  const [isTripPublic, setIsTripPublic] = useState(true);
 
   const handleNameChange = (newName) => {
     setName(newName);
   };
 
-const addMember = useMutation(MemberRequests.addMember,{
-  onSuccess: member =>{
-    queryClient.setQueriesData(['getMembers'], members => [...members, member])
-  }
-})
+  const addMember = useMutation(MemberRequests.addMember, {
+    onSuccess: member => {
+      queryClient.setQueriesData(['getMembers'], members => [...members, member])
+    }
+  })
 
   const creationTravel = useMutation(TravelRequests.createTravel, {
-    
-    onSuccess: travel =>
-     {
-      const newMember={
-        name:user.name,
-        userLogin:user.username,
-        TravelId:travel.id,
-        UserId:user.id,
+
+    onSuccess: travel => {
+      const newMember = {
+        name: user.name,
+        userLogin: user.username,
+        TravelId: travel.id,
+        UserId: user.id,
       }
 
       addMember.mutate(newMember);
-       queryClient.setQueryData(
-      ['getTravels'],
-      travels => [...travels, travel]
-    )
-    
-      
-  
+      queryClient.setQueryData(
+        ['getTravels'],
+        travels => [...travels, travel]
+      )
+
+
+
+    }
   }
-}
   );
+  const publicTrip = () => {
+    console.log(isTripPublic)
+  };
+
 
   const handleSubmit = () => {
     const newTravel = {
@@ -76,21 +82,34 @@ const addMember = useMutation(MemberRequests.addMember,{
           Nouveau voyage
         </Typography>
 
-        <Stack direction="row" width="100%" spacing={1}>
+        <Stack direction="column" width="100%" spacing={1}>
           <TextField
             id="standard-required"
             label="Nom"
             onChange={(e) => handleNameChange(e.target.value)}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<DoneRounded />}
-            onClick= {handleSubmit}
-          >
-            Créer
-          </Button>
+          <Stack direction="row" width="100%" spacing={1}>
+            <Typography variant="p" marginBottom={2}>
+              Rendre le voyage publique
+            </Typography>
+            <Checkbox onChange={() => {
+              setIsTripPublic(!isTripPublic);
+              publicTrip()
+            }
+            }
+            />
+
+          </Stack>
+
         </Stack>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<DoneRounded />}
+          onClick={handleSubmit}
+        >
+          Créer
+        </Button>
       </Stack>
     </>
   );

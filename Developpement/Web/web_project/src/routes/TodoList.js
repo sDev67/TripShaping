@@ -33,7 +33,6 @@ const TodoList = () => {
   const [taskToAdd, OnSelectTaskToAddLabel] = useState();
 
   const [filterLabels, setFilterLabels] = useState([]);
-  const [filteredTask, setFilteredTask] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState({});
 
   const {
@@ -180,6 +179,7 @@ const TodoList = () => {
     addTask.mutate(newTask);
   };
 
+
   const OnRemoveTask = (task) => {
     removeTask.mutate(task.id);
   };
@@ -218,6 +218,7 @@ const TodoList = () => {
     setLabelFormOpen(false);
     setCurrentLabel(undefined);
   }
+
   return (
     <>
       <Stack height="93.15%" width="100%" direction="row">

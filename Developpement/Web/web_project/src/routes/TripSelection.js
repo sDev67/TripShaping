@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import clsx from "clsx";
 import { makeStyles } from "@mui/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
-  CardActionArea,
-  Card,
   Grid,
   Stack,
-  CardContent,
   Dialog,
   Button,
   Typography,
@@ -15,12 +11,9 @@ import {
   AppBar,
   Toolbar,
 } from "@mui/material";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { stringAvatar } from "../utils/AvatarColorPicker";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import { Link, useNavigate } from "react-router-dom";
 import TripForm from "../components/TripForm";
-import { useQuery, useQueryClient, useMutation } from "react-query";
-import TravelRequests from "../requests/TravelRequests";
+import { useQuery } from "react-query";
 import UserRequests from "../requests/UserRequests";
 import Loading from "./../utils/Loading";
 import { useAuth } from "../Authentication/auth";
@@ -109,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TripSelection = () => {
 
-  let {user} = useAuth();
+  let { user } = useAuth();
 
   let id = parseInt(user.id);
 

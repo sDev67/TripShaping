@@ -8,10 +8,6 @@ import {
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import { CircularProgress, Button } from "@mui/material";
 import palette from "./../theme/palette";
-import InterestPointMenu from "./../components/InterestPointMenu";
-import StepMenu from "./../components/StepMenu";
-import MapModeSwitch from "./../components/MapModeSwitch";
-import RouteMenu from "./../components/RouteMenu";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import PointRequests from "../requests/PointRequests";
@@ -33,7 +29,7 @@ const containerStyle = {
   height: "100%",
 };
 
-export const MapReview = ({}) => {
+export const MapReview = ({ }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -165,7 +161,7 @@ export const MapReview = ({}) => {
                 position={{ lat: step.latitude, lng: step.longitude }}
                 icon={
                   selectedMarker?.marker.id == step.id &&
-                  selectedMarker?.type == "Step"
+                    selectedMarker?.type == "Step"
                     ? selectedStepIcon
                     : stepIcon
                 }
@@ -188,7 +184,7 @@ export const MapReview = ({}) => {
                 }}
                 icon={
                   selectedMarker?.marker.id == interestPoint.id &&
-                  selectedMarker?.type == "Point"
+                    selectedMarker?.type == "Point"
                     ? selectedInterestPointIcon
                     : interestPointIcon
                 }

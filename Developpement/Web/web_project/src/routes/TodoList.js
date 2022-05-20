@@ -149,10 +149,11 @@ const TodoList = () => {
     updateLabel.mutate(newLabel);
   };
 
-  const UpdateTask = ({ title, date, task }) => {
+  const UpdateTask = ({ title, date, isDone, task }) => {
     const newTask = {
       title: title,
       date: date,
+      isDone: isDone,
       idTask: task.id,
       idTravel: idTravel,
     };
@@ -330,7 +331,7 @@ const TodoList = () => {
                 OnRemoveLabelToTask={OnRemoveLabelToTask}
                 OnSelectTask={OnSelectTask}
                 OnRemoveTask={OnRemoveTask}
-
+                OnUpdateTask={UpdateTask}
                 OnEditTask={OnSelectTask}
                 AddLabel={OnAddLabelToTask}
                 OnSelectTaskToAddLabel={OnSelectTaskToAddLabel}
@@ -338,6 +339,7 @@ const TodoList = () => {
             </>
           )}
         </Stack>
+        <Divider orientation="vertical" />
         <Stack direction="column" width="25%">
           <Stack
             marginTop="50px"

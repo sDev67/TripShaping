@@ -23,7 +23,7 @@ import { useParams } from "react-router-dom";
 import TravelRequests from "../requests/TravelRequests";
 import Loading from "../utils/Loading";
 import DocumentRequest from "../requests/DocumentRequest";
-
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import RichTextEditor from "./RichTextEditor";
 import StepRequests from "../requests/StepRequests";
 import DocumentsList from "./DocumentsList";
@@ -56,6 +56,12 @@ const InterestPointMenu = ({
       queryClient.invalidateQueries(["getDocumentsOfPoint", idTravel]);
     },
   });
+
+  const [informationDialogOpen, setInformationDialogOpenOpen] = useState(false);
+
+  const HandleCloseAddLabelForm = () => {
+    setInformationDialogOpenOpen(false);
+  }
 
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
@@ -303,41 +309,25 @@ const InterestPointMenu = ({
             )}
           </Stack>
 
-          {/* <Stack>
-            {isLoadingD ? (
-              <Loading />
-            ) : isErrorD ? (
-              <p style={{ color: "red" }}>{errorD.message}</p>
-            ) : (
-              documents.map((document, index) => (
-                <p>{document.title}</p>
-              )))
-            }
-          </Stack> */}
 
-          {/*<TextField
-            fullWidth
-            label="Description"
-            multiline
-            rows={8}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            style={{ marginBottom: 25 }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            disabled={!isEdition}
-
-          />*/}
+          <Typography variant="h6" color="primary">
+            Description
+            <IconButton onClick={(e) => setInformationDialogOpenOpen(true)}>
+              <EditRoundedIcon />
+            </IconButton>
+          </Typography>
           <div style={{ marginBottom: 25 }}>
             <RichTextEditor
               setValue={setDescription}
               value={description}
               limitedEditor={true}
-              minH={"200px"}
+              openFormEditor={setInformationDialogOpenOpen}
+              minH="150px"
               isReadOnly={!isEdition}
-              maxH={"200px"}
+              maxW="350px"
+              popup={false}
             />
+
           </div>
 
           <Stack direction="row" justifyContent="space-between">
@@ -365,6 +355,19 @@ const InterestPointMenu = ({
           </Stack>
         </CardContent>
       </Card>
+
+      <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
+        <RichTextEditor
+          setValue={setDescription}
+          value={description}
+          limitedEditor={false}
+          OnClose={HandleCloseAddLabelForm}
+          minH="300px"
+          isReadOnly={!isEdition}
+          maxW="600px"
+          popup={true}
+        />
+      </Dialog>
     </>
   );
 };

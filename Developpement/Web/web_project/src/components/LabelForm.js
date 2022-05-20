@@ -39,6 +39,7 @@ const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
         </Typography>
         <Stack direction="row" width="100%" spacing={1}>
           <TextField
+            required
             id="secondary-required"
             label="Nom"
             onChange={(e) => setCurrentTitle(e.target.value)}

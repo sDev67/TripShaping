@@ -12,6 +12,10 @@ module.exports = sequelize => {
 	Task.init({
 		title: DataTypes.STRING,
 		date: DataTypes.DATEONLY,
+		isDone: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: 0,
+		},
 
 	}, {
 		sequelize,

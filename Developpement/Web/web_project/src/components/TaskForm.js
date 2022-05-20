@@ -52,8 +52,11 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
 
     } else {
 
+      if( currentTitle != undefined && currentTitle != null && currentTitle != "")
+      {
+          OnAddTask({ title: currentTitle, date: currentDate });
 
-      OnAddTask({ title: currentTitle, date: currentDate });
+      }
       // on la créer
     }
 
@@ -76,6 +79,7 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
 
         <Stack direction="row" width="100%" spacing={1}>
           <TextField
+            required
             id="standard-required"
             label="Nom"
             value={currentTitle !== undefined ? currentTitle : ''}

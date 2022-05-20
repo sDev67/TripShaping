@@ -412,6 +412,16 @@ module.exports = [
     method: "get",
     func: travel_ctrl.get_steps_of_travel,
   },
+  {
+    url: "/travel_preparation",
+    method: "get",
+    func: travel_ctrl.get_in_preparation_travel,
+  },
+  {
+    url: "/travel_current",
+    method: "get",
+    func: travel_ctrl.get_current_travel,
+  },
 
   /**
    * @swagger

@@ -82,7 +82,7 @@ const Informations = () => {
                 setValue={setValue}
                 value={travelDatas.infos !== null ? travelDatas.infos : null}
                 minH="500px"
-                popup={false}
+                information={true}
                 limitedEditor={false}
                 isReadOnly={false}
               />

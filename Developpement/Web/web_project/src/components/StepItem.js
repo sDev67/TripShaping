@@ -36,6 +36,7 @@ import InterestPointMenu from "./InterestPointMenu";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import PointRequests from "./../requests/PointRequests";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 
 const StepItem = ({ step, index, updateInfoStep, steps }) => {
   const queryClient = useQueryClient();
@@ -47,6 +48,12 @@ const StepItem = ({ step, index, updateInfoStep, steps }) => {
   const [category, setCategory] = useState(step.category);
   const [description, setDescription] = useState(step.description);
   const [duration, setDuration] = useState(step.duration);
+
+  const [informationDialogOpen, setInformationDialogOpen] = useState(false);
+
+  const HandleCloseAddLabelForm = () => {
+    setInformationDialogOpen(false);
+  };
 
   const categ = [
     {
@@ -236,6 +243,22 @@ const StepItem = ({ step, index, updateInfoStep, steps }) => {
               </Stack>
             </div>
 
+            <Typography variant="h6" color="primary">
+              Description
+              <IconButton onClick={() => setInformationDialogOpen(true)}>
+                <EditRoundedIcon />
+              </IconButton>
+            </Typography>
+
+            <RichTextEditor
+              setValue={setDescription}
+              value={description}
+              limitedEditor={true}
+              isReadOnly={true}
+              information={false}
+              minH="300px"
+            />
+
             {/* <TextField
                 id={"description" + index}
                 label="Description"
@@ -247,13 +270,6 @@ const StepItem = ({ step, index, updateInfoStep, steps }) => {
                   shrink: true,
                 }}
               /> */}
-
-            <RichTextEditor
-              setValue={setDescription}
-              value={description}
-              limitedEditor={true}
-              minH="300px"
-            />
 
             <Stack spacing={1} direction="column" height="160px">
               <Stack
@@ -347,6 +363,18 @@ const StepItem = ({ step, index, updateInfoStep, steps }) => {
           setOpen={setOpen}
         ></InterestPointMenuBis>
       </Dialog>
+      <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
+        <RichTextEditor
+          setValue={setDescription}
+          value={description}
+          limitedEditor={false}
+          OnClose={HandleCloseAddLabelForm}
+          minH="300px"
+          isReadOnly={false}
+          maxW="600px"
+          information={false}
+        />
+      </Dialog>
     </>
   );
 };
@@ -395,6 +423,8 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
   const [days, setDays] = useState([]);
   const [dayStep, setDayStep] = useState(selectedInterestPoint.day);
   const listSteps = steps;
+
+  const [informationDialogOpen, setInformationDialogOpen] = useState(false);
 
   const categ = [
     {
@@ -522,8 +552,8 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
             InputLabelProps={{
               shrink: true,
             }}
-            d
-          />
+          ></TextField>
+
           <TextField
             fullWidth
             select
@@ -627,13 +657,20 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
             )}
           </Stack>
 
+          <Typography variant="h6" color="primary">
+            Description
+            <IconButton onClick={() => setInformationDialogOpen(true)}>
+              <EditRoundedIcon />
+            </IconButton>
+          </Typography>
           <div style={{ marginBottom: 25 }}>
             <RichTextEditor
               setValue={setDescription}
               value={description}
               limitedEditor={true}
-              minH={"200px"}
-              maxH={"200px"}
+              isReadOnly={true}
+              information={false}
+              minH="150px"
             />
           </div>
 
@@ -657,6 +694,21 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
           </Stack>
         </CardContent>
       </Card>
+      <Dialog
+        open={informationDialogOpen}
+        onClose={() => setInformationDialogOpen(false)}
+      >
+        <RichTextEditor
+          setValue={setDescription}
+          value={description}
+          limitedEditor={false}
+          OnClose={() => setInformationDialogOpen(false)}
+          minH="300px"
+          isReadOnly={false}
+          maxW="600px"
+          information={false}
+        />
+      </Dialog>
     </>
   );
 };

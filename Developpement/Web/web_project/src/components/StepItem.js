@@ -15,6 +15,8 @@ import {
   Card,
   Grid,
   CardContent,
+  Dialog,
+  IconButton
 } from "@mui/material";
 
 import LocationOnRounded from "@mui/icons-material/LocationOnRounded";
@@ -29,6 +31,7 @@ import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import DocumentsList from "./DocumentsList";
 import StepRequests from "../requests/StepRequests";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 
 const StepItem = ({ step, index, updateInfoStep }) => {
   const queryClient = useQueryClient();
@@ -40,6 +43,12 @@ const StepItem = ({ step, index, updateInfoStep }) => {
   const [category, setCategory] = useState(step.category);
   const [description, setDescription] = useState(step.description);
   const [duration, setDuration] = useState(step.duration);
+
+  const [informationDialogOpen, setInformationDialogOpenOpen] = useState(false);
+
+  const HandleCloseAddLabelForm = () => {
+    setInformationDialogOpenOpen(false);
+  }
 
   const categ = [
     {
@@ -220,22 +229,20 @@ const StepItem = ({ step, index, updateInfoStep }) => {
             </Stack>
           </div>
 
-          {/* <TextField
-                id={"description" + index}
-                label="Description"
-                multiline
-                rows={10}
-                value={description}
-                onChange={(e) => setTitle(e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              /> */}
+
+          <Typography variant="h6" color="primary">
+            Description
+            <IconButton onClick={(e) => setInformationDialogOpenOpen(true)}>
+              <EditRoundedIcon />
+            </IconButton>
+          </Typography>
 
           <RichTextEditor
             setValue={setDescription}
             value={description}
             limitedEditor={true}
+            isReadOnly={true}
+            information={false}
             minH="300px"
           />
 
@@ -323,7 +330,22 @@ const StepItem = ({ step, index, updateInfoStep }) => {
           )}
         </Stack>
       </AccordionDetails>
+
+      <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
+        <RichTextEditor
+          setValue={setDescription}
+          value={description}
+          limitedEditor={false}
+          OnClose={HandleCloseAddLabelForm}
+          minH="300px"
+          isReadOnly={false}
+          maxW="600px"
+          information={false}
+        />
+      </Dialog>
     </Accordion>
+
+
   );
 };
 

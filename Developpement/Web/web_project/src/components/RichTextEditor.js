@@ -8,7 +8,7 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 
 
 
-const RichTextEditor = ({ setValue, OnClose, value, limitedEditor, minH, isReadOnly, openFormEditor, maxW, popup }) => {
+const RichTextEditor = ({ setValue, OnClose, value, limitedEditor, minH, isReadOnly, openFormEditor, maxW, information }) => {
 
 
   const [state, setState] = useState([
@@ -41,11 +41,15 @@ const RichTextEditor = ({ setValue, OnClose, value, limitedEditor, minH, isReadO
 
   const onChange = (editorState, limitedCheck = false) => {
 
+    if (information) {
+      limitedCheck = true;
+    }
     const contentState = editorState.getCurrentContent();
 
-    if ((!limitedEditor && !isReadOnly && limitedCheck) || !popup) {
+    if (!limitedEditor && !isReadOnly && limitedCheck) {
       saveContent(contentState);
-      OnClose();
+      if (!information)
+        OnClose();
     }
     setState({
       editorState,
@@ -59,7 +63,7 @@ const RichTextEditor = ({ setValue, OnClose, value, limitedEditor, minH, isReadO
   }
   return (
     <div class="container">
-      <div style={{ border: !limitedEditor && !isReadOnly && !popup ? 0 : "1px solid black", borderRadius: !limitedEditor && !isReadOnly && !popup ? 0 : 5, padding: '2px', height: minH, width: maxW, overflowY: "auto" }}>
+      <div style={{ border: !limitedEditor && !isReadOnly && !information ? 0 : "1px solid black", borderRadius: !limitedEditor && !isReadOnly && information ? 0 : 5, padding: '2px', height: minH, width: maxW, overflowY: "auto" }}>
         <Editor
           readOnly={limitedEditor}
           editorState={state.editorState}
@@ -84,7 +88,7 @@ const RichTextEditor = ({ setValue, OnClose, value, limitedEditor, minH, isReadO
         } */}
       </div>
       {
-        !limitedEditor && !isReadOnly && popup ?
+        !limitedEditor && !isReadOnly && !information ?
           <Button sx={{ marginLeft: '89%' }} onClick={(e) => onChange(state.editorState, true)}>Valider</Button> : ""
       }
     </div >

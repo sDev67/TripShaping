@@ -312,7 +312,7 @@ const InterestPointMenu = ({
 
           <Typography variant="h6" color="primary">
             Description
-            <IconButton onClick={(e) => setInformationDialogOpenOpen(true)}>
+            <IconButton disabled={!isEdition} onClick={(e) => setInformationDialogOpenOpen(true)}>
               <EditRoundedIcon />
             </IconButton>
           </Typography>
@@ -325,7 +325,7 @@ const InterestPointMenu = ({
               minH="150px"
               isReadOnly={!isEdition}
               maxW="350px"
-              popup={false}
+              information={false}
             />
 
           </div>
@@ -365,7 +365,7 @@ const InterestPointMenu = ({
           minH="300px"
           isReadOnly={!isEdition}
           maxW="600px"
-          popup={true}
+          information={false}
         />
       </Dialog>
     </>

@@ -82,7 +82,7 @@ const TodoListRequest = {
         .then(checkStatus)
         .then(res => res.json());
     },
-    updateTaskById: ({title, date, idTask, idTravel}) => {
+    updateTaskById: ({title, date,isDone, idTask, idTravel}) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/task/${idTask}`, {
             method:'PUT',
@@ -90,7 +90,7 @@ const TodoListRequest = {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body:JSON.stringify({title, date, idTask, idTravel})
+            body:JSON.stringify({title, date,isDone, idTask, idTravel})
         })
             .then(checkStatus)
             .then(res => res.json())

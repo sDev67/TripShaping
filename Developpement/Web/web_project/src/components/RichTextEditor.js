@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, ContentState, convertToRaw, convertFromRaw, CompositeDecorator } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography, IconButton } from "@mui/material";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
 
 
-const RichTextEditor = ({ setValue, value, limitedEditor = false, minH, isReadOnly = false }) => {
+const RichTextEditor = ({ setValue, OnClose, value, limitedEditor, minH, isReadOnly, openFormEditor, maxW, popup }) => {
 
 
   const [state, setState] = useState([
@@ -42,8 +43,9 @@ const RichTextEditor = ({ setValue, value, limitedEditor = false, minH, isReadOn
 
     const contentState = editorState.getCurrentContent();
 
-    if (!limitedEditor || (limitedEditor && limitedCheck)) {
+    if ((!limitedEditor && !isReadOnly && limitedCheck) || !popup) {
       saveContent(contentState);
+      OnClose();
     }
     setState({
       editorState,
@@ -57,36 +59,35 @@ const RichTextEditor = ({ setValue, value, limitedEditor = false, minH, isReadOn
   }
   return (
     <div class="container">
-      <div style={{ border: "1px solid black", padding: '2px', minHeight: { minH }, overflowY: "auto", }}>
+      <div style={{ border: !limitedEditor && !isReadOnly && !popup ? 0 : "1px solid black", borderRadius: !limitedEditor && !isReadOnly && !popup ? 0 : 5, padding: '2px', height: minH, width: maxW, overflowY: "auto" }}>
         <Editor
-          readOnly={isReadOnly}
+          readOnly={limitedEditor}
           editorState={state.editorState}
 
 
           onEditorStateChange={onChange}
           toolbar={limitedEditor ? {
-            options: ['inline', 'fontSize', 'list', 'history'],
+            options: [],
             inline: { inDropdown: true },
             list: { inDropdown: true },
 
             link: { inDropdown: true },
             history: { inDropdown: true },
           } : ""} />
-        {limitedEditor ?
+        {/* {limitedEditor && !isReadOnly ?
 
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ padding: 0 }}
-            disabled={isReadOnly}
-            onClick={() => onChange(state.editorState, true)}
-          >
-            <DoneRounded />
-          </Button>
-          :
-          ""}
+          <IconButton sx={{ marginLeft: '87%' }} onClick={(e) => openFormEditor(true)}>
+            <EditRoundedIcon />
+          </IconButton>
+          : ""
+
+        } */}
       </div>
-    </div>
+      {
+        !limitedEditor && !isReadOnly && popup ?
+          <Button sx={{ marginLeft: '89%' }} onClick={(e) => onChange(state.editorState, true)}>Valider</Button> : ""
+      }
+    </div >
   );
 
 }

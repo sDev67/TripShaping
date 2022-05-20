@@ -1,5 +1,6 @@
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import AddLabelToTask from "./AddLabelToTaskForm";
 import {
   Stack,
   List,
@@ -11,7 +12,7 @@ import {
   Typography,
   Autocomplete,
   TextField,
-  Button
+  Button,
 } from "@mui/material";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 import "../Styles/ButtonStyles.css";
@@ -32,102 +33,132 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TodoListRequest from "../requests/TodoListRequest";
 import Loading from "../utils/Loading";
+import { Dialog } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import { tabsListUnstyledClasses } from "@mui/material/node_modules/@mui/base";
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-const Task = ({ task,filteredLabel,OnSelectTaskToAddLabel, existingLabels,OnRemoveTask, OnRemoveLabelToTask, OnEditTask, AddLabel}) => {
-    const {
-      isLoading: isLoadingL,
-      isError: isErrorL,
-      error: errorL,
-      data: labels,
-    } = useQuery(["getLabelOfTask", task.id], () =>
-      TodoListRequest.getLabelOfTask(task.id)
-    );
+const Task = ({
+  task,
+  filteredLabel,
+  OnUpdateTask,
+  OnSelectTaskToAddLabel,
+  existingLabels,
+  OnRemoveTask,
+  OnRemoveLabelToTask,
+  OnEditTask,
+  AddLabel,
+}) => {
+  const {
+    isLoading: isLoadingL,
+    isError: isErrorL,
+    error: errorL,
+    data: labels,
+  } = useQuery(["getLabelOfTask", task.id], () =>
+    TodoListRequest.getLabelOfTask(task.id)
+  );
 
-    const [isFiltered, setIsFiltered] = useState();
+  const [isFiltered, setIsFiltered] = useState();
 
-    const [extendResearch, setResearchType] = useState(true);
+  const [extendResearch, setResearchType] = useState(true);
 
-    useEffect(() => {
+  const [labelAddFormOpen, setLabelAddFormFormOpen] = useState(false);
 
-    },[labels]);
+  useEffect(() => {}, [labels]);
 
-    useEffect(() => 
-    {
- 
-        // setIsFiltered(filteredLabel.length == 0 || (filteredLabel.length > 0 && labels.some(r => filteredLabel.includes(r))))
-        checkLabels();
+  useEffect(() => {
+    // setIsFiltered(filteredLabel.length == 0 || (filteredLabel.length > 0 && labels.some(r => filteredLabel.includes(r))))
+    checkLabels();
+  }, [filteredLabel]);
 
-    }, [filteredLabel])
-  
-    const [selectedLabel, setLabelToAdd] = useState();
-  
-    const checkLabels = () => 
-    {
-     if(filteredLabel.length == 0){  setIsFiltered( true); return; }
-    if(filteredLabel.length > 0 && (labels == undefined || labels.length == 0)){  setIsFiltered( false); return;}
+  const [selectedLabel, setLabelToAdd] = useState();
 
-      let isGood = false;
+  const checkLabels = () => {
+    if (filteredLabel.length == 0) {
+      setIsFiltered(true);
+      return;
+    }
+    if (
+      filteredLabel.length > 0 &&
+      (labels == undefined || labels.length == 0)
+    ) {
+      setIsFiltered(false);
+      return;
+    }
 
-      if(extendResearch)
-      {
-        labels.map((f) => 
-        {
-          filteredLabel.map((l) => 
-          {
-            if(f.title==l.title)
-            {
-              isGood = true;           
-            }
-          })
-        })
-      }
+    let isGood = false;
 
-      setIsFiltered( isGood);
-      // else
-      // {
-      //   labels.map((f) => 
-      //   {
-      //     filteredLabel.map((l) => 
-      //     {
-      //       if(f.title==l.title)
-      //       {
-      //           isGood = true;
-            
-      //       }else{
-  
-      //         setIsFiltered( false);
-      //         return
-      //       }
-      //     })
-      //   })
-      // }
+    if (extendResearch) {
+      labels.map((f) => {
+        filteredLabel.map((l) => {
+          if (f.title == l.title) {
+            isGood = true;
+          }
+        });
+      });
+    }
 
+    setIsFiltered(isGood);
+    // else
+    // {
+    //   labels.map((f) =>
+    //   {
+    //     filteredLabel.map((l) =>
+    //     {
+    //       if(f.title==l.title)
+    //       {
+    //           isGood = true;
+
+    //       }else{
+
+    //         setIsFiltered( false);
+    //         return
+    //       }
+    //     })
+    //   })
+    // }
 
     //  return false;
+  };
+
+  let color = task.isDone ? "#C8FACD" : "#FFFFFF";
+
+  const addLabelToTask = () => {
+    if (selectedLabel === undefined) {
+      return;
     }
 
-    const addLabelToTask = () => 
-    {
-      if(selectedLabel === undefined){ return; }
-  
-      if(labels.filter((e) => e.title === selectedLabel.title).length > 0)
-      {
-        return;
-      }
-   
-      AddLabel(task,selectedLabel);
-  
+    if (labels.filter((e) => e.title === selectedLabel.title).length > 0) {
+      return;
     }
-  
-    return (
-      <>
-      {
-        !isFiltered  ?
+
+    AddLabel(task, selectedLabel);
+    HandleCloseAddLabelForm();
+  };
+
+  const HandleCloseAddLabelForm = () => {
+    setLabelAddFormFormOpen(false);
+    setLabelToAdd(selectedLabel);
+  };
+
+  const OnTaskDone = () => {
+    OnUpdateTask({
+      title: task.title,
+      date: task.date,
+      isDone: !task.isDone,
+      task: task,
+    });
+  };
+
+  return (
+    <>
+      {!isFiltered ? (
         ""
-        :
-        <>   
+      ) : (
+        <>
           <Grid item xs={4}>
-            <Card>
+            <Card sx={{ background: color }}>
               <CardHeader
                 action={
                   <IconButton color="error" onClick={(e) => OnRemoveTask(task)}>
@@ -136,16 +167,23 @@ const Task = ({ task,filteredLabel,OnSelectTaskToAddLabel, existingLabels,OnRemo
                 }
                 title={
                   <>
-                    {task.title}
-                    <Tooltip title="Editer" placement="right" arrow>
-                      <IconButton onClick={(e) => OnEditTask(task)}>
-                        <EditRoundedIcon />
-                      </IconButton>
-                    </Tooltip>
+                    {task.isDone ? <strike>{task.title}</strike> : task.title}
+                    {!task.isDone ? (
+                      <>
+                        <Tooltip title="Editer" placement="right" arrow>
+                          <IconButton onClick={(e) => OnEditTask(task)}>
+                            <EditRoundedIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </>
                 }
                 subheader={task.date}
               />
+
               {isLoadingL ? (
                 <Loading></Loading>
               ) : isErrorL ? (
@@ -155,66 +193,70 @@ const Task = ({ task,filteredLabel,OnSelectTaskToAddLabel, existingLabels,OnRemo
                   <CardContent>
                     {labels.map((label, index) => (
                       <>
-                        <Chip
-                          key={index}
-                          style={{ margin: 5 }}
-                          size="medium"
-                          onDelete={(e) => OnRemoveLabelToTask(task, label)}
-                          color="secondary"
-                          label={label.title}
-                        />
+                        {!task.isDone ? (
+                          <>
+                            <Chip
+                              key={index}
+                              style={{ margin: 5 }}
+                              size="medium"
+                              onDelete={(e) => OnRemoveLabelToTask(task, label)}
+                              color="secondary"
+                              label={label.title}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <Chip
+                              key={index}
+                              style={{ margin: 5 }}
+                              size="medium"
+                              color="secondary"
+                              label={label.title}
+                            />
+                          </>
+                        )}
                       </>
                     ))}
-                  </CardContent>      
-                  <Autocomplete
-                        style={{ width: "75%" }}
-                        noOptionsText={"Aucun label trouvé"}
-                        options={existingLabels}
-                        fullWidth
-                        onChange={(event, value) => {
-                          setLabelToAdd(value);
-                        }}
-                        autoHighlight
-                        getOptionLabel={(option) => option.title}
-                        renderOption={(props, option) => (
-                          <Stack
-                            direction="row"
-                            component="li"
-                            {...props}
-                            alignItems="center"
-                            spacing={1}
-                          >
-                            <Typography>{option.title}</Typography>
-                          </Stack>
-                        )}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                          />
-                        )}
-                      />
+                    {!task.isDone ? (
+                      <>
+                        <IconButton
+                          onClick={() => setLabelAddFormFormOpen(true)}
+                          color="secondary"
+                        >
+                          <AddCircleIcon />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    <Stack display={"flex"}>
                       <Button
-                        style={{ width: "25%" }}
+                        onClick={(e) => OnTaskDone()}
+                        sx={{ alignSelf: "flex-end" }}
                         variant="contained"
-                        onClick={(e) => {
-                          addLabelToTask();
-                        }}
+                        color={!task.isDone ? "primary" : "error"}
                       >
-                        Ajouter
+                        {!task.isDone ? "Fait" : "Non Fait"}
                       </Button>
+                    </Stack>
+                  </CardContent>
                 </>
-                
               )}
             </Card>
           </Grid>
         </>
-    }
-      
-      </>
-    );
-}
+      )}
+
+      <Dialog open={labelAddFormOpen} onClose={HandleCloseAddLabelForm}>
+        <AddLabelToTask
+          labels={existingLabels}
+          addLabelToTask={addLabelToTask}
+          setLabelToAdd={setLabelToAdd}
+          task={task}
+        ></AddLabelToTask>
+      </Dialog>
+    </>
+  );
+};
 
 export default Task;

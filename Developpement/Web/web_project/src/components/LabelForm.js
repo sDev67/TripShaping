@@ -13,17 +13,14 @@ const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
   //   }, [label]);
 
   const handleClick = () => {
-
-    if(label != undefined)
-    {
-      updateLabel({title:currentTitle, labelId:label.id});
+    if (label != undefined) {
+      updateLabel({ title: currentTitle, labelId: label.id });
     }
 
-    if(currentTitle !== undefined)
-    {
-      addLabel({title:currentTitle});
+    if (currentTitle !== undefined) {
+      addLabel({ title: currentTitle });
     }
-  
+
     onClose();
   };
 
@@ -39,6 +36,7 @@ const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
         </Typography>
         <Stack direction="row" width="100%" spacing={1}>
           <TextField
+            required
             id="secondary-required"
             label="Nom"
             onChange={(e) => setCurrentTitle(e.target.value)}

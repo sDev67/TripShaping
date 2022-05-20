@@ -38,7 +38,7 @@ const MembersList = ({ members, deleteMember }) => {
           >
             <ListItemButton>
               <ListItemAvatar>
-                <Avatar {...stringAvatar("Bucki")} />
+                <Avatar {...stringAvatar(member.name)} />
               </ListItemAvatar>
               <ListItemText
                 primary={<>{member.name}</>}

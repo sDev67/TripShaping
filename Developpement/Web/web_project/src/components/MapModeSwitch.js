@@ -55,14 +55,7 @@ const MapModeSwitch = ({
   };
 
   return (
-    <Card
-      style={{
-        position: "absolute",
-        bottom: "25px",
-        left: "10px",
-        // height: "100px"
-      }}
-    >
+    <Card>
       <CardHeader
         style={{ textAlign: "center", padding: "5px 5px 0px 5px" }}
         title={
@@ -102,8 +95,11 @@ const MapModeSwitch = ({
                   control={<Radio />}
                   label={
                     <Stack direction="row" alignItems="center">
-                      <img style={{width:"25px", height:"25px"}}src={stepInterestPointIcon}></img>
-                      
+                      <img
+                        style={{ width: "25px", height: "25px" }}
+                        src={stepInterestPointIcon}
+                      ></img>
+
                       <p>Tout</p>
                     </Stack>
                   }
@@ -113,7 +109,10 @@ const MapModeSwitch = ({
                   control={<Radio />}
                   label={
                     <Stack direction="row" alignItems="center">
-                      <img style={{width:"25px", height:"25px"}}src={stepIcon}></img>
+                      <img
+                        style={{ width: "25px", height: "25px" }}
+                        src={stepIcon}
+                      ></img>
                       <p>Étapes</p>
                     </Stack>
                   }
@@ -124,7 +123,10 @@ const MapModeSwitch = ({
                   control={<Radio />}
                   label={
                     <Stack direction="row" alignItems="center">
-                      <img style={{width:"25px", height:"25px"}}src={interestPointIcon}></img>
+                      <img
+                        style={{ width: "25px", height: "25px" }}
+                        src={interestPointIcon}
+                      ></img>
                       <p>POI</p>
                     </Stack>
                   }
@@ -147,7 +149,10 @@ const MapModeSwitch = ({
                     control={<Radio />}
                     label={
                       <Stack direction="row" alignItems="center">
-                        <img style={{width:"25px", height:"25px"}}src={stepIcon}></img>
+                        <img
+                          style={{ width: "25px", height: "25px" }}
+                          src={stepIcon}
+                        ></img>
                         <p>Étapes</p>
                       </Stack>
                     }
@@ -158,7 +163,10 @@ const MapModeSwitch = ({
                     control={<Radio />}
                     label={
                       <Stack direction="row" alignItems="center">
-                        <img style={{width:"25px", height:"25px"}}src={interestPointIcon}></img>
+                        <img
+                          style={{ width: "25px", height: "25px" }}
+                          src={interestPointIcon}
+                        ></img>
                         <p>POI</p>
                       </Stack>
                     }

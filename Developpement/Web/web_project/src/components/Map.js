@@ -6,7 +6,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import { CircularProgress, Button } from "@mui/material";
+import { CircularProgress, Button, Stack } from "@mui/material";
 import palette from "./../theme/palette";
 import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
@@ -362,40 +362,42 @@ export const Map = ({}) => {
             zoom={10}
             onClick={onMapClick}
           >
-            <MapModeSwitch
-              handleSwitch={handleSwitch}
-              isEdition={isEdition}
-              markerFilter={markerFilter}
-              handleChangeSelectModeEdit={handleChangeSelectModeEdit}
-              handleChangeSelectModeNav={handleChangeSelectModeNav}
-              editionMode={editionMode}
-            ></MapModeSwitch>
-            {showTimeline ? (
-              <Button
-                onClick={() => setShowTimeline(!showTimeline)}
-                variant="outlined"
-                style={{
-                  position: "absolute",
-                  top: "1%",
-                  left: "12%",
-                  backgroundColor: "white",
-                }}
-              >
-                Liste Étapes
-              </Button>
-            ) : (
-              <Button
-                onClick={() => setShowTimeline(!showTimeline)}
-                variant="contained"
-                style={{
-                  position: "absolute",
-                  top: "1%",
-                  left: "12%",
-                }}
-              >
-                Liste Étapes
-              </Button>
-            )}
+            <Stack
+              direction="column-reverse"
+              spacing={2}
+              style={{
+                position: "absolute",
+                bottom: "25px",
+                left: "10px",
+              }}
+            >
+              <MapModeSwitch
+                handleSwitch={handleSwitch}
+                isEdition={isEdition}
+                markerFilter={markerFilter}
+                handleChangeSelectModeEdit={handleChangeSelectModeEdit}
+                handleChangeSelectModeNav={handleChangeSelectModeNav}
+                editionMode={editionMode}
+              ></MapModeSwitch>
+              {showTimeline ? (
+                <Button
+                  onClick={() => setShowTimeline(!showTimeline)}
+                  variant="outlined"
+                  style={{
+                    backgroundColor: "white",
+                  }}
+                >
+                  Liste Étapes
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setShowTimeline(!showTimeline)}
+                  variant="contained"
+                >
+                  Liste Étapes
+                </Button>
+              )}
+            </Stack>
 
             {isLoadingS ? (
               <Loading />

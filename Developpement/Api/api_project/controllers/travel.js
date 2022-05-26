@@ -119,6 +119,16 @@ module.exports = {
       .then((travel) => res.json(travel))
       .catch(next);
   },
+  get_finish_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        status: 2,
+      },
+      order: ["name"],
+    })
+      .then((travel) => res.json(travel))
+      .catch(next);
+  },
   get_members_of_travel: (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {

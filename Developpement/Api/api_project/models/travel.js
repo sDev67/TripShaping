@@ -29,7 +29,7 @@ module.exports = sequelize => {
 		infos: DataTypes.STRING,
 		toPublish: {
 			type: Sequelize.BOOLEAN,
-			defaultValue: 1,
+			defaultValue: 0,
 		},
 		positionAgree: {
 			type: Sequelize.BOOLEAN,

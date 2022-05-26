@@ -1,8 +1,8 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Divider, Stack } from "@mui/material";
 import * as React from "react";
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Switch } from "@mui/material";
+import { Switch, Dialog, } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
@@ -13,6 +13,10 @@ import Loading from "../utils/Loading";
 
 const TripSettings = () => {
   const queryClient = useQueryClient();
+
+  var today = new Date();
+  var dateMax = today.getFullYear() + "-" + ((today.getMonth() + 1) < 10 ? "0" + (today.getMonth() + 1) : (today.getMonth() + 1)) + "-" + (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
+  console.log(dateMax)
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
@@ -30,6 +34,8 @@ const TripSettings = () => {
   let currentDate = travel?.startDate
   let publicItinerary = travel?.toPublish
   let trackPosition = travel?.positionAgree
+
+  const [startDialogOpen, setStartDialogOpen] = useState(false);
 
   const handleDateChange = (newDate) => {
     currentDate = newDate;
@@ -59,7 +65,7 @@ const TripSettings = () => {
       TravelId: idTravel,
       status: statusTrip,
     };
-    updatePublic.mutate(newStatus);
+    updateStatus.mutate(newStatus);
   };
 
   const updateStatusPublished = (publicItinerary) => {
@@ -98,6 +104,10 @@ const TripSettings = () => {
       queryClient.invalidateQueries(["getTravel", idTravel]);
     },
   });
+
+  const HandleCloseAddLabelForm = () => {
+    setStartDialogOpen(false);
+  }
 
   return (
     <>
@@ -151,7 +161,7 @@ const TripSettings = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    // onClick={handleSwitchStartTrip()}
+                    onClick={(e) => setStartDialogOpen(true)}
                     style={{
                       paddingLeft: "40px",
                       paddingRight: "40px",
@@ -224,6 +234,42 @@ const TripSettings = () => {
                 </Button>
               </Stack>
             </Stack>
+            <Dialog open={startDialogOpen} onClose={HandleCloseAddLabelForm}>
+              <Stack >
+                <Stack direction="column" margin={5} justifyContent="space-evenly">
+                  <Typography variant="h5">Valider la date de départ</Typography>
+                  <TextField
+                    sx={{ width: "65%", alignSelf: "center", marginTop: 5 }}
+                    id="date"
+                    label=""
+                    type="date"
+                    inputProps={{ min: "1900-01-01", max: dateMax }}
+                    onChange={(e) => handleDateChange(e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+
+                </Stack>
+                <Divider />
+                <Stack margin={5}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleSwitchStartTrip()}
+                    style={{
+                      paddingLeft: "40px",
+                      paddingRight: "40px",
+                      paddingTop: "25px",
+                      paddingBottom: "25px",
+                    }}
+                  >
+                    Démarrer le voyage
+                  </Button>
+                </Stack>
+
+              </Stack>
+            </Dialog>
           </Stack>
       }
     </>

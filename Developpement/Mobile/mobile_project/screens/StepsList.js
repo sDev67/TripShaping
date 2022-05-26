@@ -24,6 +24,11 @@ export default StepsList = ({ navigation, route }) => {
         ['getPoints', idTravel], () => TravelRequests.getPointsOfTravel(idTravel)
     );
 
+    // Travel
+    const { isLoading: isLoadingT, isError: isErrorT, error: errorT, data: travel } = useQuery(
+        ['getTravel', idTravel], () => TravelRequests.getTravelByid(idTravel)
+    );
+
     // Documents 
     const { isLoading: isLoadingD, isError: isErrorD, error: errorD, data: documents } = useQuery(["getDocuments", idTravel], () => TravelRequests.getDocumentsByTravelId(idTravel));
     let count = 0;
@@ -80,7 +85,8 @@ export default StepsList = ({ navigation, route }) => {
                                     </Text >
                                     {tabDays.map((day, i) => {
                                         total = total + 1;
-                                        var date = new Date();
+                                        var date = travel ? travel.startDate : new Date();
+                                        console.log("Date " + date);
                                         date.setTime(date.getTime() + total * 24 * 3600 * 1000);
                                         const now = date.getTime() == Date.now() ? true : false;
                                         return (<View key={[idx, i]} style={{

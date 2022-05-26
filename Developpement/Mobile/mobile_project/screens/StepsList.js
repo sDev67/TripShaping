@@ -85,10 +85,20 @@ export default StepsList = ({ navigation, route }) => {
                                     </Text >
                                     {tabDays.map((day, i) => {
                                         total = total + 1;
-                                        var date = travel ? travel.startDate : new Date();
-                                        console.log("Date " + date);
-                                        date.setTime(date.getTime() + total * 24 * 3600 * 1000);
-                                        const now = date.getTime() == Date.now() ? true : false;
+                                        let date = travel ? travel.startDate : null;
+                                        let now = null;
+
+                                        if (date != null) {
+                                            if (typeof date == "string") {
+                                                let dateS = date.substring(0, 10);
+                                                let dateT = dateS.split('-');
+                                                date = new Date(parseInt(dateT[0]), parseInt(dateT[1]), parseInt(dateT[2]))
+                                            }
+
+                                            date.setTime(date.getTime() + total * 24 * 3600 * 1000);
+                                            now = date.getTime() == Date.now() ? true : false;
+                                        }
+
                                         return (<View key={[idx, i]} style={{
                                             borderRadius: 5,
                                             marginVertical: 5,
@@ -96,7 +106,10 @@ export default StepsList = ({ navigation, route }) => {
                                             borderWidth: 1,
                                             borderColor: now ? "red" : "black"
                                         }}>
-                                            <Text>Jour {i + 1} : {(date.getDate < 10 && "0") + date.getDate() + "/" + ((date.getMonth() + 1) < 10 && "0") + (date.getMonth() + 1) + "/" + date.getFullYear()} </Text>
+                                            {date ? <Text>Jour {i + 1} : {(date.getDate() < 10 && "0") + date.getDate() + "/" + (date.getMonth() < 10 && "0") + date.getMonth() + "/" + date.getFullYear()} </Text> :
+                                                <Text>Jour {i + 1} </Text>
+                                            }
+
                                             <View style={{ marginTop: 5, flexDirection: "row" }}>
                                                 {points.map((point, id) => {
                                                     if (point.StepId === step.id && point.day === i + 1) {

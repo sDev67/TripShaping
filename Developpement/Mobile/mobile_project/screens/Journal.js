@@ -11,7 +11,7 @@ import JournalRequests from '../requests/JournalRequests';
 import MemberRequests from '../requests/MemberRequests';
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 
-const Journal = ({ idTravel }) => {
+const Journal = ({ idTravel, isReadOnly }) => {
 
     const { user } = useAuth();
     const queryClient = useQueryClient();
@@ -68,11 +68,12 @@ const Journal = ({ idTravel }) => {
                             ))
                         }
                     </ScrollView>
-                    <View style={{ justifyContent: "flex-end", marginBottom: 10 }}>
-                        <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />
-                        <Button style={{ backgroundColor: "#00AB55", width: 100, justifyContent: "center", alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
-                    </View>
-
+                    {!isReadOnly &&
+                        <View style={{ justifyContent: "flex-end", marginBottom: 10 }}>
+                            <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />
+                            <Button style={{ backgroundColor: "#00AB55", width: 100, justifyContent: "center", alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
+                        </View>
+                    }
                 </SafeAreaView>
             </NativeBaseProvider>
         </>

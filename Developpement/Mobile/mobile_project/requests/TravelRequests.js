@@ -106,6 +106,18 @@ const TravelRequests = {
             .then(res => res.json())
     },
 
+    getFinishTravel: () => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel_finish`, {
+
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
     getDocumentsByTravelId: idTravel => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/documents`, {

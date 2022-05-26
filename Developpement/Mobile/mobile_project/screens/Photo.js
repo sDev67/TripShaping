@@ -8,6 +8,8 @@ import { Camera } from 'expo-camera'
 
 import noImage from "../assets/images/NoImage.jpg"
 
+import PhotoRequests from '../requests/PhotoRequests';
+
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 
 const Photo = ({ navigation, route }) => {

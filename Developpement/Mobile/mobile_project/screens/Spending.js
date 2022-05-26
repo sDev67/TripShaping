@@ -12,7 +12,10 @@ import MemberRequests from '../requests/MemberRequests';
 import JournalRequests from '../requests/JournalRequests';
 import PhotoRequests from '../requests/PhotoRequests';
 
-const Spending = ({ navigation }) => {
+const Spending = ({ navigation, route }) => {
+
+    const { isReadOnly } = route.params;
+
     const idTravel = 1;
 
     // Membres 
@@ -133,50 +136,52 @@ const Spending = ({ navigation }) => {
                         })}
                     </>}
             </ScrollView>
-            <View width={Dimensions.get('window').width} style={{ paddingBottom: 10, justifyContent: "flex-end", backgroundColor: "white" }}>
-                {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :
+            {!isReadOnly &&
+                <View width={Dimensions.get('window').width} style={{ paddingBottom: 10, justifyContent: "flex-end", backgroundColor: "white" }}>
+                    {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :
 
-                    <>
-                        <View style={{ marginBottom: 10, alignSelf: "center" }} >
-                            <Select selectedValue={donateur} width={Dimensions.get('window').width - 20} accessibilityLabel="Choisir un donateur" placeholder="Choisir un donateur" _selectedItem={{ endIcon: <CheckIcon size="5" /> }} mt={1} onValueChange={itemValue => { setDonateur(itemValue) }}>
-                                {members.map((member, i) => {
-                                    return (<Select.Item key={i} label={member.name} value={member.id} />)
-                                })}
-                            </Select>
-                        </View>
-                        <TouchableOpacity onPress={() => setListVisible(!listVisible)}>
-                            <View style={{ marginBottom: 10, flexDirection: "row", paddingHorizontal: 10 }} >
-                                <TextInput style={styles.inputFocused} placeholder="Choisir un destinataire" value={destinataires} editable={false} />
+                        <>
+                            <View style={{ marginBottom: 10, alignSelf: "center" }} >
+                                <Select selectedValue={donateur} width={Dimensions.get('window').width - 20} accessibilityLabel="Choisir un donateur" placeholder="Choisir un donateur" _selectedItem={{ endIcon: <CheckIcon size="5" /> }} mt={1} onValueChange={itemValue => { setDonateur(itemValue) }}>
+                                    {members.map((member, i) => {
+                                        return (<Select.Item key={i} label={member.name} value={member.id} />)
+                                    })}
+                                </Select>
                             </View>
-                        </TouchableOpacity>
-                        <View style={{ marginBottom: 10, paddingHorizontal: 10 }}>
-                            {listVisible && (
-                                <ScrollView style={{ height: "25%" }}>
-                                    <Checkbox.Group onChange={setSelectedItems} value={selectedItems} accessibilityLabel="Choisir les destinataires">
-                                        {members.map((member, i) => {
-                                            return (<Checkbox colorScheme="rgb(154,209,245)" key={i} value={member.id} my={2} ml={2}>
-                                                {member.name}
-                                            </Checkbox>)
-                                        })}
-                                    </Checkbox.Group>
-                                </ScrollView>
-                            )}
-                        </View>
-                        <View style={{ marginBottom: 10, flexDirection: "row", paddingHorizontal: 10 }} >
-                            <Text style={{ flex: 1, marginTop: 13 }}>Montant : </Text>
-                            <TextInput style={styles.inputFocused} keyboardType="number-pad" value={montant} onChangeText={(text) => setMontant(text)} />
-                        </View>
-                        <View style={{ marginBottom: 10, alignSelf: "center" }} >
-                            <Select selectedValue={category} width={Dimensions.get('window').width - 20} accessibilityLabel="Choisir une catégorie" placeholder="Choisir une catégorie" _selectedItem={{ endIcon: <CheckIcon size="5" /> }} mt={1} onValueChange={itemValue => { setCategory(itemValue) }}>
-                                {categories.map((category, i) => {
-                                    return (<Select.Item key={i} label={category} value={category} />)
-                                })}
-                            </Select>
-                        </View>
-                    </>
-                }
-                <CustomButton donateur={donateur} destinataires={destinataires} selectedItems={selectedItems} montant={montant} category={category} spend={spend} />
-            </View>
+                            <TouchableOpacity onPress={() => setListVisible(!listVisible)}>
+                                <View style={{ marginBottom: 10, flexDirection: "row", paddingHorizontal: 10 }} >
+                                    <TextInput style={styles.inputFocused} placeholder="Choisir un destinataire" value={destinataires} editable={false} />
+                                </View>
+                            </TouchableOpacity>
+                            <View style={{ marginBottom: 10, paddingHorizontal: 10 }}>
+                                {listVisible && (
+                                    <ScrollView style={{ height: "25%" }}>
+                                        <Checkbox.Group onChange={setSelectedItems} value={selectedItems} accessibilityLabel="Choisir les destinataires">
+                                            {members.map((member, i) => {
+                                                return (<Checkbox colorScheme="rgb(154,209,245)" key={i} value={member.id} my={2} ml={2}>
+                                                    {member.name}
+                                                </Checkbox>)
+                                            })}
+                                        </Checkbox.Group>
+                                    </ScrollView>
+                                )}
+                            </View>
+                            <View style={{ marginBottom: 10, flexDirection: "row", paddingHorizontal: 10 }} >
+                                <Text style={{ flex: 1, marginTop: 13 }}>Montant : </Text>
+                                <TextInput style={styles.inputFocused} keyboardType="number-pad" value={montant} onChangeText={(text) => setMontant(text)} />
+                            </View>
+                            <View style={{ marginBottom: 10, alignSelf: "center" }} >
+                                <Select selectedValue={category} width={Dimensions.get('window').width - 20} accessibilityLabel="Choisir une catégorie" placeholder="Choisir une catégorie" _selectedItem={{ endIcon: <CheckIcon size="5" /> }} mt={1} onValueChange={itemValue => { setCategory(itemValue) }}>
+                                    {categories.map((category, i) => {
+                                        return (<Select.Item key={i} label={category} value={category} />)
+                                    })}
+                                </Select>
+                            </View>
+                        </>
+                    }
+                    <CustomButton donateur={donateur} destinataires={destinataires} selectedItems={selectedItems} montant={montant} category={category} spend={spend} />
+                </View>
+            }
         </NativeBaseProvider>
     )
 }

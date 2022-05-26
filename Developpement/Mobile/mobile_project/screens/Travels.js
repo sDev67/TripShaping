@@ -9,8 +9,100 @@ import DatePicker from 'react-native-datepicker';
 import { useAuth } from '../requests/Auth'
 import UserRequests from '../requests/UserRequests';
 
+const AlertFinish = ({ isOpen, setIsOpen, name, id }) => {
+
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    const onClose = () => setIsOpen(false);
+
+    const updateStatus = useMutation(TravelRequests.updateTravel, {
+        onSuccess: newTravel => {
+            queryClient.setQueryData(["getCurrentTravels"], newTravel);
+            queryClient.invalidateQueries(["getCurrentTravels", user.id]);
+            queryClient.invalidateQueries(["getInPreparationTravels", user.id]);
+            queryClient.invalidateQueries(["getFinishTravels", user.id])
+        },
+    });
+
+    const finishTrip = (id) => {
+        const newTravel = { TravelId: id, status: 2 };
+        updateStatus.mutate(newTravel);
+        onClose()
+    };
+
+    const cancelRef = useRef(null);
+    return <Center>
+        <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onClose}>
+            <AlertDialog.Content>
+                <AlertDialog.Header><Center>Voulez-vous terminer ce voyage ?</Center></AlertDialog.Header>
+                <AlertDialog.Body>
+                    <Center><Text>{name}</Text></Center>
+                </AlertDialog.Body>
+                <AlertDialog.Footer>
+                    <Button.Group space={2}>
+                        <Button variant="unstyled" colorScheme="coolGray" onPress={onClose} ref={cancelRef}>
+                            Annuler
+                        </Button>
+                        <Button style={{ backgroundColor: "red" }} onPress={() => finishTrip(id)}>
+                            Terminer
+                        </Button>
+                    </Button.Group>
+                </AlertDialog.Footer>
+            </AlertDialog.Content>
+        </AlertDialog>
+    </Center>;
+};
+
+
+const AlertReactivate = ({ isOpen, setIsOpen, name, id, isReadOnly, navigation }) => {
+
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    const onClose = () => setIsOpen(false);
+
+    const updateStatus = useMutation(TravelRequests.updateTravel, {
+        onSuccess: newTravel => {
+            queryClient.setQueryData(["getCurrentTravels"], newTravel);
+            queryClient.invalidateQueries(["getCurrentTravels", user.id]);
+            queryClient.invalidateQueries(["getInPreparationTravels", user.id]);
+            queryClient.invalidateQueries(["getFinishTravels", user.id])
+        },
+    });
+
+    const reactivateTrip = (id, isReadOnly, navigation) => {
+        const newTravel = { TravelId: id, status: 1 };
+        updateStatus.mutate(newTravel);
+        onClose()
+        navigation.navigate("Map", { isReadOnly: isReadOnly, idTravel: id });
+    };
+
+    const cancelRef = useRef(null);
+    return <Center>
+        <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onClose}>
+            <AlertDialog.Content>
+                <AlertDialog.Header><Center>Voulez-vous réactiver ce voyage ?</Center></AlertDialog.Header>
+                <AlertDialog.Body>
+                    <Center><Text>{name}</Text></Center>
+                </AlertDialog.Body>
+                <AlertDialog.Footer>
+                    <Button.Group space={2}>
+                        <Button variant="unstyled" colorScheme="coolGray" onPress={onClose} ref={cancelRef}>
+                            Annuler
+                        </Button>
+                        <Button style={{ backgroundColor: "#00AB55" }} onPress={() => reactivateTrip(id, isReadOnly, navigation)}>
+                            Reactiver
+                        </Button>
+                    </Button.Group>
+                </AlertDialog.Footer>
+            </AlertDialog.Content>
+        </AlertDialog>
+    </Center>;
+};
+
+
 const Alert = ({ isOpen, setIsOpen, name, id, isReadOnly, navigation }) => {
 
+    const { user } = useAuth();
     const today = new Date();
     const todayString = ('0' + today.getDate()).slice(-2) + "-" + ('0' + (today.getMonth() + 1)).slice(-2) + "-" + today.getFullYear()
 
@@ -22,8 +114,9 @@ const Alert = ({ isOpen, setIsOpen, name, id, isReadOnly, navigation }) => {
     const updateStatus = useMutation(TravelRequests.updateTravel, {
         onSuccess: newTravel => {
             queryClient.setQueryData(["getCurrentTravels"], newTravel);
-            queryClient.invalidateQueries(["getCurrentTravels", 4]);
-            queryClient.invalidateQueries(["getInPreparationTravels", 4]);
+            queryClient.invalidateQueries(["getCurrentTravels", user.id]);
+            queryClient.invalidateQueries(["getInPreparationTravels", user.id]);
+            queryClient.invalidateQueries(["getFinishTravels", user.id])
         },
     });
 
@@ -92,11 +185,14 @@ const Travels = ({ navigation }) => {
     const id = parseInt(user.id);
 
     const [isOpen, setIsOpen] = useState(false);
+    const [isOpenReactivate, setIsOpenReactivate] = useState(false);
+    const [isOpenFinish, setIsOpenFinish] = useState(false);
     const [selectedTravel, setSelectedTravel] = useState(null);
     const [selectedId, setSelectedId] = useState(null);
 
     const [currentTravel, setCurrentTravel] = useState([]);
     const [prepTravel, setPrepTravel] = useState([]);
+    const [finTravel, setFinTravel] = useState([]);
 
     const { isLoading: isLoading, isError: isError, error: error, data: preparationTravels } = useQuery(
         ['getInPreparationTravels', 4], () => TravelRequests.getInPreparationTravel()
@@ -106,12 +202,17 @@ const Travels = ({ navigation }) => {
         ["getMembers"], () => UserRequests.getMembers(id));
 
     const { isLoading: isLoadingP, isError: isErrorP, error: errorP, data: currentTravels } = useQuery(
-        ['getCurrentTravels', 4], () => TravelRequests.getCurrentTravel()
+        ['getCurrentTravels', user.id], () => TravelRequests.getCurrentTravel()
     );
+
+    const { isLoading: isLoadingT, isError: isErrorT, error: errorT, data: finishTravels } = useQuery(
+        ['getFinishTravels', user.id], () => TravelRequests.getFinishTravel()
+    )
 
     useEffect(() => {
         let current = [];
         let prep = [];
+        let fin = [];
         isLoadingM ? null : isErrorM ? null : members.map((member) => {
             isLoadingP ? null : isErrorP ? null : currentTravels.map((travel) => {
                 if (member.TravelId === travel.id) {
@@ -123,15 +224,28 @@ const Travels = ({ navigation }) => {
                     prep.push(travel);
                 }
             })
+            isLoadingT ? null : isErrorT ? null : finishTravels.map((travel) => {
+                if (member.TravelId === travel.id) {
+                    fin.push(travel);
+                }
+            })
         })
         setCurrentTravel(current);
         setPrepTravel(prep);
-        console.log(prepTravel.length);
-    }, [currentTravels, members, preparationTravels])
+        setFinTravel(fin)
+        current = [];
+        prep = [];
+        fin = [];
+    }, [currentTravels, members, preparationTravels, finishTravels])
 
     let isReadOnly = false;
 
     const visualizedTravel = (id) => {
+        isReadOnly = false;
+        navigation.navigate("Map", { isReadOnly: isReadOnly, idTravel: id });
+    }
+
+    const visualizedFinishTravel = (id) => {
         isReadOnly = true;
         navigation.navigate("Map", { isReadOnly: isReadOnly, idTravel: id });
     }
@@ -142,8 +256,16 @@ const Travels = ({ navigation }) => {
         setIsOpen(true);
     }
 
-    const askForTerminate = () => {
+    const askForReactivate = (name, id) => {
+        setSelectedId(id)
+        setSelectedTravel(name);
+        setIsOpenReactivate(true);
+    }
 
+    const askForTerminate = (name, id) => {
+        setSelectedId(id)
+        setSelectedTravel(name);
+        setIsOpenFinish(true);
     }
 
     const showTrip = (id) => {
@@ -153,6 +275,8 @@ const Travels = ({ navigation }) => {
     return (
         <NativeBaseProvider>
             <Alert isOpen={isOpen} setIsOpen={setIsOpen} name={selectedTravel} id={selectedId} isReadOnly={isReadOnly} navigation={navigation} />
+            <AlertReactivate isOpen={isOpenReactivate} setIsOpen={setIsOpenReactivate} name={selectedTravel} id={selectedId} isReadOnly={isReadOnly} navigation={navigation} />
+            <AlertFinish isOpen={isOpenFinish} setIsOpen={setIsOpenFinish} name={selectedTravel} id={selectedId} />
             <ScrollView style={{ backgroundColor: "white", marginBottom: 10 }}>
                 {isLoadingP ? <Text>Chargement...</Text> : isErrorP ? <Text style={{ color: 'red' }}>{errorP.message}</Text> :
                     <View>
@@ -166,8 +290,8 @@ const Travels = ({ navigation }) => {
                                                 <View key={id} style={{ borderColor: "black", borderWidth: 1, height: 75, marginHorizontal: 10, marginTop: 10, borderRadius: 5, backgroundColor: "#E3E8EB" }}>
                                                     <Text style={{ textAlign: 'center' }}>{travel.name}</Text>
                                                     <View style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 7 }}>
-                                                        <Button colorScheme='blue' style={{ width: 100 }} onPress={() => showTrip(travel.id)}>Continuer</Button>
-                                                        <Button style={{ width: 100, backgroundColor: "red" }} onPress={() => askForTerminate()}>Terminer</Button>
+                                                        <Button colorScheme='blue' style={{ width: 100 }} onPress={() => showTrip(travel.id)}>Consulter</Button>
+                                                        <Button style={{ width: 100, backgroundColor: "red" }} onPress={() => askForTerminate(travel.name, travel.id)}>Terminer</Button>
                                                     </View>
                                                 </View>
                                             )
@@ -197,6 +321,27 @@ const Travels = ({ navigation }) => {
                             })}
 
                     </View>
+                }
+                {isLoadingT ? <Text>Chargement...</Text> : isErrorT ? <Text style={{ color: 'red' }}>{errorT.message}</Text> :
+                    finTravel.length !== 0 &&
+                    <View style={{ backgroundColor: "white" }}>
+                        <Text style={{ textAlign: 'center', fontSize: 20, paddingTop: "10%", borderBottomColor: "black", borderBottomWidth: 1, marginHorizontal: 10, paddingBottom: 20 }}>{finTravel.length === 1 ? "Voyage" : "Voyages"} terminé{finTravel.length === 1 ? null : "s"}</Text>
+                        {
+                            finTravel.map((travel, id) => {
+                                return (
+                                    <View key={id} style={{ borderColor: "black", borderWidth: 1, height: 75, marginHorizontal: 10, marginTop: 10, borderRadius: 5, backgroundColor: "#E3E8EB" }}>
+                                        <Text style={{ textAlign: 'center' }}>{travel.name}</Text>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", marginTop: 7 }}>
+                                            <Button colorScheme='blue' style={{ width: 100 }} onPress={() => visualizedFinishTravel(travel.id)}>Consulter</Button>
+                                            <Button style={{ width: 100, backgroundColor: "#00AB55" }} onPress={() => askForReactivate(travel.name, travel.id)}>Réactiver</Button>
+                                        </View>
+                                    </View>
+                                )
+                            })}
+
+                    </View>
+
+
                 }
             </ScrollView>
         </NativeBaseProvider >

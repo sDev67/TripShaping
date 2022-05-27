@@ -5,7 +5,7 @@ module.exports = sequelize => {
 	class Task extends Sequelize.Model {
 		static associate(db) {
 			Task.belongsTo(db.Travel);
-			Task.belongsToMany(db.Label,  {through : 'TaskLabel'} )
+			Task.belongsToMany(db.Label, { through: 'TaskLabel' })
 		}
 	}
 

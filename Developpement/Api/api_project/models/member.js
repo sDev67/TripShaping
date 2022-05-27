@@ -23,7 +23,10 @@ module.exports = sequelize => {
 				defaultValue: null,
 			}
 		},
-		balance: DataTypes.DOUBLE
+		balance: {
+			type: Sequelize.DOUBLE,
+			defaultValue: 0,
+		}
 	}, {
 		sequelize,
 		modelName: 'Member'

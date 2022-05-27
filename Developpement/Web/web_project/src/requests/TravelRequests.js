@@ -224,7 +224,7 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
-  updateTravelStatus: ({ TravelId, status }) => {
+  updateTravelStatus: ({ TravelId, status, startDate }) => {
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel/${TravelId}`, {
       method: "PUT",
@@ -232,7 +232,20 @@ const TravelRequests = {
         "Content-Type": "application/json",
         //Authorization: 'Bearer ' + token
       },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status, startDate }),
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+  updateTravelDate: ({ TravelId, startDate }) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/${TravelId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        //Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify({ startDate }),
     })
       .then(checkStatus)
       .then((res) => res.json());

@@ -83,7 +83,7 @@ const TabScreen = ({ route }) => {
       <Tab.Screen name="Journal" children={() => <Journal idTravel={idTravel} isReadOnly={isReadOnly} />} />
       {!isReadOnly && <Tab.Screen name="Photo" component={Photo} initialParams={{ photo: null, idTravel: idTravel, location: null }} />}
       <Tab.Screen name="Folder" component={Folder} options={{ title: "Documents" }} initialParams={{ isReadOnly: isReadOnly, idTravel: idTravel }} />
-      <Tab.Screen name="Spending" component={Spending} initialParams={{ isReadOnly: isReadOnly }} options={{ title: "Gestion des dépenses" }} />
+      <Tab.Screen name="Spending" component={Spending} initialParams={{ isReadOnly: isReadOnly, idTravel: idTravel }} options={{ title: "Gestion des dépenses" }} />
     </Tab.Navigator>
   );
 }

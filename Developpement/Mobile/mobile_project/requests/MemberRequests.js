@@ -20,6 +20,20 @@ const MemberRequests = {
         })
             .then(checkStatus)
             .then(res => res.json())
+    },
+
+    setBalance: ({ MemberId, balance }) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/member/${MemberId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                //Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ balance })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
     }
 };
 

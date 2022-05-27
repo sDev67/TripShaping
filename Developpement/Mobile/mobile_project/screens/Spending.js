@@ -11,17 +11,16 @@ import { useAuth } from '../requests/Auth'
 import MemberRequests from '../requests/MemberRequests';
 import JournalRequests from '../requests/JournalRequests';
 import PhotoRequests from '../requests/PhotoRequests';
+import { id } from 'date-fns/locale';
 
 const Spending = ({ navigation, route }) => {
 
-    const { isReadOnly } = route.params;
-
-    const idTravel = 1;
+    const queryClient = useQueryClient();
+    const { isReadOnly, idTravel } = route.params;
 
     // Membres 
     const { isLoading: isLoading, isError: isError, error: error, data: members } = useQuery(["getMembers", idTravel], () => TravelRequests.getMembersOfTravel(idTravel));
 
-    const [balances, setBalances] = useState([{ id: 1, balance: 0 }, { id: 2, balance: 0 }, { id: 8, balance: 0 }, { id: 4, balance: 0 }]);
     const [categories, setCategories] = useState(["Commerce", "Logement", "Loisir", "Restaurant"])
 
     // Donateur 
@@ -29,6 +28,7 @@ const Spending = ({ navigation, route }) => {
 
     // Destinataires
     const [destinataires, setDestinataires] = useState(null)
+    const [destinatairesId, setDestinatairesId] = useState(null)
 
     // Montant
     const [montant, setMontant] = useState(null)
@@ -52,24 +52,40 @@ const Spending = ({ navigation, route }) => {
     }, [])
 
     useEffect(() => {
-
         let desti = [];
+        let destiId = [];
+
         selectedItems.map((item, i) => {
             members.map((member, idx) => {
                 if (item == member.id) {
                     desti.push(member.name)
+                    destiId.push(member.id)
                 }
             })
         })
 
         setDestinataires(desti.join(', '))
+        setDestinatairesId(destiId.join(','))
     }, [selectedItems])
+
+
+    const updateMemberRequest = useMutation(MemberRequests.setBalance, {
+        onSuccess: newBalance => {
+            queryClient.setQueryData(["setBalance"], newBalance);
+            queryClient.invalidateQueries(["getMembers", idTravel]);
+        },
+    });
+
+    const updateMember = (id, balance) => {
+        const newBalance = { MemberId: id, balance: balance }
+        updateMemberRequest.mutate(newBalance)
+    }
 
     const spend = () => {
 
         if (donateur !== "" && destinataires !== null && selectedItems.length !== 0 && montant !== null && category !== "") {
             let author = "";
-            let dest = "";
+            let balanceInter = 0;
             members.map((member, idx) => {
                 if (donateur == member.id) {
                     author = member.name
@@ -82,30 +98,32 @@ const Spending = ({ navigation, route }) => {
             const nbDest = selectedItems.length;
             const part = Math.round(montant / nbDest, 2);
 
-            const tab = [];
-            balances.map((balance, idx) => {
-                if (donateur == balance.id) {
-                    var nb = parseInt(balance.balance);
+            members.map((member, idx) => {
+                if (donateur == member.id) {
+                    var nb = parseInt(member.balance);
                     var m = parseInt(montant);
-                    tab.push({ id: balance.id, balance: nb + m })
+                    balanceInter = nb + m;
+                    updateMember(member.id, nb + m)
                 }
                 selectedItems.map((item, i) => {
-                    if (item == balance.id) {
-                        tab.push({ id: balance.id, balance: balance.balance -= part })
+                    if (item == member.id) {
+                        // NE PAS ENLEVER LE CONSOLE.LOG ! IMPORTANTISSIME !
+                        console.log(member.balance)
+                        if (donateur == member.id) {
+                            console.log(balanceInter)
+                            updateMember(member.id, balanceInter - part)
+                        }
+                        else {
+                            updateMember(member.id, member.balance - part)
+                        }
+
                     }
                 })
             })
 
-            tab.map((t, i) => {
-                setBalances(old => old.map((elem) => elem.id != t.id ? elem :
-                    {
-                        ...elem,
-                        balance: t.balance
-                    }));
-            })
-
             setDonateur("")
             setDestinataires(null)
+            setDestinatairesId(null)
             setSelectedItems([])
             setMontant(null)
             setCategory("")
@@ -121,16 +139,9 @@ const Spending = ({ navigation, route }) => {
                 {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :
                     <>
                         {members.map((member, i) => {
-                            let balance;
-                            balances.map((b, idx) => {
-                                if (b.id == member.id) {
-                                    balance = b.balance;
-                                }
-                            })
-
                             return (
                                 <View style={styles.box} key={i}>
-                                    <Text>{member.name}</Text><Text style={{ color: balance > 0 ? "green" : (balance == 0 ? "black" : "red") }}>{" "}{balance > 0 && "+"}{balance}</Text>
+                                    <Text>{member.name}</Text><Text style={{ color: member.balance > 0 ? "green" : (member.balance == 0 ? "black" : "red") }}>{" "}{member.balance > 0 && "+"}{member.balance}</Text>
                                 </View>
                             )
                         })}

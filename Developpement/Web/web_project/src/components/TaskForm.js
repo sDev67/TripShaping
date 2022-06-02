@@ -17,7 +17,6 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
 
   const [currentDate, setCurrentDate] = useState("");
 
-
   const handleDateChange = (newDate) => {
     setCurrentDate(newDate);
   };
@@ -27,40 +26,34 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
   };
 
   useEffect(() => {
-    setCurrentTitle('');
+    setCurrentTitle("");
     setCurrentDate(undefined);
     if (task !== undefined) {
-
-      if (task.title
-        !== undefined) {
+      if (task.title !== undefined) {
         setCurrentTitle(task.title);
       }
-
 
       if (task.date !== undefined) {
         setCurrentDate(task.date);
       }
     }
-
-  }, [task])
+  }, [task]);
 
   const handleSubmit = () => {
     if (task !== undefined) {
-
-
       UpdateTask({ title: currentTitle, date: currentDate, task });
-
     } else {
-
-      if( currentTitle != undefined && currentTitle != null && currentTitle != "")
-      {
-          OnAddTask({ title: currentTitle, date: currentDate });
-
+      if (
+        currentTitle != undefined &&
+        currentTitle != null &&
+        currentTitle != ""
+      ) {
+        OnAddTask({ title: currentTitle, date: currentDate });
       }
       // on la créer
     }
 
-    setCurrentTitle('');
+    setCurrentTitle("");
     setCurrentDate(undefined);
 
     onClose();
@@ -74,7 +67,7 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
         style={{ height: "100%", margin: "20px" }}
       >
         <Typography variant="h3" marginBottom={2}>
-          {task != undefined ? "Modifier une tâche" : "Ajouter une tâche"}
+          {task != undefined ? "Modifier une tâche" : "Créer une tâche"}
         </Typography>
 
         <Stack direction="row" width="100%" spacing={1}>
@@ -82,7 +75,7 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
             required
             id="standard-required"
             label="Nom"
-            value={currentTitle !== undefined ? currentTitle : ''}
+            value={currentTitle !== undefined ? currentTitle : ""}
             onChange={(e) => handleTitleChange(e.target.value)}
           />
 
@@ -102,7 +95,8 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
             variant="contained"
             color="primary"
             startIcon={<DoneRounded />}
-            onClick={handleSubmit}>
+            onClick={handleSubmit}
+          >
             Enregistrer
           </Button>
         </Stack>

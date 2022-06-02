@@ -78,6 +78,7 @@ const StepList = ({ steps }) => {
           step={step}
           index={index}
           updateInfoStep={updateInfoStep}
+          steps={steps}
         ></StepItem>
       ))}
     </Box>

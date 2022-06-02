@@ -1,68 +1,72 @@
-import { Autocomplete, Typography, Stack,TextField,Button } from "@mui/material";
+import { DoneRounded } from "@mui/icons-material";
+import {
+  Autocomplete,
+  Typography,
+  Stack,
+  TextField,
+  Button,
+} from "@mui/material";
 import { useEffect } from "react";
 
-const AddLabelToTask = ({labels, addLabelToTask,setLabelToAdd, task}) => 
-{
+const AddLabelToTask = ({ labels, addLabelToTask, setLabelToAdd, task }) => {
+  useEffect(() => {
+    console.log(labels);
+  }, []);
 
-    useEffect(() => {
-        console.log(labels);
-    }, []);
-
-    return(
-        <>
-              <Stack
+  return (
+    <>
+      <Stack
         direction="column"
-        alignItems="center"
-        
+        alignItems="flex-start"
         style={{ height: "100%", margin: "20px" }}
       >
         <Typography variant="h3" marginBottom={2}>
-          Ajouter un label à {task.title}
+          Ajouter un label
         </Typography>
-                    <Autocomplete
-                        style={{ width: "100%", marginBottom: "10px"}}
-                        noOptionsText={"Aucun label trouvé"}
-                        options={labels}
-                        fullWidth
-                        onChange={(event, value) => {
-                          setLabelToAdd(value);
-                        }}
-                        autoHighlight
-                        getOptionLabel={(option) => option.title}
-                        renderOption={(props, option) => (
-                          <Stack
-                            direction="row"
-                            component="li"
-                            {...props}
-                            alignItems="center"
-                            spacing={1}
-                          >
-                            <Typography>{option.title}</Typography>
-                          </Stack>
-                        )}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                          />
-                        )}
-                      />
-                      <Button
-                        color="secondary"
-                        style={{ width: "25%" }}
-                        variant="contained"
-                        onClick={(e) => {
-                          addLabelToTask();
-
-                        }}
-                      >
-                        Ajouter
-                      </Button>
+        <Stack direction="row" width="100%" spacing={1}>
+          <Autocomplete
+            style={{ minWidth: "200px" }}
+            noOptionsText={"Aucun label trouvé"}
+            options={labels}
+            onChange={(event, value) => {
+              setLabelToAdd(value);
+            }}
+            autoHighlight
+            getOptionLabel={(option) => option.title}
+            renderOption={(props, option) => (
+              <Stack
+                direction="row"
+                component="li"
+                {...props}
+                alignItems="center"
+                spacing={1}
+              >
+                <Typography>{option.title}</Typography>
+              </Stack>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            )}
+          />
+          <Button
+            color="secondary"
+            variant="contained"
+            startIcon={<DoneRounded />}
+            onClick={(e) => {
+              addLabelToTask();
+            }}
+          >
+            Enregistrer
+          </Button>
         </Stack>
-        </>
-    )
-}
+      </Stack>
+    </>
+  );
+};
 
 export default AddLabelToTask;

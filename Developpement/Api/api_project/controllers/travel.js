@@ -146,7 +146,7 @@ module.exports = {
         if (!travel) {
           throw { status: 404, message: "Travel not found" };
         }
-        return travel.getExpenses({ order: ["date", "DESC"] });
+        return travel.getExpenses({ order: [["date", "DESC"]] });
       })
       .then((expenses) => res.json(expenses))
       .catch((err) => next(err));

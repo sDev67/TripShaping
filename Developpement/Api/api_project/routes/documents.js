@@ -114,17 +114,6 @@ module.exports = [
      *                      
      */
 
-    {
-        url: '/document',
-        method: 'get',
-        func: doc_ctrl.get_all
-    },
-    {
-        url: '/document/file/:document_id',
-        method: 'get',
-        func: doc_ctrl.disp_file_by_id
-    },
-
     /**
      * @swagger
      * /document/check/{document_title}:
@@ -154,17 +143,6 @@ module.exports = [
      *                   example: 1                    
      *                      
      */
-
-    {
-        url: '/document/check/:document_title',
-        method: 'get',
-        func: doc_ctrl.checkFileExistRoute
-    },
-    {
-        url: '/document',
-        method: 'post',
-        func: [doc_ctrl.upload, doc_ctrl.create]
-    },
 
     /**
      * @swagger
@@ -236,12 +214,56 @@ module.exports = [
      *                      
      */
 
+    /**
+     * @swagger
+     * /document/{document_id}:
+     *   delete:
+     *     tags:
+     *     - Document
+     *     summary: Supprime un document.
+     *     description: Supprime un document du répertoire Resource et de la base.
+     *     parameters:
+     *      - in: path
+     *        name: document_id
+     *        example: 2
+     *        required: true
+     *        schema:
+     *          type: integer
+     *
+     *     responses:
+     *       200:
+     *         description: Document supprimé avec succès.
+     *       
+     *       404:
+     *         description: Le document demandé n'existe pas.
+     */
+
+
+    {
+        url: '/document',
+        method: 'get',
+        func: doc_ctrl.get_all
+    },
+    {
+        url: '/document/file/:document_id',
+        method: 'get',
+        func: doc_ctrl.disp_file_by_id
+    },
+    {
+        url: '/document/check/:document_title',
+        method: 'get',
+        func: doc_ctrl.checkFileExistRoute
+    },
+    {
+        url: '/document',
+        method: 'post',
+        func: [doc_ctrl.upload, doc_ctrl.create]
+    },
     {
         url: '/document/:document_id',
         method: 'get',
         func: doc_ctrl.get_by_id
     },
-
     {
         url: '/document/:document_id',
         method: 'delete',

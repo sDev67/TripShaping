@@ -7,11 +7,9 @@ import TravelRequests from "../requests/TravelRequests";
 import iconHistory from "../assets/navigation_icons/icon_history.png"
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 
-import { useAuth } from '../requests/Auth'
+import ExpenseRequests from '../requests/ExpenseRequests';
 import MemberRequests from '../requests/MemberRequests';
-import JournalRequests from '../requests/JournalRequests';
-import PhotoRequests from '../requests/PhotoRequests';
-import { id } from 'date-fns/locale';
+
 
 const Spending = ({ navigation, route }) => {
 
@@ -46,7 +44,7 @@ const Spending = ({ navigation, route }) => {
     useEffect(() => {
         navigation.setOptions({
             headerRight: (() =>
-                <Pressable onPress={() => navigation.navigate('SpendingHistory', { history: history })}><Image source={iconHistory} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center" }} /></Pressable>
+                <Pressable onPress={() => navigation.navigate('SpendingHistory', { idTravel: idTravel })}><Image source={iconHistory} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center" }} /></Pressable>
             )
         });
     }, [])
@@ -76,6 +74,12 @@ const Spending = ({ navigation, route }) => {
         },
     });
 
+    const setExpenseRequest = useMutation(ExpenseRequests.setExpense, {
+        onSuccess: newExpense => {
+            queryClient.setQueryData(["setExpense"], newExpense);
+        }
+    })
+
     const updateMember = (id, balance) => {
         const newBalance = { MemberId: id, balance: balance }
         updateMemberRequest.mutate(newBalance)
@@ -85,38 +89,40 @@ const Spending = ({ navigation, route }) => {
 
         if (donateur !== "" && destinataires !== null && selectedItems.length !== 0 && montant !== null && category !== "") {
             let author = "";
-            let balanceInter = 0;
             members.map((member, idx) => {
                 if (donateur == member.id) {
                     author = member.name
                 }
             })
 
-            const newHistory = { author: author, category: category, dest: destinataires, montant: montant };
-            history.push(newHistory);
+            const newHistory = { MemberId: donateur, TravelId: idTravel, cost: montant, to: selectedItems.join(','), category: category, date: new Date() };
+            setExpenseRequest.mutate(newHistory)
 
             const nbDest = selectedItems.length;
-            const part = Math.round(montant / nbDest, 2);
+            let part = montant / nbDest;
+            part = part.toFixed(2);
+            console.log("part " + part)
 
             members.map((member, idx) => {
                 if (donateur == member.id) {
-                    var nb = parseInt(member.balance);
-                    var m = parseInt(montant);
-                    balanceInter = nb + m;
-                    updateMember(member.id, nb + m)
+                    if (selectedItems.includes(donateur)) {
+                        let m = member.balance + montant - part;
+                        m = m.toFixed(2);
+                        updateMember(member.id, m)
+                    }
+                    else {
+                        let o = member.balance + montant;
+                        let om = o.toFixed(2);
+                        updateMember(member.id, om)
+                    }
                 }
                 selectedItems.map((item, i) => {
                     if (item == member.id) {
-                        // NE PAS ENLEVER LE CONSOLE.LOG ! IMPORTANTISSIME !
-                        console.log(member.balance)
-                        if (donateur == member.id) {
-                            console.log(balanceInter)
-                            updateMember(member.id, balanceInter - part)
+                        if (donateur != member.id) {
+                            let n = member.balance - part;
+                            n = n.toFixed(2);
+                            updateMember(member.id, n)
                         }
-                        else {
-                            updateMember(member.id, member.balance - part)
-                        }
-
                     }
                 })
             })

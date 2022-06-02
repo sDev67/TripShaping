@@ -82,6 +82,17 @@ const TravelRequests = {
             .then(res => res.json())
     },
 
+    getExpensesOfTravel: idTravel => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/travel/${idTravel}/expenses`, {
+            // headers: {
+            //     Authorization: 'Bearer ' + token
+            // }
+        })
+            .then(checkStatus)
+            .then(res => res.json())
+    },
+
     getInPreparationTravel: () => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/travel_preparation`, {

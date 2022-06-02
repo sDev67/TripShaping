@@ -1,37 +1,76 @@
 import { NativeBaseProvider, ScrollView, Select, CheckIcon, ArrowForwardIcon } from 'native-base';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import MapViewDirections from 'react-native-maps-directions';
-import { GOOGLE_MAPS_APIKEY } from "../utils";
 import { useEffect, useState } from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import { useQuery, useQueries } from 'react-query';
+import TravelRequests from '../requests/TravelRequests';
+import MemberRequests from '../requests/MemberRequests';
 
 const SpendingHistory = ({ route, navigation }) => {
 
-    const { history } = route.params;
+    const { idTravel } = route.params;
+    const [authors, setAuthors] = useState(null);
+
+    // Hisorique 
+    const { isLoading: isLoading, isError: isError, error: error, data: historique } = useQuery(["getExpensesOfTravel", idTravel], () => TravelRequests.getExpensesOfTravel(idTravel));
 
     return (
         <NativeBaseProvider >
-            <ScrollView contentContainerStyle={{ paddingTop: 5, flex: 1, justifyContent: history.length === 0 ? 'center' : null, alignItems: history.length === 0 ? 'center' : null }}>
-                {history.length !== 0 ?
-                    history.map((hist, i) => (
-                        <View style={styles.box} key={i}>
-                            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                <Text style={{ fontWeight: "bold" }}>De : {hist.author}</Text>
-                                <Text style={{ fontWeight: "bold", color: hist.montant > 0 ? "green" : (hist.montant == 0 ? "black" : "red") }}>{" "}{hist.montant > 0 && "+"}{hist.montant}</Text>
-                            </View>
-                            <Text style={{ marginTop: 7 }}>Pour : {hist.dest}</Text>
-                            <Text style={{ marginTop: 7 }}>Catégorie : {hist.category}</Text>
-                        </View>
-                    )) :
-                    <View style={{ fontWeight: 100 }}><Text >Aucune dépense n'a été enregistré pour ce voyage</Text></View>
-
-
-
+            <ScrollView contentContainerStyle={{ paddingTop: 5, justifyContent: historique?.length === 0 ? 'center' : null, alignItems: historique?.length === 0 ? 'center' : null }}>
+                {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :
+                    historique.length != 0 ?
+                        historique.map((hist, i) => {
+                            const destId = hist.to.split(',')
+                            return (<HistoryBox hist={hist} destId={destId} key={i} />)
+                        }) :
+                        <View style={{ fontWeight: 100 }}><Text >Aucune dépense n'a été enregistré pour ce voyage</Text></View>
                 }
             </ScrollView>
         </NativeBaseProvider >
 
+    )
+}
+
+const HistoryBox = ({ hist, destId }) => {
+
+    const [destiString, setDestiString] = useState("");
+
+    // Member
+    const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: member } = useQuery(["getMember", hist.MemberId], () => MemberRequests.getMemberById(hist.MemberId))
+
+    const destinataires = useQueries(
+        destId.map(id => {
+            return {
+                queryKey: ['getMember', id],
+                queryFn: () => MemberRequests.getMemberById(id),
+            }
+        })
+    )
+
+    useEffect(() => {
+        let desti = "";
+        destinataires.map((dest, i) => {
+            if (i == destinataires.length - 1) {
+                desti += dest.data.name
+                console.log(desti)
+            }
+            else {
+                desti += dest.data.name + ', '
+                console.log(desti)
+            }
+        })
+        setDestiString(desti)
+    }, [destinataires])
+
+    return (
+        <View style={styles.box}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                {isLoadingM ? <Text>Chargement...</Text> : isErrorM ? <Text style={{ color: 'red' }}>{errorM.message}</Text> : <Text style={{ fontWeight: "bold" }}>De : {member.name}</Text>}
+                <Text style={{ fontWeight: "bold", color: hist.cost > 0 ? "green" : (hist.cost == 0 ? "black" : "red") }}>{" "}{hist.cost > 0 && "+"}{hist.cost}</Text>
+            </View>
+            <Text style={{ marginTop: 7 }}>Pour : {destiString}</Text>
+            <Text style={{ marginTop: 7 }}>Catégorie : {hist.category}</Text>
+        </View>
     )
 }
 

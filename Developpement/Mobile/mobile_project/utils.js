@@ -9,7 +9,7 @@ export const checkStatus = res => {
     }
 };
 
-//export const url_prefix = 'http://cdad181.iutrs.unistra.fr:4200';
-export const url_prefix = 'http://192.168.1.56:4200';
+export const url_prefix = 'http://cdad181.iutrs.unistra.fr:4200';
+//export const url_prefix = 'http://192.168.1.56:4200';
 
 

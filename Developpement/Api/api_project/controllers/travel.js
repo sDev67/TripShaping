@@ -140,9 +140,17 @@ module.exports = {
       .then((members) => res.json(members))
       .catch((err) => next(err));
   },
-
-
-
+  get_expenses_of_travel: (req, res, next) => {
+    return db.Travel.findByPk(req.params.travel_id)
+      .then((travel) => {
+        if (!travel) {
+          throw { status: 404, message: "Travel not found" };
+        }
+        return travel.getExpenses();
+      })
+      .then((expenses) => res.json(expenses))
+      .catch((err) => next(err));
+  },
   get_journalEntries_of_travel: (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {

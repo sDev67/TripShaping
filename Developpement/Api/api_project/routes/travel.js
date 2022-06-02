@@ -715,6 +715,11 @@ module.exports = [
     func: travel_ctrl.get_members_of_travel,
   },
   {
+    url: "/travel/:travel_id/expenses",
+    method: "get",
+    func: travel_ctrl.get_expenses_of_travel,
+  },
+  {
     url: "/travel/:travel_id/documents",
     method: "get",
     func: travel_ctrl.get_all_documents_by_travel_id,

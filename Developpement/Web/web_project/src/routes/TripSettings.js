@@ -1,11 +1,11 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Divider, Stack } from "@mui/material";
 import * as React from "react";
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Switch } from "@mui/material";
+import { Switch, Dialog, } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
@@ -13,6 +13,9 @@ import Loading from "../utils/Loading";
 
 const TripSettings = () => {
   const queryClient = useQueryClient();
+
+  var today = new Date();
+  var dateMax = today.getFullYear() + "-" + ((today.getMonth() + 1) < 10 ? "0" + (today.getMonth() + 1) : (today.getMonth() + 1)) + "-" + (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
@@ -27,13 +30,37 @@ const TripSettings = () => {
   );
 
   let statusTrip = travel?.status
-  let currentDate = travel?.startDate
+  let plannedDate = travel?.startDate.substring(0, 10)
   let publicItinerary = travel?.toPublish
   let trackPosition = travel?.positionAgree
 
+  const [startDialogOpen, setStartDialogOpen] = useState(false);
+
+  const date1 = new Date(plannedDate);
+  const date2 = new Date(dateMax)
+  let selectedDate = date1 > date2 ? dateMax : plannedDate
+
+  useEffect(() => {
+    if (date1 > date2) {
+      selectedDate = dateMax
+      console.log("sup")
+    }
+    else {
+      selectedDate = plannedDate
+      console.log("inf")
+    }
+    console.log(selectedDate)
+  }, [plannedDate]);
+
   const handleDateChange = (newDate) => {
-    currentDate = newDate;
+    plannedDate = newDate;
+    updateStartDate(plannedDate)
   };
+
+  const handleSelectedDateChange = (newDate2) => {
+    selectedDate = newDate2;
+    console.log(selectedDate)
+  }
 
   const handleSwitchPublicItinerary = () => {
     publicItinerary = !publicItinerary;
@@ -45,8 +72,8 @@ const TripSettings = () => {
     updateTrackPosition(trackPosition)
   };
 
-  const handleSwitch = () => {
-
+  const handleSwitchClickStart = () => {
+    setStartDialogOpen(true)
   };
 
   const handleSwitchStartTrip = () => {
@@ -58,8 +85,17 @@ const TripSettings = () => {
     const newStatus = {
       TravelId: idTravel,
       status: statusTrip,
+      startDate: selectedDate
     };
-    updatePublic.mutate(newStatus);
+    updateStatus.mutate(newStatus);
+  };
+
+  const updateStartDate = (plannedDate) => {
+    const newDate = {
+      TravelId: idTravel,
+      startDate: plannedDate,
+    };
+    updateDate.mutate(newDate);
   };
 
   const updateStatusPublished = (publicItinerary) => {
@@ -82,6 +118,15 @@ const TripSettings = () => {
     onSuccess: (status) => {
       queryClient.setQueryData(["getTravel", idTravel], status);
       queryClient.invalidateQueries(["getTravel", idTravel]);
+      setStartDialogOpen(false);
+    },
+  });
+
+  const updateDate = useMutation(TravelRequests.updateTravelDate, {
+    onSuccess: (startDate) => {
+      queryClient.setQueryData(["getTravel", idTravel], startDate);
+      queryClient.invalidateQueries(["getTravel", idTravel]);
+      selectedDate = plannedDate
     },
   });
 
@@ -98,6 +143,10 @@ const TripSettings = () => {
       queryClient.invalidateQueries(["getTravel", idTravel]);
     },
   });
+
+  const HandleCloseAddLabelForm = () => {
+    setStartDialogOpen(false);
+  }
 
   return (
     <>
@@ -151,7 +200,7 @@ const TripSettings = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    // onClick={handleSwitchStartTrip()}
+                    onClick={() => handleSwitchClickStart()}
                     style={{
                       paddingLeft: "40px",
                       paddingRight: "40px",
@@ -164,17 +213,20 @@ const TripSettings = () => {
                 }
               </Stack>
 
-              <Stack direction="row" spacing={1} marginTop={10} marginBottom={5}>
-                <TextField
-                  sx={{ width: "50%" }}
-                  id="date"
-                  label="Date de départ prévue"
-                  type="date"
-                  onChange={(e) => handleDateChange(e.target.value)}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+              <Stack direction="row" spacing={1} marginTop={10} marginBottom={5} justifyContent="center">
+                {statusTrip == 0 &&
+                  <TextField
+                    sx={{ width: "50%" }}
+                    value={plannedDate}
+                    id="date"
+                    label="Date de départ prévue"
+                    type="date"
+                    onChange={(e) => handleDateChange(e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                }
                 <FormControlLabel
                   sx={{ width: "50%" }}
                   value={trackPosition}
@@ -212,7 +264,7 @@ const TripSettings = () => {
                   variant="contained"
                   color="error"
                   startIcon={<DeleteRounded />}
-                  onClick={handleSwitch()}
+                  // onClick={handleSwitch()}
                   style={{
                     paddingLeft: "25px",
                     paddingRight: "25px",
@@ -224,6 +276,42 @@ const TripSettings = () => {
                 </Button>
               </Stack>
             </Stack>
+            <Dialog open={startDialogOpen} onClose={HandleCloseAddLabelForm}>
+              <Stack >
+                <Stack direction="column" margin={5} justifyContent="space-evenly">
+                  <Typography variant="h5">Valider la date de départ</Typography>
+                  <TextField
+                    sx={{ width: "65%", alignSelf: "center", marginTop: 5 }}
+                    id="startdate"
+                    defaultValue={selectedDate}
+                    label=""
+                    type="date"
+                    inputProps={{ min: "1900-01-01", max: dateMax }}
+                    onChange={(e) => handleSelectedDateChange(e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </Stack>
+                <Divider />
+                <Stack margin={5}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleSwitchStartTrip()}
+                    style={{
+                      paddingLeft: "40px",
+                      paddingRight: "40px",
+                      paddingTop: "25px",
+                      paddingBottom: "25px",
+                    }}
+                  >
+                    Démarrer le voyage
+                  </Button>
+                </Stack>
+
+              </Stack>
+            </Dialog>
           </Stack>
       }
     </>

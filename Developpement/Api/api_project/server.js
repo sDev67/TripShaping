@@ -44,6 +44,10 @@ const swaggerOptions = {
         description: 'Route concernant les labels pour les tâches',
       },
       {
+        name: 'Member',
+        description: 'Route concernant les membres du voyage',
+      },
+      {
         name: 'Point',
         description: 'Route concernant les Points d\'intérêts',
       },

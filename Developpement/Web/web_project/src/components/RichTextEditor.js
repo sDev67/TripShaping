@@ -1,94 +1,121 @@
 import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, ContentState, convertToRaw, convertFromRaw, CompositeDecorator } from "draft-js";
+import {
+  EditorState,
+  ContentState,
+  convertToRaw,
+  convertFromRaw,
+  CompositeDecorator,
+} from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography, IconButton } from "@mui/material";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
-
-
-const RichTextEditor = ({ setValue, value, limitedEditor = false, minH, isReadOnly = false }) => {
-
-
+const RichTextEditor = ({
+  setValue,
+  OnClose,
+  value,
+  limitedEditor,
+  minH,
+  isReadOnly,
+  openFormEditor,
+  maxW,
+  information,
+}) => {
   const [state, setState] = useState([
     {
-      editorState: EditorState.createEmpty
-    }
-  ])
+      editorState: EditorState.createEmpty,
+    },
+  ]);
 
   /*const content = window.localStorage.getItem('content');*/
   let content = value;
 
   useEffect(() => {
-
-
     if (content !== null) {
-
-
-      setState({ editorState: EditorState.createWithContent(convertFromRaw(JSON.parse(content))) });
-
-    }
-    else {
-
+      setState({
+        editorState: EditorState.createWithContent(
+          convertFromRaw(JSON.parse(content))
+        ),
+      });
+    } else {
       /* setState({editorState:EditorState.createEmpty()});*/
       setState({ editorState: EditorState.createEmpty() });
-
-
     }
-
-  }, [content])
+  }, [content]);
 
   const onChange = (editorState, limitedCheck = false) => {
-
+    if (information) {
+      limitedCheck = true;
+    }
     const contentState = editorState.getCurrentContent();
 
-    if (!limitedEditor || (limitedEditor && limitedCheck)) {
+    if (!limitedEditor && !isReadOnly && limitedCheck) {
       saveContent(contentState);
+      if (!information) OnClose();
     }
     setState({
       editorState,
     });
-
-
-  }
+  };
   const saveContent = (content) => {
     //window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
     setValue(JSON.stringify(convertToRaw(content)));
-  }
+  };
   return (
     <div class="container">
-      <div style={{ border: "1px solid black", padding: '2px', minHeight: { minH }, overflowY: "auto", }}>
+      <div
+        style={{
+          border:
+            !limitedEditor && !isReadOnly && !information
+              ? 0
+              : "1px solid black",
+          borderRadius: !limitedEditor && !isReadOnly && information ? 0 : 5,
+          padding: "2px",
+          height: minH,
+          width: maxW,
+          overflowY: "auto",
+        }}
+      >
         <Editor
-          readOnly={isReadOnly}
+          readOnly={limitedEditor}
           editorState={state.editorState}
-
-
           onEditorStateChange={onChange}
-          toolbar={limitedEditor ? {
-            options: ['inline', 'fontSize', 'list', 'history'],
-            inline: { inDropdown: true },
-            list: { inDropdown: true },
+          toolbar={
+            limitedEditor
+              ? {
+                  options: [],
+                  inline: { inDropdown: true },
+                  list: { inDropdown: true },
 
-            link: { inDropdown: true },
-            history: { inDropdown: true },
-          } : ""} />
-        {limitedEditor ?
+                  link: { inDropdown: true },
+                  history: { inDropdown: true },
+                }
+              : ""
+          }
+        />
+        {/* {limitedEditor && !isReadOnly ?
 
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ padding: 0 }}
-            disabled={isReadOnly}
-            onClick={() => onChange(state.editorState, true)}
-          >
-            <DoneRounded />
-          </Button>
-          :
-          ""}
+          <IconButton sx={{ marginLeft: '87%' }} onClick={(e) => openFormEditor(true)}>
+            <EditRoundedIcon />
+          </IconButton>
+          : ""
+
+        } */}
       </div>
+      {!limitedEditor && !isReadOnly && !information ? (
+        <Button
+          sx={{ marginLeft: "89%" }}
+          onClick={(e) => onChange(state.editorState, true)}
+        >
+          Valider
+        </Button>
+      ) : (
+        ""
+      )}
     </div>
   );
-
-}
+};
 
 export default RichTextEditor;

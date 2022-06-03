@@ -21,8 +21,8 @@ export function stringToColor(string) {
 export function stringAvatar(name) {
   return {
     sx: {
-      bgcolor: stringToColor(name),
+      bgcolor: stringToColor(name.toUpperCase()),
     },
-    children: `${name.split(" ")[0][0]}`,
+    children: `${name.split(" ")[0][0]}`.toUpperCase(),
   };
 }

@@ -139,7 +139,7 @@ const Exploration = () => {
               style={{ cursor: "pointer" }}
               width="5%"
             >
-              Atlas
+              TripShaping
             </Typography>
             <Stack width="80%"></Stack>
 

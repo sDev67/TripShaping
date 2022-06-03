@@ -22,7 +22,6 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 
 const TodoList = () => {
-
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
@@ -54,12 +53,11 @@ const TodoList = () => {
 
   const updateTask = useMutation(TodoListRequest.updateTaskById, {
     onSuccess: (task) =>
-      queryClient.setQueryData(["getTasks", idTravel], (tasks) => [
-        ...tasks,
-        task,
-      ],
-        queryClient.invalidateQueries(["getTasks", idTravel])),
-
+      queryClient.setQueryData(
+        ["getTasks", idTravel],
+        (tasks) => [...tasks, task],
+        queryClient.invalidateQueries(["getTasks", idTravel])
+      ),
   });
   const updateLabel = useMutation(TodoListRequest.updateLabelById, {
     onSuccess: (label) =>
@@ -77,46 +75,45 @@ const TodoList = () => {
       ]),
   });
 
-
   const addLabelToTask = useMutation(TodoListRequest.addLabelToTask, {
-
     onSuccess: (taskLabel) => {
-      queryClient.setQueryData(["getLabelOfTask", taskLabel.task.id], (taskLabels) => [
-        ...taskLabels,
-        taskLabel.label,
-      ]);
-
-    }
-
+      queryClient.setQueryData(
+        ["getLabelOfTask", taskLabel.task.id],
+        (taskLabels) => [...taskLabels, taskLabel.label]
+      );
+    },
   });
 
   const deleteLabelToTask = useMutation(TodoListRequest.deleteLabelOfTask, {
-
     onSuccess: (taskLabel) => {
-      queryClient.setQueryData(["getLabelOfTask", taskLabel.task.id], (taskLabels) =>
-        taskLabels.filter((e) => e.id !== taskLabel.label.id));
-    }
-
+      queryClient.setQueryData(
+        ["getLabelOfTask", taskLabel.task.id],
+        (taskLabels) => taskLabels.filter((e) => e.id !== taskLabel.label.id)
+      );
+    },
   });
 
   const filterTask = useMutation(TodoListRequest.getTaskByLabelId, {
     onSuccess: (task) =>
-      queryClient.setQueryData(["getFilteredTasks", idTravel], (tasks) =>
-        [...tasks, task])
+      queryClient.setQueryData(["getFilteredTasks", idTravel], (tasks) => [
+        ...tasks,
+        task,
+      ]),
   });
 
   const removeTask = useMutation(TravelRequests.removeTask, {
     onSuccess: (_, id) =>
       queryClient.setQueryData(["getTasks", idTravel], (tasks) =>
-        tasks.filter((e) => e.id !== id)),
+        tasks.filter((e) => e.id !== id)
+      ),
   });
 
   const removeLabel = useMutation(TravelRequests.removeLabel, {
     onSuccess: (_, id) =>
       queryClient.setQueryData(["getLabels", idTravel], (labels) =>
-        labels.filter((e) => e.id !== id)),
+        labels.filter((e) => e.id !== id)
+      ),
   });
-
 
   const addLabel = useMutation(TravelRequests.addLabel, {
     onSuccess: (label) =>
@@ -148,10 +145,11 @@ const TodoList = () => {
     updateLabel.mutate(newLabel);
   };
 
-  const UpdateTask = ({ title, date, task }) => {
+  const UpdateTask = ({ title, date, isDone, task }) => {
     const newTask = {
       title: title,
       date: date,
+      isDone: isDone,
       idTask: task.id,
       idTravel: idTravel,
     };
@@ -185,20 +183,18 @@ const TodoList = () => {
   };
 
   const OnAddLabelToTask = (task, label) => {
-    const taskLabel =
-    {
+    const taskLabel = {
       task: task,
-      label: label
-    }
+      label: label,
+    };
     addLabelToTask.mutate(taskLabel);
   };
 
   const OnRemoveLabelToTask = (task, label) => {
-    const taskLabel =
-    {
+    const taskLabel = {
       task: task,
-      label: label
-    }
+      label: label,
+    };
     deleteLabelToTask.mutate(taskLabel);
   };
 
@@ -207,18 +203,17 @@ const TodoList = () => {
   };
 
   const FilterTask = () => {
-    filterLabels.map((e) => filterTask.mutate(e.id))
-  }
+    filterLabels.map((e) => filterTask.mutate(e.id));
+  };
 
   const HandleCloseTaskForm = () => {
     setTaskFormOpen(false);
     setCurrentTask(undefined);
-  }
+  };
   const HandleCloseLabelForm = () => {
     setLabelFormOpen(false);
     setCurrentLabel(undefined);
-  }
-
+  };
   return (
     <>
       <Stack height="93.15%" width="100%" direction="row">
@@ -254,7 +249,7 @@ const TodoList = () => {
                 spacing={1}
               >
                 <Autocomplete
-                  style={{ width: "75%" }}
+                  style={{ width: "80%" }}
                   noOptionsText={"Aucun label trouvé"}
                   options={labels}
                   fullWidth
@@ -285,10 +280,15 @@ const TodoList = () => {
                   )}
                 />
                 <Button
-                  style={{ width: "25%" }}
+                  style={{ width: "20%" }}
                   variant="contained"
                   onClick={(e) => {
-                    if (selectedFilter != null && selectedFilter != {} && selectedFilter != undefined && !filterLabels.includes(selectedFilter)) {
+                    if (
+                      selectedFilter != null &&
+                      selectedFilter != {} &&
+                      selectedFilter != undefined &&
+                      !filterLabels.includes(selectedFilter)
+                    ) {
                       console.log(selectedFilter);
                       setFilterLabels((oldArray) => [
                         ...oldArray,
@@ -301,11 +301,10 @@ const TodoList = () => {
                 </Button>
               </Stack>
               <Stack
-                direction="horizontal"
+                marginLeft="5%"
+                width="90%"
+                direction="row"
                 alignItems="center"
-                sx={{
-                  padding: 1,
-                }}
               >
                 {filterLabels.map((label, index) => {
                   return (
@@ -331,7 +330,7 @@ const TodoList = () => {
                 OnRemoveLabelToTask={OnRemoveLabelToTask}
                 OnSelectTask={OnSelectTask}
                 OnRemoveTask={OnRemoveTask}
-
+                OnUpdateTask={UpdateTask}
                 OnEditTask={OnSelectTask}
                 AddLabel={OnAddLabelToTask}
                 OnSelectTaskToAddLabel={OnSelectTaskToAddLabel}
@@ -339,6 +338,7 @@ const TodoList = () => {
             </>
           )}
         </Stack>
+        <Divider orientation="vertical" />
         <Stack direction="column" width="25%">
           <Stack
             marginTop="50px"
@@ -374,7 +374,12 @@ const TodoList = () => {
               >
                 {labels.map((label, index) => {
                   return (
-                    <Chip size="medium" color="secondary" label={label.title} onDelete={() => OnRemoveLabel(label)} />
+                    <Chip
+                      size="medium"
+                      color="secondary"
+                      label={label.title}
+                      onDelete={() => OnRemoveLabel(label)}
+                    />
                   );
                 })}
               </Stack>

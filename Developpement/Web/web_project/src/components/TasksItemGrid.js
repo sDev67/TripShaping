@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import Task from "./Task";
 
-const TasksItemGrid = ({ tasks,filteredLabel,OnSelectTaskToAddLabel,existingLabels,OnRemoveTask,OnRemoveLabelToTask,OnEditTask,AddLabel}) => {
+const TasksItemGrid = ({ tasks,filteredLabel,OnUpdateTask,OnSelectTaskToAddLabel,existingLabels,OnRemoveTask,OnRemoveLabelToTask,OnEditTask,AddLabel}) => {
   
   return (
     <>
@@ -33,6 +33,7 @@ const TasksItemGrid = ({ tasks,filteredLabel,OnSelectTaskToAddLabel,existingLabe
               OnRemoveLabelToTask={OnRemoveLabelToTask}
               OnEditTask={OnEditTask}
               AddLabel={AddLabel}
+              OnUpdateTask={OnUpdateTask}
             
             ></Task>
           ))

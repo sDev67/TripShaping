@@ -82,6 +82,9 @@ const Informations = () => {
                 setValue={setValue}
                 value={travelDatas.infos !== null ? travelDatas.infos : null}
                 minH="500px"
+                information={true}
+                limitedEditor={false}
+                isReadOnly={false}
               />
             </>
           )}

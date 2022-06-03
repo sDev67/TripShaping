@@ -1,6 +1,9 @@
 import React from "react";
 import {
   Stack,
+  Box,
+  Button,
+  Typography,
   ImageList,
   ImageListItem,
   ImageListItemBar,
@@ -93,8 +96,11 @@ const Photos = () => {
     TravelRequests.getPhotosOfTravel(idTravel)
   );
 
-  console.log(photos);
-
+  const handleSubmit = () => {
+    const json = JSON.parse(photos[0].dataFile);
+    console.log(json);
+    console.log(json.data);
+  };
   return (
     <>
       <div style={{ height: "93.15%" }} width="100%">
@@ -110,19 +116,23 @@ const Photos = () => {
           ) : isError ? (
             <p style={{ color: "red" }}>{error.message}</p>
           ) : (
-            <ImageList>
-              {itemData.map((item, index) => (
-                <ImageListItem key={index}>
-                  <img
-                    src={`${item.img}?w=1000&fit=crop&auto=format`}
-                    srcSet={`${item.img}?w=1000&fit=crop&auto=format&dpr=2 2x`}
-                    alt={item.title}
-                    loading="lazy"
-                  />
-                  <ImageListItemBar title={item.title} subtitle={item.date} />
-                </ImageListItem>
-              ))}
-            </ImageList>
+            <>
+              <Button onClick={() => handleSubmit()}>HANDLE</Button>
+
+              <ImageList>
+                {itemData.map((item, index) => (
+                  <ImageListItem key={index}>
+                    <img
+                      src={`${item.img}?w=1000&fit=crop&auto=format`}
+                      srcSet={`${item.img}?w=1000&fit=crop&auto=format&dpr=2 2x`}
+                      alt={item.title}
+                      loading="lazy"
+                    />
+                    <ImageListItemBar title={item.title} subtitle={item.date} />
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            </>
           )}
         </Stack>
       </div>

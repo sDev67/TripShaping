@@ -6,7 +6,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import { CircularProgress, Button } from "@mui/material";
+import { CircularProgress, Button, Stack } from "@mui/material";
 import palette from "./../theme/palette";
 import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
@@ -42,9 +42,6 @@ export const Map = ({ }) => {
     lat: 48.5734053,
     lng: 7.7521113,
   });
-
-  // window.localStorage.setItem('latitudePositionCentering', 1);
-  // window.localStorage.setItem('longitudePositionCentering', 1);
 
   const [isEdition, setIsEdition] = useState(false);
   const [markerFilter, setMarkerFilter] = useState("all");
@@ -354,182 +351,190 @@ export const Map = ({ }) => {
         googleMapsApiKey={GOOGLE_MAPS_APIKEY}
         loadingElement={<Loading />}
       >
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={position}
-          zoom={10}
-          onClick={onMapClick}
-        >
-          <MapModeSwitch
-            handleSwitch={handleSwitch}
-            isEdition={isEdition}
-            markerFilter={markerFilter}
-            handleChangeSelectModeEdit={handleChangeSelectModeEdit}
-            handleChangeSelectModeNav={handleChangeSelectModeNav}
-            editionMode={editionMode}
-          ></MapModeSwitch>
-          {showTimeline ? (
-            <Button
-              onClick={() => setShowTimeline(!showTimeline)}
-              variant="outlined"
+        {isLoadingS ? (
+          <Loading />
+        ) : isErrorS ? (
+          <p style={{ color: "red" }}>{errorS.message}</p>
+        ) : (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={position}
+            zoom={10}
+            onClick={onMapClick}
+          >
+            <Stack
+              direction="column-reverse"
+              spacing={2}
               style={{
                 position: "absolute",
-                top: "1%",
-                left: "12%",
-                backgroundColor: "white",
+                bottom: "25px",
+                left: "10px",
               }}
             >
-              Liste Étapes
-            </Button>
-          ) : (
-            <Button
-              onClick={() => setShowTimeline(!showTimeline)}
-              variant="contained"
-              style={{
-                position: "absolute",
-                top: "1%",
-                left: "12%",
-              }}
-            >
-              Liste Étapes
-            </Button>
-          )}
+              <MapModeSwitch
+                handleSwitch={handleSwitch}
+                isEdition={isEdition}
+                markerFilter={markerFilter}
+                handleChangeSelectModeEdit={handleChangeSelectModeEdit}
+                handleChangeSelectModeNav={handleChangeSelectModeNav}
+                editionMode={editionMode}
+              ></MapModeSwitch>
+              {showTimeline ? (
+                <Button
+                  onClick={() => setShowTimeline(!showTimeline)}
+                  variant="outlined"
+                  style={{
+                    backgroundColor: "white",
+                  }}
+                >
+                  Liste Étapes
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => setShowTimeline(!showTimeline)}
+                  variant="contained"
+                >
+                  Liste Étapes
+                </Button>
+              )}
+            </Stack>
 
-          {isLoadingS ? (
-            <Loading />
-          ) : isErrorS ? (
-            <p style={{ color: "red" }}>{errorS.message}</p>
-          ) : (
-            !(!isEdition && markerFilter === "interestPointOnlyNav") &&
-            steps.map((step, index) => (
-              <Marker
-                key={index}
-                position={{ lat: step.latitude, lng: step.longitude }}
-                draggable={!error && isEdition}
-                clickable={true}
-                onClick={() => {
-                  setSelectedMarker(null);
-                  setSelectedMarker({ marker: step, type: "Step" });
-                  setSelectedRoute(null);
-                  setPosition({ lat: step.latitude, lng: step.longitude });
-                }}
-                onRightClick={() => {
-                  if (!error && isEdition) {
-                    if (steps.length > 1 && !isLoadingR && !isErrorR) {
-                      if (step.id === steps[steps.length - 1].id) {
-                        // Si on supprime la dernière étape
-                        deleteRoute.mutate(routes[routes.length - 1].id);
-                      } else if (step.id === steps[0].id) {
-                        // Si on supprime la première étape
-                        deleteRoute.mutate(routes[0].id);
-                      } else {
-                        // Si on supprime une étape intermédiaire
-                        deleteRoute.mutate(routes[index - 1].id);
-                        deleteRoute.mutate(routes[index].id);
-                        addRoute({
-                          idStart: steps[index - 1].id,
-                          idFinish: steps[index + 1].id,
-                        });
-                      }
-                    }
-                    deleteStep.mutate(step.id);
+            {isLoadingS ? (
+              <Loading />
+            ) : isErrorS ? (
+              <p style={{ color: "red" }}>{errorS.message}</p>
+            ) : (
+              !(!isEdition && markerFilter === "interestPointOnlyNav") &&
+              steps.map((step, index) => (
+                <Marker
+                  key={index}
+                  position={{ lat: step.latitude, lng: step.longitude }}
+                  draggable={!error && isEdition}
+                  clickable={true}
+                  onClick={() => {
                     setSelectedMarker(null);
-                  }
-                }}
-                onDragEnd={updateStepLocation(step)}
-                icon={
-                  selectedMarker?.marker.id == step.id &&
-                    selectedMarker?.type == "Step"
-                    ? selectedStepIcon
-                    : stepIcon
-                }
-              ></Marker>
-            ))
-          )}
-
-          {isLoadingP ? (
-            "Chargement..."
-          ) : isErrorP ? (
-            <p style={{ color: "red" }}>{errorP.message}</p>
-          ) : (
-            !(!isEdition && markerFilter === "stepOnlyNav") &&
-            interestPoints.map((interestPoint, index) => (
-              <Marker
-                key={index}
-                position={{
-                  lat: interestPoint.latitude,
-                  lng: interestPoint.longitude,
-                }}
-                draggable={!error && isEdition}
-                clickable={true}
-                onClick={() => {
-                  setSelectedMarker(null);
-                  setSelectedMarker({ marker: interestPoint, type: "Point" });
-                  setSelectedRoute(null);
-                }}
-                onRightClick={() => {
-                  if (!error && isEdition) {
-                    deletePoint.mutate(interestPoint.id);
-                    setSelectedMarker(null);
-                  }
-                }}
-                onDragEnd={updateInterestPointLocation(interestPoint)}
-                icon={
-                  selectedMarker?.marker.id == interestPoint.id &&
-                    selectedMarker?.type == "Point"
-                    ? selectedInterestPointIcon
-                    : interestPointIcon
-                }
-              ></Marker>
-            ))
-          )}
-
-          {isLoadingS ? (
-            "Chargement..."
-          ) : isErrorS ? (
-            <p style={{ color: "red" }}>{errorS.message}</p>
-          ) : (
-            steps.length >= 2 &&
-            !(!isEdition && markerFilter === "interestPointOnlyNav") && (
-              <>
-                {steps.map((step, index) => (
-                  <>
-                    {index > 0 && (
-                      <Polyline
-                        key={index - 1}
-                        geodesic={true}
-                        clickable={true}
-                        onClick={() => {
-                          setSelectedRoute(null);
-                          setSelectedRoute({
-                            route: routes[index - 1],
-                            start: steps[index - 1],
-                            finish: step,
+                    setSelectedMarker({ marker: step, type: "Step" });
+                    setSelectedRoute(null);
+                    setPosition({ lat: step.latitude, lng: step.longitude });
+                  }}
+                  onRightClick={() => {
+                    if (!error && isEdition) {
+                      if (steps.length > 1 && !isLoadingR && !isErrorR) {
+                        if (step.id === steps[steps.length - 1].id) {
+                          // Si on supprime la dernière étape
+                          deleteRoute.mutate(routes[routes.length - 1].id);
+                        } else if (step.id === steps[0].id) {
+                          // Si on supprime la première étape
+                          deleteRoute.mutate(routes[0].id);
+                        } else {
+                          // Si on supprime une étape intermédiaire
+                          deleteRoute.mutate(routes[index - 1].id);
+                          deleteRoute.mutate(routes[index].id);
+                          addRoute({
+                            idStart: steps[index - 1].id,
+                            idFinish: steps[index + 1].id,
                           });
-                          setSelectedMarker(null);
-                        }}
-                        path={[
-                          {
-                            lat: steps[index - 1].latitude,
-                            lng: steps[index - 1].longitude,
-                          },
-                          {
-                            lat: step.latitude,
-                            lng: step.longitude,
-                          },
-                        ]}
-                        options={{
-                          strokeColor: palette.primary.main,
-                          strokeWeight: 8,
-                        }}
-                      ></Polyline>
-                    )}
-                  </>
-                ))}
-              </>
-            )
-          )}
-        </GoogleMap>
+                        }
+                      }
+                      deleteStep.mutate(step.id);
+                      setSelectedMarker(null);
+                    }
+                  }}
+                  onDragEnd={updateStepLocation(step)}
+                  icon={
+                    selectedMarker?.marker.id == step.id &&
+                      selectedMarker?.type == "Step"
+                      ? selectedStepIcon
+                      : stepIcon
+                  }
+                ></Marker>
+              ))
+            )}
+
+            {isLoadingP ? (
+              "Chargement..."
+            ) : isErrorP ? (
+              <p style={{ color: "red" }}>{errorP.message}</p>
+            ) : (
+              !(!isEdition && markerFilter === "stepOnlyNav") &&
+              interestPoints.map((interestPoint, index) => (
+                <Marker
+                  key={index}
+                  position={{
+                    lat: interestPoint.latitude,
+                    lng: interestPoint.longitude,
+                  }}
+                  draggable={!error && isEdition}
+                  clickable={true}
+                  onClick={() => {
+                    setSelectedMarker(null);
+                    setSelectedMarker({ marker: interestPoint, type: "Point" });
+                    setSelectedRoute(null);
+                  }}
+                  onRightClick={() => {
+                    if (!error && isEdition) {
+                      deletePoint.mutate(interestPoint.id);
+                      setSelectedMarker(null);
+                    }
+                  }}
+                  onDragEnd={updateInterestPointLocation(interestPoint)}
+                  icon={
+                    selectedMarker?.marker.id == interestPoint.id &&
+                      selectedMarker?.type == "Point"
+                      ? selectedInterestPointIcon
+                      : interestPointIcon
+                  }
+                ></Marker>
+              ))
+            )}
+
+            {isLoadingS ? (
+              "Chargement..."
+            ) : isErrorS ? (
+              <p style={{ color: "red" }}>{errorS.message}</p>
+            ) : (
+              steps.length >= 2 &&
+              !(!isEdition && markerFilter === "interestPointOnlyNav") && (
+                <>
+                  {steps.map((step, index) => (
+                    <>
+                      {index > 0 && (
+                        <Polyline
+                          key={index - 1}
+                          geodesic={true}
+                          clickable={true}
+                          onClick={() => {
+                            setSelectedRoute(null);
+                            setSelectedRoute({
+                              route: routes[index - 1],
+                              start: steps[index - 1],
+                              finish: step,
+                            });
+                            setSelectedMarker(null);
+                          }}
+                          path={[
+                            {
+                              lat: steps[index - 1].latitude,
+                              lng: steps[index - 1].longitude,
+                            },
+                            {
+                              lat: step.latitude,
+                              lng: step.longitude,
+                            },
+                          ]}
+                          options={{
+                            strokeColor: palette.primary.main,
+                            strokeWeight: 8,
+                          }}
+                        ></Polyline>
+                      )}
+                    </>
+                  ))}
+                </>
+              )
+            )}
+          </GoogleMap>
+        )}
       </LoadScript>
 
       {selectedMarker &&

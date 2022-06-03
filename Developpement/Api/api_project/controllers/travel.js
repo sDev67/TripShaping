@@ -24,7 +24,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         req.travel = travel;
         return next();
@@ -36,7 +36,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return res.json(travel);
       })
@@ -47,7 +47,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getPoints();
       })
@@ -59,7 +59,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getSteps();
       })
@@ -70,7 +70,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getTasks();
       })
@@ -81,7 +81,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getLabels();
       })
@@ -92,30 +92,70 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getRoutes();
       })
       .then((steps) => res.json(steps))
       .catch((err) => next(err));
   },
-
+  get_in_preparation_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        status: 0,
+      },
+      order: ["name"],
+    })
+      .then((travel) => res.json(travel))
+      .catch(next);
+  },
+  get_current_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        status: 1,
+      },
+      order: ["name"],
+    })
+      .then((travel) => res.json(travel))
+      .catch(next);
+  },
+  get_finish_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        status: 2,
+      },
+      order: ["name"],
+    })
+      .then((travel) => res.json(travel))
+      .catch(next);
+  },
   get_members_of_travel: (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getMembers();
       })
       .then((members) => res.json(members))
       .catch((err) => next(err));
   },
+  get_expenses_of_travel: (req, res, next) => {
+    return db.Travel.findByPk(req.params.travel_id)
+      .then((travel) => {
+        if (!travel) {
+          throw { status: 404, message: "Requested Travel not found" };
+        }
+        return travel.getExpenses({ order: [["date", "DESC"]] });
+      })
+      .then((expenses) => res.json(expenses))
+      .catch((err) => next(err));
+  },
   get_journalEntries_of_travel: (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getJournalEntries();
       })
@@ -126,7 +166,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getDocuments({
           attributes: { exclude: ["dataFile"] }, // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
@@ -140,26 +180,14 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Travel not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.getPhotos();
       })
       .then((photos) => res.json(photos))
       .catch((err) => next(err));
   },
-  // get_all_documents_by_travel_point_id: async (req, res, next) => {
-  // 	return db.Travel.findByPk(req.params.travel_id)
-  // 		.then(travel => {
-  // 			if (!travel) {
-  // 				throw { status: 404, message: 'Travel not found' };
-  // 			}
-  // 			return travel.getDocuments({
-  // 				attributes: { exclude: ['dataFile'] }
-  // 			});
-  // 		})
-  // 		.then(steps => res.json(steps))
-  // 		.catch(err => next(err));
-  // },
+
   create: (req, res, next) => {
     return db.Travel.create(req.body)
       .then((travel) => res.json(travel))
@@ -170,7 +198,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         Object.assign(travel, req.body);
         return travel.save();
@@ -183,7 +211,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Requested Travel not found" };
         }
         return travel.destroy();
       })

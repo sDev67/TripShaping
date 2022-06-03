@@ -17,7 +17,7 @@ import { useQuery } from "react-query";
 import UserRequests from "../requests/UserRequests";
 import Loading from "./../utils/Loading";
 import { useAuth } from "../Authentication/auth";
-import TripCard from "../components/TripCard"
+import TripCard from "../components/TripCard";
 
 const drawerWidth = 170;
 
@@ -101,12 +101,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TripSelection = () => {
-
   let { user } = useAuth();
 
   let id = parseInt(user.id);
-
-
 
   const {
     isLoading: isLoadingT,
@@ -120,7 +117,6 @@ const TripSelection = () => {
   const navigate = useNavigate();
 
   const [tripFormOpen, setTripFormOpen] = useState(false);
-
 
   return (
     <>
@@ -136,7 +132,7 @@ const TripSelection = () => {
               style={{ cursor: "pointer" }}
               width="5%"
             >
-              Atlas
+              TripShaping
             </Typography>
             <Stack width="80%"></Stack>
 

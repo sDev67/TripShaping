@@ -15,7 +15,7 @@ const MemberForm = () => {
 
   const [name, setName] = useState("");
   const [login, setLogin] = useState("");
-  const [registeredMember, setRegiteredMember] = useState(false);
+  const [registeredMember, setRegiteredMember] = useState(true);
   const [error, setError] = useState(null);
 
   const addMember = useMutation(MemberRequests.addMember, {
@@ -30,27 +30,27 @@ const MemberForm = () => {
   });
 
   const OnAddMember = (name, login, fictive) => {
-    if (name) {
-      if (fictive) {
-        const newMember = {
-          name: name,
-          userLogin: login,
-          TravelId: idTravel,
-          UserId: null,
-        };
-        addMember.mutate(newMember);
-      } else {
-        const newMember = {
-          name: name,
-          userLogin: "",
-          TravelId: idTravel,
-          UserId: null,
-        };
-        addMember.mutate(newMember);
-      }
-      setName("");
-      setLogin("");
+
+    if (fictive) {
+      const newMember = {
+        name: name,
+        userLogin: login,
+        TravelId: idTravel,
+        UserId: null,
+      };
+      addMember.mutate(newMember);
+    } else {
+      const newMember = {
+        name: name,
+        userLogin: "",
+        TravelId: idTravel,
+        UserId: null,
+      };
+      addMember.mutate(newMember);
     }
+    setName("");
+    setLogin("");
+
   };
 
   const handleSwitch = () => {
@@ -68,12 +68,12 @@ const MemberForm = () => {
         <FormControlLabel
           value="MembreInscrit"
           control={<Switch color="primary" />}
-          label="Membre non inscrit"
+          label="Membre inscrit"
           labelPlacement="start"
           onChange={handleSwitch}
           checked={registeredMember}
         />
-        {!registeredMember ? (
+        {registeredMember ? (
           <div style={{ width: "50%" }}>
             <Stack direction="row" justifyContent="center">
               <Typography variant="h6" marginY={1} marginX={2}>
@@ -93,6 +93,7 @@ const MemberForm = () => {
             <Stack direction="row" spacing={1}>
               <Stack direction="row" spacing={1} style={{ width: "75%" }}>
                 <TextField
+                  required
                   label="Nom d'utilisateur"
                   fullWidth
                   InputLabelProps={{
@@ -133,6 +134,7 @@ const MemberForm = () => {
             <Stack direction="row" spacing={1}>
               <Stack direction="row" spacing={1} style={{ width: "75%" }}>
                 <TextField
+                  required
                   label="Nom"
                   InputLabelProps={{
                     shrink: true,

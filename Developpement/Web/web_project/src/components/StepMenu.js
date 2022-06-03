@@ -20,6 +20,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import RichTextEditor from "./RichTextEditor";
 import DocumentRequest from "../requests/DocumentRequest";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
 
@@ -55,6 +56,12 @@ const StepMenu = ({
       queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
     },
   });
+
+  const [informationDialogOpen, setInformationDialogOpenOpen] = useState(false);
+
+  const HandleCloseAddLabelForm = () => {
+    setInformationDialogOpenOpen(false);
+  }
 
   const categ = [
     {
@@ -212,30 +219,25 @@ const StepMenu = ({
             )}
           </Stack>
 
-          {/* <TextField
-            fullWidth
-            label="Description"
-            multiline
-            rows={10}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            style={{ marginBottom: 25 }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            disabled={!isEdition}
 
-          />*/}
-
+          <Typography variant="h6" color="primary">
+            Description
+            <IconButton disabled={!isEdition} onClick={(e) => setInformationDialogOpenOpen(true)}>
+              <EditRoundedIcon />
+            </IconButton>
+          </Typography>
           <div style={{ marginBottom: 25 }}>
             <RichTextEditor
               setValue={setDescription}
               value={description}
               limitedEditor={true}
-              minH={"200px"}
+              openFormEditor={setInformationDialogOpenOpen}
+              minH="150px"
               isReadOnly={!isEdition}
-              maxH={"200px"}
+              maxW="350px"
+              information={false}
             />
+
           </div>
 
           <Stack direction="row" justifyContent="space-between">
@@ -263,6 +265,20 @@ const StepMenu = ({
           </Stack>
         </CardContent>
       </Card>
+
+
+      <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
+        <RichTextEditor
+          setValue={setDescription}
+          value={description}
+          limitedEditor={false}
+          OnClose={HandleCloseAddLabelForm}
+          minH="300px"
+          isReadOnly={!isEdition}
+          maxW="600px"
+          information={false}
+        />
+      </Dialog>
     </>
   );
 };

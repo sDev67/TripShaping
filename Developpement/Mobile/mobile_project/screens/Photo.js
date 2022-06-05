@@ -43,21 +43,27 @@ const Photo = ({ navigation, route }) => {
             const formData = new FormData();
             let data = image.base64;
             let b = Buffer.from(data, 'utf8');
-            formData.append("dataFile", JSON.stringify(b));
+            let uarray = Uint8Array.from(b);
+            let json = JSON.stringify(uarray);
+            console.log(uarray);
+            formData.append("dataFile", JSON.stringify(uarray));
             formData.append("date", formattedDate.toString());
             formData.append("TravelId", idTravel);
-            PhotoRequests.sendPhoto(formData);
+            //PhotoRequests.sendPhoto(formData);
         }
         else if (photo != null) {
             const formData = new FormData();
             let data = photo.base64;
             let b = Buffer.from(data, 'utf8');
-            formData.append("dataFile", JSON.stringify(b));
+            let uarray = Uint8Array.from(b);
+            let json = JSON.stringify(uarray)
+            console.log(uarray);
+            formData.append("dataFile", JSON.stringify(uarray));
             formData.append("date", formattedDate.toString());
             formData.append("TravelId", idTravel);
             formData.append("longitude", location.coords.longitude);
             formData.append("latitude", location.coords.latitude);
-            PhotoRequests.sendPhoto(formData);
+            //PhotoRequests.sendPhoto(formData);
         }
     }
 

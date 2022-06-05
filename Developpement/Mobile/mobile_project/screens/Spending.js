@@ -100,28 +100,30 @@ const Spending = ({ navigation, route }) => {
 
             const nbDest = selectedItems.length;
             let part = montant / nbDest;
-            part = part.toFixed(2);
-            console.log("part " + part)
+            part = Math.round(part * 100) / 100
 
             members.map((member, idx) => {
                 if (donateur == member.id) {
                     if (selectedItems.includes(donateur)) {
+                        console.log("Si donateur = receveur : " + member.balance)
                         let m = member.balance + montant - part;
-                        m = m.toFixed(2);
-                        updateMember(member.id, m)
+                        let res = Math.round(m * 100) / 100;
+                        updateMember(member.id, res)
                     }
                     else {
+                        console.log("Si donateur != receveur")
                         let o = member.balance + montant;
-                        let om = o.toFixed(2);
-                        updateMember(member.id, om)
+                        let res = Math.round(o * 100) / 100;
+                        updateMember(member.id, res)
                     }
                 }
                 selectedItems.map((item, i) => {
                     if (item == member.id) {
                         if (donateur != member.id) {
+                            console.log("Donateur : " + donateur + " Member : " + member.id)
                             let n = member.balance - part;
-                            n = n.toFixed(2);
-                            updateMember(member.id, n)
+                            let res = Math.round(n * 100) / 100
+                            updateMember(member.id, res)
                         }
                     }
                 })

@@ -27,7 +27,6 @@ const SpendingHistory = ({ route, navigation }) => {
                 }
             </ScrollView>
         </NativeBaseProvider >
-
     )
 }
 
@@ -38,7 +37,7 @@ const HistoryBox = ({ hist, destId }) => {
     // Member
     const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: member } = useQuery(["getMember", hist.MemberId], () => MemberRequests.getMemberById(hist.MemberId))
 
-    const destinataires = useQueries(
+    const { isLoading: isLoadingD, isError: isErrorD, error: errorD, data: destinataires } = useQueries(
         destId.map(id => {
             return {
                 queryKey: ['getMember', id],
@@ -49,14 +48,12 @@ const HistoryBox = ({ hist, destId }) => {
 
     useEffect(() => {
         let desti = "";
-        destinataires.map((dest, i) => {
+        isLoadingD ? null : isErrorD ? null : destinataires != undefined && destinataires.map((dest, i) => {
             if (i == destinataires.length - 1) {
                 desti += dest.data.name
-                console.log(desti)
             }
             else {
                 desti += dest.data.name + ', '
-                console.log(desti)
             }
         })
         setDestiString(desti)

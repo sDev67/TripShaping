@@ -18,6 +18,7 @@ module.exports = sequelize => {
 		latitude: DataTypes.FLOAT,
 		longitude: DataTypes.FLOAT,
 		description: DataTypes.STRING,
+		descriptionHTML: DataTypes.TEXT,
 		category: DataTypes.STRING,
 		day: DataTypes.INTEGER
 	}, {

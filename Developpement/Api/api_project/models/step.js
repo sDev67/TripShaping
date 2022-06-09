@@ -16,6 +16,7 @@ module.exports = sequelize => {
 	Step.init({
 		title: DataTypes.STRING,
 		description: DataTypes.STRING,
+		descriptionHTML: DataTypes.TEXT,
 		latitude: DataTypes.FLOAT,
 		longitude: DataTypes.FLOAT,
 		duration: DataTypes.INTEGER,

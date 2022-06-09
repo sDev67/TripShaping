@@ -27,6 +27,7 @@ module.exports = sequelize => {
 			defaultValue: 0,
 		},
 		infos: DataTypes.STRING,
+		infosHTML: DataTypes.TEXT,
 		toPublish: {
 			type: Sequelize.BOOLEAN,
 			defaultValue: 1,

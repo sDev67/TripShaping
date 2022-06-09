@@ -16,6 +16,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import StepList from "../components/StepList";
 import StepTimeline from "../components/StepTimeline";
+import { addDays, changeDateFormat } from "./../utils/DateFormatting";
 
 const Steps = () => {
   let { idTravel } = useParams();
@@ -30,6 +31,15 @@ const Steps = () => {
     data: steps,
   } = useQuery(["getSteps", idTravel], () =>
     TravelRequests.getStepsOfTravel(idTravel)
+  );
+
+  const {
+    isLoading: isLoadingT,
+    isError: isErrorT,
+    error: errorT,
+    data: travel,
+  } = useQuery(["getTravel", idTravel], () =>
+    TravelRequests.getTravelByid(idTravel)
   );
 
   const [totalDuration, setTotalDuration] = useState(0);
@@ -55,43 +65,57 @@ const Steps = () => {
         direction="column"
         style={{ overflowY: "scroll" }}
       >
-        <Stack
-          width="90%"
-          marginLeft="5%"
-          paddingY="1%"
-          direction="column"
-          height="100%"
-        >
-          {isLoadingS ? (
-            <Loading></Loading>
-          ) : isErrorS ? (
-            <p style={{ color: "red" }}>{errorS.message}</p>
-          ) : (
-            <div>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="flex-start"
-                spacing={10}
-              >
-                <Typography variant="h4" marginY={1}>
-                  Nombre d'étapes : {steps.length}
-                </Typography>
-                <Typography variant="h4" marginY={1}>
-                  Durée totale :{" "}
-                  {totalDuration > 1 ? (
-                    <Typography variant="body">
-                      {totalDuration} jours
-                    </Typography>
-                  ) : (
-                    <Typography variant="body">{totalDuration} jour</Typography>
-                  )}
-                </Typography>
-              </Stack>
-              <StepList steps={steps}></StepList>
-            </div>
-          )}
-        </Stack>
+        {isLoadingT ? (
+          <Loading></Loading>
+        ) : isErrorT ? (
+          <p style={{ color: "red" }}>{errorT.message}</p>
+        ) : (
+          <Stack
+            width="90%"
+            marginLeft="5%"
+            paddingY="1%"
+            direction="column"
+            height="100%"
+          >
+            {isLoadingS ? (
+              <Loading></Loading>
+            ) : isErrorS ? (
+              <p style={{ color: "red" }}>{errorS.message}</p>
+            ) : (
+              <div>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="flex-start"
+                  spacing={10}
+                >
+                  <Typography variant="h4" marginY={1}>
+                    Nombre d'étapes : {steps.length}
+                  </Typography>
+                  <Typography variant="h4" marginY={1}>
+                    Date de départ : {changeDateFormat(travel.startDate)}
+                  </Typography>
+                  <Typography variant="h4" marginY={1}>
+                    Date d'arrivée : {addDays(travel.startDate, totalDuration)}
+                  </Typography>
+                  <Typography variant="h4" marginY={1}>
+                    Durée totale :{" "}
+                    {totalDuration > 1 ? (
+                      <Typography variant="body">
+                        {totalDuration} jours
+                      </Typography>
+                    ) : (
+                      <Typography variant="body">
+                        {totalDuration} jour
+                      </Typography>
+                    )}
+                  </Typography>
+                </Stack>
+                <StepList steps={steps} startDate={travel.startDate}></StepList>
+              </div>
+            )}
+          </Stack>
+        )}
       </Stack>
     </>
   );

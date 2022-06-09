@@ -1,0 +1,60 @@
+{
+  "appshowcase": {
+    "navbar": {
+      "signin": "signin",
+      "signup": "signup"
+    },
+    "page1": {
+      "title": "Enter in a world a trip.",
+      "paragraph1": "Have you always wanted to organize your trips easily? ",
+      "paragraph2": "With TripShaping, you can plan the trip of your dreams with our easy-to-use tools that will save you a lot of time in organizing and choosing your trip. Our tools will also allow you to see what interesting places to visit near your destination. ",
+      "paragraph3": "Moreover, we have a large community of travelers who do not hesitate to share their itineraries, itineraries that you can very easily duplicate to add to your own trips!",
+      "button1": "Explore our trips",
+      "button2": "Create your trips"
+    },
+    "page2": {
+      "title1": "Plan your trips easily!",
+      "paragraph11": "Thanks to our web interface, plan your trip easily with our Map tool that will allow you to create your own itinerary! ",
+      "paragraph12": "Place the different stages of your trips, place markers at the places you would like to visit, choose your means of transportation, ... ",
+      "paragraph13": "In a few clicks the trip of your dreams will become a reality!",
+      "title2": "Follow your trip in real time!",
+      "paragraph21": "Once your trip is planned and activated, follow your trip in real time with our mobile application (android and ios). ",
+      "paragraph22": "It will allow you to see at what stage of your trip you are, the places to visit near you. You will also be able to access all your documents imported during the preparation phase. ",
+      "paragraph23": "Thanks to this mobile application, you will know exactly where you are, where you have to go and the interesting places around you to visit!"
+    },
+    "page3": {
+      "title": "Features:",
+      "title1": "Plan the remaining tasks",
+      "paragraph1": "Don't forget anything with our Tasks tab that will allow you to add important tasks to be done in preparation for the trip. You will also be able to add labels to these tasks to know which category each task corresponds to.",
+      "title2": "Save your important documents",
+      "paragraph2": "In addition to planning, TripShapping will allow you to save important documents and link them to different stages of your trip to easily find them on the mobile application.",
+      "title3": "Create your team",
+      "paragraph3": "Add your trip members to help you plan your trip! Some members of your trip don't want to sign up on the app? That's okay! You can add them without registering and they'll still appear in the app and album!",
+      "title4": "Manage your expenses during your trip",
+      "paragraph4": "in our mobile application you will find a tab dedicated to the management of your expenses. It will allow you to see the financial status of each member of the trip and thus manage the expenses fairly during the trip.",
+      "title5": "A souvenir album",
+      "paragraph5": "Once your trip is over, you will have access to an album that will allow you to retrace your trip and your itinerary. You will be able to see the photos taken during your trip as well as the texts written by the different members of the trip.",
+      "title6": "Show off your exploits!",
+      "paragraph6": "Share your trip with your friends and family through a unique web link, which will allow them to follow your trip live, as well as the photos and texts you share!"
+    },
+    "page4": {
+      "title": "Opinions",
+      "title1": "A very practical application! ",
+      "paragraph11": "I've always been very hesitant to plan trips because I had a lot of trouble getting organized.",
+      "paragraph12": "But since I discovered TripShaping, planning a trip has become a breeze. With just a few clicks, I can get a global view of my trip and each important step of it. ",
+      "paragraph13": "The interface is clear and easy to use. I highly recommend it for all those who hate planning!",
+      "title2": "An incredible application! ",
+      "paragraph21": "As much as the planning part already has many features, I was especially surprised by the mobile application that allows you to follow your trip! ",
+      "paragraph22": "Not only you can exactly locate yourself in your trip but you also have access to all your documents, you can see the places close to visit and even manage your expenses! I recommend it.",
+      "title3": "Perfect for trips with friends! ",
+      "paragraph31": "Mes amis et moi ne pouvons plus nous passer de TripShapping !",
+      "paragraph32": "My friends and I can't do without TripShapping anymore! Planning a trip was always tedious but with this application it's now a breeze. ",
+      "paragraph33": "Moreover, once the trip is over, we have access to the annotations written by each of us but also to the photos taken thanks to the application. In short, it is to be done again!"
+    },
+    "page5": {
+      "title": "Create now the trip of your dreams!",
+      "button1": "Explore our trips",
+      "button2": "Create your trips"
+    }
+  }
+}

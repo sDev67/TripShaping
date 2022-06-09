@@ -55,14 +55,7 @@ const MapModeSwitchAlbum = ({
   };
 
   return (
-    <Card
-      style={{
-        position: "absolute",
-        bottom: "25px",
-        left: "10px",
-        // height: "100px"
-      }}
-    >
+    <Card>
       <CardHeader
         style={{ textAlign: "center", padding: "5px 5px 0px 5px" }}
         title={

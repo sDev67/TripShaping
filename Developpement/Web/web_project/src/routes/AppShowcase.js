@@ -15,9 +15,9 @@ import {
   Toolbar,
   Box,
   CardMedia,
-  Divider,
-  ListItem,
-  ListItemIcon,
+  FormControl,
+  Select,
+  MenuItem,
   ListItemText,
   ListSubheader,
   Container,
@@ -35,6 +35,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 import Loading from "../utils/Loading";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Translation, changeLocale } from "@psyycker/react-translation";
 
 const drawerWidth = 170;
 
@@ -115,12 +116,31 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  select: {
+    "&:before": {
+      borderColor: "white",
+    },
+    "&:after": {
+      borderColor: "white",
+    },
+  },
+  icon: {
+    fill: "white",
+  },
 }));
 
 const AppShowcase = () => {
   const navigate = useNavigate();
 
   const classes = useStyles();
+
+  const [language, setLanguage] = useState("fr");
+
+  const handleChangeLanguage = (value) => {
+    setLanguage(value);
+    changeLocale(value);
+  };
+
   return (
     <>
       <CssBaseline />
@@ -140,11 +160,26 @@ const AppShowcase = () => {
             <Stack width="80%"></Stack>
 
             <Stack direction="row" width="15%" justifyContent="flex-end">
+              <FormControl color="primary">
+                <Select
+                  value={language}
+                  onChange={(e) => handleChangeLanguage(e.target.value)}
+                  className={classes.select}
+                  inputProps={{
+                    classes: {
+                      icon: classes.icon,
+                    },
+                  }}
+                >
+                  <MenuItem value="fr">🇫🇷</MenuItem>
+                  <MenuItem value="en">🇬🇧</MenuItem>
+                </Select>
+              </FormControl>
               <Button color="inherit" to={"/signin"} component={Link}>
-                Se connecter
+                <Translation translationKey="appshowcase.navbar.signin" />
               </Button>
               <Button color="inherit" to={"/signup"} component={Link}>
-                S'inscrire
+                <Translation translationKey="appshowcase.navbar.signup" />
               </Button>
             </Stack>
           </Toolbar>
@@ -174,7 +209,7 @@ const AppShowcase = () => {
               color="primary"
               style={{ textShadow: "black 2px 2px" }}
             >
-              Entrez dans un monde de voyages.
+              <Translation translationKey="appshowcase.page1.title" />
             </Typography>
             <Typography
               style={{ fontWeight: "normal" }}
@@ -182,47 +217,46 @@ const AppShowcase = () => {
               variant="h5"
               align="justify"
             >
-              Vous avez toujours voulu organiser facilement vos voyages ? <br />
+              <Translation translationKey="appshowcase.page1.paragraph1" />
               <br />
-              Grâce à TripShaping planifiez le voyage de vos rêves à l’aide de
-              nos outils faciles d’utilisation qui vous feront gagner un temps
-              considérable sur l’organisation et le choix du déroulé de votre
-              voyage. Nos outils vous permettront aussi de voir quels sont les
-              lieux intéressants à visiter proches de votre destination. <br />
               <br />
-              De plus, nous avons une grande communauté de voyageurs qui
-              n’hésitent pas à partager leurs itinéraires, itinéraires que vous
-              pouvez très facilement dupliquer pour les ajouter à vos propres
-              voyages !
+              <Translation translationKey="appshowcase.page1.paragraph2" />
+              <br />
+              <br />
+              <Translation translationKey="appshowcase.page1.paragraph3" />
             </Typography>
             <Stack direction="row" paddingTop={2} justifyContent="space-evenly">
               <Button
                 color="primary"
                 variant="contained"
                 style={{
-                  paddingLeft: "25px",
-                  paddingRight: "25px",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
+                  paddingLeft: "50px",
+                  paddingRight: "50px",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
                 }}
                 component={Link}
                 to={"/discover"}
               >
-                Explorer les voyages
+                <Typography variant="h6">
+                  <Translation translationKey="appshowcase.page1.button1" />
+                </Typography>
               </Button>
               <Button
                 color="primary"
                 variant="contained"
                 style={{
-                  paddingLeft: "25px",
-                  paddingRight: "25px",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
+                  paddingLeft: "50px",
+                  paddingRight: "50px",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
                 }}
                 component={Link}
                 to={"/mytrips"}
               >
-                Créer vos voyages
+                <Typography variant="h6">
+                  <Translation translationKey="appshowcase.page1.button2" />
+                </Typography>
               </Button>
             </Stack>
           </Stack>
@@ -260,7 +294,7 @@ const AppShowcase = () => {
                   color="grey.0"
                   marginBottom={3}
                 >
-                  Planifiez vos voyages facilement !
+                  <Translation translationKey="appshowcase.page2.title1" />
                 </Typography>
                 <Typography
                   style={{ fontWeight: "normal" }}
@@ -268,15 +302,13 @@ const AppShowcase = () => {
                   variant="h4"
                   align="justify"
                 >
-                  Grâce à notre interface web, planifiez votre voyage simplement
-                  à l’aide de notre outil « Carte » qui vous permettra de créer
-                  votre propre itinéraire !<br />
-                  <br /> Placez les différentes étapes de vos voyages, placez
-                  des marqueurs aux endroits et lieux que vous aimeriez visiter,
-                  choisissez vos moyens de transport, …
+                  <Translation translationKey="appshowcase.page2.paragraph11" />
+                  <br />
+                  <br />{" "}
+                  <Translation translationKey="appshowcase.page2.paragraph12" />
                   <br />
                   <br />
-                  En quelques clics le voyage de vos rêves se concrétisera !
+                  <Translation translationKey="appshowcase.page2.paragraph13" />
                 </Typography>
               </CardContent>
             </Card>
@@ -294,7 +326,7 @@ const AppShowcase = () => {
                   color="grey.0"
                   marginBottom={3}
                 >
-                  Suivez votre voyage en temps réel !
+                  <Translation translationKey="appshowcase.page2.title2" />
                 </Typography>
                 <Typography
                   style={{ fontWeight: "normal" }}
@@ -302,18 +334,13 @@ const AppShowcase = () => {
                   variant="h4"
                   align="justify"
                 >
-                  Une fois votre voyage planifié et activé, suivez votre voyage
-                  en temps réel grâce à notre application mobile (android et
-                  ios).
+                  <Translation translationKey="appshowcase.page2.paragraph21" />
                   <br />
-                  <br /> Elle vous permettra de voir à quelle étape de votre
-                  voyage vous vous situez, les lieux à visiter proches de vous.
-                  Vous pourrez aussi accéder à tous vos documents importés lors
-                  de la phase de préparation.
+                  <br />{" "}
+                  <Translation translationKey="appshowcase.page2.paragraph22" />
                   <br />
-                  <br /> Grâce à cette application mobile, vous saurez
-                  exactement où vous en êtes, vers où vous devez vous diriger et
-                  les lieux intéressants autour de vous à visiter !
+                  <br />{" "}
+                  <Translation translationKey="appshowcase.page2.paragraph23" />
                 </Typography>
               </CardContent>
             </Card>
@@ -336,7 +363,7 @@ const AppShowcase = () => {
             textAlign="center"
             style={{ textShadow: "black 2px 2px" }}
           >
-            Fonctionnalités
+            <Translation translationKey="appshowcase.page3.title" />
           </Typography>
           <Carousel navButtonsAlwaysVisible animation="slide" duration={1500}>
             <Stack direction="row" justifyContent="space-around">
@@ -344,7 +371,7 @@ const AppShowcase = () => {
                 <CardMedia component="img" height="180" image={image} />
                 <CardContent>
                   <Typography variant="h4" textAlign="start" color="primary">
-                    Planifiez les tâches restantes
+                    <Translation translationKey="appshowcase.page3.title1" />
                   </Typography>
 
                   <Typography
@@ -353,11 +380,7 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    N’oubliez rien grâce à notre onglet « Tâches » qui vous
-                    permettra d’ajouter les tâches importantes à faire en
-                    préparation du voyage. Vous pourrez aussi ajouter des labels
-                    à ces taches pour savoir à quelle catégorie correspond
-                    chaque tâche.
+                    <Translation translationKey="appshowcase.page3.paragraph1" />
                   </Typography>
                 </CardContent>
               </Card>
@@ -365,7 +388,7 @@ const AppShowcase = () => {
                 <CardMedia component="img" height="180" image={image} />
                 <CardContent>
                   <Typography variant="h4" textAlign="start" color="primary">
-                    Sauvegardez vos documents importants
+                    <Translation translationKey="appshowcase.page3.title2" />
                   </Typography>
 
                   <Typography
@@ -374,10 +397,7 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    En plus de la planification, TripShapping vous permettra de
-                    sauvegarder des documents importants et de les lier à
-                    différentes étapes de votre voyage pour les retrouver
-                    facilement sur l’application mobile
+                    <Translation translationKey="appshowcase.page3.paragraph2" />
                   </Typography>
                 </CardContent>
               </Card>
@@ -385,7 +405,7 @@ const AppShowcase = () => {
                 <CardMedia component="img" height="180" image={image} />
                 <CardContent>
                   <Typography variant="h4" textAlign="start" color="primary">
-                    Créez votre équipe
+                    <Translation translationKey="appshowcase.page3.title3" />
                   </Typography>
 
                   <Typography
@@ -394,12 +414,7 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    Ajoutez les membres de votre voyage pour qu’ils vous aident
-                    à la planification de celui-ci ! Certains membres de votre
-                    voyage ne souhaitent pas s’inscrire sur l’application ? Ce
-                    n’est pas grave ! Vous pouvez les ajouter sans inscription
-                    préalable pour qu’ils figurent tout de même dans
-                    l’application et l’album !
+                    <Translation translationKey="appshowcase.page3.paragraph3" />
                   </Typography>
                 </CardContent>
               </Card>
@@ -409,7 +424,7 @@ const AppShowcase = () => {
                 <CardMedia component="img" height="180" image={image} />
                 <CardContent>
                   <Typography variant="h4" textAlign="start" color="primary">
-                    Gérez vos dépenses lors du voyage
+                    <Translation translationKey="appshowcase.page3.title4" />
                   </Typography>
 
                   <Typography
@@ -418,10 +433,7 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    Dans notre application mobile vous trouverez un onglet dédié
-                    à la gestion des dépenses. Il vous permettra notamment de
-                    voir l’état des finances de chaque membre du voyage et ainsi
-                    gérer les dépenses équitablement lors du voyage.
+                    <Translation translationKey="appshowcase.page3.paragraph4" />
                   </Typography>
                 </CardContent>
               </Card>
@@ -429,7 +441,7 @@ const AppShowcase = () => {
                 <CardMedia component="img" height="180" image={image} />
                 <CardContent>
                   <Typography variant="h4" textAlign="start" color="primary">
-                    Un album souvenir
+                    <Translation translationKey="appshowcase.page3.title5" />
                   </Typography>
 
                   <Typography
@@ -438,11 +450,7 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    Une fois votre voyage achevé, vous aurez accès à un album
-                    qui vous permettra de retracer votre voyage et votre
-                    itinéraire. Vous pourrez ainsi voir les photos prises durant
-                    votre voyage ainsi que les textes rédigés par les différents
-                    membres du voyage.
+                    <Translation translationKey="appshowcase.page3.paragraph5" />
                   </Typography>
                 </CardContent>
               </Card>
@@ -450,7 +458,7 @@ const AppShowcase = () => {
                 <CardMedia component="img" height="180" image={image} />
                 <CardContent>
                   <Typography variant="h4" textAlign="start" color="primary">
-                    Montrez vos exploits !
+                    <Translation translationKey="appshowcase.page3.title6" />
                   </Typography>
 
                   <Typography
@@ -459,10 +467,7 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    Partagez votre voyage avec vos amis et votre famille grâce à
-                    un lien web unique, qui leur permettra de suivre en direct
-                    votre voyage, ainsi que les photos et textes que vous
-                    partagerez !
+                    <Translation translationKey="appshowcase.page3.paragraph6" />
                   </Typography>
                 </CardContent>
               </Card>
@@ -486,7 +491,7 @@ const AppShowcase = () => {
             textAlign="center"
             style={{ textShadow: "black 2px 2px" }}
           >
-            Avis
+            <Translation translationKey="appshowcase.page4.title" />
           </Typography>
           <Stack direction="row" spacing={5} justifyContent="space-evenly">
             <Card style={{ width: "20%" }}>
@@ -499,7 +504,7 @@ const AppShowcase = () => {
                     marginBottom={2}
                   >
                     <Typography variant="h4" textAlign="start" color="primary">
-                      Une application très pratique !
+                      <Translation translationKey="appshowcase.page4.title1" />
                     </Typography>
                     <Rating defaultValue={5} size="large" readOnly />
                   </Stack>
@@ -509,15 +514,11 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    J’ai toujours été très hésitant à planifier des voyages car
-                    j’avais beaucoup de mal à m’organiser. <br />
-                    Mais depuis que j’ai découvert TripShaping, planifier un
-                    voyage est devenu un jeu d’enfant. En quelques clics,
-                    j’arrive à obtenir une vision globale de mon voyage et de
-                    chaque étape importante de celui-ci. <br />
-                    L’interface est claire et simple d’utilisation. Je
-                    recommande fortement pour tous ceux qui détestent planifier
-                    !
+                    <Translation translationKey="appshowcase.page4.paragraph11" />
+                    <br />
+                    <Translation translationKey="appshowcase.page4.paragraph12" />
+                    <br />
+                    <Translation translationKey="appshowcase.page4.paragraph13" />
                   </Typography>
                 </div>
 
@@ -549,7 +550,7 @@ const AppShowcase = () => {
                     marginBottom={2}
                   >
                     <Typography variant="h4" textAlign="start" color="primary">
-                      Je recommande
+                      <Translation translationKey="appshowcase.page4.title2" />
                     </Typography>
                     <Rating defaultValue={5} size="large" readOnly />
                   </Stack>
@@ -559,13 +560,9 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    La partie planification possède déjà de nombreuses
-                    fonctionnalités mais j’ai surtout été surpris par
-                    l’application mobile permettant de suivre son voyage !<br />
-                    Non seulement vous pouvez exactement vous situer dans votre
-                    voyage mais vous avez aussi accès à tous vos documents, vous
-                    pouvez voir les endroits proches à visiter et même gérer vos
-                    dépenses.
+                    <Translation translationKey="appshowcase.page4.paragraph21" />
+                    <br />
+                    <Translation translationKey="appshowcase.page4.paragraph22" />
                   </Typography>
                 </div>
 
@@ -597,7 +594,7 @@ const AppShowcase = () => {
                     marginBottom={2}
                   >
                     <Typography variant="h4" textAlign="start" color="primary">
-                      Bluffant
+                      <Translation translationKey="appshowcase.page4.title3" />
                     </Typography>
                     <Rating defaultValue={5} size="large" readOnly />
                   </Stack>
@@ -607,14 +604,11 @@ const AppShowcase = () => {
                     variant="h6"
                     align="justify"
                   >
-                    Mes amis et moi ne pouvons plus nous passer de TripShapping
-                    !<br /> Prévoir et planifier les étapes d’un voyage était
-                    toujours fastidieux mais sur cette application c’est devenu
-                    un jeu d’enfant.
-                    <br /> De plus, une fois le voyage terminé, nous avons accès
-                    aux annotations rédigées par chacun d’entre nous mais aussi
-                    aux photos prises grâce à l’application. Bref, c’est à
-                    refaire !
+                    <Translation translationKey="appshowcase.page4.paragraph31" />
+                    <br />{" "}
+                    <Translation translationKey="appshowcase.page4.paragraph32" />
+                    <br />{" "}
+                    <Translation translationKey="appshowcase.page4.paragraph33" />
                   </Typography>
                 </div>
 
@@ -656,7 +650,7 @@ const AppShowcase = () => {
               textAlign="center"
               style={{ textShadow: "black 2px 2px" }}
             >
-              Créez vous aussi le voyage de vos rêves
+              <Translation translationKey="appshowcase.page5.title" />
             </Typography>
             <Stack direction="row" paddingTop={2} justifyContent="space-evenly">
               <Button
@@ -671,7 +665,9 @@ const AppShowcase = () => {
                 component={Link}
                 to={"/discover"}
               >
-                <Typography variant="h4">Explorer les voyages</Typography>
+                <Typography variant="h4">
+                  <Translation translationKey="appshowcase.page5.button1" />
+                </Typography>
               </Button>
               <Button
                 color="primary"
@@ -685,7 +681,9 @@ const AppShowcase = () => {
                 component={Link}
                 to={"/mytrips"}
               >
-                <Typography variant="h4">Créer vos voyages</Typography>
+                <Typography variant="h4">
+                  <Translation translationKey="appshowcase.page5.button2" />
+                </Typography>
               </Button>
             </Stack>
           </Stack>

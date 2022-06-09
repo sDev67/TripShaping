@@ -61,7 +61,7 @@ const InterestPointMenu = ({
 
   const HandleCloseAddLabelForm = () => {
     setInformationDialogOpenOpen(false);
-  }
+  };
 
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
@@ -96,9 +96,6 @@ const InterestPointMenu = ({
     },
     {
       value: "Spectacle",
-    },
-    {
-      value: "Nature",
     },
     {
       value: "Port",
@@ -309,10 +306,12 @@ const InterestPointMenu = ({
             )}
           </Stack>
 
-
           <Typography variant="h6" color="primary">
             Description
-            <IconButton disabled={!isEdition} onClick={(e) => setInformationDialogOpenOpen(true)}>
+            <IconButton
+              disabled={!isEdition}
+              onClick={(e) => setInformationDialogOpenOpen(true)}
+            >
               <EditRoundedIcon />
             </IconButton>
           </Typography>
@@ -327,7 +326,6 @@ const InterestPointMenu = ({
               maxW="350px"
               information={false}
             />
-
           </div>
 
           <Stack direction="row" justifyContent="space-between">

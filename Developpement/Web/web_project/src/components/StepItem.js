@@ -18,6 +18,7 @@ import {
   Dialog,
   CardMedia,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 
 import LocationOnRounded from "@mui/icons-material/LocationOnRounded";
@@ -37,8 +38,9 @@ import CancelRounded from "@mui/icons-material/CancelRounded";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import PointRequests from "./../requests/PointRequests";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import { addDays } from "../utils/DateFormatting";
 
-const StepItem = ({ step, index, updateInfoStep, steps }) => {
+const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -105,8 +107,6 @@ const StepItem = ({ step, index, updateInfoStep, steps }) => {
     },
   });
 
-  console.log(points);
-
   const addFile = (file) => {
     const formData = new FormData();
     formData.append("title", file);
@@ -144,54 +144,59 @@ const StepItem = ({ step, index, updateInfoStep, steps }) => {
                 {title}
               </Typography>
             </Stack>
+            <Tooltip title="Durée de l'étape" arrow>
+              <Typography variant="h5" width="15%">
+                {duration} jours
+              </Typography>
+            </Tooltip>
 
-            <Typography variant="h5" width="15%">
-              {duration} jours
-            </Typography>
+            <Tooltip title="Date du début de l'étape" arrow>
+              <Typography variant="h5" width="15%">
+                {addDays(startDate, date)}
+              </Typography>
+            </Tooltip>
 
-            <Stack direction="row" alignItems="center" spacing={1} width="5%">
-              {isLoadingD ? (
-                <Loading />
-              ) : isErrorD ? (
-                <p style={{ color: "red" }}>{errorD.message}</p>
-              ) : (
-                <Typography variant="h5" style={{ fontWeight: "normal" }}>
-                  {documents.length}
-                </Typography>
-              )}
+            <Tooltip title="Documents" arrow>
+              <Stack direction="row" alignItems="center" spacing={1} width="5%">
+                {isLoadingD ? (
+                  <Loading />
+                ) : isErrorD ? (
+                  <p style={{ color: "red" }}>{errorD.message}</p>
+                ) : (
+                  <Typography variant="h5" style={{ fontWeight: "normal" }}>
+                    {documents.length}
+                  </Typography>
+                )}
 
-              <InsertDriveFileRoundedIcon color="primary"></InsertDriveFileRoundedIcon>
-            </Stack>
-            <Stack direction="row" alignItems="center" spacing={1} width="5%">
-              {isLoadingP ? (
-                <Loading />
-              ) : isErrorP ? (
-                <p style={{ color: "red" }}>{errorP.message}</p>
-              ) : (
-                <Typography variant="h5" style={{ fontWeight: "normal" }}>
-                  {points.length}
-                </Typography>
-              )}
-              <LocationOnRounded color="error"></LocationOnRounded>
-            </Stack>
+                <InsertDriveFileRoundedIcon color="primary"></InsertDriveFileRoundedIcon>
+              </Stack>
+            </Tooltip>
+            <Tooltip title="Points d'intérêts" arrow>
+              <Stack direction="row" alignItems="center" spacing={1} width="5%">
+                {isLoadingP ? (
+                  <Loading />
+                ) : isErrorP ? (
+                  <p style={{ color: "red" }}>{errorP.message}</p>
+                ) : (
+                  <Typography variant="h5" style={{ fontWeight: "normal" }}>
+                    {points.length}
+                  </Typography>
+                )}
+                <LocationOnRounded color="secondary"></LocationOnRounded>
+              </Stack>
+            </Tooltip>
           </Stack>
         </AccordionSummary>
         <AccordionDetails>
           <Divider></Divider>
-          <Stack direction="column" spacing={5} marginTop={2}>
+          <Stack direction="column" spacing={3} marginTop={2}>
             <div>
-              <Stack direction="row" justifyContent="flex-end" marginBottom={2}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<DoneRounded />}
-                  onClick={updateStepInfo(step.id)}
-                >
-                  Enregistrer
-                </Button>
-              </Stack>
-
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack
+                direction="row"
+                spacing={2}
+                alignItems="center"
+                marginBottom={2}
+              >
                 <TextField
                   id={"title" + index}
                   fullWidth
@@ -240,6 +245,16 @@ const StepItem = ({ step, index, updateInfoStep, steps }) => {
                     </MenuItem>
                   ))}
                 </TextField>
+              </Stack>
+              <Stack direction="row" justifyContent="flex-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<DoneRounded />}
+                  onClick={updateStepInfo(step.id)}
+                >
+                  Enregistrer
+                </Button>
               </Stack>
             </div>
 
@@ -450,9 +465,6 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
     },
     {
       value: "Spectacle",
-    },
-    {
-      value: "Nature",
     },
     {
       value: "Port",

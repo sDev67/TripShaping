@@ -17,7 +17,7 @@ const getMemberUserLogin = member => request(`${url_prefix}/member/${member}`)
 
 const getFictiveMember = member => request(`${url_prefix}/member/${member}`)
 
-const getDocumentFileData = document => request(`${url_prefix}/documents/${document}`)
+const getDocumentFileData = document => request(`${url_prefix}/document/${document}`)
 
 const getTravelStatus = travel => request(`${url_prefix}/travel/${travel}`)
 

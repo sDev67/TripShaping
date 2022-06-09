@@ -5,10 +5,11 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Button, TextField, Typography, IconButton } from "@mui/material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
+import { convertToHTML } from "draft-convert";
 
 
 
-const RichTextEditor = ({ setValue, OnClose, value, limitedEditor, minH, isReadOnly, openFormEditor, maxW, information }) => {
+const RichTextEditor = ({ setValueHTML, setValue, OnClose, value, limitedEditor, minH, isReadOnly, openFormEditor, maxW, information }) => {
 
 
   const [state, setState] = useState([
@@ -60,6 +61,8 @@ const RichTextEditor = ({ setValue, OnClose, value, limitedEditor, minH, isReadO
   const saveContent = (content) => {
     //window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
     setValue(JSON.stringify(convertToRaw(content)));
+    console.log(convertToHTML(content));
+    setValueHTML(JSON.stringify(convertToHTML(content)));
   }
   return (
     <div class="container">

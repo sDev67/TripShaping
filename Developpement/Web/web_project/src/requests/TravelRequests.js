@@ -129,6 +129,7 @@ const TravelRequests = {
     latitude,
     longitude,
     description,
+    descriptionHTML,
     category,
     TravelId,
   }) => {
@@ -144,6 +145,7 @@ const TravelRequests = {
         latitude,
         longitude,
         description,
+        descriptionHTML,
         category,
         TravelId,
       }),
@@ -157,6 +159,7 @@ const TravelRequests = {
     latitude,
     longitude,
     description,
+    descriptionHTML,
     duration,
     category,
     TravelId,
@@ -173,6 +176,7 @@ const TravelRequests = {
         latitude,
         longitude,
         description,
+        descriptionHTML,
         category,
         duration,
         TravelId,
@@ -271,6 +275,7 @@ const TravelRequests = {
     activated,
     budget,
     infos,
+    infosHTML,
     finished,
   }) => {
     //const token = window.localStorage.getItem('token');
@@ -287,6 +292,7 @@ const TravelRequests = {
         activated,
         budget,
         infos,
+        infosHTML,
         finished,
       }),
     })

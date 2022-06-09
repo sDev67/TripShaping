@@ -14,7 +14,7 @@ const PointRequests = {
             .then(checkStatus)
             .then(res => res.json())
     },
-    updatePointInfoById: ({ title, category, description, idPoint, StepId, day }) => {
+    updatePointInfoById: ({ title, category, description, descriptionHTML, idPoint, StepId, day }) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/point/${idPoint}`, {
             method: 'PUT',
@@ -22,7 +22,7 @@ const PointRequests = {
                 'Content-Type': 'application/json',
                 //  Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify({ title, category, description, StepId, day })
+            body: JSON.stringify({ title, category, description, descriptionHTML, StepId, day })
         })
             .then(checkStatus)
             .then(res => res.json())

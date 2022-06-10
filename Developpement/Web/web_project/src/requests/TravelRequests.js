@@ -45,7 +45,6 @@ const TravelRequests = {
   },
   createTravel: ({ name, UserId }) => {
     //const token = window.localStorage.getItem('token');
-    console.log(name);
     return fetch(`${url_prefix}/travel`, {
       method: "POST",
       headers: {
@@ -57,6 +56,34 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
+
+  copyTravel: ({ TravelId, UserId }) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/copy`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        //  Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify({ TravelId, UserId }),
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+
+  // copyTravelRoutes: ({ OldTravelId, NewTravelId }) => {
+  //   //const token = window.localStorage.getItem('token');
+  //   return fetch(`${url_prefix}/travel/copyR`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       //  Authorization: 'Bearer ' + token
+  //     },
+  //     body: JSON.stringify({ OldTravelId, NewTravelId }),
+  //   })
+  //     .then(checkStatus)
+  //     .then((res) => res.json());
+  // },
 
   getStepsOfTravel: (idTravel) => {
     //const token = window.localStorage.getItem('token');
@@ -224,7 +251,7 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
-  updateTravelStatus: ({ TravelId, status }) => {
+  updateTravelStatus: ({ TravelId, status, startDate }) => {
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel/${TravelId}`, {
       method: "PUT",
@@ -232,7 +259,20 @@ const TravelRequests = {
         "Content-Type": "application/json",
         //Authorization: 'Bearer ' + token
       },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status, startDate }),
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+  updateTravelDate: ({ TravelId, startDate }) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/${TravelId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        //Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify({ startDate }),
     })
       .then(checkStatus)
       .then((res) => res.json());

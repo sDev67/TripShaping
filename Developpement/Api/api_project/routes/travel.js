@@ -1140,5 +1140,11 @@ module.exports = [
     url: "/travel/:travel_id/copy",
     method: "post",
     func: travel_ctrl.copyTravel,
-  }
+  },
+  {
+    url: "/travel/copy",
+    method: "post",
+    func: travel_ctrl.copyTravel,
+  },
+
 ];

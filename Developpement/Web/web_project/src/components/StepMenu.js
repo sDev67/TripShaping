@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   TextField,
@@ -23,6 +23,8 @@ import DocumentRequest from "../requests/DocumentRequest";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
+import TravelRequests from "../requests/TravelRequests";
+import { addDays } from "../utils/DateFormatting";
 
 const StepMenu = ({
   deleteStep,
@@ -30,6 +32,8 @@ const StepMenu = ({
   setSelectedMarker,
   updateInfoStep,
   isEdition,
+  steps,
+  setSelectedPoiOfMarker,
 }) => {
   const queryClient = useQueryClient();
 
@@ -51,6 +55,36 @@ const StepMenu = ({
     DocumentRequest.getDocumentsByStepId(selectedMarker.id)
   );
 
+  const {
+    isLoading: isLoadingT,
+    isError: isErrorT,
+    error: errorT,
+    data: travel,
+  } = useQuery(["getTravel", idTravel], () =>
+    TravelRequests.getTravelByid(idTravel)
+  );
+
+  const [days, setDays] = useState();
+
+  useEffect(() => {
+    let dayCounter = 0;
+    let date;
+    let stop = false;
+
+    steps.forEach((step) => {
+      if (!stop) {
+        if (step.id === selectedMarker.id) {
+          console.log(step.id);
+          stop = true;
+        } else {
+          dayCounter += step.duration;
+        }
+      }
+    });
+
+    setDays(dayCounter);
+  }, []);
+
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
       queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
@@ -61,7 +95,7 @@ const StepMenu = ({
 
   const HandleCloseAddLabelForm = () => {
     setInformationDialogOpenOpen(false);
-  }
+  };
 
   const categ = [
     {
@@ -125,7 +159,10 @@ const StepMenu = ({
         />
         <IconButton
           color="error"
-          onClick={() => setSelectedMarker(null)}
+          onClick={() => {
+            setSelectedMarker(null);
+            setSelectedPoiOfMarker(null);
+          }}
           style={{ position: "absolute", right: 5, top: 5 }}
         >
           <CancelRounded />
@@ -161,18 +198,38 @@ const StepMenu = ({
               </MenuItem>
             ))}
           </TextField>
-          <TextField
-            fullWidth
-            label="Durée du séjour"
-            type="number"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            style={{ marginBottom: 25 }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            disabled={!isEdition}
-          />
+          <Stack direction="row" spacing={2}>
+            {isLoadingT ? (
+              <Loading />
+            ) : isErrorT ? (
+              <p style={{ color: "red" }}>{errorT.message}</p>
+            ) : (
+              <TextField
+                fullWidth
+                label="Date du début de l'étape"
+                type="text"
+                value={addDays(travel.startDate, days)}
+                style={{ marginBottom: 25 }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                disabled={true}
+              />
+            )}
+            <TextField
+              fullWidth
+              label="Durée du séjour"
+              type="number"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              style={{ marginBottom: 25 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              disabled={!isEdition}
+            />
+          </Stack>
+
           <Stack
             style={{ marginBottom: 25 }}
             spacing={1}
@@ -219,10 +276,12 @@ const StepMenu = ({
             )}
           </Stack>
 
-
           <Typography variant="h6" color="primary">
             Description
-            <IconButton disabled={!isEdition} onClick={(e) => setInformationDialogOpenOpen(true)}>
+            <IconButton
+              disabled={!isEdition}
+              onClick={(e) => setInformationDialogOpenOpen(true)}
+            >
               <EditRoundedIcon />
             </IconButton>
           </Typography>
@@ -237,7 +296,6 @@ const StepMenu = ({
               maxW="350px"
               information={false}
             />
-
           </div>
 
           <Stack direction="row" justifyContent="space-between">
@@ -265,7 +323,6 @@ const StepMenu = ({
           </Stack>
         </CardContent>
       </Card>
-
 
       <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
         <RichTextEditor

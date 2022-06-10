@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Stack,
   Box,
@@ -12,10 +12,14 @@ import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import TravelRequests from "./../requests/TravelRequests";
+import { UTurnLeft } from "@mui/icons-material";
 
 const Photos = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
+  const [url, setUrl] = useState();
+
+  const Buffer = require("buffer").Buffer;
 
   let queryClient = useQueryClient();
   const itemData = [
@@ -81,11 +85,45 @@ const Photos = () => {
     },
   ];
 
-  // const convertToBase64 = (buffer) => {
-  //   // let bufferTest = "<Buffer 54 75 74 6f 72 69 61 6c 73 50 6f 69 6e 74>";
-  //   // let base64 = bufferTest.toString("base64");
-  //   // console.log(base64);
-  // };
+  const convertToBase64 = (buffer) => {
+    //let bufferTest = "<Buffer 54 75 74 6f 72 69 61 6c 73 50 6f 69 6e 74>";
+    // console.log("Buffer :" + buffer);
+    // let base64 = buffer.toString("base64");
+    // console.log("Base 64 :" + base64);
+    // console.log("Test");
+    // var donneesEncodees = window.btoa(buffer);
+    // // const base64String = window.btoa(
+    // //   String.fromCharCode(...new Uint8Array(buffer))
+    // // );
+    // console.log(donneesEncodees);
+    // setPhoto(donneesEncodees);
+
+    // const array = [104, 101, 108, 108, 111];
+    // let uarray = Uint8Array.from(array);
+    // uarray = Uint8Array.prototype.bu
+    // console.log(uarray);
+    // let base64 = uarray.toString("base64");
+    // console.log(base64);
+
+    // var bufferTest = Buffer.from("hello", "utf-8"); //create a buffer of the text "hello"
+    // console.log(bufferTest);
+    // let base64t = bufferTest.toString("base64");
+    // console.log(base64t);
+
+    let uarray = Uint8Array.from(buffer);
+    console.log(uarray);
+    let base64 = uarray.toString("base64");
+    console.log(base64);
+
+    setUrl(URL.createObjectURL(buffer));
+    console.log(url);
+    // let bufferArray = new ArrayBuffer(buffer);
+    // console.log(bufferArray);
+    // let z = new Uint8Array(buffer, 1, 4);
+
+    // var bufferTest2 = Buffer.from("hello"); //create a buffer of the text "hello"
+    // console.log(bufferTest2);
+  };
 
   const {
     isLoading: isLoading,
@@ -97,9 +135,16 @@ const Photos = () => {
   );
 
   const handleSubmit = () => {
-    const json = JSON.parse(photos[0].dataFile);
-    console.log(json);
-    console.log(json.data);
+    //const json = JSON.parse(photos[0].dataFile);
+    //setUrl(URL.createObjectURL(photos[0].dataFile));
+
+    var reader = new FileReader();
+    reader.readAsDataURL(photos[0].dataFile);
+    reader.onloadend = function () {
+      var base64data = reader.result;
+      console.log(base64data);
+    };
+    //convertToBase64(json.data);
   };
   return (
     <>
@@ -117,6 +162,12 @@ const Photos = () => {
             <p style={{ color: "red" }}>{error.message}</p>
           ) : (
             <>
+              <img
+                src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA
+    AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
+        9TXL0Y4OHwAAAABJRU5ErkJggg=="
+                alt="Red dot"
+              />
               <Button onClick={() => handleSubmit()}>HANDLE</Button>
 
               <ImageList>

@@ -1,5 +1,5 @@
 const db = require("../models");
-const { Sequelize } = require('sequelize')
+const { Sequelize } = require('sequelize');
 
 module.exports = {
   get_all: (req, res, next) => {
@@ -12,7 +12,6 @@ module.exports = {
   get_published: (req, res, next) => {
     return db.Travel.findAll({
       where: {
-        status: 2,
         toPublish: 1,
       },
       order: ["name"],
@@ -228,87 +227,116 @@ module.exports = {
           model: db.Step, include: [
             { model: db.Point }]
         },
-        {
-          model: db.Route, include: [
-            // {
-            //   model: db.Step,
-            //   where: {
-            //     // id: Sequelize.col('Routes.finish')
-            //     id: "1"
-            //   }
-            // }
-          ]
-        }
+        { model: db.Route }
         ],
       where: {
-        id: req.params.travel_id
-      }
+        id: req.body.TravelId
+      },
+      order: [[db.Step, 'id']]
     })
       .then(travel => {
-        console.log(res.json(travel))
-        // if (travel) {
-        //   let resTrip = {
-        //     name: travel.name,
-        //     isPublic: false,
-        //     startDate: null
-        //   }
+        if (travel) {
+          let resTravel = {
+            name: travel.name,
+            UserId: req.body.UserId
+          }
 
-        //   const tabPromis = [];
-        //   const dictInterestPoint = new Object();
-        //   req.user.createTrip(resTrip).then(newTrip => {
-        //     travel.Interest_points.map(interestPoint => {
-        //       let resInterestPoint = {
-        //         name: interestPoint.name,
-        //         type: interestPoint.type,
-        //         longitude: interestPoint.longitude,
-        //         latitude: interestPoint.latitude,
-        //         description: interestPoint.description
-        //       }
-        //       tabPromis.push(newTrip.createInterest_point(resInterestPoint).then(newInterestPoint => { dictInterestPoint["\"" + interestPoint.id + "\""] = newInterestPoint }))
-        //     })
+          db.Travel.create(resTravel).then(newTravel => {
+            travel.Points.map(point => {
+              if (point.StepId == null) {
+                let resPoint = {
+                  title: point.title,
+                  longitude: point.longitude,
+                  latitude: point.latitude,
+                  description: point.description,
+                  category: point.category,
+                  TravelId: newTravel.id
+                }
+                db.Point.create(resPoint)
+              }
+            })
 
-        //     Promise.all(tabPromis).then(() => {
-        //       travel.Etapes.map(etape => {
-        //         let resEtape = {
-        //           name: etape.name,
-        //           type: etape.type,
-        //           longitude: etape.longitude,
-        //           latitude: etape.latitude,
-        //           order: etape.order,
-        //           description: etape.description
-        //         }
-        //         newTrip.createEtape(resEtape).then(newEtape => {
-        //           let resRoute = {
-        //             description: etape.Route.description,
-        //             transportType: etape.Route.transportType,
-        //             distance: etape.Route.distance,
-        //             time: etape.Route.time
-        //           }
-        //           newEtape.createRoute(resRoute)
+            var tabSteps = [];
+            travel.Steps.map(step => {
+              var resStep = {
+                title: step.title,
+                longitude: step.longitude,
+                latitude: step.latitude,
+                description: step.description,
+                duration: step.duration,
+                category: step.category,
+                TravelId: newTravel.id
+              }
 
-        //           etape.Days.map(day => {
-        //             let resDay = {
-        //               day_number: day.day_number
-        //             }
-        //             newEtape.createDay(resDay).then(newDay => {
-        //               day.Interest_points.map(interest_pointAssociation => {
-        //                 //const found = tabInterestPoint.find( newInterestPoint => newInterestPoint.oldID == interest_pointAssociation.id )
-        //                 newDay.addInterest_point(dictInterestPoint["\"" + interest_pointAssociation.id + "\""]);
-        //               })
-        //             })
-        //           })
-        //         })
-        //       })
-        //       res.json(newTrip)
-        //     })
-        //   })
-        // }
-        // else {
-        //   throw { status: 404, message: 'Requested Trip not found' };
-        // }
+              db.Step.create(resStep).then(newStep => {
+                if (step.Points.length > 0) {
+                  step.Points.map(point => {
+                    let resPoint = {
+                      title: point.title,
+                      longitude: point.longitude,
+                      latitude: point.latitude,
+                      description: point.description,
+                      category: point.category,
+                      StepId: newStep.id,
+                      day: point.day,
+                      TravelId: newTravel.id
+                    }
+                    db.Point.create(resPoint)
+                  })
+                }
+              })
+
+              tabSteps.push(resStep)
+            })
+
+            copyTravelRoutes(req.body.TravelId, newTravel['dataValues'].id)
+            res.json(newTravel)
+          })
+        }
+        else {
+          throw { status: 404, message: 'Requested Trip not found' };
+        }
       })
-      // .then((travel) => res.json(travel))
       .catch(next)
-  }
+  },
 };
+
+const copyTravelRoutes = async (OldTravelId, NewTravelId) => {
+  var newSteps = await db.Step.findAll({
+    where: {
+      TravelId: NewTravelId
+    }
+  })
+
+  var oldSteps = await db.Step.findAll({
+    where: {
+      TravelId: OldTravelId
+    }
+  })
+
+  var oldRoutes = await db.Route.findAll({
+    where: {
+      TravelId: OldTravelId
+    }
+  })
+
+  oldRoutes.map(route => {
+    var oldStepStart = (oldSteps.filter(step => step['dataValues'].id == route.start))[0]['dataValues']
+    var oldStepFinish = (oldSteps.filter(step => step['dataValues'].id == route.finish))[0]['dataValues']
+
+    var newStepStartId = (newSteps.filter(step => step['dataValues'].latitude == oldStepStart.latitude && step['dataValues'].longitude == oldStepStart.longitude))[0]['dataValues'].id
+    var newStepFinishId = (newSteps.filter(step => step['dataValues'].latitude == oldStepFinish.latitude && step['dataValues'].longitude == oldStepFinish.longitude))[0]['dataValues'].id
+
+
+    let newRoute = {
+      TravelId: NewTravelId,
+      start: newStepStartId,
+      finish: newStepFinishId,
+      travelType: ""
+    }
+    db.Route.create(newRoute)
+  })
+}
+
+
 

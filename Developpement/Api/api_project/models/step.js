@@ -9,13 +9,13 @@ module.exports = sequelize => {
 			Step.hasMany(db.Point, { onDelete: 'cascade' });
 			Step.hasMany(db.Document, { onDelete: 'cascade' });
 			Step.hasMany(db.Photo, { onDelete: 'cascade' });
-
 		}
 	}
 
 	Step.init({
 		title: DataTypes.STRING,
 		description: DataTypes.STRING,
+		descriptionHTML: DataTypes.TEXT,
 		latitude: DataTypes.FLOAT,
 		longitude: DataTypes.FLOAT,
 		duration: DataTypes.INTEGER,

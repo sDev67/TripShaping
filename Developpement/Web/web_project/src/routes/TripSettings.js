@@ -1,11 +1,11 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Divider, Stack } from "@mui/material";
 import * as React from "react";
 import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { Switch } from "@mui/material";
+import { Switch, Dialog } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
@@ -13,6 +13,16 @@ import Loading from "../utils/Loading";
 
 const TripSettings = () => {
   const queryClient = useQueryClient();
+
+  var today = new Date();
+  var dateMax =
+    today.getFullYear() +
+    "-" +
+    (today.getMonth() + 1 < 10
+      ? "0" + (today.getMonth() + 1)
+      : today.getMonth() + 1) +
+    "-" +
+    (today.getDate() < 10 ? "0" + today.getDate() : today.getDate());
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
@@ -26,40 +36,73 @@ const TripSettings = () => {
     TravelRequests.getTravelByid(idTravel)
   );
 
-  let statusTrip = travel?.status
-  let currentDate = travel?.startDate
-  let publicItinerary = travel?.toPublish
-  let trackPosition = travel?.positionAgree
+  let statusTrip = travel?.status;
+  let plannedDate = travel?.startDate.substring(0, 10);
+  let publicItinerary = travel?.toPublish;
+  let trackPosition = travel?.positionAgree;
+
+  const [startDialogOpen, setStartDialogOpen] = useState(false);
+
+  const date1 = new Date(plannedDate);
+  const date2 = new Date(dateMax);
+  let selectedDate = date1 > date2 ? dateMax : plannedDate;
+
+  useEffect(() => {
+    if (date1 > date2) {
+      selectedDate = dateMax;
+    } else {
+      selectedDate = plannedDate;
+    }
+    console.log(selectedDate);
+  }, [plannedDate]);
 
   const handleDateChange = (newDate) => {
-    currentDate = newDate;
+    console.log(newDate);
+    if (newDate != "") {
+      plannedDate = newDate;
+      updateStartDate(plannedDate);
+    }
+  };
+
+  const handleSelectedDateChange = (newDate2) => {
+    selectedDate = newDate2;
+    console.log(selectedDate);
   };
 
   const handleSwitchPublicItinerary = () => {
     publicItinerary = !publicItinerary;
-    updateStatusPublished(publicItinerary)
+    updateStatusPublished(publicItinerary);
   };
 
   const handleSwitchTrackPosition = () => {
     trackPosition = !trackPosition;
-    updateTrackPosition(trackPosition)
+    updateTrackPosition(trackPosition);
   };
 
-  const handleSwitch = () => {
-
+  const handleSwitchClickStart = () => {
+    setStartDialogOpen(true);
   };
 
   const handleSwitchStartTrip = () => {
     statusTrip = 1;
-    updateStatusTravel(statusTrip)
+    updateStatusTravel(statusTrip);
   };
 
   const updateStatusTravel = (statusTrip) => {
     const newStatus = {
       TravelId: idTravel,
       status: statusTrip,
+      startDate: selectedDate,
     };
-    updatePublic.mutate(newStatus);
+    updateStatus.mutate(newStatus);
+  };
+
+  const updateStartDate = (plannedDate) => {
+    const newDate = {
+      TravelId: idTravel,
+      startDate: plannedDate,
+    };
+    updateDate.mutate(newDate);
   };
 
   const updateStatusPublished = (publicItinerary) => {
@@ -82,15 +125,27 @@ const TripSettings = () => {
     onSuccess: (status) => {
       queryClient.setQueryData(["getTravel", idTravel], status);
       queryClient.invalidateQueries(["getTravel", idTravel]);
+      setStartDialogOpen(false);
     },
   });
 
-  const updatePublic = useMutation(TravelRequests.updateTravelPublishItinerary, {
-    onSuccess: (publishedStatus) => {
-      queryClient.setQueryData(["getTravel", idTravel], publishedStatus);
+  const updateDate = useMutation(TravelRequests.updateTravelDate, {
+    onSuccess: (startDate) => {
+      queryClient.setQueryData(["getTravel", idTravel], startDate);
       queryClient.invalidateQueries(["getTravel", idTravel]);
+      selectedDate = plannedDate;
     },
   });
+
+  const updatePublic = useMutation(
+    TravelRequests.updateTravelPublishItinerary,
+    {
+      onSuccess: (publishedStatus) => {
+        queryClient.setQueryData(["getTravel", idTravel], publishedStatus);
+        queryClient.invalidateQueries(["getTravel", idTravel]);
+      },
+    }
+  );
 
   const updatePosition = useMutation(TravelRequests.updateTravelTrackPosition, {
     onSuccess: (statusPosition) => {
@@ -99,26 +154,29 @@ const TripSettings = () => {
     },
   });
 
+  const HandleCloseAddLabelForm = () => {
+    setStartDialogOpen(false);
+  };
+
   return (
     <>
-      {
-        isLoadingT ? (
-          <Loading />
-        ) : isErrorT ? (
-          <p style={{ color: "red" }}>{errorT.message}</p>
-        ) :
-          <Stack height="93.15%" width="100%" direction="column">
-            <Stack
-              width="40%"
-              marginLeft="30%"
-              paddingY="1%"
-              direction="column"
-              height="85%"
-              alignItems="strech"
-              marginTop="5%"
-            >
-              <Stack spacing={5}>
-                {/* <Button
+      {isLoadingT ? (
+        <Loading />
+      ) : isErrorT ? (
+        <p style={{ color: "red" }}>{errorT.message}</p>
+      ) : (
+        <Stack height="93.15%" width="100%" direction="column">
+          <Stack
+            width="40%"
+            marginLeft="30%"
+            paddingY="1%"
+            direction="column"
+            height="85%"
+            alignItems="strech"
+            marginTop="5%"
+          >
+            <Stack spacing={5}>
+              {/* <Button
 
               variant="contained"
               color="error"
@@ -147,26 +205,34 @@ const TripSettings = () => {
             >
               Supprimer tous les points d'interet du voyage
             </Button> */}
-                {statusTrip == 0 &&
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    // onClick={handleSwitchStartTrip()}
-                    style={{
-                      paddingLeft: "40px",
-                      paddingRight: "40px",
-                      paddingTop: "25px",
-                      paddingBottom: "25px",
-                    }}
-                  >
-                    Démarrer le voyage
-                  </Button>
-                }
-              </Stack>
+              {statusTrip == 0 && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleSwitchClickStart()}
+                  style={{
+                    paddingLeft: "40px",
+                    paddingRight: "40px",
+                    paddingTop: "25px",
+                    paddingBottom: "25px",
+                  }}
+                >
+                  Démarrer le voyage
+                </Button>
+              )}
+            </Stack>
 
-              <Stack direction="row" spacing={1} marginTop={10} marginBottom={5}>
+            <Stack
+              direction="row"
+              spacing={1}
+              marginTop={10}
+              marginBottom={5}
+              justifyContent="center"
+            >
+              {statusTrip == 0 && (
                 <TextField
                   sx={{ width: "50%" }}
+                  value={plannedDate}
                   id="date"
                   label="Date de départ prévue"
                   type="date"
@@ -175,57 +241,104 @@ const TripSettings = () => {
                     shrink: true,
                   }}
                 />
-                <FormControlLabel
-                  sx={{ width: "50%" }}
-                  value={trackPosition}
-                  checked={trackPosition}
-                  control={<Switch color="primary" />}
-                  label={
-                    <Typography variant="h6" color="primary">
-                      Suivre ma position lors du voyage
-                    </Typography>
-                  }
-                  labelPlacement="start"
-                  onChange={handleSwitchTrackPosition}
-                  position="relative"
-                />
-              </Stack>
-              <Stack direction="row" marginBottom={5} justifyContent="space-evenly">
-                <FormControlLabel
-                  sx={{ width: "58%" }}
-                  value={publicItinerary}
-                  checked={publicItinerary}
-                  control={<Switch color="primary" />}
-                  label={
-                    <Typography variant="h6" color="primary">
-                      Rendre l'itinéraire public à la fin du voyage
-                    </Typography>
-                  }
-                  labelPlacement="start"
-                  onChange={handleSwitchPublicItinerary}
-                  position="relative"
-                />
-              </Stack>
+              )}
+              <FormControlLabel
+                sx={{ width: "50%" }}
+                value={trackPosition}
+                checked={trackPosition}
+                control={<Switch color="primary" />}
+                label={
+                  <Typography variant="h6" color="primary">
+                    Suivre ma position lors du voyage
+                  </Typography>
+                }
+                labelPlacement="start"
+                onChange={handleSwitchTrackPosition}
+                position="relative"
+              />
+            </Stack>
+            <Stack
+              direction="row"
+              marginBottom={5}
+              justifyContent="space-evenly"
+            >
+              <FormControlLabel
+                sx={{ width: "58%" }}
+                value={publicItinerary}
+                checked={publicItinerary}
+                control={<Switch color="primary" />}
+                label={
+                  <Typography variant="h6" color="primary">
+                    Rendre l'itinéraire public à la fin du voyage
+                  </Typography>
+                }
+                labelPlacement="start"
+                onChange={handleSwitchPublicItinerary}
+                position="relative"
+              />
+            </Stack>
 
-              <Stack>
+            <Stack>
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<DeleteRounded />}
+                // onClick={handleSwitch()}
+                style={{
+                  paddingLeft: "25px",
+                  paddingRight: "25px",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
+                }}
+              >
+                Supprimer le voyage
+              </Button>
+            </Stack>
+          </Stack>
+          <Dialog open={startDialogOpen} onClose={HandleCloseAddLabelForm}>
+            <Stack>
+              <Stack
+                direction="column"
+                margin={5}
+                justifyContent="space-evenly"
+              >
+                <Typography variant="h5">Valider la date de départ</Typography>
+                <TextField
+                  sx={{ width: "65%", alignSelf: "center", marginTop: 5 }}
+                  id="startdate"
+                  defaultValue={selectedDate}
+                  label=""
+                  type="date"
+                  inputProps={{
+                    min: "1900-01-01",
+                    max: dateMax,
+                  }}
+                  onChange={(e) => handleSelectedDateChange(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Stack>
+              <Divider />
+              <Stack margin={5}>
                 <Button
                   variant="contained"
-                  color="error"
-                  startIcon={<DeleteRounded />}
-                  onClick={handleSwitch()}
+                  color="primary"
+                  onClick={() => handleSwitchStartTrip()}
                   style={{
-                    paddingLeft: "25px",
-                    paddingRight: "25px",
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
+                    paddingLeft: "40px",
+                    paddingRight: "40px",
+                    paddingTop: "25px",
+                    paddingBottom: "25px",
                   }}
                 >
-                  Supprimer le voyage
+                  Démarrer le voyage
                 </Button>
               </Stack>
             </Stack>
-          </Stack>
-      }
+          </Dialog>
+        </Stack>
+      )}
     </>
   );
 };

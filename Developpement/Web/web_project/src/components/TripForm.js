@@ -24,15 +24,13 @@ const TripForm = ({ setTripFormOpen }) => {
 
   const [name, setName] = useState("");
 
-  const [isTripPublic, setIsTripPublic] = useState(true);
-
   const handleNameChange = (newName) => {
     setName(newName);
   };
 
   const addMember = useMutation(MemberRequests.addMember, {
     onSuccess: member => {
-      queryClient.setQueriesData(['getMembers'], members => [...members, member])
+      queryClient.setQueriesData(['getMembers', user.id], members => [...members, member])
     }
   })
 
@@ -51,16 +49,9 @@ const TripForm = ({ setTripFormOpen }) => {
         ['getTravels'],
         travels => [...travels, travel]
       )
-
-
-
     }
   }
   );
-  const publicTrip = () => {
-    console.log(isTripPublic)
-  };
-
 
   const handleSubmit = () => {
     const newTravel = {
@@ -88,19 +79,14 @@ const TripForm = ({ setTripFormOpen }) => {
             label="Nom"
             onChange={(e) => handleNameChange(e.target.value)}
           />
-          <Stack direction="row" width="100%" spacing={1}>
-            <Typography variant="p" marginBottom={2}>
-              Rendre le voyage publique
-            </Typography>
-            <Checkbox onChange={() => {
-              setIsTripPublic(!isTripPublic);
-              publicTrip()
-            }
-            }
-            />
-
-          </Stack>
-
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<DoneRounded />}
+            onClick={handleSubmit}
+          >
+            Créer
+          </Button>
         </Stack>
         <Button
           variant="contained"

@@ -2,14 +2,24 @@ import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
+<<<<<<< HEAD
   Grid,
   Stack,
+=======
+  Card,
+  CardContent,
+  Popover,
+  Grid,
+  Stack,
+  Avatar,
+>>>>>>> dev_web_benjamin
   Dialog,
   Button,
   Typography,
   Box,
   AppBar,
   Toolbar,
+  CardHeader,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import TripForm from "../components/TripForm";
@@ -101,16 +111,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TripSelection = () => {
-  let { user } = useAuth();
+  let { user, signout } = useAuth();
 
   let id = parseInt(user.id);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const divRef = React.useRef();
+  function handleClick() {
+    setAnchorEl(divRef.current);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  const open = Boolean(anchorEl);
 
   const {
     isLoading: isLoadingT,
     isError: isErrorT,
     error: errorT,
     data: members,
-  } = useQuery(["getMembers"], () => UserRequests.getMembers(id));
+  } = useQuery(["getMembers", user.id], () => UserRequests.getMembers(id));
 
   const classes = useStyles();
 
@@ -136,14 +158,61 @@ const TripSelection = () => {
             </Typography>
             <Stack width="80%"></Stack>
 
-            <Stack direction="row" width="15%" justifyContent="flex-end">
-              <Button color="inherit" to={"/signin"} component={Link}>
-                Se connecter
-              </Button>
-              <Button color="inherit" to={"/signup"} component={Link}>
-                S'inscrire
-              </Button>
-            </Stack>
+            <div ref={divRef}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                spacing={1}
+              >
+                <Avatar
+                  {...stringAvatar(user.username)}
+                  onClick={handleClick}
+                  style={{ cursor: "pointer" }}
+                />
+              </Stack>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <Card>
+                  <CardHeader
+                    title={
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="flex-start"
+                        spacing={1}
+                      >
+                        <Avatar {...stringAvatar(user.username)} />
+                        <Typography variant="button" textAlign="center">
+                          {user.username}
+                        </Typography>
+                      </Stack>
+                    }
+                  ></CardHeader>
+                  <CardContent>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => signout()}
+                    >
+                      Se déconnecter
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Popover>
+            </div>
           </Toolbar>
         </AppBar>
       </Box>

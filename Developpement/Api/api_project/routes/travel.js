@@ -743,14 +743,9 @@ module.exports = [
   // },
 
   {
-    url: "/travel/copyTSP",
+    url: "/travel/copy",
     method: "post",
-    func: travel_ctrl.copyTravelStepsPoints,
+    func: travel_ctrl.copyTravel,
   },
 
-  {
-    url: "/travel/copyR",
-    method: "post",
-    func: travel_ctrl.copyTravelRoutes,
-  }
 ];

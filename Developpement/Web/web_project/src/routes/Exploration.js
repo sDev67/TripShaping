@@ -122,9 +122,6 @@ const Exploration = () => {
 
   const [open, setOpen] = useState(false);
 
-  var oldIdTravel = 0;
-  var newIdTravel = 0;
-
   const {
     isLoading: isLoadingT,
     isError: isErrorT,
@@ -140,30 +137,29 @@ const Exploration = () => {
   })
 
   const handleCLickCopyTravel = (travel) => {
-    oldIdTravel = travel.id;
-    copyTravelStepPoints.mutate({ TravelId: travel.id, UserId: user.id })
+    copyTravel.mutate({ TravelId: travel.id, UserId: user.id })
   }
 
-  const copyTravelStepPoints = useMutation(TravelRequests.copyTravelStepsPoints, {
+  const copyTravel = useMutation(TravelRequests.copyTravel, {
     onSuccess: travel => {
-      console.log("tst")
-      newIdTravel = travel.id;
-      copyTravelRoutes.mutate({ OldTravelId: oldIdTravel, NewTravelId: travel.id });
-    }
-  });
-
-  const copyTravelRoutes = useMutation(TravelRequests.copyTravelRoutes, {
-    onSuccess: (_, id) => {
       const newMember = {
         name: user.name,
         userLogin: user.username,
-        TravelId: newIdTravel,
+        TravelId: travel.id,
         UserId: user.id,
       }
 
       addMember.mutate(newMember);
     }
   });
+
+  // const copyTravelRoutes = useMutation(TravelRequests.copyTravelRoutes, {
+  //   onSuccess: (_, id) => {
+  //     console.log("tst")
+  //     newIdTravel = travel.id;
+  //     copyTravelRoutes.mutate({ OldTravelId: oldIdTravel, NewTravelId: travel.id });
+  //   }
+  // });
 
   return (
     <>

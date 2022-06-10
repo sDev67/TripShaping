@@ -16,10 +16,10 @@ import TravelRequests from "../requests/TravelRequests";
 import MemberRequests from "../requests/MemberRequests";
 import { useAuth } from "../Authentication/auth";
 
-const TripForm = ({setTripFormOpen}) => {
+const TripForm = ({ setTripFormOpen }) => {
   const queryClient = useQueryClient();
 
-  let {user} = useAuth();
+  let { user } = useAuth();
 
   const [name, setName] = useState("");
 
@@ -27,33 +27,29 @@ const TripForm = ({setTripFormOpen}) => {
     setName(newName);
   };
 
-const addMember = useMutation(MemberRequests.addMember,{
-  onSuccess: member =>{
-    queryClient.setQueriesData(['getMembers'], members => [...members, member])
-  }
-})
+  const addMember = useMutation(MemberRequests.addMember, {
+    onSuccess: member => {
+      queryClient.setQueriesData(['getMembers', user.id], members => [...members, member])
+    }
+  })
 
   const creationTravel = useMutation(TravelRequests.createTravel, {
-    
-    onSuccess: travel =>
-     {
-      const newMember={
-        name:user.name,
-        userLogin:user.username,
-        TravelId:travel.id,
-        UserId:user.id,
+
+    onSuccess: travel => {
+      const newMember = {
+        name: user.name,
+        userLogin: user.username,
+        TravelId: travel.id,
+        UserId: user.id,
       }
 
       addMember.mutate(newMember);
-       queryClient.setQueryData(
-      ['getTravels'],
-      travels => [...travels, travel]
-    )
-    
-      
-  
+      queryClient.setQueryData(
+        ['getTravels'],
+        travels => [...travels, travel]
+      )
+    }
   }
-}
   );
 
   const handleSubmit = () => {
@@ -86,7 +82,7 @@ const addMember = useMutation(MemberRequests.addMember,{
             variant="contained"
             color="primary"
             startIcon={<DoneRounded />}
-            onClick= {handleSubmit}
+            onClick={handleSubmit}
           >
             Créer
           </Button>

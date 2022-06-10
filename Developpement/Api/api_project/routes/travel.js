@@ -741,4 +741,16 @@ module.exports = [
   // 	method: 'get',
   // 	func: [travel_ctrl.load_by_id, point_ctrl.load_by_id, travel_ctrl.get_all_documents_by_travel_point_id]
   // },
+
+  {
+    url: "/travel/copyTSP",
+    method: "post",
+    func: travel_ctrl.copyTravelStepsPoints,
+  },
+
+  {
+    url: "/travel/copyR",
+    method: "post",
+    func: travel_ctrl.copyTravelRoutes,
+  }
 ];

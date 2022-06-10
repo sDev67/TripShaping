@@ -9,7 +9,6 @@ module.exports = sequelize => {
 			Step.hasMany(db.Point, { onDelete: 'cascade' });
 			Step.hasMany(db.Document, { onDelete: 'cascade' });
 			Step.hasMany(db.Photo, { onDelete: 'cascade' });
-
 		}
 	}
 

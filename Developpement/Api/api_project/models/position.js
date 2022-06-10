@@ -4,6 +4,7 @@ module.exports = sequelize => {
 
     class Position extends Sequelize.Model {
         static associate(db) {
+            Position.belongsTo(db.Member);
             Position.belongsTo(db.Travel);
         }
     }

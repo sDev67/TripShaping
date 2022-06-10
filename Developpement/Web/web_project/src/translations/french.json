@@ -1,7 +1,7 @@
 {
   "appshowcase": {
     "navbar": {
-      "signin": "se connecter",
+      "signin": "connexion",
       "signup": "s'inscrire"
     },
     "page1": {

@@ -14,11 +14,11 @@ import {
   Box,
   Drawer,
   Divider,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-  Container,
+  Popover,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
   Grid,
   Paper,
 } from "@mui/material";
@@ -129,7 +129,19 @@ const NavigationBar = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
-  let { user } = useAuth();
+  let { user, signout } = useAuth();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const divRef = React.useRef();
+  function handleClick() {
+    setAnchorEl(divRef.current);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  const openPopover = Boolean(anchorEl);
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -187,17 +199,60 @@ const NavigationBar = () => {
               >
                 {value}
               </Typography>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
-                spacing={1}
-              >
-                <Typography variant="button" textAlign="center">
-                  {user.username}
-                </Typography>
-                <Avatar {...stringAvatar(user.username)} />
-              </Stack>
+              <div ref={divRef}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="center"
+                  spacing={1}
+                >
+                  <Avatar
+                    {...stringAvatar(user.username)}
+                    onClick={handleClick}
+                    style={{ cursor: "pointer" }}
+                  />
+                </Stack>
+                <Popover
+                  open={openPopover}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <Card>
+                    <CardHeader
+                      title={
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="flex-start"
+                          spacing={1}
+                        >
+                          <Avatar {...stringAvatar(user.username)} />
+                          <Typography variant="button" textAlign="center">
+                            {user.username}
+                          </Typography>
+                        </Stack>
+                      }
+                    ></CardHeader>
+                    <CardContent>
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => signout()}
+                      >
+                        Se déconnecter
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Popover>
+              </div>
             </Toolbar>
           </AppBar>
         </Box>

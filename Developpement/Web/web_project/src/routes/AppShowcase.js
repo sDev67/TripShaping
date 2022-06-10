@@ -10,7 +10,7 @@ import {
   Tabs,
   Typography,
   Avatar,
-  IconButton,
+  Popover,
   AppBar,
   Toolbar,
   Box,
@@ -36,6 +36,7 @@ import TravelRequests from "../requests/TravelRequests";
 import Loading from "../utils/Loading";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Translation, changeLocale } from "@psyycker/react-translation";
+import { useAuth } from "../Authentication/auth";
 
 const drawerWidth = 170;
 
@@ -132,6 +133,20 @@ const useStyles = makeStyles((theme) => ({
 const AppShowcase = () => {
   const navigate = useNavigate();
 
+  let { user, signout } = useAuth();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const divRef = React.useRef();
+  function handleClick() {
+    setAnchorEl(divRef.current);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  const openPopover = Boolean(anchorEl);
+
   const classes = useStyles();
 
   const [language, setLanguage] = useState("fr");
@@ -175,13 +190,72 @@ const AppShowcase = () => {
                   <MenuItem value="en">🇬🇧</MenuItem>
                 </Select>
               </FormControl>
-              <Button color="inherit" to={"/signin"} component={Link}>
-                <Translation translationKey="appshowcase.navbar.signin" />
-              </Button>
-              <Button color="inherit" to={"/signup"} component={Link}>
-                <Translation translationKey="appshowcase.navbar.signup" />
-              </Button>
             </Stack>
+            {user ? (
+              <div ref={divRef}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="center"
+                  spacing={1}
+                >
+                  <Avatar
+                    {...stringAvatar(user.username)}
+                    onClick={handleClick}
+                    style={{ cursor: "pointer" }}
+                  />
+                </Stack>
+                <Popover
+                  open={openPopover}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <Card>
+                    <CardHeader
+                      title={
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="flex-start"
+                          spacing={1}
+                        >
+                          <Avatar {...stringAvatar(user.username)} />
+                          <Typography variant="button" textAlign="center">
+                            {user.username}
+                          </Typography>
+                        </Stack>
+                      }
+                    ></CardHeader>
+                    <CardContent>
+                      <Button
+                        color="error"
+                        variant="contained"
+                        onClick={() => signout()}
+                      >
+                        Se déconnecter
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Popover>
+              </div>
+            ) : (
+              <>
+                <Button color="inherit" to={"/signin"} component={Link}>
+                  <Translation translationKey="appshowcase.navbar.signin" />
+                </Button>
+                <Button color="inherit" to={"/signup"} component={Link}>
+                  <Translation translationKey="appshowcase.navbar.signup" />
+                </Button>
+              </>
+            )}
           </Toolbar>
         </AppBar>
       </Box>

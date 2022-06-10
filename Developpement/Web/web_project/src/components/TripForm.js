@@ -3,6 +3,7 @@ import {
   tabsListUnstyledClasses,
   TextField,
   Typography,
+  Checkbox
 } from "@mui/material";
 import { Stack, Box, Chip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -72,7 +73,7 @@ const TripForm = ({ setTripFormOpen }) => {
           Nouveau voyage
         </Typography>
 
-        <Stack direction="row" width="100%" spacing={1}>
+        <Stack direction="column" width="100%" spacing={1}>
           <TextField
             id="standard-required"
             label="Nom"
@@ -87,6 +88,14 @@ const TripForm = ({ setTripFormOpen }) => {
             Créer
           </Button>
         </Stack>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<DoneRounded />}
+          onClick={handleSubmit}
+        >
+          Créer
+        </Button>
       </Stack>
     </>
   );

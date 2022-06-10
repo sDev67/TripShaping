@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 
 import {
+
   Stack,
-  AccordionDetails,
-  AccordionSummary,
-  Accordion,
   Typography,
-  Divider,
-  Box,
+
 } from "@mui/material";
 
 import Loading from "../utils/Loading";
 import TravelRequests from "../requests/TravelRequests";
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import StepList from "../components/StepList";
 import StepTimeline from "../components/StepTimeline";

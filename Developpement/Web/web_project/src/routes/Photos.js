@@ -8,7 +8,7 @@ import {
   ImageListItem,
   ImageListItemBar,
 } from "@mui/material";
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import TravelRequests from "./../requests/TravelRequests";

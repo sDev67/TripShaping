@@ -619,7 +619,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   onDragEnd={updateStepLocation(step)}
                   icon={
                     selectedMarker?.marker.id == step.id &&
-                    selectedMarker?.type == "Step"
+                      selectedMarker?.type == "Step"
                       ? selectedStepIcon
                       : stepIcon
                   }

@@ -6,13 +6,8 @@ import { useEffect, useState } from "react";
 const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
   const [currentTitle, setCurrentTitle] = useState("");
 
-  //   useEffect(() => {
-  //     if (label.title !== undefined) {
-  //       setCurrentTitle(label.title);
-  //     }
-  //   }, [label]);
-
   const handleClick = () => {
+
     if (label != undefined) {
       updateLabel({ title: currentTitle, labelId: label.id });
     }

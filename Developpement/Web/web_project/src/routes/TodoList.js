@@ -32,7 +32,6 @@ const TodoList = () => {
   const [taskToAdd, OnSelectTaskToAddLabel] = useState();
 
   const [filterLabels, setFilterLabels] = useState([]);
-  const [filteredTask, setFilteredTask] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState({});
 
   const {
@@ -177,6 +176,7 @@ const TodoList = () => {
 
     addTask.mutate(newTask);
   };
+
 
   const OnRemoveTask = (task) => {
     removeTask.mutate(task.id);

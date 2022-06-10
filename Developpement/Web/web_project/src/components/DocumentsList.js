@@ -26,7 +26,9 @@ const DocumentsList = ({
   const queryClient = useQueryClient();
 
   const displayDocument = (idDocument) => {
-    let url = encodeURI(url_prefix + "/document/file/" + idDocument);
+    let url = encodeURI(
+      url_prefix + "/document/file/" + idDocument
+    );
     window.open(url);
   };
 

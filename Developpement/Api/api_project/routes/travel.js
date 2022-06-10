@@ -18,18 +18,21 @@ module.exports = [
    *          picture:
    *            type: string
    *            description: Image du voyage
-   *          activated:
-   *            type: boolean
-   *            description: Indique l'état d'activité du voyage
-   *          budget:
+   *          status:
    *            type: integer
-   *            description: Total budget pour le voyage
+   *            description: Indique l'état d'activité du voyage
    *          infos:
    *            type: string
    *            description: Description indiqué lors du voyage
-   *          finished:
+   *          toPublish:
    *            type: boolean
-   *            description: Indique si le voyage est fini
+   *            description: Indique si le voyage est publique ou non
+   *          positionAgree:
+   *            type: boolean
+   *            description: Indique si on autorise la suivie de notre position
+   *          startDate: 
+   *            type: date
+   *            description: Date de début du voyage
    *          createdAt:
    *            type: string
    *            description: Date de création du voyage
@@ -40,11 +43,12 @@ module.exports = [
    *       example:
    *         id: 5
    *         name: Visite Asie centrale.
-   *         picture:
-   *         activated: true
-   *         budget: 2000
-   *         infos:
-   *         finished: false
+   *         picture: null
+   *         status: 0
+   *         infos: null
+   *         toPublish: true
+   *         positionAgree: true
+   *         startDate: 25/06/2022
    *         createdAt: 2022-03-17T15:17:42.282Z
    *         updateAt: 2022-03-17T15:17:42.282Z
    *
@@ -68,49 +72,53 @@ module.exports = [
    *               properties:
    *                 id:
    *                   type: integer
-   *                   description: Id du voyage.
+   *                   description: Id du voyage
    *                   example: 5
    *                 name:
    *                   type: string
-   *                   description: Nom du voyage.
-   *                   example: Tournée Asie centrale.
+   *                   description: Nom du voyage
+   *                   example: Tournée Asie centrale
    *                 picture:
    *                   type: string
-   *                   description: Image du voyage.
-   *                   example:
-   *                 activated:
-   *                   type: boolean
-   *                   description: Indique si le voyage est actif.
-   *                   example: true
-   *                 budget:
+   *                   description: Image du voyage
+   *                   example: null
+   *                 status:
    *                   type: integer
-   *                   description: Budget du voyage.
-   *                   example: 2000
+   *                   description: Indique l'état d'activité du voyage
+   *                   example: 0
    *                 infos:
    *                   type: string
-   *                   description: Description d'un voyage.
-   *                   example: Excellent voyage.
-   *                 finished:
+   *                   description: Description d'un voyage
+   *                   example: null
+   *                 toPublish:
    *                   type: boolean
-   *                   description: Indique si le voyage est fini.
-   *                   example: false
+   *                   description: Indique si le voyage est publique ou non
+   *                   example: true
+   *                 positionAgree:
+   *                   type: boolean
+   *                   description: Indique si on autorise la suivie de notre position
+   *                   example: true
+   *                 startDate: 
+   *                   type: date
+   *                   description: Date de début du voyage
+   *                   example: null
    *                 createdAt:
    *                   type: string
-   *                   description: Date de création du voyage.
+   *                   description: Date de création du voyage
    *                   example: 2022-03-17T15:17:42.282Z
    *                 updateAt:
    *                   type: string
-   *                   description: Date de modification du voyage.
+   *                   description: Date de modification du voyage
    *                   example: 2022-03-17T15:17:42.282Z
+   *                 UserId:
+   *                   type: integer
+   *                   description: Id de l'utilisateur ayant crée le voyage
+   *                   example: 2
+   *                 
+   *                
    *
    *
    */
-
-  {
-    url: "/travel",
-    method: "get",
-    func: travel_ctrl.get_all,
-  },
 
   /**
    * @swagger
@@ -186,16 +194,71 @@ module.exports = [
    *
    */
 
-  {
-    url: "/travelpublished",
-    method: "get",
-    func: travel_ctrl.get_published,
-  },
-  {
-    url: "/travel",
-    method: "post",
-    func: travel_ctrl.create,
-  },
+  /**
+   * @swagger
+   * /travelpublished:
+   *   get:
+   *     tags:
+   *     - Travel
+   *     summary: Retourne tout les voyages actifs.
+   *     description: Retourne tout les voyages actifs.
+   *     responses:
+   *       200:
+   *         description: Retourne tout les voyages publique.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: integer
+   *                   description: Id du voyage
+   *                   example: 5
+   *                 name:
+   *                   type: string
+   *                   description: Nom du voyage
+   *                   example: Tournée Asie centrale
+   *                 picture:
+   *                   type: string
+   *                   description: Image du voyage
+   *                   example: null
+   *                 status:
+   *                   type: integer
+   *                   description: Indique l'état d'activité du voyage
+   *                   example: 2
+   *                 infos:
+   *                   type: string
+   *                   description: Description d'un voyage
+   *                   example: null
+   *                 toPublish:
+   *                   type: boolean
+   *                   description: Indique si le voyage est publique ou non
+   *                   example: true
+   *                 positionAgree:
+   *                   type: boolean
+   *                   description: Indique si on autorise la suivie de notre position
+   *                   example: true
+   *                 startDate: 
+   *                   type: date
+   *                   description: Date de début du voyage
+   *                   example: null
+   *                 createdAt:
+   *                   type: string
+   *                   description: Date de création du voyage
+   *                   example: 2022-03-17T15:17:42.282Z
+   *                 updateAt:
+   *                   type: string
+   *                   description: Date de modification du voyage
+   *                   example: 2022-03-17T15:17:42.282Z
+   *                 UserId:
+   *                   type: integer
+   *                   description: Id de l'utilisateur ayant crée le voyage
+   *                   example: 2
+   *                 
+   *                
+   *
+   *
+   */
 
   /**
    * @swagger
@@ -223,32 +286,36 @@ module.exports = [
    *               properties:
    *                 id:
    *                   type: integer
-   *                   description: Id du voyage.
-   *                   example: 52
+   *                   description: Id du voyage
+   *                   example: 5
    *                 name:
    *                   type: string
    *                   description: Nom du voyage
-   *                   example: Vacance 2022
+   *                   example: Tournée Asie centrale
    *                 picture:
    *                   type: string
    *                   description: Image du voyage
-   *                   example:
-   *                 activated:
-   *                   type: boolean
-   *                   description: Indique si le voyage est actif
-   *                   example: true
-   *                 budget:
+   *                   example: null
+   *                 status:
    *                   type: integer
-   *                   description: Budget du voyage
-   *                   example: 3580
+   *                   description: Indique l'état d'activité du voyage
+   *                   example: 2
    *                 infos:
    *                   type: string
-   *                   description: Description du voyage
-   *                   example:
-   *                 finished:
+   *                   description: Description d'un voyage
+   *                   example: null
+   *                 toPublish:
    *                   type: boolean
-   *                   description: Indique si le voyage est fini
-   *                   example: false
+   *                   description: Indique si le voyage est publique ou non
+   *                   example: true
+   *                 positionAgree:
+   *                   type: boolean
+   *                   description: Indique si on autorise la suivie de notre position
+   *                   example: true
+   *                 startDate: 
+   *                   type: date
+   *                   description: Date de début du voyage
+   *                   example: null
    *                 createdAt:
    *                   type: string
    *                   description: Date de création du voyage
@@ -257,16 +324,12 @@ module.exports = [
    *                   type: string
    *                   description: Date de modification du voyage
    *                   example: 2022-03-17T15:17:42.282Z
-   *
-   *
+   *                 UserId:
+   *                   type: integer
+   *                   description: Id de l'utilisateur ayant crée le voyage
+   *                   example: 2
    *
    */
-
-  {
-    url: "/travel/:travel_id",
-    method: "get",
-    func: travel_ctrl.get_by_id,
-  },
 
   /**
    * @swagger
@@ -294,50 +357,52 @@ module.exports = [
    *               properties:
    *                 id:
    *                   type: integer
-   *                   description: Id du point d'intérêt.
+   *                   description: Id du point d'intérêt
    *                   example: 33
    *                 title:
    *                   type: string
-   *                   description: Titre du point d'intérêt.
+   *                   description: Titre du point d'intérêt
    *                   example: Arc de Triomphe
    *                 latitude:
    *                   type: number
    *                   format: float
-   *                   description: Latitude du point d'intérêt.
+   *                   description: Latitude du point d'intérêt
    *                   example: 48.87382848822226
    *                 longitude:
    *                   type: number
    *                   format: float
-   *                   description: Longitude du point d'intérêt.
+   *                   description: Longitude du point d'intérêt
    *                   example: 2.2950540054083306
    *                 description:
    *                   type: string
-   *                   description: Description du point d'intérêt.
-   *                   example: Arc de triomphe emblématique érigé pour commémorer les victoires de Napoléon, avec plateforme d'observation.
+   *                   description: Description du point d'intérêt
+   *                   example: null
    *                 category:
    *                   type: string
-   *                   description: Catégorie du point d'intérêt.
+   *                   description: Catégorie du point d'intérêt
    *                   example: Monument historique
+   *                 day:
+   *                   type: integer
+   *                   description: Correspond au numéro du jour d'étape associé
+   *                   example: 3
    *                 createdAt:
    *                   type: string
-   *                   description: Date de création du point d'intérêt.
+   *                   description: Date de création du point d'intérêt
    *                   example: 2022-03-17T15:17:42.282Z
    *                 updateAt:
    *                   type: string
-   *                   description: Date de modification du point d'intérêt.
+   *                   description: Date de modification du point d'intérêt
    *                   example: 2022-03-17T15:17:42.282Z
    *                 TravelId:
    *                   type: integer
-   *                   description: Id du voyage passé en paramètre.
+   *                   description: Id du voyage
    *                   example: 1
+   *                 StepId:
+   *                   type: integer
+   *                   description: Id du point d'étape
+   *                   example: 8
    *
    */
-
-  {
-    url: "/travel/:travel_id/points",
-    method: "get",
-    func: travel_ctrl.get_points_of_travel,
-  },
 
   /**
    * @swagger
@@ -365,197 +430,51 @@ module.exports = [
    *               properties:
    *                 id:
    *                   type: integer
-   *                   description: Id du point.
+   *                   description: Id du point
    *                   example: 1
    *                 title:
    *                   type: string
-   *                   description: Titre du point.
+   *                   description: Titre du point
    *                   example: Strasbourg
    *                 description:
    *                   type: string
-   *                   description: Description du point.
-   *                   example: Capitale de l'Alsace
+   *                   description: Description du point
+   *                   example: null
    *                 latitude:
    *                   type: number
    *                   format: float
-   *                   description: Latitude du point.
+   *                   description: Latitude du point
    *                   example: 48.58216674328555
    *                 longitude:
    *                   type: number
    *                   format: float
-   *                   description: Longitude du point.
+   *                   description: Longitude du point
    *                   example: 7.742935804417188
+   *                 duration:
+   *                   type: integer
+   *                   description: Nombre de jour du point d'étape
+   *                   example: 3
    *                 category:
    *                   type: string
-   *                   description: Catégorie du point.
+   *                   description: Catégorie du point
    *                   example: Hôtel
    *                 createdAt:
    *                   type: string
-   *                   description: Date de création du point.
+   *                   description: Date de création du point
    *                   example: 2022-03-17T15:17:42.282Z
    *                 updateAt:
    *                   type: string
-   *                   description: Date de modification du point.
+   *                   description: Date de modification du point
    *                   example: 2022-03-17T15:17:42.282Z
    *                 TravelId:
    *                   type: integer
-   *                   description: Id du voyage passé en paramètre.
-   *                   example: 1
+   *                   description: Id du voyage
+   *                   example: 2
    *       404:
    *         description: L'id que vous avez passé n'existe pas. Voyage non trouvé.
    *
    *
    */
-
-  {
-    url: "/travel/:travel_id/steps",
-    method: "get",
-    func: travel_ctrl.get_steps_of_travel,
-  },
-  {
-    url: "/travel_preparation",
-    method: "get",
-    func: travel_ctrl.get_in_preparation_travel,
-  },
-  {
-    url: "/travel_current",
-    method: "get",
-    func: travel_ctrl.get_current_travel,
-  },
-  {
-    url: "/travel_finish",
-    method: "get",
-    func: travel_ctrl.get_finish_travel,
-  },
-
-  /**
-   * @swagger
-   * /travel/{travel_id}:
-   *   put:
-   *     tags:
-   *     - Travel
-   *     summary: Update voyage infos.
-   *     description: Met à jour les infos d'un voyage dont l'id est passé en paramètre.
-   *     parameters:
-   *      - in: path
-   *        name: travel_id
-   *        example: 4
-   *        required: true
-   *        schema:
-   *          type: integer
-   *
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               name:
-   *                 type: string
-   *                 description: Nom du nouveau voyage
-   *                 example: Vacance 2022
-   *               picture:
-   *                 type: string
-   *                 description: Image du voyage
-   *                 example:
-   *               activated:
-   *                 type: boolean
-   *                 description: Indique si le voyage est actif
-   *                 example: true
-   *               budget:
-   *                 type: integer
-   *                 description: Budget du voyage
-   *                 example: 3580
-   *               infos:
-   *                 type: string
-   *                 description: Description du voyage
-   *                 example:
-   *               finished:
-   *                 type: boolean
-   *                 description: Indique si le voyage est fini
-   *                 example: false
-   *
-   *     responses:
-   *       200:
-   *         description: Retourne les infos du voyage après modification.
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 id:
-   *                   type: integer
-   *                   description: Id du point.
-   *                   example: 6
-   *                 name:
-   *                   type: string
-   *                   description: Nom du voyage
-   *                   example: Vacance 2022
-   *                 picture:
-   *                   type: string
-   *                   description: Image du voyage
-   *                   example:
-   *                 activated:
-   *                   type: boolean
-   *                   description: Indique si le voyage est actif
-   *                   example: true
-   *                 budget:
-   *                   type: integer
-   *                   description: Budget du voyage
-   *                   example: 3580
-   *                 infos:
-   *                   type: string
-   *                   description: Description du voyage
-   *                   example:
-   *                 finished:
-   *                   type: boolean
-   *                   description: Indique si le voyage est fini
-   *                   example: false
-   *                 createdAt:
-   *                   type: string
-   *                   description: Date de création du voyage
-   *                   example: 2022-03-17T15:17:42.282Z
-   *                 updateAt:
-   *                   type: string
-   *                   description: Date de modification du voyage
-   *                   example: 2022-03-17T15:17:42.282Z
-   *
-   *
-   */
-
-  {
-    url: "/travel/:travel_id",
-    method: "put",
-    func: travel_ctrl.update_by_id,
-  },
-
-  /**
-   * @swagger
-   * /travel/{travel_id}:
-   *   delete:
-   *     tags:
-   *     - Travel
-   *     summary: Supprime un voyage.
-   *     description: Supprime un voyage dont l'id est passé en paramètre.
-   *     parameters:
-   *      - in: path
-   *        name: travel_id
-   *        example: 5
-   *        required: true
-   *        schema:
-   *          type: integer
-   *
-   *     responses:
-   *       200:
-   *         description: Voyage supprimé avec succès.
-   *
-   */
-  {
-    url: "/travel/:travel_id",
-    method: "delete",
-    func: travel_ctrl.delete_by_id,
-  },
 
   /**
    * @swagger
@@ -615,21 +534,134 @@ module.exports = [
    *
    */
 
-  {
-    url: "/travel/:travel_id/tasks",
-    method: "get",
-    func: travel_ctrl.get_tasks_of_travel,
-  },
-  {
-    url: "/travel/:travel_id/labels",
-    method: "get",
-    func: travel_ctrl.get_labels_of_travel,
-  },
-  {
-    url: "/travel/:travel_id/routes",
-    method: "get",
-    func: travel_ctrl.get_routes_of_travel,
-  },
+  /**
+   * @swagger
+   * /travel/{travel_id}:
+   *   put:
+   *     tags:
+   *     - Travel
+   *     summary: Update voyage infos.
+   *     description: Met à jour les infos d'un voyage dont l'id est passé en paramètre.
+   *     parameters:
+   *      - in: path
+   *        name: travel_id
+   *        example: 4
+   *        required: true
+   *        schema:
+   *          type: integer
+   *
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               name:
+   *                 type: string
+   *                 description: Nom du voyage
+   *                 example: Tournée Asie centrale
+   *               picture:
+   *                 type: string
+   *                 description: Image du voyage
+   *                 example: null
+   *               status:
+   *                 type: integer
+   *                 description: Indique l'état d'activité du voyage
+   *                 example: 2
+   *               infos:
+   *                 type: string
+   *                 description: Description d'un voyage
+   *                 example: null
+   *               toPublish:
+   *                 type: boolean
+   *                 description: Indique si le voyage est publique ou non
+   *                 example: true
+   *               positionAgree:
+   *                 type: boolean
+   *                 description: Indique si on autorise la suivie de notre position
+   *                 example: true
+   *               startDate: 
+   *                 type: date
+   *                 description: Date de début du voyage
+   *                 example: null
+   *               
+   *
+   *     responses:
+   *       200:
+   *         description: Retourne les infos du voyage après modification.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: integer
+   *                   description: Id du voyage
+   *                   example: 5
+   *                 name:
+   *                   type: string
+   *                   description: Nom du voyage
+   *                   example: Tournée Asie centrale
+   *                 picture:
+   *                   type: string
+   *                   description: Image du voyage
+   *                   example: null
+   *                 status:
+   *                   type: integer
+   *                   description: Indique l'état d'activité du voyage
+   *                   example: 0
+   *                 infos:
+   *                   type: string
+   *                   description: Description d'un voyage
+   *                   example: null
+   *                 toPublish:
+   *                   type: boolean
+   *                   description: Indique si le voyage est publique ou non
+   *                   example: true
+   *                 positionAgree:
+   *                   type: boolean
+   *                   description: Indique si on autorise la suivie de notre position
+   *                   example: true
+   *                 startDate: 
+   *                   type: date
+   *                   description: Date de début du voyage
+   *                   example: null
+   *                 createdAt:
+   *                   type: string
+   *                   description: Date de création du voyage
+   *                   example: 2022-03-17T15:17:42.282Z
+   *                 updateAt:
+   *                   type: string
+   *                   description: Date de modification du voyage
+   *                   example: 2022-03-17T15:17:42.282Z
+   *                 UserId:
+   *                   type: integer
+   *                   description: Id de l'utilisateur ayant crée le voyage
+   *                   example: 2
+   */
+
+  /**
+   * @swagger
+   * /travel/{travel_id}:
+   *   delete:
+   *     tags:
+   *     - Travel
+   *     summary: Supprime un voyage.
+   *     description: Supprime un voyage dont l'id est passé en paramètre.
+   *     parameters:
+   *      - in: path
+   *        name: travel_id
+   *        example: 5
+   *        required: true
+   *        schema:
+   *          type: integer
+   *
+   *     responses:
+   *       200:
+   *         description: Voyage supprimé avec succès.
+   *
+   */
 
   /**
    * @swagger
@@ -657,37 +689,398 @@ module.exports = [
    *               properties:
    *                 id:
    *                   type: integer
-   *                   description: Id du membre.
+   *                   description: Id du membre
    *                   example: 5
-   *                 lastname:
+   *                 name:
    *                   type: string
-   *                   description: Nom du membre.
-   *                   example: Deveci
-   *                 firstname:
-   *                   type: string
-   *                   description: Prénom du membre.
+   *                   description: Nom du membre
    *                   example: Serkan
-   *                 fictive:
+   *                 userLogin:
    *                   type: string
-   *                   description: Indique si le membre est fictif ou non.
-   *                   example: false
+   *                   description: Nom d'utilisateur
+   *                   example: Sdev
    *                 createdAt:
    *                   type: string
-   *                   description: Date de création du point.
+   *                   description: Date de création du point
    *                   example: 2022-03-17T15:17:42.282Z
    *                 updateAt:
    *                   type: string
-   *                   description: Date de modification du point.
+   *                   description: Date de modification du point
    *                   example: 2022-03-17T15:17:42.282Z
    *                 TravelId:
    *                   type: integer
-   *                   description: Id du voyage passé en paramètre.
+   *                   description: Id du voyage
+   *                   example: 1
+   *                 UserId:
+   *                   type: integer
+   *                   description: Id de l'utilisateur
    *                   example: 1
    *       404:
    *         description: L'id que vous avez passé n'existe pas. Voyage non trouvé.
    *
    *
    */
+
+  /**
+   * @swagger
+   * /travel/{travel_id}/tasks:
+   *   get:
+   *     tags:
+   *     - Travel
+   *     summary: Retourne toutes les tâches d'un voyage.
+   *     description: Retourne toutes les tâches d'un voyage.
+   *     parameters:
+   *      - in: path
+   *        name: travel_id
+   *        example: 1
+   *        required: true
+   *        schema:
+   *          type: integer
+   *
+   *     responses:
+   *       200:
+   *         description: Retourne toutes les tâches d'un voyage.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: integer
+   *                   description: Id de la tâche
+   *                   example: 2
+   *                 title:
+   *                   type: string
+   *                   description: Titre de la tâche 
+   *                   example: Préparer les rations pour le voyage
+   *                 date:
+   *                   type: string
+   *                   description: Date associé à la tâche
+   *                   example: 2022-05-18
+   *                 createdAt:
+   *                   type: string
+   *                   description: Date de création de la tâche
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 updateAt:
+   *                   type: string
+   *                   description: Date de modification de la tâche
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 TravelId:
+   *                   type: integer
+   *                   description: Id du voyage
+   *                   example: 1
+   *
+   */
+
+  /**
+   * @swagger
+   * /travel/{travel_id}/labels:
+   *   get:
+   *     tags:
+   *     - Travel
+   *     summary: Retourne toutes les labels d'un voyage.
+   *     description: Retourne toutes les labels d'un voyage.
+   *     parameters:
+   *      - in: path
+   *        name: travel_id
+   *        example: 1
+   *        required: true
+   *        schema:
+   *          type: integer
+   *
+   *     responses:
+   *       200:
+   *         description: Retourne toutes les labels d'un voyage.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: integer
+   *                   description: Id du label
+   *                   example: 2
+   *                 title:
+   *                   type: string
+   *                   description: Titre du label 
+   *                   example: Préparer les rations pour le voyage
+   *                 createdAt:
+   *                   type: string
+   *                   description: Date de création du label
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 updateAt:
+   *                   type: string
+   *                   description: Date de modification du label
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 TravelId:
+   *                   type: integer
+   *                   description: Id du voyage
+   *                   example: 1
+   *
+   */
+
+  /**
+   * @swagger
+   * /travel/{travel_id}/journalEntries:
+   *   get:
+   *     tags:
+   *     - Travel
+   *     summary: Retourne les entrées du journal d'un voyage.
+   *     description: Retourne les entrées du journal d'un voyage.
+   *     parameters:
+   *      - in: path
+   *        name: travel_id
+   *        example: 1
+   *        required: true
+   *        schema:
+   *          type: integer
+   *
+   *     responses:
+   *       200:
+   *         description: Retourne les entrées du journal d'un voyage.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: integer
+   *                   description: Id de l'entrée du journal
+   *                   example: 2
+   *                 date:
+   *                   type: string
+   *                   description: Date de l'entrée du journal 
+   *                   example: 12/05/2022 15:18
+   *                 text:
+   *                   type: string
+   *                   description: Text de l'entrée du journal 
+   *                   example: Woah c'est vraiment beau ici !
+   *                 createdAt:
+   *                   type: string
+   *                   description: Date de création de l'entrée du journal
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 updateAt:
+   *                   type: string
+   *                   description: Date de modification de l'entrée du journal
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 TravelId:
+   *                   type: integer
+   *                   description: Id du voyage
+   *                   example: 1
+   *                 MemberId:
+   *                   type: integer
+   *                   description: Id du membre
+   *                   example: 1
+   *                 StepId:
+   *                   type: integer
+   *                   description: Id du point d'étape
+   *                   example: 1 
+   *                 PointId:
+   *                   type: integer
+   *                   description: Id du point d'intérêt
+   *                   example: 1 
+   *
+   */
+
+  /**
+   * @swagger
+   * /travel/{travel_id}/documents:
+   *   get:
+   *     tags:
+   *     - Travel
+   *     summary: Retourne tous les documents d'un voyage.
+   *     description: Retourne tous les documents d'un voyage.
+   *     parameters:
+   *      - in: path
+   *        name: travel_id
+   *        example: 1
+   *        required: true
+   *        schema:
+   *          type: integer
+   *
+   *     responses:
+   *       200:
+   *         description: Retourne tous les documents d'un voyage.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: integer
+   *                   description: Id du document
+   *                   example: 2
+   *                 title:
+   *                   type: string
+   *                   description: titre du document 
+   *                   example: monument.png
+   *                 typeFile:
+   *                   type: string
+   *                   description: Type du document 
+   *                   example: image/png
+   *                 createdAt:
+   *                   type: string
+   *                   description: Date de création du document
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 updateAt:
+   *                   type: string
+   *                   description: Date de modification du document
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 StepId:
+   *                   type: integer
+   *                   description: Id du point d'étape
+   *                   example: null
+   *                 TravelId:
+   *                   type: integer
+   *                   description: Id du voyage
+   *                   example: 2
+   *                 RouteId:
+   *                   type: integer
+   *                   description: Id de la route
+   *                   example: null
+   *                 PointId:
+   *                   type: integer
+   *                   description: Id du point d'intérêt
+   *                   example: null
+   *       404:
+   *         description: L'id que vous avez passé n'existe pas. Voyage non trouvé.
+   *
+   *
+   *
+   */
+
+  /**
+   * @swagger
+   * /travel/{travel_id}/photos:
+   *   get:
+   *     tags:
+   *     - Travel
+   *     summary: Retourne les photos prises par le mobile.
+   *     description: Retourne les photos prises par le mobile.
+   *     parameters:
+   *      - in: path
+   *        name: travel_id
+   *        example: 1
+   *        required: true
+   *        schema:
+   *          type: integer
+   *
+   *     responses:
+   *       200:
+   *         description: Retourne les photos prises par le mobile.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 id:
+   *                   type: integer
+   *                   description: Id de la  photo
+   *                   example: 2
+   *                 dataFile:
+   *                   type: object
+   *                   properties:
+   *                     type: 
+   *                        type: string
+   *                     data: 
+   *                        type: array   
+   *                        items:
+   *                          type: integer
+   *                          example: 1   
+   *                 date:
+   *                   type: string
+   *                   description: Date de prise de la photo 
+   *                   example: 26/05/2022 15:30
+   *                 latitude:
+   *                   type: number
+   *                   format: float
+   *                   description: Latitude de la photo
+   *                   example: 48.87382848822226
+   *                 longitude:
+   *                   type: number
+   *                   format: float
+   *                   description: Longitude de la photo
+   *                   example: 2.2950540054083306
+   *                 createdAt:
+   *                   type: string
+   *                   description: Date de création de la photo
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 updateAt:
+   *                   type: string
+   *                   description: Date de modification de la photo
+   *                   example: 2022-05-24T18:25:09.730Z
+   *                 StepId:
+   *                   type: integer
+   *                   description: Id du point d'étape
+   *                   example: null
+   *                 TravelId:
+   *                   type: integer
+   *                   description: Id du voyage
+   *                   example: 2
+   *                 RouteId:
+   *                   type: integer
+   *                   description: Id de la route
+   *                   example: null
+   *                 PointId:
+   *                   type: integer
+   *                   description: Id du point d'intérêt
+   *                   example: null
+   *       404:
+   *         description: L'id que vous avez passé n'existe pas. Voyage non trouvé.
+   *
+   *
+   *
+   */
+
+  {
+    url: "/travel",
+    method: "get",
+    func: travel_ctrl.get_all,
+  },
+  {
+    url: "/travel",
+    method: "post",
+    func: travel_ctrl.create,
+  },
+  {
+    url: "/travelpublished",
+    method: "get",
+    func: travel_ctrl.get_published,
+  },
+  {
+    url: "/travel/:travel_id",
+    method: "get",
+    func: travel_ctrl.get_by_id,
+  },
+  {
+    url: "/travel/:travel_id/points",
+    method: "get",
+    func: travel_ctrl.get_points_of_travel,
+  },
+
+  {
+    url: "/travel/:travel_id/steps",
+    method: "get",
+    func: travel_ctrl.get_steps_of_travel,
+  },
+
+  {
+    url: "/travel/:travel_id/routes",
+    method: "get",
+    func: travel_ctrl.get_routes_of_travel,
+  },
+
+  {
+    url: "/travel/:travel_id",
+    method: "put",
+    func: travel_ctrl.update_by_id,
+  },
+
+  {
+    url: "/travel/:travel_id",
+    method: "delete",
+    func: travel_ctrl.delete_by_id,
+  },
   {
     url: "/travel/:travel_id/tasks",
     method: "get",
@@ -698,11 +1091,7 @@ module.exports = [
     method: "get",
     func: travel_ctrl.get_labels_of_travel,
   },
-  {
-    url: "/travel/:travel_id/routes",
-    method: "get",
-    func: travel_ctrl.get_routes_of_travel,
-  },
+
   {
     url: "/travel/:travel_id/journalEntries",
     method: "get",
@@ -726,22 +1115,32 @@ module.exports = [
   },
 
   {
-    url: "/travel/:travel_id/journal_entries",
-    method: "get",
-    func: travel_ctrl.get_all_journal_entries_by_travel_id,
-  },
-
-  {
     url: "/travel/:travel_id/photos",
     method: "get",
     func: travel_ctrl.get_all_photos_by_travel_id,
   },
-  // {
-  // 	url: '/travel/:travel_id/point/:point_id/documents',
-  // 	method: 'get',
-  // 	func: [travel_ctrl.load_by_id, point_ctrl.load_by_id, travel_ctrl.get_all_documents_by_travel_point_id]
-  // },
 
+  /* new route a swagger */
+  {
+    url: "/travel_preparation",
+    method: "get",
+    func: travel_ctrl.get_in_preparation_travel,
+  },
+  {
+    url: "/travel_current",
+    method: "get",
+    func: travel_ctrl.get_current_travel,
+  },
+  {
+    url: "/travel_finish",
+    method: "get",
+    func: travel_ctrl.get_finish_travel,
+  },
+  {
+    url: "/travel/:travel_id/copy",
+    method: "post",
+    func: travel_ctrl.copyTravel,
+  },
   {
     url: "/travel/copy",
     method: "post",

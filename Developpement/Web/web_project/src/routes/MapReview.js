@@ -33,7 +33,7 @@ const containerStyle = {
   height: "100%",
 };
 
-export const MapReview = ({}) => {
+export const MapReview = ({ }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -473,7 +473,7 @@ export const MapReview = ({}) => {
                   onDragEnd={updateStepLocation(step)}
                   icon={
                     selectedMarker?.marker.id == step.id &&
-                    selectedMarker?.type == "Step"
+                      selectedMarker?.type == "Step"
                       ? selectedStepIcon
                       : stepIcon
                   }
@@ -510,7 +510,7 @@ export const MapReview = ({}) => {
                   onDragEnd={updateInterestPointLocation(interestPoint)}
                   icon={
                     selectedMarker?.marker.id == interestPoint.id &&
-                    selectedMarker?.type == "Point"
+                      selectedMarker?.type == "Point"
                       ? selectedInterestPointIcon
                       : interestPointIcon
                   }

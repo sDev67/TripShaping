@@ -196,7 +196,9 @@ const Signup = () => {
                 Déjà inscrit ? Connectez-vous ici.
               </Typography>
             </Stack>
-            {message && <AlertError message={message}></AlertError>}
+            {message && (
+              <AlertError message={message} severity={"error"}></AlertError>
+            )}
           </Box>
         </Grid>
       </Grid>

@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
       .then((data) => {
         window.localStorage.setItem("token", data.token);
         setUser(data.user);
-        navigate("/mytrips");
+        navigate(-1);
       });
   };
 

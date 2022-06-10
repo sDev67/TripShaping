@@ -42,6 +42,7 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setMessage("");
     signin({ username, password }).catch((err) => {
       setUsername("");
       setPassword("");
@@ -174,7 +175,13 @@ const Signin = () => {
                 Pas de compte ? Inscrivez-vous ici.
               </Typography>
             </Stack>
-            {message && <AlertError message={message}></AlertError>}
+            {message && (
+              <AlertError
+                message={message}
+                setMessage={setMessage}
+                severity={"error"}
+              ></AlertError>
+            )}
           </Box>
         </Grid>
       </Grid>

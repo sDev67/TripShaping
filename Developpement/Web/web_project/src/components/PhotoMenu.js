@@ -28,10 +28,10 @@ const PhotoMenu = ({ setSelectedPhoto, selectedPhoto }) => {
     >
       <ImageListItem>
         <img
-          src={`${image}?w=1000&fit=crop&auto=format`}
-          srcSet={`${image}?w=1000&fit=crop&auto=format&dpr=2 2x`}
-          alt="test"
-          loading="lazy"
+          style={{}}
+          src={`data:image/jpeg;base64,${
+            selectedPhoto.dataFile1 + selectedPhoto.dataFile2
+          }`}
         />
         <ImageListItemBar title={selectedPhoto.date} />
       </ImageListItem>

@@ -45,6 +45,7 @@ import TopicRoundedIcon from "@mui/icons-material/TopicRounded";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
 import { useAuth } from "../Authentication/auth";
 import Loading from "../utils/Loading";
+import ProfileBubble from "./ProfileBubble";
 
 const drawerWidth = 170;
 
@@ -201,60 +202,7 @@ const NavigationBar = () => {
               >
                 {value}
               </Typography>
-              <div ref={divRef}>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  spacing={1}
-                >
-                  <Avatar
-                    {...stringAvatar(user.username)}
-                    onClick={handleClick}
-                    style={{ cursor: "pointer" }}
-                  />
-                </Stack>
-                <Popover
-                  open={openPopover}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  <Card>
-                    <CardHeader
-                      title={
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="flex-start"
-                          spacing={1}
-                        >
-                          <Avatar {...stringAvatar(user.username)} />
-                          <Typography variant="button" textAlign="center">
-                            {user.username}
-                          </Typography>
-                        </Stack>
-                      }
-                    ></CardHeader>
-                    <CardContent>
-                      <Button
-                        color="error"
-                        variant="contained"
-                        onClick={() => signout()}
-                      >
-                        Se déconnecter
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Popover>
-              </div>
+              <ProfileBubble />
             </Toolbar>
           </AppBar>
         </Box>
@@ -397,46 +345,50 @@ const NavigationBar = () => {
             ) : isErrorT ? (
               <p style={{ color: "red" }}>{errorT.message}</p>
             ) : (
-              <>
-                {travel.status !== 1 && (
-                  <>
-                    <Tab
-                      icon={<GroupsRoundedIcon />}
-                      iconPosition="start"
-                      label={
-                        <Stack
-                          style={{ minWidth: "200px" }}
-                          direction="row"
-                          justifyContent="flex-start"
-                          marginLeft={1}
-                        >
-                          <Typography variant="button">Membres</Typography>
-                        </Stack>
-                      }
-                      value="Membres"
-                      component={Link}
-                      to={"/trip/" + idTravel + "/members"}
-                    />
-                    <Tab
-                      icon={<SettingsRoundedIcon />}
-                      iconPosition="start"
-                      label={
-                        <Stack
-                          style={{ minWidth: "200px" }}
-                          direction="row"
-                          justifyContent="flex-start"
-                          marginLeft={1}
-                        >
-                          <Typography variant="button">Options</Typography>
-                        </Stack>
-                      }
-                      value={"Options du voyage"}
-                      component={Link}
-                      to={"/trip/" + idTravel + "/tripsettings"}
-                    />
-                  </>
-                )}
-              </>
+              travel.status !== 1 && (
+                <Tab
+                  icon={<GroupsRoundedIcon />}
+                  iconPosition="start"
+                  label={
+                    <Stack
+                      style={{ minWidth: "200px" }}
+                      direction="row"
+                      justifyContent="flex-start"
+                      marginLeft={1}
+                    >
+                      <Typography variant="button">Membres</Typography>
+                    </Stack>
+                  }
+                  value="Membres"
+                  component={Link}
+                  to={"/trip/" + idTravel + "/members"}
+                />
+              )
+            )}
+            {isLoadingT ? (
+              <Loading />
+            ) : isErrorT ? (
+              <p style={{ color: "red" }}>{errorT.message}</p>
+            ) : (
+              travel.status !== 1 && (
+                <Tab
+                  icon={<SettingsRoundedIcon />}
+                  iconPosition="start"
+                  label={
+                    <Stack
+                      style={{ minWidth: "200px" }}
+                      direction="row"
+                      justifyContent="flex-start"
+                      marginLeft={1}
+                    >
+                      <Typography variant="button">Options</Typography>
+                    </Stack>
+                  }
+                  value={"Options du voyage"}
+                  component={Link}
+                  to={"/trip/" + idTravel + "/tripsettings"}
+                />
+              )
             )}
           </Tabs>
         </Drawer>

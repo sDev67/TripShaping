@@ -2,7 +2,7 @@
   "appshowcase": {
     "navbar": {
       "signin": "connexion",
-      "signup": "s'inscrire"
+      "signup": "inscription"
     },
     "page1": {
       "title": "Entrez dans un monde de voyages.",

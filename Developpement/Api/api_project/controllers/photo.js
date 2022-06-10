@@ -111,7 +111,8 @@ const disp_file_by_id = async (req, res, next) => {
 const create = async (req, res) => {
     try {
         db.Photo.create({
-            dataFile: req.body.dataFile,
+            dataFile1: req.body.dataFile1,
+            dataFile2: req.body.dataFile2,
             StepId: req.body.StepId,
             TravelId: req.body.TravelId,
             RouteId: req.body.RouteId,

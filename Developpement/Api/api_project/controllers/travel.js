@@ -243,7 +243,7 @@ module.exports = {
       .catch(next);
   },
 
-  copyTravelStepsPoints: (req, res, next) => {
+  copyTravel: (req, res, next) => {
     db.Travel.findOne({
       include:
         [{ model: db.Point },
@@ -255,7 +255,8 @@ module.exports = {
         ],
       where: {
         id: req.body.TravelId
-      }
+      },
+      order: [[db.Step, 'id']]
     })
       .then(travel => {
         if (travel) {
@@ -311,51 +312,55 @@ module.exports = {
 
               tabSteps.push(resStep)
             })
+
+            copyTravelRoutes(req.body.TravelId, newTravel['dataValues'].id)
+            res.json(newTravel)
           })
         }
         else {
           throw { status: 404, message: 'Requested Trip not found' };
         }
       })
-      .then((travel) => res.json(travel))
       .catch(next)
   },
-
-  copyTravelRoutes: async (req, res, next) => {
-    var newSteps = await db.Step.findAll({
-      where: {
-        TravelId: req.body.NewTravelId
-      }
-    })
-
-    var oldSteps = await db.Step.findAll({
-      where: {
-        TravelId: req.body.OldTravelId
-      }
-    })
-
-    var oldRoutes = await db.Route.findAll({
-      where: {
-        TravelId: req.body.OldTravelId
-      }
-    })
-
-    oldRoutes.map(route => {
-      var oldStepStart = (oldSteps.filter(step => step['dataValues'].id == route.start))[0]['dataValues']
-      var oldStepFinish = (oldSteps.filter(step => step['dataValues'].id == route.finish))[0]['dataValues']
-
-      var newStepStartId = (newSteps.filter(step => step['dataValues'].latitude == oldStepStart.latitude && step['dataValues'].longitude == oldStepStart.longitude))[0]['dataValues'].id
-      var newStepFinishId = (newSteps.filter(step => step['dataValues'].latitude == oldStepFinish.latitude && step['dataValues'].longitude == oldStepFinish.longitude))[0]['dataValues'].id
-
-
-      let newRoute = {
-        TravelId: req.body.NewTravelId,
-        start: newStepStartId,
-        finish: newStepFinishId,
-        travelType: ""
-      }
-      db.Route.create(newRoute)
-    })
-    res.status(200).end()
-  },
 };
+
+const copyTravelRoutes = async (OldTravelId, NewTravelId) => {
+  var newSteps = await db.Step.findAll({
+    where: {
+      TravelId: NewTravelId
+    }
+  })
+
+  var oldSteps = await db.Step.findAll({
+    where: {
+      TravelId: OldTravelId
+    }
+  })
+
+  var oldRoutes = await db.Route.findAll({
+    where: {
+      TravelId: OldTravelId
+    }
+  })
+
+  oldRoutes.map(route => {
+    var oldStepStart = (oldSteps.filter(step => step['dataValues'].id == route.start))[0]['dataValues']
+    var oldStepFinish = (oldSteps.filter(step => step['dataValues'].id == route.finish))[0]['dataValues']
+
+    var newStepStartId = (newSteps.filter(step => step['dataValues'].latitude == oldStepStart.latitude && step['dataValues'].longitude == oldStepStart.longitude))[0]['dataValues'].id
+    var newStepFinishId = (newSteps.filter(step => step['dataValues'].latitude == oldStepFinish.latitude && step['dataValues'].longitude == oldStepFinish.longitude))[0]['dataValues'].id
+
+
+    let newRoute = {
+      TravelId: NewTravelId,
+      start: newStepStartId,
+      finish: newStepFinishId,
+      travelType: ""
+    }
+    db.Route.create(newRoute)
+  })
+}
+
+
+

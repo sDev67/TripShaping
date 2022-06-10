@@ -57,9 +57,9 @@ const TravelRequests = {
       .then((res) => res.json());
   },
 
-  copyTravelStepsPoints: ({ TravelId, UserId }) => {
+  copyTravel: ({ TravelId, UserId }) => {
     //const token = window.localStorage.getItem('token');
-    return fetch(`${url_prefix}/travel/copyTSP`, {
+    return fetch(`${url_prefix}/travel/copy`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,19 +71,19 @@ const TravelRequests = {
       .then((res) => res.json());
   },
 
-  copyTravelRoutes: ({ OldTravelId, NewTravelId }) => {
-    //const token = window.localStorage.getItem('token');
-    return fetch(`${url_prefix}/travel/copyR`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        //  Authorization: 'Bearer ' + token
-      },
-      body: JSON.stringify({ OldTravelId, NewTravelId }),
-    })
-      .then(checkStatus)
-      .then((res) => res.json());
-  },
+  // copyTravelRoutes: ({ OldTravelId, NewTravelId }) => {
+  //   //const token = window.localStorage.getItem('token');
+  //   return fetch(`${url_prefix}/travel/copyR`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       //  Authorization: 'Bearer ' + token
+  //     },
+  //     body: JSON.stringify({ OldTravelId, NewTravelId }),
+  //   })
+  //     .then(checkStatus)
+  //     .then((res) => res.json());
+  // },
 
   getStepsOfTravel: (idTravel) => {
     //const token = window.localStorage.getItem('token');

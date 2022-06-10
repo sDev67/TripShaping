@@ -32,6 +32,10 @@ const swaggerOptions = {
     ],
     tags: [
       {
+        name: 'User',
+        description: 'Route concernant les utilisateurs',
+      },
+      {
         name: 'Document',
         description: 'Route concernant les documents (image et pdf)',
       },
@@ -66,8 +70,29 @@ const swaggerOptions = {
       {
         name: 'Travel',
         description: 'Route concernant les Voyages',
-      },
+      }
     ],
+    components: {
+      securitySchemes: {
+        Bearer: {
+          type: "http",
+          scheme: "bearer",
+          description: "Le token est obligatoire pour les requêtes lorsque vous êtes connecté"
+        }
+      },
+      responses: {
+        UnauthorizedError: {
+          description: "Token manquant ou invalide"
+        }
+
+      }
+
+    },
+    security: [{
+      Bearer: []
+    }
+    ]
+
   },
   apis: ['./routes/*.js'],
 };

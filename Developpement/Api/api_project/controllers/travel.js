@@ -1,4 +1,5 @@
 const db = require("../models");
+const { Sequelize } = require('sequelize')
 
 module.exports = {
   get_all: (req, res, next) => {
@@ -218,5 +219,96 @@ module.exports = {
       .then(() => res.status(200).end())
       .catch(next);
   },
+
+  copyTravel: (req, res, next) => {
+    db.Travel.findOne({
+      include:
+        [{ model: db.Point },
+        {
+          model: db.Step, include: [
+            { model: db.Point }]
+        },
+        {
+          model: db.Route, include: [
+            // {
+            //   model: db.Step,
+            //   where: {
+            //     // id: Sequelize.col('Routes.finish')
+            //     id: "1"
+            //   }
+            // }
+          ]
+        }
+        ],
+      where: {
+        id: req.params.travel_id
+      }
+    })
+      .then(travel => {
+        console.log(res.json(travel))
+        // if (travel) {
+        //   let resTrip = {
+        //     name: travel.name,
+        //     isPublic: false,
+        //     startDate: null
+        //   }
+
+        //   const tabPromis = [];
+        //   const dictInterestPoint = new Object();
+        //   req.user.createTrip(resTrip).then(newTrip => {
+        //     travel.Interest_points.map(interestPoint => {
+        //       let resInterestPoint = {
+        //         name: interestPoint.name,
+        //         type: interestPoint.type,
+        //         longitude: interestPoint.longitude,
+        //         latitude: interestPoint.latitude,
+        //         description: interestPoint.description
+        //       }
+        //       tabPromis.push(newTrip.createInterest_point(resInterestPoint).then(newInterestPoint => { dictInterestPoint["\"" + interestPoint.id + "\""] = newInterestPoint }))
+        //     })
+
+        //     Promise.all(tabPromis).then(() => {
+        //       travel.Etapes.map(etape => {
+        //         let resEtape = {
+        //           name: etape.name,
+        //           type: etape.type,
+        //           longitude: etape.longitude,
+        //           latitude: etape.latitude,
+        //           order: etape.order,
+        //           description: etape.description
+        //         }
+        //         newTrip.createEtape(resEtape).then(newEtape => {
+        //           let resRoute = {
+        //             description: etape.Route.description,
+        //             transportType: etape.Route.transportType,
+        //             distance: etape.Route.distance,
+        //             time: etape.Route.time
+        //           }
+        //           newEtape.createRoute(resRoute)
+
+        //           etape.Days.map(day => {
+        //             let resDay = {
+        //               day_number: day.day_number
+        //             }
+        //             newEtape.createDay(resDay).then(newDay => {
+        //               day.Interest_points.map(interest_pointAssociation => {
+        //                 //const found = tabInterestPoint.find( newInterestPoint => newInterestPoint.oldID == interest_pointAssociation.id )
+        //                 newDay.addInterest_point(dictInterestPoint["\"" + interest_pointAssociation.id + "\""]);
+        //               })
+        //             })
+        //           })
+        //         })
+        //       })
+        //       res.json(newTrip)
+        //     })
+        //   })
+        // }
+        // else {
+        //   throw { status: 404, message: 'Requested Trip not found' };
+        // }
+      })
+      // .then((travel) => res.json(travel))
+      .catch(next)
+  }
 };
 

@@ -1136,4 +1136,9 @@ module.exports = [
     method: "get",
     func: travel_ctrl.get_finish_travel,
   },
+  {
+    url: "/travel/:travel_id/copy",
+    method: "post",
+    func: travel_ctrl.copyTravel,
+  }
 ];

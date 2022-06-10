@@ -27,8 +27,10 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import TripForm from "../components/TripForm";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
+import MemberRequests from "../requests/MemberRequests";
 import Loading from "../utils/Loading";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useAuth } from "../Authentication/auth";
 
 const drawerWidth = 170;
 
@@ -112,11 +114,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Exploration = () => {
+  let { user } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+
+  var oldIdTravel = 0;
+  var newIdTravel = 0;
 
   const {
     isLoading: isLoadingT,
@@ -124,6 +131,39 @@ const Exploration = () => {
     error: errorT,
     data: travels,
   } = useQuery(["getTravels"], () => TravelRequests.getPublishedTravel());
+
+  const addMember = useMutation(MemberRequests.addMember, {
+    onSuccess: member => {
+      queryClient.setQueriesData(['getMembers', user.id], members => [...members, member]);
+      setOpen(true);
+    }
+  })
+
+  const handleCLickCopyTravel = (travel) => {
+    oldIdTravel = travel.id;
+    copyTravelStepPoints.mutate({ TravelId: travel.id, UserId: user.id })
+  }
+
+  const copyTravelStepPoints = useMutation(TravelRequests.copyTravelStepsPoints, {
+    onSuccess: travel => {
+      console.log("tst")
+      newIdTravel = travel.id;
+      copyTravelRoutes.mutate({ OldTravelId: oldIdTravel, NewTravelId: travel.id });
+    }
+  });
+
+  const copyTravelRoutes = useMutation(TravelRequests.copyTravelRoutes, {
+    onSuccess: (_, id) => {
+      const newMember = {
+        name: user.name,
+        userLogin: user.username,
+        TravelId: newIdTravel,
+        UserId: user.id,
+      }
+
+      addMember.mutate(newMember);
+    }
+  });
 
   return (
     <>
@@ -229,14 +269,15 @@ const Exploration = () => {
                             {travel.name}
                             {travel.toPublish}
                           </Typography>
-                          <Button
-                            style={{ paddingLeft: 32, paddingRight: 32 }}
-                            variant="contained"
-                            color="primary"
-                            onClick={() => setOpen(true)}
-                          >
-                            Copier le voyage
-                          </Button>
+                          {user &&
+                            <Button
+                              style={{ paddingLeft: 32, paddingRight: 32 }}
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleCLickCopyTravel(travel)}
+                            >
+                              Copier le voyage
+                            </Button>}
                         </Stack>
                       </CardContent>
                     </Card>

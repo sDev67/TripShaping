@@ -117,7 +117,7 @@ const TripSelection = () => {
     isError: isErrorT,
     error: errorT,
     data: members,
-  } = useQuery(["getMembers"], () => UserRequests.getMembers(id));
+  } = useQuery(["getMembers", user.id], () => UserRequests.getMembers(id));
 
   const classes = useStyles();
 

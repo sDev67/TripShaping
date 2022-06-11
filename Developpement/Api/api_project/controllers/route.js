@@ -14,7 +14,7 @@ module.exports = {
         return db.Route.findByPk(req.params.route_id)
             .then(route => {
                 if (!route) {
-                    throw { status: 404, message: 'Requested Route not found' };
+                    throw { status: 404, message: 'Route inexistante / introuvable' };
                 }
                 req.route = route;
                 return next();
@@ -26,7 +26,7 @@ module.exports = {
         return db.Route.findByPk(req.params.route_id)
             .then(route => {
                 if (!route) {
-                    throw { status: 404, message: 'Requested Route not found' };
+                    throw { status: 404, message: 'Route inexistante / introuvable' };
                 }
                 return res.json(route);
             })
@@ -43,7 +43,7 @@ module.exports = {
         return db.Route.findByPk(req.params.route_id)
             .then(route => {
                 if (!route) {
-                    throw { status: 404, message: 'Requested Route not found' };
+                    throw { status: 404, message: 'Route inexistante / introuvable' };
                 }
                 Object.assign(route, req.body);
                 return route.save();
@@ -56,7 +56,7 @@ module.exports = {
         return db.Route.findByPk(req.params.route_id)
             .then(route => {
                 if (!route) {
-                    throw { status: 404, message: 'Requested Route not found' };
+                    throw { status: 404, message: 'Route inexistante / introuvable' };
                 }
                 return route.destroy();
             })
@@ -68,7 +68,7 @@ module.exports = {
         return db.Route.findByPk(req.params.route_id)
             .then(route => {
                 if (!route) {
-                    throw { status: 404, message: 'Requested Route not found' };
+                    throw { status: 404, message: 'Route inexistante / introuvable' };
                 }
                 return route.getDocuments({
                     attributes: { exclude: ['dataFile'] } // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel

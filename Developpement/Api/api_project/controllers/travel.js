@@ -24,7 +24,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         req.travel = travel;
         return next();
@@ -36,7 +36,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return res.json(travel);
       })
@@ -47,7 +47,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getPoints();
       })
@@ -59,7 +59,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getSteps();
       })
@@ -70,7 +70,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getTasks();
       })
@@ -81,7 +81,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getLabels();
       })
@@ -92,7 +92,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getRoutes();
       })
@@ -133,7 +133,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getMembers();
       })
@@ -144,7 +144,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getExpenses({ order: [["date", "DESC"]] });
       })
@@ -155,7 +155,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getJournalEntries();
       })
@@ -166,7 +166,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getDocuments({
           attributes: { exclude: ["dataFile"] }, // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
@@ -180,7 +180,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.getPhotos();
       })
@@ -198,7 +198,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         Object.assign(travel, req.body);
         return travel.save();
@@ -211,7 +211,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: "Requested Travel not found" };
+          throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
         return travel.destroy();
       })
@@ -294,7 +294,7 @@ module.exports = {
           })
         }
         else {
-          throw { status: 404, message: 'Requested Trip not found' };
+          throw { status: 404, message: 'Voyage inexistant / introuvable' };
         }
       })
       .catch(next)

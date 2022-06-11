@@ -17,7 +17,7 @@ module.exports = {
     return db.User.findByPk(req.params.user_id)
       .then((user) => {
         if (!user) {
-          throw { status: 404, message: "Requested User not found" };
+          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
         }
         return res.json(user);
       })
@@ -38,7 +38,7 @@ module.exports = {
     return db.User.findByPk(req.params.user_id)
       .then((user) => {
         if (!user) {
-          throw { status: 404, message: "Requested User not found" };
+          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
         }
         delete req.body.password;
         Object.assign(user, req.body);
@@ -52,7 +52,7 @@ module.exports = {
     return db.User.findByPk(req.params.user_id)
       .then((user) => {
         if (!user) {
-          throw { status: 404, message: "Requested User not found" };
+          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
         }
         return user.destroy();
       })
@@ -69,10 +69,10 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          throw { status: 404, message: "Requested User not found" };
+          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
         }
         if (!user.check_password(password)) {
-          throw { status: 401, message: "Wrong password" };
+          throw { status: 401, message: "Mot de passe incorrect" };
         }
 
         const token = jsonwebtoken.sign({ id: user.id }, secret, {
@@ -86,35 +86,33 @@ module.exports = {
   },
 
   whoami: (req, res, next) => {
-    try
-    {
+    try {
 
       return res.json(req.user);
     }
-    catch(err)
-    {
+    catch (err) {
       next(err);
     }
 
   },
   load_by_id: (req, res, next) => {
-		return db.User.findByPk(req.params.user_id)
-			.then(user => {
-				if (!user) {
-					throw { status: 404, message: 'User not found' };
-				}
-				res.locals.user = user;
-				return next();
-			})
-			.catch(next);
-	},
+    return db.User.findByPk(req.params.user_id)
+      .then(user => {
+        if (!user) {
+          throw { status: 404, message: 'Utilisateur inexistant / introuvable' };
+        }
+        res.locals.user = user;
+        return next();
+      })
+      .catch(next);
+  },
 
   identify_client: [
     expressjwt({ secret, algorithms: ["HS256"] }),
     (req, res, next) => {
       db.User.findByPk(req.user.id).then((user) => {
         if (!user) {
-          throw { status: 404, message: "Requested User not found" };
+          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
         }
         req.user = user;
         return next();

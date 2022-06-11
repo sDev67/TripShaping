@@ -14,7 +14,7 @@ module.exports = {
         return db.Expense.findByPk(req.params.expense_id)
             .then(expense => {
                 if (!expense) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Dépense inexistante / introuvable' };
                 }
                 req.expense = expense;
                 return next();
@@ -26,7 +26,7 @@ module.exports = {
         return db.Expense.findByPk(req.params.expense_id)
             .then(expense => {
                 if (!expense) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Dépense inexistante / introuvable' };
                 }
                 return res.json(expense);
             })
@@ -43,7 +43,7 @@ module.exports = {
         return db.Expense.findByPk(req.params.expense_id)
             .then(expense => {
                 if (!expense) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Dépense inexistante / introuvable' };
                 }
                 Object.assign(expense, req.body);
                 return expense.save();
@@ -56,7 +56,7 @@ module.exports = {
         return db.Expense.findByPk(req.params.expense_id)
             .then(expense => {
                 if (!expense) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Dépense inexistante / introuvable' };
                 }
                 return expense.destroy();
             })

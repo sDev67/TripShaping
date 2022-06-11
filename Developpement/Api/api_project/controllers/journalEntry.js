@@ -14,7 +14,7 @@ module.exports = {
         return db.JournalEntry.findByPk(req.params.journal_entry_id)
             .then(journalEntry => {
                 if (!journalEntry) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Entrée de journal inexistante / introuvable' };
                 }
                 req.journalEntry = journalEntry;
                 return next();
@@ -26,7 +26,7 @@ module.exports = {
         return db.JournalEntry.findByPk(req.params.journal_entry_id)
             .then(journalEntry => {
                 if (!journalEntry) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Entrée de journal inexistante / introuvable' };
                 }
                 return res.json(journalEntry);
             })
@@ -43,7 +43,7 @@ module.exports = {
         return db.JournalEntry.findByPk(req.params.journal_entry_id)
             .then(journalEntry => {
                 if (!journalEntry) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Entrée de journal inexistante / introuvable' };
                 }
                 Object.assign(journalEntry, req.body);
                 return journalEntry.save();
@@ -56,7 +56,7 @@ module.exports = {
         return db.JournalEntry.findByPk(req.params.journal_entry_id)
             .then(journalEntry => {
                 if (!journalEntry) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Entrée de journal inexistante / introuvable' };
                 }
                 return journalEntry.destroy();
             })

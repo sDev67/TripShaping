@@ -6,14 +6,14 @@ import Collapse from "@mui/material/Collapse";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 
-const AlertError = ({ message }) => {
+const AlertError = ({ message, setMessage, severity }) => {
   const [open, setOpen] = React.useState(true);
 
   return (
     <Collapse in={open}>
       <Alert
         variant="filled"
-        severity="error"
+        severity={severity}
         action={
           <IconButton
             aria-label="close"
@@ -21,6 +21,7 @@ const AlertError = ({ message }) => {
             size="small"
             onClick={() => {
               setOpen(false);
+              setMessage("");
             }}
           >
             <CloseIcon fontSize="inherit" />

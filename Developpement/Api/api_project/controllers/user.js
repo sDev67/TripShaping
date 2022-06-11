@@ -17,7 +17,10 @@ module.exports = {
     return db.User.findByPk(req.params.user_id)
       .then((user) => {
         if (!user) {
-          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
+          throw {
+            status: 404,
+            message: "Utilisateur ou mot de passe incorrects",
+          };
         }
         return res.json(user);
       })
@@ -38,7 +41,10 @@ module.exports = {
     return db.User.findByPk(req.params.user_id)
       .then((user) => {
         if (!user) {
-          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
+          throw {
+            status: 404,
+            message: "Utilisateur ou mot de passe incorrects",
+          };
         }
         delete req.body.password;
         Object.assign(user, req.body);
@@ -52,7 +58,10 @@ module.exports = {
     return db.User.findByPk(req.params.user_id)
       .then((user) => {
         if (!user) {
-          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
+          throw {
+            status: 404,
+            message: "Utilisateur ou mot de passe incorrects",
+          };
         }
         return user.destroy();
       })
@@ -69,7 +78,10 @@ module.exports = {
     })
       .then((user) => {
         if (!user) {
-          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
+          throw {
+            status: 404,
+            message: "Utilisateur ou mot de passe incorrects",
+          };
         }
         if (!user.check_password(password)) {
           throw { status: 401, message: "Mot de passe incorrect" };
@@ -87,19 +99,16 @@ module.exports = {
 
   whoami: (req, res, next) => {
     try {
-
       return res.json(req.user);
-    }
-    catch (err) {
+    } catch (err) {
       next(err);
     }
-
   },
   load_by_id: (req, res, next) => {
     return db.User.findByPk(req.params.user_id)
-      .then(user => {
+      .then((user) => {
         if (!user) {
-          throw { status: 404, message: 'Utilisateur inexistant / introuvable' };
+          throw { status: 404, message: "User not found" };
         }
         res.locals.user = user;
         return next();
@@ -110,13 +119,18 @@ module.exports = {
   identify_client: [
     expressjwt({ secret, algorithms: ["HS256"] }),
     (req, res, next) => {
-      db.User.findByPk(req.user.id).then((user) => {
-        if (!user) {
-          throw { status: 404, message: "Utilisateur inexistant / introuvable" };
-        }
-        req.user = user;
-        return next();
-      }).catch((err) => next(err));
+      db.User.findByPk(req.user.id)
+        .then((user) => {
+          if (!user) {
+            throw {
+              status: 404,
+              message: "Utilisateur ou mot de passe incorrects",
+            };
+          }
+          req.user = user;
+          return next();
+        })
+        .catch((err) => next(err));
     },
   ],
 };

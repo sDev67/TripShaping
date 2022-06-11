@@ -12,11 +12,11 @@ import {
   Typography,
   Alert,
   CardMedia,
-  IconButton,
+  Avatar,
   AppBar,
   Toolbar,
   Box,
-  Container,
+  Popover,
   Grid,
   Rating,
   CardHeader,
@@ -31,6 +31,7 @@ import MemberRequests from "../requests/MemberRequests";
 import Loading from "../utils/Loading";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAuth } from "../Authentication/auth";
+import ProfileBubble from "../components/ProfileBubble";
 
 const drawerWidth = 170;
 
@@ -114,7 +115,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Exploration = () => {
-  let { user } = useAuth();
+  let { user, signout } = useAuth();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const divRef = React.useRef();
+  function handleClick() {
+    setAnchorEl(divRef.current);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  const openPopover = Boolean(anchorEl);
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -130,27 +144,30 @@ const Exploration = () => {
   } = useQuery(["getTravels"], () => TravelRequests.getPublishedTravel());
 
   const addMember = useMutation(MemberRequests.addMember, {
-    onSuccess: member => {
-      queryClient.setQueriesData(['getMembers', user.id], members => [...members, member]);
+    onSuccess: (member) => {
+      queryClient.setQueriesData(["getMembers", user.id], (members) => [
+        ...members,
+        member,
+      ]);
       setOpen(true);
-    }
-  })
+    },
+  });
 
   const handleCLickCopyTravel = (travel) => {
-    copyTravel.mutate({ TravelId: travel.id, UserId: user.id })
-  }
+    copyTravel.mutate({ TravelId: travel.id, UserId: user.id });
+  };
 
   const copyTravel = useMutation(TravelRequests.copyTravel, {
-    onSuccess: travel => {
+    onSuccess: (travel) => {
       const newMember = {
         name: user.name,
         userLogin: user.username,
         TravelId: travel.id,
         UserId: user.id,
-      }
+      };
 
       addMember.mutate(newMember);
-    }
+    },
   });
 
   // const copyTravelRoutes = useMutation(TravelRequests.copyTravelRoutes, {
@@ -179,14 +196,18 @@ const Exploration = () => {
             </Typography>
             <Stack width="80%"></Stack>
 
-            <Stack direction="row" width="15%" justifyContent="flex-end">
-              <Button color="inherit" to={"/signin"} component={Link}>
-                Se connecter
-              </Button>
-              <Button color="inherit" to={"/signup"} component={Link}>
-                S'inscrire
-              </Button>
-            </Stack>
+            {user ? (
+              <ProfileBubble />
+            ) : (
+              <>
+                <Button color="inherit" to={"/signin"} component={Link}>
+                  Connexion
+                </Button>
+                <Button color="inherit" to={"/signup"} component={Link}>
+                  Inscription
+                </Button>
+              </>
+            )}
           </Toolbar>
         </AppBar>
       </Box>
@@ -265,7 +286,7 @@ const Exploration = () => {
                             {travel.name}
                             {travel.toPublish}
                           </Typography>
-                          {user &&
+                          {user && (
                             <Button
                               style={{ paddingLeft: 32, paddingRight: 32 }}
                               variant="contained"
@@ -273,7 +294,8 @@ const Exploration = () => {
                               onClick={() => handleCLickCopyTravel(travel)}
                             >
                               Copier le voyage
-                            </Button>}
+                            </Button>
+                          )}
                         </Stack>
                       </CardContent>
                     </Card>

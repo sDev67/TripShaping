@@ -174,76 +174,10 @@ const TripSettings = () => {
             height="85%"
             alignItems="strech"
             marginTop="5%"
+            spacing={5}
           >
-            <Stack spacing={5}>
-              {/* <Button
-
-              variant="contained"
-              color="error"
-              startIcon={<DeleteRounded />}
-              onClick={handleSwitch()}
-              style={{
-                paddingLeft: "25px",
-                paddingRight: "25px",
-                paddingTop: "10px",
-                paddingBottom: "10px",
-              }}
-            >
-              Supprimer toutes les étapes du voyage
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<DeleteRounded />}
-              onClick={handleSwitch()}
-              style={{
-                paddingLeft: "25px",
-                paddingRight: "25px",
-                paddingTop: "10px",
-                paddingBottom: "10px",
-              }}
-            >
-              Supprimer tous les points d'interet du voyage
-            </Button> */}
-              {statusTrip == 0 && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleSwitchClickStart()}
-                  style={{
-                    paddingLeft: "40px",
-                    paddingRight: "40px",
-                    paddingTop: "25px",
-                    paddingBottom: "25px",
-                  }}
-                >
-                  Démarrer le voyage
-                </Button>
-              )}
-            </Stack>
-
-            <Stack
-              direction="row"
-              spacing={1}
-              marginTop={10}
-              marginBottom={5}
-              justifyContent="center"
-            >
-              {statusTrip == 0 && (
-                <TextField
-                  sx={{ width: "50%" }}
-                  value={plannedDate}
-                  id="date"
-                  label="Date de départ prévue"
-                  type="date"
-                  onChange={(e) => handleDateChange(e.target.value)}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              )}
+            <Stack direction="row" justifyContent="space-between">
               <FormControlLabel
-                sx={{ width: "50%" }}
                 value={trackPosition}
                 checked={trackPosition}
                 control={<Switch color="primary" />}
@@ -256,20 +190,13 @@ const TripSettings = () => {
                 onChange={handleSwitchTrackPosition}
                 position="relative"
               />
-            </Stack>
-            <Stack
-              direction="row"
-              marginBottom={5}
-              justifyContent="space-evenly"
-            >
               <FormControlLabel
-                sx={{ width: "58%" }}
                 value={publicItinerary}
                 checked={publicItinerary}
                 control={<Switch color="primary" />}
                 label={
                   <Typography variant="h6" color="primary">
-                    Rendre l'itinéraire public à la fin du voyage
+                    Rendre l'itinéraire public
                   </Typography>
                 }
                 labelPlacement="start"
@@ -277,7 +204,21 @@ const TripSettings = () => {
                 position="relative"
               />
             </Stack>
-
+            <Stack direction="row" spacing={1} justifyContent="center">
+              {statusTrip == 0 && (
+                <TextField
+                  fullWidth
+                  value={plannedDate}
+                  id="date"
+                  label="Date de départ prévue"
+                  type="date"
+                  onChange={(e) => handleDateChange(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              )}
+            </Stack>
             <Stack>
               <Button
                 variant="contained"
@@ -294,6 +235,23 @@ const TripSettings = () => {
                 Supprimer le voyage
               </Button>
             </Stack>
+            <Stack>
+              {statusTrip == 0 && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleSwitchClickStart()}
+                  style={{
+                    paddingLeft: "40px",
+                    paddingRight: "40px",
+                    paddingTop: "25px",
+                    paddingBottom: "25px",
+                  }}
+                >
+                  Démarrer le voyage
+                </Button>
+              )}
+            </Stack>
           </Stack>
           <Dialog open={startDialogOpen} onClose={HandleCloseAddLabelForm}>
             <Stack>
@@ -301,10 +259,11 @@ const TripSettings = () => {
                 direction="column"
                 margin={5}
                 justifyContent="space-evenly"
+                spacing={2}
               >
                 <Typography variant="h5">Valider la date de départ</Typography>
                 <TextField
-                  sx={{ width: "65%", alignSelf: "center", marginTop: 5 }}
+                  fullWidth
                   id="startdate"
                   defaultValue={selectedDate}
                   label=""

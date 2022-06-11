@@ -43,6 +43,7 @@ import TravelRequests from "../requests/TravelRequests";
 import { useAuth } from "../Authentication/auth";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
+import ProfileBubble from "./ProfileBubble";
 
 const drawerWidth = 170;
 
@@ -199,60 +200,7 @@ const NavigationBar = () => {
               >
                 {value}
               </Typography>
-              <div ref={divRef}>
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  spacing={1}
-                >
-                  <Avatar
-                    {...stringAvatar(user.username)}
-                    onClick={handleClick}
-                    style={{ cursor: "pointer" }}
-                  />
-                </Stack>
-                <Popover
-                  open={openPopover}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  <Card>
-                    <CardHeader
-                      title={
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="flex-start"
-                          spacing={1}
-                        >
-                          <Avatar {...stringAvatar(user.username)} />
-                          <Typography variant="button" textAlign="center">
-                            {user.username}
-                          </Typography>
-                        </Stack>
-                      }
-                    ></CardHeader>
-                    <CardContent>
-                      <Button
-                        color="error"
-                        variant="contained"
-                        onClick={() => signout()}
-                      >
-                        Se déconnecter
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </Popover>
-              </div>
+              <ProfileBubble />
             </Toolbar>
           </AppBar>
         </Box>

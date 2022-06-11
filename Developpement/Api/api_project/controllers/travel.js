@@ -264,7 +264,6 @@ module.exports = {
                 latitude: step.latitude,
                 description: step.description,
                 duration: step.duration,
-                category: step.category,
                 TravelId: newTravel.id
               }
 

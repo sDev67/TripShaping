@@ -19,8 +19,6 @@ module.exports = sequelize => {
 		latitude: DataTypes.FLOAT,
 		longitude: DataTypes.FLOAT,
 		duration: DataTypes.INTEGER,
-		category: DataTypes.STRING
-
 	}, {
 		sequelize,
 		modelName: 'Step'

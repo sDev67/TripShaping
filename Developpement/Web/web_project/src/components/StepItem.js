@@ -33,7 +33,6 @@ import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import DocumentsList from "./DocumentsList";
 import StepRequests from "../requests/StepRequests";
-import InterestPointMenu from "./InterestPointMenu";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import PointRequests from "./../requests/PointRequests";
@@ -47,7 +46,6 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
   idTravel = parseInt(idTravel);
 
   const [title, setTitle] = useState(step.title);
-  const [category, setCategory] = useState(step.category);
   const [description, setDescription] = useState(step.description);
   const [duration, setDuration] = useState(step.duration);
 
@@ -56,24 +54,6 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
   const HandleCloseAddLabelForm = () => {
     setInformationDialogOpen(false);
   };
-
-  const categ = [
-    {
-      value: "Hôtel",
-    },
-    {
-      value: "Gîtes",
-    },
-    {
-      value: "Camping",
-    },
-    {
-      value: "Palace",
-    },
-    {
-      value: "Autre",
-    },
-  ];
 
   const [open, setOpen] = useState(false);
   const [selectedInterestPoint, setSelectedInterestPoint] = useState({});
@@ -122,7 +102,6 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
     const newStep = {
       title: title,
       duration: duration,
-      category: category,
       description: description,
       idStep: id,
     };
@@ -227,24 +206,6 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
                     ),
                   }}
                 />
-                <TextField
-                  id={"category" + index}
-                  fullWidth
-                  variant="outlined"
-                  select
-                  label="Catégorie"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                >
-                  {categ.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.value}
-                    </MenuItem>
-                  ))}
-                </TextField>
               </Stack>
               <Stack direction="row" justifyContent="flex-end">
                 <Button
@@ -273,18 +234,6 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
               information={false}
               minH="300px"
             />
-
-            {/* <TextField
-                id={"description" + index}
-                label="Description"
-                multiline
-                rows={10}
-                value={description}
-                onChange={(e) => setTitle(e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              /> */}
 
             <Stack spacing={1} direction="column" height="160px">
               <Stack

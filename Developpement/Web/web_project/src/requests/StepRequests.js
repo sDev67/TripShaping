@@ -24,7 +24,7 @@ const StepRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
-  updateStepInfoById: ({ title, duration, category, description, idStep }) => {
+  updateStepInfoById: ({ title, duration, description, idStep }) => {
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/step/${idStep}`, {
       method: "PUT",
@@ -32,7 +32,7 @@ const StepRequests = {
         "Content-Type": "application/json",
         //  Authorization: 'Bearer ' + token
       },
-      body: JSON.stringify({ title, duration, category, description }),
+      body: JSON.stringify({ title, duration, description }),
     })
       .then(checkStatus)
       .then((res) => res.json());

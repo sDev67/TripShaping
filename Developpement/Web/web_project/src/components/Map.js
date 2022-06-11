@@ -444,7 +444,6 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
         ],
         entityMap: {},
       }),
-      category: "",
       duration: 1,
       TravelId: idTravel,
     };

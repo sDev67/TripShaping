@@ -15,7 +15,6 @@ import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
-import { FileUploader } from "react-drag-drop-files";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import RichTextEditor from "./RichTextEditor";
@@ -40,9 +39,7 @@ const StepMenu = ({
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
-  const [files, setFiles] = useState([]);
   const [title, setTitle] = useState(selectedMarker.title);
-  const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
   const [duration, setDuration] = useState(selectedMarker.duration);
 
@@ -97,30 +94,11 @@ const StepMenu = ({
     setInformationDialogOpenOpen(false);
   };
 
-  const categ = [
-    {
-      value: "Hôtel",
-    },
-    {
-      value: "Gîtes",
-    },
-    {
-      value: "Camping",
-    },
-    {
-      value: "Palace",
-    },
-    {
-      value: "Autre",
-    },
-  ];
-
   // Fonction qui met a jour les propriétés d'un point d'interet
   const updateStepInfo = (step) => (e) => {
     if (isEdition) {
       const newPoint = {
         title: title,
-        category: category,
         description: description,
         duration: duration,
         idStep: step.id,
@@ -180,24 +158,6 @@ const StepMenu = ({
             }}
             disabled={!isEdition}
           />
-          <TextField
-            fullWidth
-            select
-            label="Catégorie"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            style={{ marginBottom: 25 }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            disabled={!isEdition}
-          >
-            {categ.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.value}
-              </MenuItem>
-            ))}
-          </TextField>
           <Stack direction="row" spacing={2}>
             {isLoadingT ? (
               <Loading />

@@ -454,10 +454,6 @@ module.exports = [
    *                   type: integer
    *                   description: Nombre de jour du point d'étape
    *                   example: 3
-   *                 category:
-   *                   type: string
-   *                   description: Catégorie du point
-   *                   example: Hôtel
    *                 createdAt:
    *                   type: string
    *                   description: Date de création du point

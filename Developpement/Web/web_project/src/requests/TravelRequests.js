@@ -1,4 +1,3 @@
-import { Label } from "@mui/icons-material";
 import { checkStatus, url_prefix } from "../utils";
 
 const TravelRequests = {
@@ -120,7 +119,7 @@ const TravelRequests = {
 
   getJournalEntriesOfTravel: (idTravel) => {
     //const token = window.localStorage.getItem('token');
-    return fetch(`${url_prefix}/travel/${idTravel}/journal_entries`, {
+    return fetch(`${url_prefix}/travel/${idTravel}/journalEntries`, {
       // headers: {
       //     Authorization: 'Bearer ' + token
       // }
@@ -185,7 +184,6 @@ const TravelRequests = {
     longitude,
     description,
     duration,
-    category,
     TravelId,
   }) => {
     //const token = window.localStorage.getItem('token');
@@ -200,7 +198,6 @@ const TravelRequests = {
         latitude,
         longitude,
         description,
-        category,
         duration,
         TravelId,
       }),

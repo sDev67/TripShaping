@@ -2,17 +2,12 @@ import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
-<<<<<<< HEAD
-  Grid,
-  Stack,
-=======
   Card,
   CardContent,
   Popover,
   Grid,
   Stack,
   Avatar,
->>>>>>> dev_web_benjamin
   Dialog,
   Button,
   Typography,

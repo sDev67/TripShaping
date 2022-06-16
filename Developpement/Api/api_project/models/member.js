@@ -9,6 +9,7 @@ module.exports = sequelize => {
 
 			Member.hasMany(db.Expense);
 			Member.hasMany(db.JournalEntry);
+			Member.hasMany(db.Position);
 		}
 	}
 

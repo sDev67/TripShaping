@@ -306,7 +306,6 @@ export const MapReview = ({ }) => {
         ],
         entityMap: {},
       }),
-      category: "",
       duration: 1,
       TravelId: idTravel,
     };

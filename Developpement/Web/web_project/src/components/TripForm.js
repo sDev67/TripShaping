@@ -88,14 +88,6 @@ const TripForm = ({ setTripFormOpen }) => {
             Créer
           </Button>
         </Stack>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<DoneRounded />}
-          onClick={handleSubmit}
-        >
-          Créer
-        </Button>
       </Stack>
     </>
   );

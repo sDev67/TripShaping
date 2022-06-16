@@ -14,7 +14,7 @@ module.exports = {
 		return db.Point.findByPk(req.params.point_id)
 			.then(point => {
 				if (!point) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Point d\'intêret inexistant / introuvable' };
 				}
 				req.point = point;
 				return next();
@@ -26,7 +26,7 @@ module.exports = {
 		return db.Point.findByPk(req.params.point_id)
 			.then(point => {
 				if (!point) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Point d\'intêret inexistant / introuvable' };
 				}
 				return res.json(point);
 			})
@@ -43,7 +43,7 @@ module.exports = {
 		return db.Point.findByPk(req.params.point_id)
 			.then(point => {
 				if (!point) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Point d\'intêret inexistant / introuvable' };
 				}
 				Object.assign(point, req.body);
 				return point.save();
@@ -56,7 +56,7 @@ module.exports = {
 		return db.Point.findByPk(req.params.point_id)
 			.then(point => {
 				if (!point) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Point d\'intêret inexistant / introuvable' };
 				}
 				return point.destroy();
 			})
@@ -68,7 +68,7 @@ module.exports = {
 		return db.Point.findByPk(req.params.point_id)
 			.then(point => {
 				if (!point) {
-					throw { status: 404, message: 'Point not found' };
+					throw { status: 404, message: 'Point d\'intêret inexistant / introuvable' };
 				}
 				return point.getDocuments({
 					attributes: { exclude: ['dataFile'] } // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel

@@ -85,7 +85,7 @@ const get_by_id = async (req, res, next) => {
     return await db.Document.findByPk(req.params.document_id)
         .then(doc => {
             if (!doc) {
-                throw { status: 404, message: 'Requested Document not found' };
+                throw { status: 404, message: 'Document inexistant / non trouvé' };
             }
             return res.json(doc);
         })
@@ -106,7 +106,7 @@ const disp_file_by_id = async (req, res, next) => {
         then(resp => {
             // si l'id du document souhaité n'existe pas
             if (resp == "") {
-                res.status(404).send('Id of document does not exist');
+                res.status(404).send('Document inexistant');
             }
 
             else {
@@ -140,7 +140,7 @@ const disp_file_by_id = async (req, res, next) => {
 const create = async (req, res) => {
     try {
         if (req.file == undefined) {
-            return res.send(`You must select a file.`);
+            return res.send(`Vous devez sélectionner un fichier !`);
         }
 
         db.Document.create({
@@ -160,12 +160,12 @@ const create = async (req, res) => {
                 //     "resources/" + image.name,
                 //     image.dataFile
                 // );
-                return res.send(`File has been uploaded.`);
+                return res.send(`Fichier importé correctement !`);
             });
 
 
     } catch (error) {
-        return res.send(`Error when trying upload images: ${error}`);
+        return res.send(`Erreur lors de l'upload du document : ${error}`);
     }
 }
 
@@ -174,7 +174,7 @@ const delete_document_by_id = async (req, res, next) => {
     return db.Document.findByPk(req.params.document_id)
         .then(doc => {
             if (!doc) {
-                throw { status: 404, message: 'Requested Document not found' };
+                throw { status: 404, message: 'Document inexistant / non trouvé' };
             }
             return doc.destroy();
         })
@@ -188,11 +188,11 @@ const delete_document_by_id = async (req, res, next) => {
                         throw err;
                     }
                 })
-                res.status(200).end('File : ' + fileName + ' was deleted successfully')
+                res.status(200).end('Fichier : ' + fileName + ' a été supprimé correctement !')
             }
 
         }).catch((e) => {
-            res.status(404).send('Probleme here : ' + e.message);
+            res.status(404).send('Oups petit problème : ' + e.message);
 
         })
 

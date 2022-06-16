@@ -13,7 +13,7 @@ module.exports = {
     return db.Member.findByPk(req.params.member_id)
       .then((member) => {
         if (!member) {
-          throw { status: 404, message: "Requested Member not found" };
+          throw { status: 404, message: "Membre inexistant / introuvable" };
         }
         req.member = member;
         return next();
@@ -25,7 +25,7 @@ module.exports = {
     return db.Member.findByPk(req.params.member_id)
       .then((member) => {
         if (!member) {
-          throw { status: 404, message: "Requested Member not found" };
+          throw { status: 404, message: "Membre inexistant / introuvable" };
         }
         return res.json(member);
       })
@@ -41,7 +41,7 @@ module.exports = {
         },
       }).then((resp) => {
         if (resp == "") {
-          return res.status(404).send("Username does not exist");
+          return res.status(404).send("Nom d'utilisateur inexistant / introuvable");
         }
         else {
           return db.Member.create({ name: req.body.name, UserId: resp[0].id, TravelId: req.body.TravelId, userLogin: req.body.userLogin })
@@ -61,7 +61,7 @@ module.exports = {
     return db.Member.findByPk(req.params.member_id)
       .then((member) => {
         if (!member) {
-          throw { status: 404, message: "Requested Member not found" };
+          throw { status: 404, message: "Membre inexistant / introuvable" };
         }
         Object.assign(member, req.body);
         return member.save();
@@ -74,7 +74,7 @@ module.exports = {
     return db.Member.findByPk(req.params.member_id)
       .then((member) => {
         if (!member) {
-          throw { status: 404, message: "Requested Member not found" };
+          throw { status: 404, message: "Membre inexistant / introuvable" };
         }
         return member.destroy();
       })

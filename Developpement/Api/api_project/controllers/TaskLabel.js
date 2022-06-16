@@ -14,7 +14,7 @@ module.exports = {
       .getLabels({
         where:
         {
-          id:req.params.label_id
+          id: req.params.label_id
         },
       })
       .then((label) => res.json(label))
@@ -30,10 +30,9 @@ module.exports = {
   },
 
   add_label_id_by_task_id: (req, res, next) => {
-    console.log("-------------------------------" + res.locals.label + "-------------------------------")
-     return res.locals.task.addLabel(res.locals.label)
-     .then(res.json(res.locals))
-     .catch(next);
+    return res.locals.task.addLabel(res.locals.label)
+      .then(res.json(res.locals))
+      .catch(next);
   },
 
   delete_label_id_by_task_id: (req, res, next) => {
@@ -47,7 +46,7 @@ module.exports = {
     return db.Travel.findByPk(req.params.task_id)
       .then((task) => {
         if (!task) {
-          throw { status: 404, message: "Requested Group not found" };
+          throw { status: 404, message: "Tâche inexistante / introuvable" };
         }
         Object.assign(task, req.body);
         return task.save();

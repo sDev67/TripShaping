@@ -11,11 +11,10 @@ module.exports = {
 	},
 
 	load_by_id: (req, res, next) => {
-		console.log("------------------------------------" + req.params.label_id + "-------------------------------------");
 		return db.Label.findByPk(req.params.label_id)
 			.then(label => {
 				if (!label) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Label inexistant / introuvable' };
 				}
 				res.locals.label = label;
 				return next();
@@ -27,7 +26,7 @@ module.exports = {
 		return db.Label.findByPk(req.params.label_id)
 			.then(label => {
 				if (!label) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Label inexistant / introuvable' };
 				}
 				return res.json(label);
 			})
@@ -44,7 +43,7 @@ module.exports = {
 		return db.Label.findByPk(req.params.label_id)
 			.then(label => {
 				if (!label) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Label inexistant / introuvable' };
 				}
 				Object.assign(label, req.body);
 				return label.save();
@@ -57,7 +56,7 @@ module.exports = {
 		return db.Label.findByPk(req.params.label_id)
 			.then(label => {
 				if (!label) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Label inexistant / introuvable' };
 				}
 				return label.destroy();
 			})

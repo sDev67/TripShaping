@@ -14,7 +14,7 @@ module.exports = {
         return db.Position.findByPk(req.params.position_id)
             .then(position => {
                 if (!position) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Position inexistant / introuvable' };
                 }
                 req.position = position;
                 return next();
@@ -26,7 +26,7 @@ module.exports = {
         return db.Position.findByPk(req.params.position_id)
             .then(position => {
                 if (!position) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Position inexistant / introuvable' };
                 }
                 return res.json(position);
             })
@@ -43,7 +43,7 @@ module.exports = {
         return db.Position.findByPk(req.params.position_id)
             .then(position => {
                 if (!position) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Position inexistant / introuvable' };
                 }
                 Object.assign(position, req.body);
                 return position.save();
@@ -56,7 +56,7 @@ module.exports = {
         return db.Position.findByPk(req.params.position_id)
             .then(position => {
                 if (!position) {
-                    throw { status: 404, message: 'Requested Group not found' };
+                    throw { status: 404, message: 'Position inexistant / introuvable' };
                 }
                 return position.destroy();
             })

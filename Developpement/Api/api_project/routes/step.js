@@ -29,9 +29,6 @@ module.exports = [
 	 *          duration: 
 	 *            type: integer
 	 *            description: Durée du point d'étape
-	 *          category:
-	 *            type: string 
-	 *            description: Catégorie du point d'étape
 	 *          createdAt:
 	 *            type: string
 	 *            description: Date de création du point d'étape
@@ -49,7 +46,6 @@ module.exports = [
 	 *         latitude: 48.53088834964869
 	 *         longitude: 7.7356207021928824
 	 *         duration: 3
-	 *         category: Autre
 	 *         createdAt: 2022-03-17T15:17:42.282Z
 	 *         updateAt: 2022-03-17T15:17:42.282Z
 	 *         TravelId: 1
@@ -100,10 +96,6 @@ module.exports = [
 	 *                   type: integer
 	 *                   description: Durée du point d'étape.
 	 *                   example: 3
-	 *                 category: 
-	 *                   type: string                 
-	 *                   description: Catégorie du point.
-	 *                   example: Autre
 	 *                 createdAt:                    
 	 *                   type: string                   
 	 *                   description: Date de création du point.                   
@@ -157,10 +149,6 @@ module.exports = [
 	 *                 type: integer
 	 *                 description: Durée du point d'étape.
 	 *                 example: 3
-	 *               category:
-	 *                 type: string 
-	 *                 description: Catégorie du nouveau point crée.
-	 *                 example: Autre
 	 *               TravelId:
 	 *                 type: integer 
 	 *                 description: Id du voyage. 
@@ -199,10 +187,6 @@ module.exports = [
 	 *                   type: integer
 	 *                   description: Durée du point d'étape.
 	 *                   example: 3
-	 *                 category:
-	 *                   type: string 
-	 *                   description: Catégorie du nouveau point crée.
-	 *                   example: Autre
 	 *                 createdAt:                    
 	 *                   type: string                   
 	 *                   description: Date de création du point crée.                   
@@ -268,10 +252,6 @@ module.exports = [
 	 *                   type: string
 	 *                   description: Description du point.
 	 *                   example: Super parc à paris.
-	 *                 category: 
-	 *                   type: string                 
-	 *                   description: Catégorie du point.
-	 *                   example: Parc
 	 *                 createdAt:                    
 	 *                   type: string                   
 	 *                   description: Date de création du point.                   
@@ -398,10 +378,6 @@ module.exports = [
 	 *                    type: string
 	 *                    description: Description du point d'intérêt
 	 *                    example: null
-	 *                 category:
-	 *                    type: string 
-	 *                    description: Catégorie du point d'intérêt.
-	 *                    example: Autre
 	 *                 day:
 	 *                    type: integer 
 	 *                    description: Jour du point d'intérêt.
@@ -470,10 +446,6 @@ module.exports = [
 	 *                 type: string 
 	 *                 description: Description du nouveau point crée.
 	 *                 example: Ecole très répandue au Grand Est
-	 *               category:
-	 *                 type: string 
-	 *                 description: Catégorie du nouveau point crée.
-	 *                 example: Autre
 	 *               TravelId:
 	 *                 type: integer 
 	 *                 description: Id du voyage. 
@@ -513,10 +485,6 @@ module.exports = [
 	 *                   type: string
 	 *                   description: Description du point.
 	 *                   example: Grand campus à visiter.
-	 *                 category: 
-	 *                   type: string                 
-	 *                   description: Catégorie du point.
-	 *                   example: Autre
 	 *                 createdAt:                    
 	 *                   type: string                   
 	 *                   description: Date de création du point.                   

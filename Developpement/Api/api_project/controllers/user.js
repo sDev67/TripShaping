@@ -84,7 +84,7 @@ module.exports = {
           };
         }
         if (!user.check_password(password)) {
-          throw { status: 401, message: "Wrong password" };
+          throw { status: 401, message: "Mot de passe incorrect" };
         }
 
         const token = jsonwebtoken.sign({ id: user.id }, secret, {

@@ -14,7 +14,7 @@ module.exports = {
 		return db.Task.findByPk(req.params.task_id)
 			.then(task => {
 				if (!task) {
-					throw { status: 404, message: 'Requested Task not found' };
+					throw { status: 404, message: 'Tâche inexistante / introuvable' };
 				}
 				res.locals.task = task;
 				return next();
@@ -26,7 +26,7 @@ module.exports = {
 		return db.Task.findByPk(req.params.task_id)
 			.then(task => {
 				if (!task) {
-					throw { status: 404, message: 'Requested Task not found' };
+					throw { status: 404, message: 'Tâche inexistante / introuvable' };
 				}
 				return res.json(task);
 			})
@@ -43,7 +43,7 @@ module.exports = {
 		return db.Task.findByPk(req.params.task_id)
 			.then(task => {
 				if (!task) {
-					throw { status: 404, message: 'Requested Task not found' };
+					throw { status: 404, message: 'Tâche inexistante / introuvable' };
 				}
 				Object.assign(task, req.body);
 				return task.save();
@@ -56,7 +56,7 @@ module.exports = {
 		return db.Task.findByPk(req.params.task_id)
 			.then(task => {
 				if (!task) {
-					throw { status: 404, message: 'Requested Task not found' };
+					throw { status: 404, message: 'Tâche inexistante / introuvable' };
 				}
 				return task.destroy();
 			})

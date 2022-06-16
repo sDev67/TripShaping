@@ -68,7 +68,7 @@ const get_by_id = async (req, res, next) => {
     return await db.Photo.findByPk(req.params.photo_id)
         .then(photo => {
             if (!photo) {
-                throw { status: 404, message: 'Requested Photo not found' };
+                throw { status: 404, message: 'Photo inexistant / introuvable' };
             }
             return res.json(photo);
         })
@@ -87,7 +87,7 @@ const disp_file_by_id = async (req, res, next) => {
         then(resp => {
             // si l'id du document souhaité n'existe pas
             if (resp == "") {
-                res.status(404).send('Id of Photo does not exist');
+                res.status(404).send('Photo inexistant / introuvable');
             }
             else {
                 // on récupère le chemin du fichier 
@@ -111,7 +111,8 @@ const disp_file_by_id = async (req, res, next) => {
 const create = async (req, res) => {
     try {
         db.Photo.create({
-            dataFile: req.body.dataFile,
+            dataFile1: req.body.dataFile1,
+            dataFile2: req.body.dataFile2,
             StepId: req.body.StepId,
             TravelId: req.body.TravelId,
             RouteId: req.body.RouteId,
@@ -121,10 +122,10 @@ const create = async (req, res) => {
             longitude: req.body.longitude
         })
             .then((image) => {
-                return res.send(`Photo has been uploaded.`);
+                return res.send(`La photo a bien été upload`);
             });
     } catch (error) {
-        return res.send(`Error when trying upload photos: ${error}`);
+        return res.send(`Erreur lors de l'upload de la photo : ${error}`);
     }
 }
 
@@ -132,7 +133,7 @@ const delete_photo_by_id = async (req, res, next) => {
     return db.Photo.findByPk(req.params.photo_id)
         .then(photo => {
             if (!photo) {
-                throw { status: 404, message: 'Requested Photo not found' };
+                throw { status: 404, message: 'Photo inexistant / introuvable' };
             }
             return photo.destroy();
         })
@@ -144,10 +145,10 @@ const delete_photo_by_id = async (req, res, next) => {
                         throw err;
                     }
                 })
-                res.status(200).end('Photo : ' + fileName + ' was deleted successfully')
+                res.status(200).end('Photo : ' + fileName + ' à été supprimé correctement')
             }
         }).catch((e) => {
-            res.status(404).send('Probleme here : ' + e.message);
+            res.status(404).send('Oups petit problème : ' + e.message);
         })
 }
 

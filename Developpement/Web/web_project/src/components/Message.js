@@ -3,10 +3,6 @@ import {
   Stack,
   CardHeader,
   Avatar,
-  CardMedia,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
   Card,
   Typography,
   CardContent,
@@ -25,8 +21,11 @@ const Message = ({ journalEntry }) => {
     isError: isErrorS,
     error: errorS,
     data: step,
-  } = useQuery(["getStepById", journalEntry.StepId], () =>
-    StepRequests.getStepById(journalEntry.StepId)
+    refetch: refetchS,
+  } = useQuery(
+    ["getStepById", journalEntry.StepId],
+    () => StepRequests.getStepById(journalEntry.StepId),
+    { enabled: false }
   );
 
   const {
@@ -38,7 +37,11 @@ const Message = ({ journalEntry }) => {
     MemberRequests.getMemberById(journalEntry.MemberId)
   );
 
-  console.log(member);
+  if (journalEntry.StepId) {
+    refetchS();
+  }
+
+  // console.log(step);
   return (
     <div>
       {isLoading ? (
@@ -47,29 +50,33 @@ const Message = ({ journalEntry }) => {
         <p style={{ color: "red" }}>{error.message}</p>
       ) : (
         <div>
-          {isLoadingS ? (
-            <Loading />
-          ) : isErrorS ? (
-            <p style={{ color: "red" }}>{errorS.message}</p>
-          ) : (
-            <div>
-              <Card>
-                <CardHeader
-                  avatar={<Avatar {...stringAvatar(member.name)} />}
-                  title={
-                    <Stack direction="row" justifyContent="space-between">
-                      <div>{member.name}</div>
-                      <i>{step.title}</i>
-                    </Stack>
-                  }
-                  subheader={journalEntry.date}
-                />
-                <CardContent>
-                  <Typography variant="body"> {journalEntry.text}</Typography>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+          <div>
+            <Card>
+              <CardHeader
+                avatar={<Avatar {...stringAvatar(member.name)} />}
+                title={
+                  <Stack direction="row" justifyContent="space-between">
+                    <div>{member.name}</div>
+                    {step && (
+                      <>
+                        {isLoadingS ? (
+                          <Loading />
+                        ) : isErrorS ? (
+                          <p style={{ color: "red" }}>{errorS.message}</p>
+                        ) : (
+                          <i>{step.title}</i>
+                        )}
+                      </>
+                    )}
+                  </Stack>
+                }
+                subheader={journalEntry.date}
+              />
+              <CardContent>
+                <Typography variant="body"> {journalEntry.text}</Typography>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       )}
     </div>

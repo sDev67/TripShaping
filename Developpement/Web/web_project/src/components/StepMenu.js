@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   TextField,
@@ -15,7 +15,6 @@ import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
-import { FileUploader } from "react-drag-drop-files";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import RichTextEditor from "./RichTextEditor";
@@ -23,6 +22,8 @@ import DocumentRequest from "../requests/DocumentRequest";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
+import TravelRequests from "../requests/TravelRequests";
+import { addDays } from "../utils/DateFormatting";
 
 const StepMenu = ({
   deleteStep,
@@ -30,15 +31,15 @@ const StepMenu = ({
   setSelectedMarker,
   updateInfoStep,
   isEdition,
+  steps,
+  setSelectedPoiOfMarker,
 }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
-  const [files, setFiles] = useState([]);
   const [title, setTitle] = useState(selectedMarker.title);
-  const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
   const [descriptionHTML, setDescriptionHTML] = useState(selectedMarker.descriptionHTML);
 
@@ -53,6 +54,36 @@ const StepMenu = ({
     DocumentRequest.getDocumentsByStepId(selectedMarker.id)
   );
 
+  const {
+    isLoading: isLoadingT,
+    isError: isErrorT,
+    error: errorT,
+    data: travel,
+  } = useQuery(["getTravel", idTravel], () =>
+    TravelRequests.getTravelByid(idTravel)
+  );
+
+  const [days, setDays] = useState();
+
+  useEffect(() => {
+    let dayCounter = 0;
+    let date;
+    let stop = false;
+
+    steps.forEach((step) => {
+      if (!stop) {
+        if (step.id === selectedMarker.id) {
+          console.log(step.id);
+          stop = true;
+        } else {
+          dayCounter += step.duration;
+        }
+      }
+    });
+
+    setDays(dayCounter);
+  }, []);
+
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
       queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
@@ -63,32 +94,13 @@ const StepMenu = ({
 
   const HandleCloseAddLabelForm = () => {
     setInformationDialogOpenOpen(false);
-  }
-
-  const categ = [
-    {
-      value: "Hôtel",
-    },
-    {
-      value: "Gîtes",
-    },
-    {
-      value: "Camping",
-    },
-    {
-      value: "Palace",
-    },
-    {
-      value: "Autre",
-    },
-  ];
+  };
 
   // Fonction qui met a jour les propriétés d'un point d'interet
   const updateStepInfo = (step) => (e) => {
     if (isEdition) {
       const newPoint = {
         title: title,
-        category: category,
         description: description,
         descriptionHTML: descriptionHTML,
         duration: duration,
@@ -128,7 +140,10 @@ const StepMenu = ({
         />
         <IconButton
           color="error"
-          onClick={() => setSelectedMarker(null)}
+          onClick={() => {
+            setSelectedMarker(null);
+            setSelectedPoiOfMarker(null);
+          }}
           style={{ position: "absolute", right: 5, top: 5 }}
         >
           <CancelRounded />
@@ -146,36 +161,38 @@ const StepMenu = ({
             }}
             disabled={!isEdition}
           />
-          <TextField
-            fullWidth
-            select
-            label="Catégorie"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            style={{ marginBottom: 25 }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            disabled={!isEdition}
-          >
-            {categ.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.value}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            fullWidth
-            label="Durée du séjour"
-            type="number"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            style={{ marginBottom: 25 }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            disabled={!isEdition}
-          />
+          <Stack direction="row" spacing={2}>
+            {isLoadingT ? (
+              <Loading />
+            ) : isErrorT ? (
+              <p style={{ color: "red" }}>{errorT.message}</p>
+            ) : (
+              <TextField
+                fullWidth
+                label="Date du début de l'étape"
+                type="text"
+                value={addDays(travel.startDate, days)}
+                style={{ marginBottom: 25 }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                disabled={true}
+              />
+            )}
+            <TextField
+              fullWidth
+              label="Durée du séjour"
+              type="number"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              style={{ marginBottom: 25 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              disabled={!isEdition}
+            />
+          </Stack>
+
           <Stack
             style={{ marginBottom: 25 }}
             spacing={1}
@@ -222,10 +239,12 @@ const StepMenu = ({
             )}
           </Stack>
 
-
           <Typography variant="h6" color="primary">
             Description
-            <IconButton disabled={!isEdition} onClick={(e) => setInformationDialogOpenOpen(true)}>
+            <IconButton
+              disabled={!isEdition}
+              onClick={(e) => setInformationDialogOpenOpen(true)}
+            >
               <EditRoundedIcon />
             </IconButton>
           </Typography>
@@ -241,7 +260,6 @@ const StepMenu = ({
               maxW="350px"
               information={false}
             />
-
           </div>
 
           <Stack direction="row" justifyContent="space-between">
@@ -269,7 +287,6 @@ const StepMenu = ({
           </Stack>
         </CardContent>
       </Card>
-
 
       <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
         <RichTextEditor

@@ -31,13 +31,16 @@ module.exports = sequelize => {
 		infosHTML: DataTypes.TEXT,
 		toPublish: {
 			type: Sequelize.BOOLEAN,
-			defaultValue: 1,
+			defaultValue: 0,
 		},
 		positionAgree: {
 			type: Sequelize.BOOLEAN,
 			defaultValue: 1,
 		},
-		startDate: DataTypes.DATE
+		startDate: {
+			type: Sequelize.DATE,
+			defaultValue: Sequelize.NOW
+		}
 	}, {
 		sequelize,
 		modelName: 'Travel'

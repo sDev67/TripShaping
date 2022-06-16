@@ -24,8 +24,26 @@ import { AuthProvider } from "./Authentication/auth";
 import TripSettings from "./routes/TripSettings";
 import Exploration from "./routes/Exploration";
 import AppShowcase from "./routes/AppShowcase";
+import {
+  setTranslationConfig,
+  registerTranslations,
+} from "@psyycker/react-translation";
+// Always call first before initialising the config
+import "@psyycker/react-translation";
+import french from "./translations/french.json";
+import english from "./translations/english.json";
 
 const queryClient = new QueryClient();
+
+registerTranslations({
+  en: english,
+  fr: french,
+});
+
+// Do not call inside a component
+setTranslationConfig({
+  defaultLocale: "fr",
+});
 
 function App() {
   return (
@@ -34,7 +52,6 @@ function App() {
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             <Routes>
-              <Route path="/vitrine" element={<Exploration />} />
               <Route path="/" element={<AppShowcase />} />
               <Route path="/discover" element={<Exploration />} />
               <Route path="/signin" element={<Signin />} />

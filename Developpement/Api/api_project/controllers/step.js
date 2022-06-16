@@ -14,7 +14,7 @@ module.exports = {
 		return db.Step.findByPk(req.params.step_id)
 			.then(step => {
 				if (!step) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Point d\'étape inexistant / introuvable' };
 				}
 				req.step = step;
 				return next();
@@ -26,7 +26,7 @@ module.exports = {
 		return db.Step.findByPk(req.params.step_id)
 			.then(step => {
 				if (!step) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Point d\'étape inexistant / introuvable' };
 				}
 				return res.json(step);
 			})
@@ -43,7 +43,7 @@ module.exports = {
 		return db.Step.findByPk(req.params.step_id)
 			.then(step => {
 				if (!step) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Point d\'étape inexistant / introuvable' };
 				}
 				Object.assign(step, req.body);
 				return step.save();
@@ -56,7 +56,7 @@ module.exports = {
 		return db.Step.findByPk(req.params.step_id)
 			.then(step => {
 				if (!step) {
-					throw { status: 404, message: 'Requested Group not found' };
+					throw { status: 404, message: 'Point d\'étape inexistant / introuvable' };
 				}
 				return step.destroy();
 			})
@@ -68,7 +68,7 @@ module.exports = {
 		return db.Step.findByPk(req.params.step_id)
 			.then(step => {
 				if (!step) {
-					throw { status: 404, message: 'Step not found' };
+					throw { status: 404, message: 'Point d\'étape inexistant / introuvable' };
 				}
 				return step.getDocuments({
 					attributes: { exclude: ['dataFile'] } // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
@@ -82,7 +82,7 @@ module.exports = {
 		return db.Step.findByPk(req.params.step_id)
 			.then(step => {
 				if (!step) {
-					throw { status: 404, message: 'Step not found' };
+					throw { status: 404, message: 'Point d\'étape inexistant / introuvable' };
 				}
 				return step.getPoints();
 			})

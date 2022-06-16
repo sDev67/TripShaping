@@ -4,29 +4,17 @@ import TimelineItem from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
 import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
-import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
-import HotelIcon from "@mui/icons-material/Hotel";
-import RepeatIcon from "@mui/icons-material/Repeat";
 import Typography from "@mui/material/Typography";
 import CancelRounded from "@mui/icons-material/CancelRounded";
-import { styled } from "@mui/material/styles";
 import {
   Card,
-  Box,
-  Slide,
-  Stack,
-  CardContent,
-  Dialog,
-  MenuItem,
-  Button,
   IconButton,
 } from "@mui/material";
 import Loading from "../utils/Loading";
 import palette from "../theme/palette";
 import { textTruncation } from "../utils/TextTruncation";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const StepTimeline = ({
   steps,
@@ -34,9 +22,6 @@ const StepTimeline = ({
   isErrorS,
   errorS,
   setPosition,
-  setSelectedMarker,
-  setExpanded,
-  expanded,
   setShowTimeline,
 }) => {
   const [selectedTimeLineItem, setSelectedTimeLineItem] = useState(null);

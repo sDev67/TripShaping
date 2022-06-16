@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../Authentication/auth";
 import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   Box,
   Typography,
@@ -10,22 +9,19 @@ import {
   IconButton,
   Grid,
   Avatar,
-  Alert,
   Paper,
   InputAdornment,
   InputLabel,
   OutlinedInput,
   Button,
-  FormControlLabel,
-  Checkbox,
+
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AlertError from "../utils/AlertError";
-import palette from "./../theme/palette";
 import image from "../assets/rainbow.png";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
 
@@ -196,7 +192,9 @@ const Signup = () => {
                 Déjà inscrit ? Connectez-vous ici.
               </Typography>
             </Stack>
-            {message && <AlertError message={message}></AlertError>}
+            {message && (
+              <AlertError message={message} severity={"error"}></AlertError>
+            )}
           </Box>
         </Grid>
       </Grid>

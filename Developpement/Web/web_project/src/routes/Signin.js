@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../Authentication/auth";
 import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import {
   Box,
   Typography,
@@ -10,20 +10,18 @@ import {
   IconButton,
   Grid,
   Avatar,
-  Alert,
   Paper,
   InputAdornment,
   InputLabel,
   OutlinedInput,
   Button,
-  FormControlLabel,
-  Checkbox,
+
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AlertError from "../utils/AlertError";
 import image from "../assets/rainbow.png";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
@@ -42,6 +40,7 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setMessage("");
     signin({ username, password }).catch((err) => {
       setUsername("");
       setPassword("");
@@ -174,7 +173,13 @@ const Signin = () => {
                 Pas de compte ? Inscrivez-vous ici.
               </Typography>
             </Stack>
-            {message && <AlertError message={message}></AlertError>}
+            {message && (
+              <AlertError
+                message={message}
+                setMessage={setMessage}
+                severity={"error"}
+              ></AlertError>
+            )}
           </Box>
         </Grid>
       </Grid>

@@ -29,9 +29,6 @@ module.exports = [
 	 *          duration: 
 	 *            type: integer
 	 *            description: Durée du point d'étape
-	 *          category:
-	 *            type: string 
-	 *            description: Catégorie du point d'étape
 	 *          createdAt:
 	 *            type: string
 	 *            description: Date de création du point d'étape
@@ -41,6 +38,7 @@ module.exports = [
 	 *          TravelId:
 	 *            type: integer 
 	 *            description: Id du voyage
+	 * 
 	 *       example:
 	 *         id: 14 
 	 *         title: Iut Robert Schuman
@@ -48,7 +46,6 @@ module.exports = [
 	 *         latitude: 48.53088834964869
 	 *         longitude: 7.7356207021928824
 	 *         duration: 3
-	 *         category: Autre
 	 *         createdAt: 2022-03-17T15:17:42.282Z
 	 *         updateAt: 2022-03-17T15:17:42.282Z
 	 *         TravelId: 1
@@ -99,10 +96,6 @@ module.exports = [
 	 *                   type: integer
 	 *                   description: Durée du point d'étape.
 	 *                   example: 3
-	 *                 category: 
-	 *                   type: string                 
-	 *                   description: Catégorie du point.
-	 *                   example: Autre
 	 *                 createdAt:                    
 	 *                   type: string                   
 	 *                   description: Date de création du point.                   
@@ -118,11 +111,6 @@ module.exports = [
 	 *                     
 	 *                      
 	 */
-	{
-		url: '/step',
-		method: 'get',
-		func: step_ctrl.get_all
-	},
 
 	/**
 	 * @swagger
@@ -161,10 +149,6 @@ module.exports = [
 	 *                 type: integer
 	 *                 description: Durée du point d'étape.
 	 *                 example: 3
-	 *               category:
-	 *                 type: string 
-	 *                 description: Catégorie du nouveau point crée.
-	 *                 example: Autre
 	 *               TravelId:
 	 *                 type: integer 
 	 *                 description: Id du voyage. 
@@ -203,10 +187,6 @@ module.exports = [
 	 *                   type: integer
 	 *                   description: Durée du point d'étape.
 	 *                   example: 3
-	 *                 category:
-	 *                   type: string 
-	 *                   description: Catégorie du nouveau point crée.
-	 *                   example: Autre
 	 *                 createdAt:                    
 	 *                   type: string                   
 	 *                   description: Date de création du point crée.                   
@@ -221,13 +201,6 @@ module.exports = [
 	 *                   example: 1                   
 	 *                      
 	 */
-
-	{
-		url: '/step',
-		method: 'post',
-		func: step_ctrl.create
-	},
-
 
 	/**
 	 * @swagger
@@ -279,10 +252,6 @@ module.exports = [
 	 *                   type: string
 	 *                   description: Description du point.
 	 *                   example: Super parc à paris.
-	 *                 category: 
-	 *                   type: string                 
-	 *                   description: Catégorie du point.
-	 *                   example: Parc
 	 *                 createdAt:                    
 	 *                   type: string                   
 	 *                   description: Date de création du point.                   
@@ -299,12 +268,138 @@ module.exports = [
 	 *                      
 	 */
 
-	{
-		url: '/step/:step_id',
-		method: 'get',
-		func: step_ctrl.get_by_id
-	},
+	/**
+	 * @swagger
+	 * /step/{step_id}/documents:
+	 *   get:
+	 *     tags:
+	 *     - Step
+	 *     summary: Retourne le document associé au point d'étape.
+	 *     description: Retourne le document associé au point d'étape.
+	 *     parameters:
+	 *      - in: path
+	 *        name: step_id
+	 *        example: 11
+	 *        required: true
+	 *        schema:
+	 *          type: integer     
+	 *           
+	 *     responses:
+	 *       200:
+	 *         description: Retourne le document associé au point d'étape.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 id:
+	 *                   type: integer
+	 *                   description: Id du document
+	 *                   example: 4
+	 *                 title: 
+	 *                   type: string
+	 *                   description: Titre du document
+	 *                   example: DisneyLand.png
+	 *                 typeFile: 
+	 *                   type: string
+	 *                   description: Description du document
+	 *                   example: image/png
+	 *                 createdAt:                    
+	 *                   type: string                   
+	 *                   description: Date de création du point                  
+	 *                   example: 2022-03-17T15:17:42.282Z
+	 *                 updateAt:   
+	 *                   type: string
+	 *                   description: Date de modification du point
+	 *                   example: 2022-03-17T15:17:42.282Z
+	 *                 StepId:    
+	 *                   type: integer 
+	 *                   description: Id du point d'étape
+	 *                   example: 11
+	 *                 TravelId:    
+	 *                   type: integer 
+	 *                   description: Id du voyage
+	 *                   example: 2
+	 *                 RouteId:    
+	 *                   type: integer 
+	 *                   description: Id de la route
+	 *                   example: null
+	 *                 PointId:    
+	 *                   type: integer 
+	 *                   description: Id point d'intérêt
+	 *                   example: null 
+	 *                     
+	 *                      
+	 */
 
+	/**
+	 * @swagger
+	 * /step/{step_id}/points:
+	 *   get:
+	 *     tags:
+	 *     - Step
+	 *     summary: Retourne les points d'intérêts associé au point d'étape.
+	 *     description: Retourne les points d'intérêts associé au point d'étape.
+	 *     parameters:
+	 *      - in: path
+	 *        name: step_id
+	 *        example: 8
+	 *        required: true
+	 *        schema:
+	 *          type: integer     
+	 *           
+	 *     responses:
+	 *       200:
+	 *         description: Retourne les points d'intérêts associé au point d'étape.
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               type: object
+	 *               properties:
+	 *                 id:
+	 *                   type: integer
+	 *                   description: Id du document
+	 *                   example: 4
+	 *                 title:
+	 *                   type: string
+	 *                   description: nom du point d'intérêt 
+	 *                   example: Iut Robert Schuman
+	 *                 latitude:
+	 *                   type: number
+	 *                   format: float
+	 *                   description: Latitude du point d'intérêt
+	 *                   example: 48.53088834964869
+	 *                 longitude:
+	 *                    type: number 
+	 *                    format: float                        
+	 *                    description: Longitude du point d'intérêt
+	 *                    example: 7.7356207021928824
+	 *                 description: 
+	 *                    type: string
+	 *                    description: Description du point d'intérêt
+	 *                    example: null
+	 *                 day:
+	 *                    type: integer 
+	 *                    description: Jour du point d'intérêt.
+	 *                    example: 3
+	 *                 createdAt:                    
+	 *                   type: string                   
+	 *                   description: Date de création du point d'intérêt                
+	 *                   example: 2022-03-17T15:17:42.282Z
+	 *                 updateAt:   
+	 *                   type: string
+	 *                   description: Date de modification du point d'intérêt
+	 *                   example: 2022-03-17T15:17:42.282Z
+	 *                 TravelId:
+	 *                    type: integer 
+	 *                    description: Id du voyage
+	 *                    example: 1  
+	 *                 StepId:    
+	 *                    type: integer 
+	 *                    description: Id du point d'étape associé
+	 *                    example: 8
+	 *                      
+	 */
 
 	/**
 	 * @swagger
@@ -351,10 +446,6 @@ module.exports = [
 	 *                 type: string 
 	 *                 description: Description du nouveau point crée.
 	 *                 example: Ecole très répandue au Grand Est
-	 *               category:
-	 *                 type: string 
-	 *                 description: Catégorie du nouveau point crée.
-	 *                 example: Autre
 	 *               TravelId:
 	 *                 type: integer 
 	 *                 description: Id du voyage. 
@@ -394,10 +485,6 @@ module.exports = [
 	 *                   type: string
 	 *                   description: Description du point.
 	 *                   example: Grand campus à visiter.
-	 *                 category: 
-	 *                   type: string                 
-	 *                   description: Catégorie du point.
-	 *                   example: Autre
 	 *                 createdAt:                    
 	 *                   type: string                   
 	 *                   description: Date de création du point.                   
@@ -413,13 +500,6 @@ module.exports = [
 	 *                     
 	 *                      
 	 */
-
-	{
-		url: '/step/:step_id',
-		method: 'put',
-		func: step_ctrl.update_by_id
-	},
-
 
 	/**
 	 * @swagger
@@ -443,6 +523,27 @@ module.exports = [
 	 *                      
 	 */
 
+
+	{
+		url: '/step',
+		method: 'get',
+		func: step_ctrl.get_all
+	},
+	{
+		url: '/step',
+		method: 'post',
+		func: step_ctrl.create
+	},
+	{
+		url: '/step/:step_id',
+		method: 'get',
+		func: step_ctrl.get_by_id
+	},
+	{
+		url: '/step/:step_id',
+		method: 'put',
+		func: step_ctrl.update_by_id
+	},
 	{
 		url: '/step/:step_id/documents',
 		method: 'get',

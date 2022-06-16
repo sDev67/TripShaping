@@ -10,22 +10,17 @@ import {
   Button,
   Typography,
   IconButton,
-  CardHeader,
-  FormGroup,
 } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
-import { FileUploader } from "react-drag-drop-files";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
-import TravelRequests from "../requests/TravelRequests";
 import Loading from "../utils/Loading";
 import DocumentRequest from "../requests/DocumentRequest";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import RichTextEditor from "./RichTextEditor";
-import StepRequests from "../requests/StepRequests";
 import DocumentsList from "./DocumentsList";
 
 const InterestPointMenu = ({
@@ -61,7 +56,7 @@ const InterestPointMenu = ({
 
   const HandleCloseAddLabelForm = () => {
     setInformationDialogOpenOpen(false);
-  }
+  };
 
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
@@ -97,9 +92,6 @@ const InterestPointMenu = ({
     },
     {
       value: "Spectacle",
-    },
-    {
-      value: "Nature",
     },
     {
       value: "Port",
@@ -311,10 +303,12 @@ const InterestPointMenu = ({
             )}
           </Stack>
 
-
           <Typography variant="h6" color="primary">
             Description
-            <IconButton disabled={!isEdition} onClick={(e) => setInformationDialogOpenOpen(true)}>
+            <IconButton
+              disabled={!isEdition}
+              onClick={(e) => setInformationDialogOpenOpen(true)}
+            >
               <EditRoundedIcon />
             </IconButton>
           </Typography>
@@ -330,7 +324,6 @@ const InterestPointMenu = ({
               maxW="350px"
               information={false}
             />
-
           </div>
 
           <Stack direction="row" justifyContent="space-between">

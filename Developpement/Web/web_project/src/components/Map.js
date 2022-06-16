@@ -25,6 +25,24 @@ import selectedStepIcon from "../assets/selectedStepIcon.png";
 
 import interestPointIcon from "../assets/interestPointIcon.png";
 import selectedInterestPointIcon from "../assets/selectedInterestPointIcon.png";
+import antique from "../assets/antique.png";
+import antiqueSelected from "../assets/antiqueSelected.png";
+import boat from "../assets/boat.png";
+import boatSelected from "../assets/boatSelected.png";
+import camera from "../assets/camera.png";
+import cameraSelected from "../assets/cameraSelected.png";
+import castle from "../assets/castle.png";
+import castleSelected from "../assets/castleSelected.png";
+import parc from "../assets/parc.png";
+import parcSelected from "../assets/parcSelected.png";
+import shop from "../assets/shop.png";
+import shopSelected from "../assets/shopSelected.png";
+import stade from "../assets/stade.png";
+import stadeSelected from "../assets/stadeSelected.png";
+import theater from "../assets/theater.png";
+import theaterSelected from "../assets/theaterSelected.png";
+import food from "../assets/food.png";
+import foodSelected from "../assets/foodSelected.png";
 
 const containerStyle = {
   position: "relative",
@@ -32,15 +50,15 @@ const containerStyle = {
   height: "100%",
 };
 
-export const Map = ({}) => {
+export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
   const [position, setPosition] = useState({
-    lat: 48.5734053,
-    lng: 7.7521113,
+    lat: steps[0] ? steps[0].latitude : 48.5734053,
+    lng: steps[0] ? steps[0].longitude : 7.7521113,
   });
 
   const [isEdition, setIsEdition] = useState(false);
@@ -49,22 +67,13 @@ export const Map = ({}) => {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
+  const [selectedPoiOfMarker, setSelectedPoiOfMarker] = useState(null);
 
   const [showTimeline, setShowTimeline] = useState(false);
 
   const [stepAdded, setStepAdded] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
-
-  // Etapes
-  const {
-    isLoading: isLoadingS,
-    isError: isErrorS,
-    error: errorS,
-    data: steps,
-  } = useQuery(["getSteps", idTravel], () =>
-    TravelRequests.getStepsOfTravel(idTravel)
-  );
 
   // Points
   const {
@@ -227,7 +236,8 @@ export const Map = ({}) => {
   });
 
   const onMapClick = (e) => {
-    // on peut placer les points uniquement si on est en mode edition
+    // on peut placer les points uniquement si on est en mode edition*
+    setSelectedPoiOfMarker(null);
     if (isEdition) {
       if (selectedMarker !== null) {
         setSelectedMarker(null);
@@ -256,6 +266,164 @@ export const Map = ({}) => {
     }
   };
 
+  const selectInterestPointIcon = (interestPoint) => {
+    console.log(selectedPoiOfMarker);
+    console.log(interestPoint.id);
+    if (selectedPoiOfMarker != null && selectedPoiOfMarker.length > 0) {
+      for (let index = 0; index < selectedPoiOfMarker.length; index++) {
+        if (selectedPoiOfMarker[index].id == interestPoint.id) {
+          if (interestPoint.category == "Parc") {
+            return parcSelected;
+          } else if (interestPoint.category == "Musée") {
+            return antiqueSelected;
+          } else if (interestPoint.category == "Cinéma") {
+            return cameraSelected;
+          } else if (interestPoint.category == "Stade") {
+            return stadeSelected;
+          } else if (interestPoint.category == "Magasin") {
+            return shopSelected;
+          } else if (interestPoint.category == "Monument historique") {
+            return castleSelected;
+          } else if (interestPoint.category == "Restaurant") {
+            return foodSelected;
+          } else if (interestPoint.category == "Spectacle") {
+            return theaterSelected;
+          } else if (interestPoint.category == "Port") {
+            return boatSelected;
+          } else if (interestPoint.category == "Autre") {
+            return selectedInterestPointIcon;
+          } else {
+            return selectedInterestPointIcon;
+          }
+        }
+      }
+      if (interestPoint.category == "Parc") {
+        return parc;
+      } else if (interestPoint.category == "Musée") {
+        return antique;
+      } else if (interestPoint.category == "Cinéma") {
+        return camera;
+      } else if (interestPoint.category == "Stade") {
+        return stade;
+      } else if (interestPoint.category == "Magasin") {
+        return shop;
+      } else if (interestPoint.category == "Monument historique") {
+        return castle;
+      } else if (interestPoint.category == "Restaurant") {
+        return food;
+      } else if (interestPoint.category == "Spectacle") {
+        return theater;
+      } else if (interestPoint.category == "Port") {
+        return boat;
+      } else if (interestPoint.category == "Autre") {
+        return interestPointIcon;
+      } else {
+        return interestPointIcon;
+      }
+    } else {
+      if (interestPoint.category == "Parc") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return parcSelected;
+        } else {
+          return parc;
+        }
+      } else if (interestPoint.category == "Musée") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return antiqueSelected;
+        } else {
+          return antique;
+        }
+      } else if (interestPoint.category == "Cinéma") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return cameraSelected;
+        } else {
+          return camera;
+        }
+      } else if (interestPoint.category == "Stade") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return stadeSelected;
+        } else {
+          return stade;
+        }
+      } else if (interestPoint.category == "Magasin") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return shopSelected;
+        } else {
+          return shop;
+        }
+      } else if (interestPoint.category == "Monument historique") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return castleSelected;
+        } else {
+          return castle;
+        }
+      } else if (interestPoint.category == "Restaurant") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return foodSelected;
+        } else {
+          return food;
+        }
+      } else if (interestPoint.category == "Spectacle") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return theaterSelected;
+        } else {
+          return theater;
+        }
+      } else if (interestPoint.category == "Port") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return boatSelected;
+        } else {
+          return boat;
+        }
+      } else if (interestPoint.category == "Autre") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return selectedInterestPointIcon;
+        } else {
+          return interestPointIcon;
+        }
+      } else {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return selectedInterestPointIcon;
+        } else {
+          return interestPointIcon;
+        }
+      }
+    }
+  };
+
   // Fonction qui permet d'ajouter un point d'étape
   const addStepPoint = (e) => {
     const newStep = {
@@ -276,7 +444,6 @@ export const Map = ({}) => {
         ],
         entityMap: {},
       }),
-      category: "",
       duration: 1,
       TravelId: idTravel,
     };
@@ -412,8 +579,16 @@ export const Map = ({}) => {
                   draggable={!error && isEdition}
                   clickable={true}
                   onClick={() => {
+                    setSelectedPoiOfMarker(null);
                     setSelectedMarker(null);
                     setSelectedMarker({ marker: step, type: "Step" });
+                    const PoisOfStep = [];
+                    interestPoints.map((interestPoint) => {
+                      interestPoint.StepId == step.id &&
+                        PoisOfStep.push(interestPoint);
+                    });
+
+                    setSelectedPoiOfMarker(PoisOfStep);
                     setSelectedRoute(null);
                     setPosition({ lat: step.latitude, lng: step.longitude });
                   }}
@@ -443,7 +618,7 @@ export const Map = ({}) => {
                   onDragEnd={updateStepLocation(step)}
                   icon={
                     selectedMarker?.marker.id == step.id &&
-                    selectedMarker?.type == "Step"
+                      selectedMarker?.type == "Step"
                       ? selectedStepIcon
                       : stepIcon
                   }
@@ -467,6 +642,7 @@ export const Map = ({}) => {
                   draggable={!error && isEdition}
                   clickable={true}
                   onClick={() => {
+                    setSelectedPoiOfMarker(null);
                     setSelectedMarker(null);
                     setSelectedMarker({ marker: interestPoint, type: "Point" });
                     setSelectedRoute(null);
@@ -478,12 +654,7 @@ export const Map = ({}) => {
                     }
                   }}
                   onDragEnd={updateInterestPointLocation(interestPoint)}
-                  icon={
-                    selectedMarker?.marker.id == interestPoint.id &&
-                    selectedMarker?.type == "Point"
-                      ? selectedInterestPointIcon
-                      : interestPointIcon
-                  }
+                  icon={selectInterestPointIcon(interestPoint)}
                 ></Marker>
               ))
             )}
@@ -564,6 +735,8 @@ export const Map = ({}) => {
             deleteStep={deleteStep}
             updateInfoStep={updateInfoStep}
             isEdition={isEdition}
+            steps={steps}
+            setSelectedPoiOfMarker={setSelectedPoiOfMarker}
           ></StepMenu>
         ))}
       {selectedRoute && (

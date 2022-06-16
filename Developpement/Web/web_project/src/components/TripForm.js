@@ -3,6 +3,7 @@ import {
   tabsListUnstyledClasses,
   TextField,
   Typography,
+  Checkbox
 } from "@mui/material";
 import { Stack, Box, Chip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -19,9 +20,7 @@ import shrtcode from '../requests/shrtcode'
 import { url_prefix } from '../utils'
 const HTTP_URL_VALIDATOR_REGEX = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
 
-
 const TripForm = ({ setTripFormOpen }) => {
-
   const queryClient = useQueryClient();
 
   let { user } = useAuth();
@@ -56,9 +55,6 @@ const TripForm = ({ setTripFormOpen }) => {
   }
 
   const getLink = async () => {
-
-
-
     const newTravel = {
       name: name.trim(),
       UserId: user.id,
@@ -139,7 +135,7 @@ const TripForm = ({ setTripFormOpen }) => {
           Nouveau voyage
         </Typography>
 
-        <Stack direction="row" width="100%" spacing={1}>
+        <Stack direction="column" width="100%" spacing={1}>
           <TextField
             id="standard-required"
             label="Nom"

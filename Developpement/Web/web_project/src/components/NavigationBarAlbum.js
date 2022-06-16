@@ -14,11 +14,11 @@ import {
   Box,
   Drawer,
   Divider,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-  Container,
+  Popover,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
   Grid,
   Paper,
 } from "@mui/material";
@@ -43,6 +43,7 @@ import TravelRequests from "../requests/TravelRequests";
 import { useAuth } from "../Authentication/auth";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
+import ProfileBubble from "./ProfileBubble";
 
 const drawerWidth = 170;
 
@@ -133,7 +134,19 @@ const NavigationBar = () => {
   console.log(idTravel);
   idTravel = parseInt(idTravel);
 
-  let { user } = useAuth();
+  let { user, signout } = useAuth();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const divRef = React.useRef();
+  function handleClick() {
+    setAnchorEl(divRef.current);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  const openPopover = Boolean(anchorEl);
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -191,17 +204,7 @@ const NavigationBar = () => {
               >
                 {value}
               </Typography>
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
-                spacing={1}
-              >
-                <Typography variant="button" textAlign="center">
-                  {user.username}
-                </Typography>
-                <Avatar {...stringAvatar(user.username)} />
-              </Stack>
+              <ProfileBubble />
             </Toolbar>
           </AppBar>
         </Box>
@@ -268,7 +271,7 @@ const NavigationBar = () => {
               }
               value="Carte"
               component={Link}
-              to={"/album/" +/* + travels.albumURL + */"596jcv$6/map"}
+              to={"/album/" + cryptedName + "/map"}
             />
             <Tab
               icon={<PhotoSizeSelectActualRoundedIcon />}
@@ -285,7 +288,7 @@ const NavigationBar = () => {
               }
               value="Photos"
               component={Link}
-              to={"/album/" +/* + travels.albumURL + */"596jcv$6/photos"}
+              to={"/album/" + cryptedName + "/photos"}
             />
             <Tab
               icon={<NewspaperRoundedIcon />}
@@ -302,7 +305,7 @@ const NavigationBar = () => {
               }
               value="Journal"
               component={Link}
-              to={"/album/" +/* + travels.albumURL + */"596jcv$6/logbook"}
+              to={"/album/" + cryptedName + "/logbook"}
             />
           </Tabs>
         </Drawer>

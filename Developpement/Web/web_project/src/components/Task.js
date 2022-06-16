@@ -3,9 +3,6 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AddLabelToTask from "./AddLabelToTaskForm";
 import {
   Stack,
-  List,
-  ListItemButton,
-  Box,
   Tooltip,
   Chip,
   Grid,
@@ -14,23 +11,15 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 import "../Styles/ButtonStyles.css";
 import "../App.css";
 import IconButton from "@mui/material/IconButton";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import Avatar from "@mui/material/Avatar";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { useEffect, useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useQuery, useQueryClient, useMutation } from "react-query";
+import { useQuery } from "react-query";
 import TodoListRequest from "../requests/TodoListRequest";
 import Loading from "../utils/Loading";
 import { Dialog } from "@mui/material";
@@ -65,7 +54,7 @@ const Task = ({
 
   const [labelAddFormOpen, setLabelAddFormFormOpen] = useState(false);
 
-  useEffect(() => {}, [labels]);
+  useEffect(() => { }, [labels]);
 
   useEffect(() => {
     // setIsFiltered(filteredLabel.length == 0 || (filteredLabel.length > 0 && labels.some(r => filteredLabel.includes(r))))

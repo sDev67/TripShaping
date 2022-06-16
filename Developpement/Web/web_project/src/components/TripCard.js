@@ -161,7 +161,7 @@ const TripCard = ({ travelId }) => {
                   key={"Album"}
                   icon={<PhotoRoundedIcon />}
                   tooltipTitle={"Album"}
-                  to={"/album/" + travel.cryptedName + "/map"}
+                  to={"/album/" + travel.albumURL + "/map"}
                 />
 
 

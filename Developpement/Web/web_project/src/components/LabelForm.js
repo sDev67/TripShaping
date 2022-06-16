@@ -13,17 +13,14 @@ const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
   //   }, [label]);
 
   const handleClick = () => {
-
-    if(label != undefined)
-    {
-      updateLabel({title:currentTitle, labelId:label.id});
+    if (label != undefined) {
+      updateLabel({ title: currentTitle, labelId: label.id });
     }
 
-    if(currentTitle !== undefined)
-    {
-      addLabel({title:currentTitle});
+    if (currentTitle !== undefined) {
+      addLabel({ title: currentTitle });
     }
-  
+
     onClose();
   };
 

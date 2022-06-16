@@ -10,7 +10,7 @@ module.exports = sequelize => {
     }
 
     Expense.init({
-        cost: DataTypes.INTEGER,
+        cost: DataTypes.DOUBLE,
         to: DataTypes.STRING,
         category: DataTypes.STRING,
         date: DataTypes.DATE

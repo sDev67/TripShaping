@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Stack,
@@ -16,7 +16,8 @@ import {
   Grid,
   CardContent,
   Dialog,
-  IconButton
+  CardMedia,
+  IconButton,
 } from "@mui/material";
 
 import LocationOnRounded from "@mui/icons-material/LocationOnRounded";
@@ -31,9 +32,13 @@ import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import DocumentsList from "./DocumentsList";
 import StepRequests from "../requests/StepRequests";
+import InterestPointMenu from "./InterestPointMenu";
+import CancelRounded from "@mui/icons-material/CancelRounded";
+import DeleteRounded from "@mui/icons-material/DeleteRounded";
+import PointRequests from "./../requests/PointRequests";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 
-const StepItem = ({ step, index, updateInfoStep }) => {
+const StepItem = ({ step, index, updateInfoStep, steps }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -44,11 +49,11 @@ const StepItem = ({ step, index, updateInfoStep }) => {
   const [description, setDescription] = useState(step.description);
   const [duration, setDuration] = useState(step.duration);
 
-  const [informationDialogOpen, setInformationDialogOpenOpen] = useState(false);
+  const [informationDialogOpen, setInformationDialogOpen] = useState(false);
 
   const HandleCloseAddLabelForm = () => {
-    setInformationDialogOpenOpen(false);
-  }
+    setInformationDialogOpen(false);
+  };
 
   const categ = [
     {
@@ -67,6 +72,14 @@ const StepItem = ({ step, index, updateInfoStep }) => {
       value: "Autre",
     },
   ];
+
+  const [open, setOpen] = useState(false);
+  const [selectedInterestPoint, setSelectedInterestPoint] = useState({});
+
+  const handleSelectInterestPoint = (point) => {
+    setSelectedInterestPoint(point);
+    setOpen(true);
+  };
 
   const {
     isLoading: isLoadingD,
@@ -117,136 +130,495 @@ const StepItem = ({ step, index, updateInfoStep }) => {
   };
 
   return (
-    <Accordion key={index} style={{ backgroundColor: "#F5F5F5" }}>
-      <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
-        <Stack direction="row" spacing={5} width="50%">
-          <Stack direction="row" alignItems="center" spacing={1} width="60%">
-            <Typography variant="h5">{index + 1}.</Typography>
-            <Typography
-              variant="h5"
-              style={{ fontWeight: "normal" }}
-              width="30%"
-            >
-              {title}
-            </Typography>
-          </Stack>
-
-          <Typography variant="h5" width="15%">
-            {duration} jours
-          </Typography>
-
-          <Stack direction="row" alignItems="center" spacing={1} width="5%">
-            {isLoadingD ? (
-              <Loading />
-            ) : isErrorD ? (
-              <p style={{ color: "red" }}>{errorD.message}</p>
-            ) : (
-              <Typography variant="h5" style={{ fontWeight: "normal" }}>
-                {documents.length}
+    <>
+      <Accordion key={index} style={{ backgroundColor: "#F5F5F5" }}>
+        <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
+          <Stack direction="row" spacing={5} width="50%">
+            <Stack direction="row" alignItems="center" spacing={1} width="60%">
+              <Typography variant="h5">{index + 1}.</Typography>
+              <Typography
+                variant="h5"
+                style={{ fontWeight: "normal" }}
+                width="30%"
+              >
+                {title}
               </Typography>
-            )}
+            </Stack>
 
-            <InsertDriveFileRoundedIcon color="primary"></InsertDriveFileRoundedIcon>
+            <Typography variant="h5" width="15%">
+              {duration} jours
+            </Typography>
+
+            <Stack direction="row" alignItems="center" spacing={1} width="5%">
+              {isLoadingD ? (
+                <Loading />
+              ) : isErrorD ? (
+                <p style={{ color: "red" }}>{errorD.message}</p>
+              ) : (
+                <Typography variant="h5" style={{ fontWeight: "normal" }}>
+                  {documents.length}
+                </Typography>
+              )}
+
+              <InsertDriveFileRoundedIcon color="primary"></InsertDriveFileRoundedIcon>
+            </Stack>
+            <Stack direction="row" alignItems="center" spacing={1} width="5%">
+              {isLoadingP ? (
+                <Loading />
+              ) : isErrorP ? (
+                <p style={{ color: "red" }}>{errorP.message}</p>
+              ) : (
+                <Typography variant="h5" style={{ fontWeight: "normal" }}>
+                  {points.length}
+                </Typography>
+              )}
+              <LocationOnRounded color="error"></LocationOnRounded>
+            </Stack>
           </Stack>
-          <Stack direction="row" alignItems="center" spacing={1} width="5%">
+        </AccordionSummary>
+        <AccordionDetails>
+          <Divider></Divider>
+          <Stack direction="column" spacing={5} marginTop={2}>
+            <div>
+              <Stack direction="row" justifyContent="flex-end" marginBottom={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<DoneRounded />}
+                  onClick={updateStepInfo(step.id)}
+                >
+                  Enregistrer
+                </Button>
+              </Stack>
+
+              <Stack direction="row" spacing={2} alignItems="center">
+                <TextField
+                  id={"title" + index}
+                  fullWidth
+                  label="Titre"
+                  variant="outlined"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <TextField
+                  id={"duration" + index}
+                  label="Durée"
+                  style={{ maxWidth: "10%" }}
+                  variant="outlined"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  endAdornment={
+                    <InputAdornment position="end">jours</InputAdornment>
+                  }
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">jours</InputAdornment>
+                    ),
+                  }}
+                />
+                <TextField
+                  id={"category" + index}
+                  fullWidth
+                  variant="outlined"
+                  select
+                  label="Catégorie"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                >
+                  {categ.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+            </div>
+
+            <Typography variant="h6" color="primary">
+              Description
+              <IconButton onClick={() => setInformationDialogOpen(true)}>
+                <EditRoundedIcon />
+              </IconButton>
+            </Typography>
+
+            <RichTextEditor
+              setValue={setDescription}
+              value={description}
+              limitedEditor={true}
+              isReadOnly={true}
+              information={false}
+              minH="300px"
+            />
+
+            {/* <TextField
+                id={"description" + index}
+                label="Description"
+                multiline
+                rows={10}
+                value={description}
+                onChange={(e) => setTitle(e.target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              /> */}
+
+            <Stack spacing={1} direction="column" height="160px">
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="h6" color="primary">
+                  Documents
+                </Typography>
+                <Button
+                  style={{ paddingLeft: 32, paddingRight: 32 }}
+                  startIcon={<UploadFileRounded />}
+                  variant="contained"
+                  component="label"
+                >
+                  Ajouter
+                  <input
+                    type="file"
+                    hidden
+                    onChange={(e) => {
+                      addFile(e.target.files[0]);
+                    }}
+                    required
+                  />
+                </Button>
+              </Stack>
+              {isLoadingD ? (
+                <Loading />
+              ) : isErrorD ? (
+                <p style={{ color: "red" }}>{errorD.message}</p>
+              ) : (
+                <DocumentsList
+                  documents={documents}
+                  requestKeyTitle="getDocumentsOfPoint"
+                  requestKeyValue={step.id}
+                  isEdition={true}
+                ></DocumentsList>
+              )}
+            </Stack>
             {isLoadingP ? (
               <Loading />
             ) : isErrorP ? (
               <p style={{ color: "red" }}>{errorP.message}</p>
             ) : (
-              <Typography variant="h5" style={{ fontWeight: "normal" }}>
-                {points.length}
-              </Typography>
+              <div style={{ overflowY: "scroll", height: "200px" }}>
+                <Grid container spacing={5}>
+                  {Array.from(Array(duration), (index, day) => {
+                    return (
+                      <Grid key={index} item xs={3}>
+                        <Card>
+                          <CardHeader
+                            title={
+                              <Typography variant="h5" color="primary">
+                                Jour {day + 1}
+                              </Typography>
+                            }
+                          ></CardHeader>
+                          <CardContent>
+                            {points.map(
+                              (point) =>
+                                point.day === day + 1 && (
+                                  <Button
+                                    onClick={() =>
+                                      handleSelectInterestPoint(point)
+                                    }
+                                    fullWidth
+                                    color="primary"
+                                  >
+                                    <Typography variant="h7">
+                                      {point.title}
+                                    </Typography>
+                                  </Button>
+                                )
+                            )}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </div>
             )}
-            <LocationOnRounded color="error"></LocationOnRounded>
           </Stack>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Divider></Divider>
-        <Stack direction="column" spacing={5} marginTop={2}>
-          <div>
-            <Stack direction="row" justifyContent="flex-end" marginBottom={2}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<DoneRounded />}
-                onClick={updateStepInfo(step.id)}
-              >
-                Enregistrer
-              </Button>
-            </Stack>
+        </AccordionDetails>
+      </Accordion>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <InterestPointMenuBis
+          selectedInterestPoint={selectedInterestPoint}
+          steps={steps}
+          setOpen={setOpen}
+        ></InterestPointMenuBis>
+      </Dialog>
+      <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
+        <RichTextEditor
+          setValue={setDescription}
+          value={description}
+          limitedEditor={false}
+          OnClose={HandleCloseAddLabelForm}
+          minH="300px"
+          isReadOnly={false}
+          maxW="600px"
+          information={false}
+        />
+      </Dialog>
+    </>
+  );
+};
 
-            <Stack direction="row" spacing={2} alignItems="center">
-              <TextField
-                id={"title" + index}
-                fullWidth
-                label="Titre"
-                variant="outlined"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <TextField
-                id={"duration" + index}
-                label="Durée"
-                style={{ maxWidth: "10%" }}
-                variant="outlined"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">jours</InputAdornment>
-                }
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">jours</InputAdornment>
-                  ),
-                }}
-              />
-              <TextField
-                id={"category" + index}
-                fullWidth
-                variant="outlined"
-                select
-                label="Catégorie"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              >
-                {categ.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.value}
+const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
+  const queryClient = useQueryClient();
+
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
+
+  // Documents by id
+  const {
+    isLoading: isLoadingD,
+    isError: isErrorD,
+    error: errorD,
+    data: documents,
+  } = useQuery(["getDocumentsOfPoint", selectedInterestPoint.id], () =>
+    DocumentRequest.getDocumentsByPointId(selectedInterestPoint.id)
+  );
+
+  const addDocument = useMutation(DocumentRequest.uploadFile, {
+    onSuccess: (document) => {
+      queryClient.invalidateQueries(["getDocumentsOfPoint", idTravel]);
+    },
+  });
+
+  const updateInfoPoint = useMutation(PointRequests.updatePointInfoById, {
+    onSuccess: (point) => {
+      queryClient.setQueryData(
+        ["getPointsOfStep", selectedStep.id],
+        (interestPoints) => [...interestPoints, point]
+      );
+      queryClient.invalidateQueries(["getPointsOfStep", selectedStep.id]);
+      queryClient.invalidateQueries(["getPointsOfStep", stepId]);
+      setStepId(selectedStep.id);
+    },
+  });
+
+  const [title, setTitle] = useState(selectedInterestPoint.title);
+  const [category, setCategory] = useState(selectedInterestPoint.category);
+  const [description, setDescription] = useState(
+    selectedInterestPoint.description
+  );
+  const [stepId, setStepId] = useState(selectedInterestPoint.StepId);
+  const [selectedStep, setSelectedStep] = useState(null);
+  const [days, setDays] = useState([]);
+  const [dayStep, setDayStep] = useState(selectedInterestPoint.day);
+  const listSteps = steps;
+
+  const [informationDialogOpen, setInformationDialogOpen] = useState(false);
+
+  const categ = [
+    {
+      value: "Parc",
+    },
+    {
+      value: "Musée",
+    },
+    {
+      value: "Cinéma",
+    },
+    {
+      value: "Stade",
+    },
+    {
+      value: "Magasin",
+    },
+    {
+      value: "Monument historique",
+    },
+    {
+      value: "Restaurant",
+    },
+    {
+      value: "Spectacle",
+    },
+    {
+      value: "Nature",
+    },
+    {
+      value: "Port",
+    },
+    {
+      value: "Autre",
+    },
+  ];
+
+  const fillDays = () => {
+    if (selectedStep) {
+      setDays([]);
+      for (let i = 0; i < selectedStep.duration; i++) {
+        let day = { date: "Jour " + (i + 1), value: i + 1 };
+        setDays((days) => [...days, day]);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (stepId) {
+      if (listSteps) {
+        listSteps.forEach((step) => {
+          if (step.id === stepId) {
+            setSelectedStep(step);
+          }
+        });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedStep) {
+      fillDays();
+    }
+  }, [selectedStep]);
+
+  // Fonction qui met a jour les propriétés d'un point d'interet
+  const updateInterestPointInfo = (pointId) => (e) => {
+    const newPoint = {
+      title: title,
+      category: category,
+      description: description,
+      idPoint: pointId.id,
+      StepId: selectedStep?.id,
+      day: dayStep,
+    };
+    updateInfoPoint.mutate(newPoint);
+    setOpen(false);
+  };
+
+  const addFile = (file) => {
+    const formData = new FormData();
+    formData.append("title", file);
+    formData.append("TravelId", idTravel);
+    formData.append("PointId", selectedInterestPoint.id);
+    console.log(...formData);
+
+    addDocument.mutate(formData);
+  };
+
+  return (
+    <>
+      <Card
+        style={{
+          right: "3%",
+          top: "8%",
+          width: 400,
+          position: "fixed",
+          height: "90%",
+        }}
+      >
+        <CardMedia
+          component="img"
+          height="120"
+          image={require("../assets/pointInterets.JPG")}
+        />
+        <IconButton
+          color="error"
+          onClick={() => setOpen(false)}
+          style={{ position: "absolute", right: 5, top: 5 }}
+        >
+          <CancelRounded />
+        </IconButton>
+
+        <CardContent
+          style={{
+            overflowY: "auto",
+          }}
+        >
+          <TextField
+            fullWidth
+            label="Nom"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={{ marginBottom: 25 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          ></TextField>
+
+          <TextField
+            fullWidth
+            select
+            label="Catégorie"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            style={{ marginBottom: 25 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          >
+            {categ.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.value}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Stack
+            style={{ marginBottom: 25 }}
+            direction="row"
+            justifyContent="space-between"
+            spacing={2}
+          >
+            <TextField
+              fullWidth
+              select
+              label="Etape associée"
+              value={selectedStep}
+              onChange={(e) => setSelectedStep(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            >
+              {listSteps &&
+                listSteps.map((step, index) => (
+                  <MenuItem key={index} value={step}>
+                    {step.title}
                   </MenuItem>
                 ))}
-              </TextField>
-            </Stack>
-          </div>
+            </TextField>
+            <TextField
+              fullWidth
+              select
+              label="Jour associé"
+              value={dayStep}
+              onChange={(e) => setDayStep(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              disabled={selectedStep ? false : true}
+            >
+              {days.map((day, index) => (
+                <MenuItem key={index} value={day.value}>
+                  {day.date}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Stack>
 
-
-          <Typography variant="h6" color="primary">
-            Description
-            <IconButton onClick={(e) => setInformationDialogOpenOpen(true)}>
-              <EditRoundedIcon />
-            </IconButton>
-          </Typography>
-
-          <RichTextEditor
-            setValue={setDescription}
-            value={description}
-            limitedEditor={true}
-            isReadOnly={true}
-            information={false}
-            minH="300px"
-          />
-
-          <Stack spacing={1} direction="column" height="160px">
+          <Stack
+            style={{ marginBottom: 25 }}
+            spacing={1}
+            direction="column"
+            height="160px"
+          >
             <Stack
               direction="row"
               justifyContent="space-between"
@@ -280,72 +652,64 @@ const StepItem = ({ step, index, updateInfoStep }) => {
               <DocumentsList
                 documents={documents}
                 requestKeyTitle="getDocumentsOfPoint"
-                requestKeyValue={step.id}
-                isEdition={true}
+                requestKeyValue={selectedInterestPoint.id}
               ></DocumentsList>
             )}
           </Stack>
-          {isLoadingP ? (
-            <Loading />
-          ) : isErrorP ? (
-            <p style={{ color: "red" }}>{errorP.message}</p>
-          ) : (
-            <div style={{ overflowY: "scroll", height: "200px" }}>
-              <Grid container spacing={5}>
-                {Array.from(Array(duration), (index, day) => {
-                  return (
-                    <Grid key={index} item xs={3}>
-                      <Card>
-                        <CardHeader
-                          title={
-                            <Typography variant="h5" color="primary">
-                              Jour {day + 1}
-                            </Typography>
-                          }
-                        ></CardHeader>
-                        <CardContent>
-                          {points.map(
-                            (point) =>
-                              point.day === day + 1 && (
-                                <Stack
-                                  direction="row"
-                                  justifyContent="space-between"
-                                >
-                                  <Typography variant="h7">
-                                    • {point.title}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    {point.category}
-                                  </Typography>
-                                </Stack>
-                              )
-                          )}
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </div>
-          )}
-        </Stack>
-      </AccordionDetails>
 
-      <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
+          <Typography variant="h6" color="primary">
+            Description
+            <IconButton onClick={() => setInformationDialogOpen(true)}>
+              <EditRoundedIcon />
+            </IconButton>
+          </Typography>
+          <div style={{ marginBottom: 25 }}>
+            <RichTextEditor
+              setValue={setDescription}
+              value={description}
+              limitedEditor={true}
+              isReadOnly={true}
+              information={false}
+              minH="150px"
+            />
+          </div>
+
+          <Stack direction="row" justifyContent="space-between">
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteRounded />}
+              style={{ visibility: "hidden" }}
+            >
+              Supprimer
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<DoneRounded />}
+              onClick={updateInterestPointInfo(selectedInterestPoint)}
+            >
+              Enregistrer
+            </Button>
+          </Stack>
+        </CardContent>
+      </Card>
+      <Dialog
+        open={informationDialogOpen}
+        onClose={() => setInformationDialogOpen(false)}
+      >
         <RichTextEditor
           setValue={setDescription}
           value={description}
           limitedEditor={false}
-          OnClose={HandleCloseAddLabelForm}
+          OnClose={() => setInformationDialogOpen(false)}
           minH="300px"
           isReadOnly={false}
           maxW="600px"
           information={false}
         />
       </Dialog>
-    </Accordion>
-
-
+    </>
   );
 };
 

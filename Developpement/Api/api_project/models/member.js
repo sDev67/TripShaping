@@ -22,6 +22,10 @@ module.exports = sequelize => {
 				allowNull: true,
 				defaultValue: null,
 			}
+		},
+		balance: {
+			type: Sequelize.DOUBLE,
+			defaultValue: 0,
 		}
 	}, {
 		sequelize,

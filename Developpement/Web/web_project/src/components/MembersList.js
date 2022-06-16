@@ -25,14 +25,12 @@ const MembersList = ({ members, deleteMember }) => {
         }}
       >
         {members.map((member, index) => {
-
           if (index != 0) {
             return (
               <>
                 <ListItem
                   key={member.toString()}
                   disablePadding
-
                   secondaryAction={
                     <IconButton
                       color="error"
@@ -48,24 +46,25 @@ const MembersList = ({ members, deleteMember }) => {
                     </ListItemAvatar>
                     <ListItemText
                       primary={<>{member.name}</>}
-                      secondary={<i>{!member.userLogin ? "Non Inscrit" : ""}</i>}
+                      secondary={
+                        <i>{!member.userLogin ? "Non Inscrit" : ""}</i>
+                      }
                     />
                   </ListItemButton>
                 </ListItem>
-
               </>
-            )
-
-          }
-          else {
+            );
+          } else {
             return (
               <>
                 <ListItem
                   key={member.toString()}
                   disablePadding
-
                   secondaryAction={
-                    <img src={crown} style={{ width: "25px", height: "25px", marginRight: 8 }} />
+                    <img
+                      src={crown}
+                      style={{ width: "25px", height: "25px", marginRight: 8 }}
+                    />
                   }
                 >
                   <ListItemButton>
@@ -74,13 +73,14 @@ const MembersList = ({ members, deleteMember }) => {
                     </ListItemAvatar>
                     <ListItemText
                       primary={<>{member.name}</>}
-                      secondary={<i>{!member.userLogin ? "Non Inscrit" : ""}</i>}
+                      secondary={
+                        <i>{!member.userLogin ? "Non Inscrit" : ""}</i>
+                      }
                     />
                   </ListItemButton>
                 </ListItem>
-
               </>
-            )
+            );
           }
         })}
       </List>

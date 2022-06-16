@@ -20,7 +20,11 @@ import { stringAvatar } from "../utils/AvatarColorPicker";
 import Message from "../components/Message";
 
 const LogBook = () => {
-  let { idTravel } = useParams();
+  let { cryptedName } = useParams();
+  cryptedName = cryptedName.toString();
+
+  let idTravel = cryptedName.substring(cryptedName.indexOf('$') + 1);
+  console.log(idTravel);
   idTravel = parseInt(idTravel);
 
   const queryClient = useQueryClient();

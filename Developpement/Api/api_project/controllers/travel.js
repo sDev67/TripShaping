@@ -99,7 +99,36 @@ module.exports = {
       .then((steps) => res.json(steps))
       .catch((err) => next(err));
   },
-
+  get_in_preparation_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        status: 0,
+      },
+      order: ["name"],
+    })
+      .then((travel) => res.json(travel))
+      .catch(next);
+  },
+  get_current_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        status: 1,
+      },
+      order: ["name"],
+    })
+      .then((travel) => res.json(travel))
+      .catch(next);
+  },
+  get_finish_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        status: 2,
+      },
+      order: ["name"],
+    })
+      .then((travel) => res.json(travel))
+      .catch(next);
+  },
   get_members_of_travel: (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {
@@ -109,6 +138,17 @@ module.exports = {
         return travel.getMembers();
       })
       .then((members) => res.json(members))
+      .catch((err) => next(err));
+  },
+  get_expenses_of_travel: (req, res, next) => {
+    return db.Travel.findByPk(req.params.travel_id)
+      .then((travel) => {
+        if (!travel) {
+          throw { status: 404, message: "Travel not found" };
+        }
+        return travel.getExpenses({ order: [["date", "DESC"]] });
+      })
+      .then((expenses) => res.json(expenses))
       .catch((err) => next(err));
   },
   get_journalEntries_of_travel: (req, res, next) => {

@@ -412,6 +412,21 @@ module.exports = [
     method: "get",
     func: travel_ctrl.get_steps_of_travel,
   },
+  {
+    url: "/travel_preparation",
+    method: "get",
+    func: travel_ctrl.get_in_preparation_travel,
+  },
+  {
+    url: "/travel_current",
+    method: "get",
+    func: travel_ctrl.get_current_travel,
+  },
+  {
+    url: "/travel_finish",
+    method: "get",
+    func: travel_ctrl.get_finish_travel,
+  },
 
   /**
    * @swagger
@@ -700,6 +715,11 @@ module.exports = [
     func: travel_ctrl.get_members_of_travel,
   },
   {
+    url: "/travel/:travel_id/expenses",
+    method: "get",
+    func: travel_ctrl.get_expenses_of_travel,
+  },
+  {
     url: "/travel/:travel_id/documents",
     method: "get",
     func: travel_ctrl.get_all_documents_by_travel_id,
@@ -710,7 +730,11 @@ module.exports = [
     method: "get",
     func: travel_ctrl.get_all_journal_entries_by_travel_id,
   },
-
+  {
+    url: "/travel/:travel_id",
+    method: "put",
+    func: travel_ctrl.update_by_id,
+  },
   {
     url: "/travel/:travel_id/photos",
     method: "get",

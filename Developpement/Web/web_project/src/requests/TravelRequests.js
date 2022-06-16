@@ -43,9 +43,11 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
+
+
   createTravel: ({ name, UserId }) => {
     //const token = window.localStorage.getItem('token');
-    console.log(name);
+
     return fetch(`${url_prefix}/travel`, {
       method: "POST",
       headers: {
@@ -207,6 +209,7 @@ const TravelRequests = {
     budget,
     infos,
     finished,
+    albumURL
   }) => {
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel/${TravelId}`, {
@@ -223,6 +226,7 @@ const TravelRequests = {
         budget,
         infos,
         finished,
+        albumURL
       }),
     })
       .then(checkStatus)
@@ -237,6 +241,19 @@ const TravelRequests = {
         //Authorization: 'Bearer ' + token
       },
       body: JSON.stringify({ status }),
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+  updateTravelCryptedName: ({ TravelId, albumURL }) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/${TravelId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        //Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify({ TravelId, albumURL }),
     })
       .then(checkStatus)
       .then((res) => res.json());
@@ -263,38 +280,6 @@ const TravelRequests = {
         //Authorization: 'Bearer ' + token
       },
       body: JSON.stringify({ positionAgree }),
-    })
-      .then(checkStatus)
-      .then((res) => res.json());
-  },
-
-  updateTravel: ({
-    TravelId,
-    name,
-    picture,
-    activated,
-    budget,
-    infos,
-    infosHTML,
-    finished,
-  }) => {
-    //const token = window.localStorage.getItem('token');
-    return fetch(`${url_prefix}/travel/${TravelId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        //Authorization: 'Bearer ' + token
-      },
-      body: JSON.stringify({
-        TravelId,
-        name,
-        picture,
-        activated,
-        budget,
-        infos,
-        infosHTML,
-        finished,
-      }),
     })
       .then(checkStatus)
       .then((res) => res.json());

@@ -33,10 +33,14 @@ const containerStyle = {
   height: "100%",
 };
 
-export const MapReview = ({}) => {
+export const MapReview = ({ }) => {
   const queryClient = useQueryClient();
 
-  let { idTravel } = useParams();
+  let { cryptedName } = useParams();
+  cryptedName = cryptedName.toString();
+
+  let idTravel = cryptedName.substring(cryptedName.indexOf('$') + 1);
+  console.log(idTravel);
   idTravel = parseInt(idTravel);
 
   const [position, setPosition] = useState({
@@ -165,7 +169,7 @@ export const MapReview = ({}) => {
                 position={{ lat: step.latitude, lng: step.longitude }}
                 icon={
                   selectedMarker?.marker.id == step.id &&
-                  selectedMarker?.type == "Step"
+                    selectedMarker?.type == "Step"
                     ? selectedStepIcon
                     : stepIcon
                 }
@@ -188,7 +192,7 @@ export const MapReview = ({}) => {
                 }}
                 icon={
                   selectedMarker?.marker.id == interestPoint.id &&
-                  selectedMarker?.type == "Point"
+                    selectedMarker?.type == "Point"
                     ? selectedInterestPointIcon
                     : interestPointIcon
                 }

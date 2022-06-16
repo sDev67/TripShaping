@@ -35,6 +35,7 @@
     "react-draggable": "^4.4.4",
     "react-google-maps": "^9.4.5",
     "react-map-gl": "^6.1.19",
+    "react-material-ui-carousel": "^3.4.2",
     "react-query": "^3.34.16",
     "react-router-dom": "^6.2.2",
     "react-scripts": "5.0.0",

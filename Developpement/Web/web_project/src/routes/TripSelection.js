@@ -205,7 +205,7 @@ const TripSelection = () => {
               ) : (
                 members.map((member, index) => (
                   <Grid key={index} item xs={4}>
-                    <TripCard travelId={member.TravelId} />
+                    <TripCard travelId={member.TravelId} user={user} />
                   </Grid>
                 ))
               )}

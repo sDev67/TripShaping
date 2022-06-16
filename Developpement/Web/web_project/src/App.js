@@ -19,7 +19,6 @@ import Documents from "./routes/Documents";
 import NavigationBarAlbum from "./components/NavigationBarAlbum";
 import Photos from "./routes/Photos";
 import LogBook from "./routes/LogBook";
-import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
 import TripSettings from "./routes/TripSettings";
 import Exploration from "./routes/Exploration";
@@ -32,6 +31,9 @@ import {
 import "@psyycker/react-translation";
 import french from "./translations/french.json";
 import english from "./translations/english.json";
+import ItineraryAlbum from "./routes/ItineraryAlbum";
+import NavigationBarDisplay from "./components/NavigationBarDisplay";
+import ItineraryDisplay from "./routes/ItineraryDisplay";
 
 const queryClient = new QueryClient();
 
@@ -73,9 +75,12 @@ function App() {
                 />
               </Route>
               <Route path="/album" element={<NavigationBarAlbum />}>
-                <Route path=":idTravel/map" element={<MapReview />} />
+                <Route path=":idTravel/map" element={<ItineraryAlbum />} />
                 <Route path=":idTravel/photos" element={<Photos />} />
                 <Route path=":idTravel/logbook" element={<LogBook />} />
+              </Route>
+              <Route path="/display" element={<NavigationBarDisplay />}>
+                <Route path=":idTravel/map" element={<ItineraryDisplay />} />
               </Route>
             </Routes>
             {/* <ReactQueryDevtools />  */}

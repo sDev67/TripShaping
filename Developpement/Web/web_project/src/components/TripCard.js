@@ -26,20 +26,39 @@ import TravelRequests from "../requests/TravelRequests";
 import Loading from "./../utils/Loading";
 import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
+import MemberRequests from "../requests/MemberRequests";
+import CustomSnackbar from "../utils/CustomSnackbar";
 
-const TripCard = ({ travelId }) => {
-  const actions = [
-    {
-      icon: <FileCopyIcon />,
-      name: "Dupliquer",
-      to: "",
+const TripCard = ({ travelId, user }) => {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+
+  const addMember = useMutation(MemberRequests.addMember, {
+    onSuccess: (member) => {
+      queryClient.setQueriesData(["getMembers", user.id], (members) => [
+        ...members,
+        member,
+      ]);
+      setOpen(true);
     },
-    {
-      icon: <PhotoRoundedIcon />,
-      name: "Album",
-      to: "/album/" + travelId + "/map",
+  });
+
+  const handleCLickCopyTravel = (travelId) => {
+    copyTravel.mutate({ TravelId: travelId, UserId: user.id });
+  };
+
+  const copyTravel = useMutation(TravelRequests.copyTravel, {
+    onSuccess: (travel) => {
+      const newMember = {
+        name: user.name,
+        userLogin: user.username,
+        TravelId: travel.id,
+        UserId: user.id,
+      };
+
+      addMember.mutate(newMember);
     },
-  ];
+  });
 
   const {
     isLoading: isLoadingT,
@@ -59,7 +78,6 @@ const TripCard = ({ travelId }) => {
     TravelRequests.getMembersOfTravel(travelId)
   );
 
-  let isActive = travel?.activated;
   return (
     <>
       {isLoadingT ? (
@@ -151,20 +169,27 @@ const TripCard = ({ travelId }) => {
                 icon={<SpeedDialIcon />}
                 direction="left"
               >
-                {actions.map((action) => (
-                  <SpeedDialAction
-                    component={Link}
-                    key={action.name}
-                    icon={action.icon}
-                    tooltipTitle={action.name}
-                    to={action.to}
-                  />
-                ))}
+                <SpeedDialAction
+                  icon={<FileCopyIcon />}
+                  tooltipTitle={"Dupliquer"}
+                  onClick={() => handleCLickCopyTravel(travelId)}
+                />
+                <SpeedDialAction
+                  component={Link}
+                  icon={<PhotoRoundedIcon />}
+                  tooltipTitle={"Album"}
+                  to={"/album/" + travelId + "/map"}
+                />
               </SpeedDial>
             </Stack>
           </CardContent>
         </Card>
       )}
+      <CustomSnackbar
+        open={open}
+        setOpen={setOpen}
+        message={"Voyage dupliqué !"}
+      ></CustomSnackbar>
     </>
   );
 };

@@ -7,10 +7,9 @@ import {
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import { CircularProgress, Button, Stack } from "@mui/material";
-import palette from "./../theme/palette";
-import InterestPointMenu from "./InterestPointMenu";
-import StepMenu from "./StepMenu";
-import MapModeSwitch from "./MapModeSwitch";
+import palette from "../theme/palette";
+
+import MapModeSwitchAlbum from "./MapModeSwitchAlbum";
 import RouteMenu from "./RouteMenu";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
@@ -19,7 +18,10 @@ import StepRequests from "../requests/StepRequests";
 import { useParams } from "react-router-dom";
 import StepTimeline from "./StepTimeline";
 import Loading from "../utils/Loading";
-
+import photoIcon from "../assets/photoIcon.png";
+import InterestPointMenu from "./InterestPointMenu";
+import StepMenu from "./StepMenu";
+import PhotoMenu from "./PhotoMenu";
 import stepIcon from "../assets/stepIcon.png";
 import selectedStepIcon from "../assets/selectedStepIcon.png";
 import interestPointIcon from "../assets/interestPointIcon.png";
@@ -49,7 +51,7 @@ const containerStyle = {
   height: "100%",
 };
 
-export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
+export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -60,12 +62,31 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
     lng: steps[0] ? steps[0].longitude : 7.7521113,
   });
 
+  const userPositions = [
+    {
+      latitude: 20,
+      longitude: 10,
+      date: "12/12/2001",
+    },
+    {
+      latitude: 30,
+      longitude: 10,
+      date: "12/12/2001",
+    },
+    {
+      latitude: 20,
+      longitude: 20,
+      date: "12/12/2001",
+    },
+  ];
+
   const [isEdition, setIsEdition] = useState(false);
   const [markerFilter, setMarkerFilter] = useState("all");
   const [editionMode, setEditionMode] = useState("stepOnlyEdit");
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedPoiOfMarker, setSelectedPoiOfMarker] = useState(null);
 
   const [showTimeline, setShowTimeline] = useState(false);
@@ -140,129 +161,6 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
 
   const handleChangeSelectModeEdit = (event) => {
     setEditionMode(event.target.value);
-  };
-
-  const addPoint = useMutation(TravelRequests.addPoint, {
-    onSuccess: (point) =>
-      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
-        ...interestPoints,
-        point,
-      ]),
-  });
-
-  const addStep = useMutation(TravelRequests.addStep, {
-    onSuccess: (step) => {
-      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
-        ...steps,
-        step,
-      ]);
-    },
-  });
-
-  const createRoute = useMutation(TravelRequests.addRoute, {
-    onSuccess: (route) =>
-      queryClient.setQueryData(["getRoutes", idTravel], (routes) => [
-        ...routes,
-        route,
-      ]),
-  });
-
-  const updateLocationPoint = useMutation(
-    PointRequests.updatePointLocationById,
-    {
-      onSuccess: (point) => {
-        queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
-          ...interestPoints,
-          point,
-        ]);
-        queryClient.invalidateQueries(["getPoints", idTravel]);
-      },
-    }
-  );
-
-  const updateInfoPoint = useMutation(PointRequests.updatePointInfoById, {
-    onSuccess: (point) => {
-      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
-        ...interestPoints,
-        point,
-      ]);
-      queryClient.invalidateQueries(["getPoints", idTravel]);
-    },
-  });
-
-  const updateLocationStep = useMutation(StepRequests.updateStepLocationById, {
-    onSuccess: (step) => {
-      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
-        ...steps,
-        step,
-      ]);
-      queryClient.invalidateQueries(["getSteps", idTravel]);
-    },
-  });
-
-  const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
-    onSuccess: (step) => {
-      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
-        ...steps,
-        step,
-      ]);
-      queryClient.invalidateQueries(["getSteps", idTravel]);
-    },
-  });
-
-  //Suppression de point
-  const deletePoint = useMutation(TravelRequests.removePoint, {
-    onSuccess: (_, id) =>
-      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) =>
-        interestPoints.filter((e) => e.id !== id)
-      ),
-  });
-
-  //Suppression d'étape
-  const deleteStep = useMutation(TravelRequests.removeStep, {
-    onSuccess: (_, id) =>
-      queryClient.setQueryData(["getSteps", idTravel], (steps) =>
-        steps.filter((e) => e.id !== id)
-      ),
-  });
-
-  //Suppression de route
-  const deleteRoute = useMutation(TravelRequests.removeRoute, {
-    onSuccess: (_, id) =>
-      queryClient.setQueryData(["getRoutes", idTravel], (routes) =>
-        routes.filter((e) => e.id !== id)
-      ),
-  });
-
-  const onMapClick = (e) => {
-    // on peut placer les points uniquement si on est en mode edition*
-    setSelectedPoiOfMarker(null);
-    if (isEdition) {
-      if (selectedMarker !== null) {
-        setSelectedMarker(null);
-      } else if (selectedRoute !== null) {
-        setSelectedRoute(null);
-      } else {
-        if (editionMode === "stepOnlyEdit") {
-          if (!error) {
-            addStepPoint(e);
-          }
-        }
-        // ici : editionMode === "interestPointOnlyEdit")
-        else {
-          if (!error) {
-            addInterestPoint(e);
-          }
-        }
-      }
-    }
-    // si on est en mode navigation
-    else {
-      // si le menu est ouvert on le ferme en cliquant sur la map
-      if (selectedMarker !== null) {
-        setSelectedMarker(null);
-      }
-    }
   };
 
   const selectInterestPointIcon = (interestPoint) => {
@@ -423,11 +321,133 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
     }
   };
 
-  console.log(steps);
+  const addPoint = useMutation(TravelRequests.addPoint, {
+    onSuccess: (point) =>
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+        ...interestPoints,
+        point,
+      ]),
+  });
+
+  const addStep = useMutation(TravelRequests.addStep, {
+    onSuccess: (step) => {
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]);
+    },
+  });
+
+  const createRoute = useMutation(TravelRequests.addRoute, {
+    onSuccess: (route) =>
+      queryClient.setQueryData(["getRoutes", idTravel], (routes) => [
+        ...routes,
+        route,
+      ]),
+  });
+
+  const updateLocationPoint = useMutation(
+    PointRequests.updatePointLocationById,
+    {
+      onSuccess: (point) => {
+        queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+          ...interestPoints,
+          point,
+        ]);
+        queryClient.invalidateQueries(["getPoints", idTravel]);
+      },
+    }
+  );
+
+  const updateInfoPoint = useMutation(PointRequests.updatePointInfoById, {
+    onSuccess: (point) => {
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+        ...interestPoints,
+        point,
+      ]);
+      queryClient.invalidateQueries(["getPoints", idTravel]);
+    },
+  });
+
+  const updateLocationStep = useMutation(StepRequests.updateStepLocationById, {
+    onSuccess: (step) => {
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]);
+      queryClient.invalidateQueries(["getSteps", idTravel]);
+    },
+  });
+
+  const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
+    onSuccess: (step) => {
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]);
+      queryClient.invalidateQueries(["getSteps", idTravel]);
+    },
+  });
+
+  //Suppression de point
+  const deletePoint = useMutation(TravelRequests.removePoint, {
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) =>
+        interestPoints.filter((e) => e.id !== id)
+      ),
+  });
+
+  //Suppression d'étape
+  const deleteStep = useMutation(TravelRequests.removeStep, {
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getSteps", idTravel], (steps) =>
+        steps.filter((e) => e.id !== id)
+      ),
+  });
+
+  //Suppression de route
+  const deleteRoute = useMutation(TravelRequests.removeRoute, {
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getRoutes", idTravel], (routes) =>
+        routes.filter((e) => e.id !== id)
+      ),
+  });
+
+  const onMapClick = (e) => {
+    // on peut placer les points uniquement si on est en mode edition
+    setSelectedPoiOfMarker(null);
+    if (isEdition) {
+      if (selectedMarker !== null) {
+        setSelectedMarker(null);
+      } else if (selectedRoute !== null) {
+        setSelectedRoute(null);
+      } else {
+        if (editionMode === "stepOnlyEdit") {
+          if (!error) {
+            addStepPoint(e);
+          }
+        }
+        // ici : editionMode === "interestPointOnlyEdit")
+        else {
+          if (!error) {
+            addInterestPoint(e);
+          }
+        }
+      }
+    }
+    // si on est en mode navigation
+    else {
+      // si le menu est ouvert on le ferme en cliquant sur la map
+      if (selectedMarker !== null) {
+        setSelectedMarker(null);
+      }
+    }
+  };
+
   // Fonction qui permet d'ajouter un point d'étape
   const addStepPoint = (e) => {
     const newStep = {
-      title: "Etape_" + (steps.length + 1),
+      title: "",
       latitude: parseFloat(e.latLng.lat()),
       longitude: parseFloat(e.latLng.lng()),
       description: JSON.stringify({
@@ -464,7 +484,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
   // Fonction qui permet d'ajouter un point d'interet
   const addInterestPoint = (e) => {
     const newPoint = {
-      title: "POI_" + (interestPoints.length + 1),
+      title: "",
       latitude: parseFloat(e.latLng.lat()),
       longitude: parseFloat(e.latLng.lng()),
       description: JSON.stringify({
@@ -538,14 +558,14 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                 left: "10px",
               }}
             >
-              <MapModeSwitch
+              <MapModeSwitchAlbum
                 handleSwitch={handleSwitch}
                 isEdition={isEdition}
                 markerFilter={markerFilter}
                 handleChangeSelectModeEdit={handleChangeSelectModeEdit}
                 handleChangeSelectModeNav={handleChangeSelectModeNav}
                 editionMode={editionMode}
-              ></MapModeSwitch>
+              ></MapModeSwitchAlbum>
               {showTimeline ? (
                 <Button
                   onClick={() => {
@@ -651,7 +671,6 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   draggable={!error && isEdition}
                   clickable={true}
                   onClick={() => {
-                    setSelectedPoiOfMarker(null);
                     setSelectedMarker(null);
                     setSelectedMarker({ marker: interestPoint, type: "Point" });
                     setSelectedRoute(null);
@@ -733,6 +752,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
               updateInfoPoint={updateInfoPoint}
               isEdition={isEdition}
               steps={steps}
+              hideDocuments={true}
             ></InterestPointMenu>
           )
         ) : selectedMarker.type === "Step" && isLoadingS ? (
@@ -748,6 +768,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
             isEdition={isEdition}
             steps={steps}
             setSelectedPoiOfMarker={setSelectedPoiOfMarker}
+            hideDocuments={true}
           ></StepMenu>
         ))}
       {selectedRoute && (
@@ -757,6 +778,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
           finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
           isEdition={isEdition}
+          hideDocuments={true}
         ></RouteMenu>
       )}
       {showTimeline && (
@@ -771,6 +793,12 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
           setExpanded={setExpanded}
           setShowTimeline={setShowTimeline}
         ></StepTimeline>
+      )}
+      {selectedPhoto && (
+        <PhotoMenu
+          selectedPhoto={selectedPhoto}
+          setSelectedPhoto={setSelectedPhoto}
+        ></PhotoMenu>
       )}
     </div>
   );

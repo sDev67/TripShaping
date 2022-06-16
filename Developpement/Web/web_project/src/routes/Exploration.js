@@ -10,13 +10,13 @@ import {
   Snackbar,
   Button,
   Typography,
-  Alert,
+  SpeedDial,
   CardMedia,
-  Avatar,
+  SpeedDialAction,
   AppBar,
   Toolbar,
   Box,
-  Popover,
+  SpeedDialIcon,
   Grid,
   Rating,
   CardHeader,
@@ -32,6 +32,9 @@ import Loading from "../utils/Loading";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAuth } from "../Authentication/auth";
 import ProfileBubble from "../components/ProfileBubble";
+import CustomSnackbar from "../utils/CustomSnackbar";
+import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
+import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 
 const drawerWidth = 170;
 
@@ -287,14 +290,23 @@ const Exploration = () => {
                             {travel.toPublish}
                           </Typography>
                           {user && (
-                            <Button
-                              style={{ paddingLeft: 32, paddingRight: 32 }}
-                              variant="contained"
-                              color="primary"
-                              onClick={() => handleCLickCopyTravel(travel)}
+                            <SpeedDial
+                              ariaLabel="SpeedDial basic example"
+                              icon={<SpeedDialIcon />}
+                              direction="left"
                             >
-                              Copier le voyage
-                            </Button>
+                              <SpeedDialAction
+                                icon={<FileCopyIcon />}
+                                tooltipTitle={"Copier"}
+                                onClick={() => handleCLickCopyTravel(travel)}
+                              />
+                              <SpeedDialAction
+                                component={Link}
+                                icon={<PhotoRoundedIcon />}
+                                tooltipTitle={"Visualiser"}
+                                to={"/display/" + travel.id + "/map"}
+                              />
+                            </SpeedDial>
                           )}
                         </Stack>
                       </CardContent>
@@ -306,20 +318,11 @@ const Exploration = () => {
           </Stack>
         </Stack>
       </main>
-      <Snackbar
+      <CustomSnackbar
         open={open}
-        autoHideDuration={6000}
-        onClose={() => setOpen(false)}
-      >
-        <Alert
-          onClose={() => setOpen(false)}
-          variant="filled"
-          color="primary"
-          sx={{ width: "100%" }}
-        >
-          Voyage copié!
-        </Alert>
-      </Snackbar>
+        setOpen={setOpen}
+        message={"Voyage copié !"}
+      ></CustomSnackbar>
     </>
   );
 };

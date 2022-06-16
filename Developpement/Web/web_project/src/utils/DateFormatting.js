@@ -11,8 +11,6 @@ export function changeDateFormat(date) {
 export function addDays(date, days) {
   var dateObject = new Date(date);
   dateObject.setDate(dateObject.getDate() + days);
-  console.log(date);
-  console.log(dateObject);
 
   return (
     (dateObject.getDate() < 10

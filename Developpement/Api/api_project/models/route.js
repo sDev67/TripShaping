@@ -4,8 +4,8 @@ module.exports = sequelize => {
 
     class Route extends Sequelize.Model {
         static associate(db) {
-            Route.belongsTo(db.Step, { foreignKey: 'start' });
-            Route.belongsTo(db.Step, { foreignKey: 'finish' });
+            Route.belongsTo(db.Step, { foreignKey: 'start' }, { onDelete: 'cascade' });
+            Route.belongsTo(db.Step, { foreignKey: 'finish' }, { onDelete: 'cascade' });
             Route.belongsTo(db.Travel, { foreignKey: 'TravelId' });
 
             Route.hasMany(db.Document, { onDelete: 'cascade' });

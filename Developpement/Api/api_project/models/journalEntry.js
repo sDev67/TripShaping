@@ -4,10 +4,10 @@ module.exports = sequelize => {
 
     class JournalEntry extends Sequelize.Model {
         static associate(db) {
-            JournalEntry.belongsTo(db.Travel);
-            JournalEntry.belongsTo(db.Member);
-            JournalEntry.belongsTo(db.Step);
-            JournalEntry.belongsTo(db.Point);
+            JournalEntry.belongsTo(db.Travel, { onDelete: 'cascade' });
+            JournalEntry.belongsTo(db.Member, { onDelete: 'cascade' });
+            JournalEntry.belongsTo(db.Step, { onDelete: 'cascade' });
+            JournalEntry.belongsTo(db.Point, { onDelete: 'cascade' });
         }
     }
 

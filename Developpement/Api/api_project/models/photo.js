@@ -5,7 +5,7 @@ module.exports = sequelize => {
     class Photo extends Sequelize.Model {
         static associate(db) {
             Photo.belongsTo(db.Step);
-            Photo.belongsTo(db.Travel);
+            Photo.belongsTo(db.Travel, { onDelete: 'cascade' });
             Photo.belongsTo(db.Route);
             Photo.belongsTo(db.Point);
         }

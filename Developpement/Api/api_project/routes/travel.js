@@ -1,8 +1,5 @@
 const travel_ctrl = require("../controllers/travel");
 const point_ctrl = require("../controllers/point");
-const route_ctrl = require("..");
-const task_ctrl = require('../controllers/task');
-const label_ctrl = require('../controllers/label');
 
 module.exports = [
   /**

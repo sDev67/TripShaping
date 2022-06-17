@@ -4,8 +4,8 @@ module.exports = sequelize => {
 
     class Position extends Sequelize.Model {
         static associate(db) {
-            Position.belongsTo(db.Member);
-            Position.belongsTo(db.Travel);
+            Position.belongsTo(db.Member, { onDelete: 'cascade' });
+            Position.belongsTo(db.Travel, { onDelete: 'cascade' });
         }
     }
 

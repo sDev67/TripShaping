@@ -24,6 +24,7 @@ import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
 import TravelRequests from "../requests/TravelRequests";
 import { addDays } from "../utils/DateFormatting";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const StepMenu = ({
   deleteStep,
@@ -34,17 +35,17 @@ const StepMenu = ({
   steps,
   setSelectedPoiOfMarker,
   hideDocuments,
+  idTravel,
 }) => {
   const queryClient = useQueryClient();
 
   console.log("HIDE DOCUMENTS : " + hideDocuments);
 
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
-
   const [title, setTitle] = useState(selectedMarker.title);
   const [description, setDescription] = useState(selectedMarker.description);
-  const [descriptionHTML, setDescriptionHTML] = useState(selectedMarker.descriptionHTML);
+  const [descriptionHTML, setDescriptionHTML] = useState(
+    selectedMarker.descriptionHTML
+  );
 
   const [duration, setDuration] = useState(selectedMarker.duration);
 

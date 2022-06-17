@@ -45,6 +45,7 @@ import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelec
 import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
 import ProfileBubble from "./ProfileBubble";
 import NavigationBar from "./NavigationBar";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const drawerWidth = 170;
 
@@ -129,12 +130,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NavigationBarAlbum = () => {
   let { cryptedName } = useParams();
-  cryptedName = cryptedName.toString();
-
-  let idTravel = cryptedName.substring(cryptedName.indexOf("$") + 1);
-  console.log(idTravel);
-
-  idTravel = parseInt(idTravel);
+  let idTravel = cryptedNameToTravelId(cryptedName);
 
   let { user, signout } = useAuth();
 

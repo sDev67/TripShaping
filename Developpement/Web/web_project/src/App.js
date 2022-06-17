@@ -75,13 +75,10 @@ function App() {
                   element={<TripSettings />}
                 />
               </Route>
-              <Route
-                path="/album/:cryptedName"
-                element={<NavigationBarAlbum />}
-              >
-                <Route path="map" element={<MapAlbum />} />
-                <Route path="photos" element={<Photos />} />
-                <Route path="logbook" element={<LogBook />} />
+              <Route path="/album" element={<NavigationBarAlbum />}>
+                <Route path=":cryptedName/map" element={<ItineraryAlbum />} />
+                <Route path=":cryptedName/photos" element={<Photos />} />
+                <Route path=":cryptedName/logbook" element={<LogBook />} />
               </Route>
               <Route path="/display" element={<NavigationBarDisplay />}>
                 <Route path=":idTravel/map" element={<ItineraryDisplay />} />

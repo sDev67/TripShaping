@@ -1,8 +1,7 @@
 const travel_ctrl = require("../controllers/travel");
 const point_ctrl = require("../controllers/point");
-const route_ctrl = require("..");
-const task_ctrl = require('../controllers/task');
-const label_ctrl = require('../controllers/label');
+const task_ctrl = require("../controllers/task");
+const label_ctrl = require("../controllers/label");
 
 module.exports = [
   /**
@@ -33,7 +32,7 @@ module.exports = [
    *          positionAgree:
    *            type: boolean
    *            description: Indique si on autorise la suivie de notre position
-   *          startDate: 
+   *          startDate:
    *            type: date
    *            description: Date de début du voyage
    *          createdAt:
@@ -101,7 +100,7 @@ module.exports = [
    *                   type: boolean
    *                   description: Indique si on autorise la suivie de notre position
    *                   example: true
-   *                 startDate: 
+   *                 startDate:
    *                   type: date
    *                   description: Date de début du voyage
    *                   example: null
@@ -117,8 +116,8 @@ module.exports = [
    *                   type: integer
    *                   description: Id de l'utilisateur ayant crée le voyage
    *                   example: 2
-   *                 
-   *                
+   *
+   *
    *
    *
    */
@@ -241,7 +240,7 @@ module.exports = [
    *                   type: boolean
    *                   description: Indique si on autorise la suivie de notre position
    *                   example: true
-   *                 startDate: 
+   *                 startDate:
    *                   type: date
    *                   description: Date de début du voyage
    *                   example: null
@@ -257,8 +256,8 @@ module.exports = [
    *                   type: integer
    *                   description: Id de l'utilisateur ayant crée le voyage
    *                   example: 2
-   *                 
-   *                
+   *
+   *
    *
    *
    */
@@ -315,7 +314,7 @@ module.exports = [
    *                   type: boolean
    *                   description: Indique si on autorise la suivie de notre position
    *                   example: true
-   *                 startDate: 
+   *                 startDate:
    *                   type: date
    *                   description: Date de début du voyage
    *                   example: null
@@ -580,11 +579,11 @@ module.exports = [
    *                 type: boolean
    *                 description: Indique si on autorise la suivie de notre position
    *                 example: true
-   *               startDate: 
+   *               startDate:
    *                 type: date
    *                 description: Date de début du voyage
    *                 example: null
-   *               
+   *
    *
    *     responses:
    *       200:
@@ -622,7 +621,7 @@ module.exports = [
    *                   type: boolean
    *                   description: Indique si on autorise la suivie de notre position
    *                   example: true
-   *                 startDate: 
+   *                 startDate:
    *                   type: date
    *                   description: Date de début du voyage
    *                   example: null
@@ -750,7 +749,7 @@ module.exports = [
    *                   example: 2
    *                 title:
    *                   type: string
-   *                   description: Titre de la tâche 
+   *                   description: Titre de la tâche
    *                   example: Préparer les rations pour le voyage
    *                 date:
    *                   type: string
@@ -801,7 +800,7 @@ module.exports = [
    *                   example: 2
    *                 title:
    *                   type: string
-   *                   description: Titre du label 
+   *                   description: Titre du label
    *                   example: Préparer les rations pour le voyage
    *                 createdAt:
    *                   type: string
@@ -848,11 +847,11 @@ module.exports = [
    *                   example: 2
    *                 date:
    *                   type: string
-   *                   description: Date de l'entrée du journal 
+   *                   description: Date de l'entrée du journal
    *                   example: 12/05/2022 15:18
    *                 text:
    *                   type: string
-   *                   description: Text de l'entrée du journal 
+   *                   description: Text de l'entrée du journal
    *                   example: Woah c'est vraiment beau ici !
    *                 createdAt:
    *                   type: string
@@ -873,11 +872,11 @@ module.exports = [
    *                 StepId:
    *                   type: integer
    *                   description: Id du point d'étape
-   *                   example: 1 
+   *                   example: 1
    *                 PointId:
    *                   type: integer
    *                   description: Id du point d'intérêt
-   *                   example: 1 
+   *                   example: 1
    *
    */
 
@@ -911,11 +910,11 @@ module.exports = [
    *                   example: 2
    *                 title:
    *                   type: string
-   *                   description: titre du document 
+   *                   description: titre du document
    *                   example: monument.png
    *                 typeFile:
    *                   type: string
-   *                   description: Type du document 
+   *                   description: Type du document
    *                   example: image/png
    *                 createdAt:
    *                   type: string
@@ -979,16 +978,16 @@ module.exports = [
    *                 dataFile:
    *                   type: object
    *                   properties:
-   *                     type: 
+   *                     type:
    *                        type: string
-   *                     data: 
-   *                        type: array   
+   *                     data:
+   *                        type: array
    *                        items:
    *                          type: integer
-   *                          example: 1   
+   *                          example: 1
    *                 date:
    *                   type: string
-   *                   description: Date de prise de la photo 
+   *                   description: Date de prise de la photo
    *                   example: 26/05/2022 15:30
    *                 latitude:
    *                   type: number
@@ -1155,5 +1154,4 @@ module.exports = [
     method: "post",
     func: travel_ctrl.copyTravel,
   },
-
 ];

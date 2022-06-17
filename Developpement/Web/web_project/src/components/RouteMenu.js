@@ -36,6 +36,7 @@ import DocumentRequest from "../requests/DocumentRequest";
 import RouteRequest from "../requests/RouteRequest";
 import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const containerStyle = {
   position: "relative",
@@ -51,10 +52,8 @@ const RouteMenu = ({
   isEdition,
   hideDocuments,
   updateRoute,
+  idTravel,
 }) => {
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
-
   const queryClient = useQueryClient();
   const [files, setFiles] = useState([]);
   const [travelType, setTravelType] = useState(selectedRoute.travelType);

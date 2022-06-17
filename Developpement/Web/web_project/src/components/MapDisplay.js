@@ -54,35 +54,13 @@ const containerStyle = {
 export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const queryClient = useQueryClient();
 
-  let { cryptedName } = useParams();
-  cryptedName = cryptedName.toString();
-
-  let idTravel = cryptedName.substring(cryptedName.indexOf('$') + 1);
-  console.log(idTravel);
+  let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
-
+  console.log(idTravel);
   const [position, setPosition] = useState({
     lat: steps[0] ? steps[0].latitude : 48.5734053,
     lng: steps[0] ? steps[0].longitude : 7.7521113,
   });
-
-  const userPositions = [
-    {
-      latitude: 20,
-      longitude: 10,
-      date: "12/12/2001",
-    },
-    {
-      latitude: 30,
-      longitude: 10,
-      date: "12/12/2001",
-    },
-    {
-      latitude: 20,
-      longitude: 20,
-      date: "12/12/2001",
-    },
-  ];
 
   const [isEdition, setIsEdition] = useState(false);
   const [markerFilter, setMarkerFilter] = useState("all");
@@ -757,6 +735,7 @@ export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
               isEdition={isEdition}
               steps={steps}
               hideDocuments={true}
+              idTravel={idTravel}
             ></InterestPointMenu>
           )
         ) : selectedMarker.type === "Step" && isLoadingS ? (
@@ -773,6 +752,7 @@ export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
             steps={steps}
             setSelectedPoiOfMarker={setSelectedPoiOfMarker}
             hideDocuments={true}
+            idTravel={idTravel}
           ></StepMenu>
         ))}
       {selectedRoute && (
@@ -783,6 +763,7 @@ export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
           setSelectedRoute={setSelectedRoute}
           isEdition={isEdition}
           hideDocuments={true}
+          idTravel={idTravel}
         ></RouteMenu>
       )}
       {showTimeline && (

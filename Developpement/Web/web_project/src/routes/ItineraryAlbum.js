@@ -14,12 +14,13 @@ import {
 } from "@mui/material";
 import Loading from "./../utils/Loading";
 import { MapAlbum } from "../components/MapAlbum";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const ItineraryAlbum = () => {
   const queryClient = useQueryClient();
 
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
+  let { cryptedName } = useParams();
+  let idTravel = cryptedNameToTravelId(cryptedName);
 
   // Etapes
   const {

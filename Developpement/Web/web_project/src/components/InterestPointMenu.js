@@ -22,6 +22,7 @@ import DocumentRequest from "../requests/DocumentRequest";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import RichTextEditor from "./RichTextEditor";
 import DocumentsList from "./DocumentsList";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const InterestPointMenu = ({
   deletePoint,
@@ -31,11 +32,9 @@ const InterestPointMenu = ({
   isEdition,
   steps,
   hideDocuments,
+  idTravel,
 }) => {
   const queryClient = useQueryClient();
-
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
 
   // Documents by id
   const {
@@ -62,7 +61,9 @@ const InterestPointMenu = ({
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
-  const [descriptionHTML, setDescriptionHTML] = useState(selectedMarker.descriptionHTML);
+  const [descriptionHTML, setDescriptionHTML] = useState(
+    selectedMarker.descriptionHTML
+  );
   const [stepId, setStepId] = useState(selectedMarker.StepId);
   const [selectedStep, setSelectedStep] = useState(null);
   const [days, setDays] = useState([]);

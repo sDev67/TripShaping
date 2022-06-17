@@ -46,6 +46,7 @@ import food from "../assets/food.png";
 import foodSelected from "../assets/foodSelected.png";
 import DropDownMember from "./DropDownMember";
 import MemberRequests from "../requests/MemberRequests";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const containerStyle = {
   position: "relative",
@@ -56,8 +57,8 @@ const containerStyle = {
 export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const queryClient = useQueryClient();
 
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
+  let { cryptedName } = useParams();
+  let idTravel = cryptedNameToTravelId(cryptedName);
 
   const [position, setPosition] = useState({
     lat: steps[0] ? steps[0].latitude : 48.5734053,
@@ -867,6 +868,7 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
               updateInfoPoint={updateInfoPoint}
               isEdition={isEdition}
               steps={steps}
+              idTravel={idTravel}
             ></InterestPointMenu>
           )
         ) : selectedMarker.type === "Step" && isLoadingS ? (
@@ -882,6 +884,7 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
             isEdition={isEdition}
             steps={steps}
             setSelectedPoiOfMarker={setSelectedPoiOfMarker}
+            idTravel={idTravel}
           ></StepMenu>
         ))}
       {selectedRoute && (
@@ -891,6 +894,7 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
           finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
           isEdition={isEdition}
+          idTravel={idTravel}
         ></RouteMenu>
       )}
       {showTimeline && (

@@ -717,10 +717,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                                 },
                               ]}
                               options={{
-                                strokeColor:
-                                  routes[index - 1].travelType == "DRIVING"
-                                    ? palette.primary.main
-                                    : "#fff",
+                                strokeColor: palette.primary.main,
                                 strokeWeight: 8,
                                 icons: [
                                   {
@@ -761,6 +758,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
               updateInfoPoint={updateInfoPoint}
               isEdition={isEdition}
               steps={steps}
+              idTravel={idTravel}
             ></InterestPointMenu>
           )
         ) : selectedMarker.type === "Step" && isLoadingS ? (
@@ -776,6 +774,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
             isEdition={isEdition}
             steps={steps}
             setSelectedPoiOfMarker={setSelectedPoiOfMarker}
+            idTravel={idTravel}
           ></StepMenu>
         ))}
       {selectedRoute && (
@@ -786,6 +785,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
           setSelectedRoute={setSelectedRoute}
           isEdition={isEdition}
           updateRoute={updateRoute}
+          idTravel={idTravel}
         ></RouteMenu>
       )}
       {showTimeline && (

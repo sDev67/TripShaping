@@ -4,10 +4,11 @@ import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const DropDownMember = ({ selectedMember, setSelectedMember }) => {
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
+  let { cryptedName } = useParams();
+  let idTravel = cryptedNameToTravelId(cryptedName);
 
   // Members
   const {

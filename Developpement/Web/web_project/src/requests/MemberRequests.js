@@ -23,9 +23,21 @@ const MemberRequests = {
       .then((res) => res.json());
   },
 
-  addMember: ({ name, userLogin, TravelId }) => {
+  getPositionOfMember: (idMember) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/member/${idMember}/positions`, {
+      // headers: {
+      //     Authorization: 'Bearer ' + token
+      // }
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
 
-    if(name === undefined){name=userLogin}
+  addMember: ({ name, userLogin, TravelId }) => {
+    if (name === undefined) {
+      name = userLogin;
+    }
     //const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/member`, {
       method: "POST",

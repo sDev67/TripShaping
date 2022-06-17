@@ -6,7 +6,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import { CircularProgress, Button, Stack } from "@mui/material";
+import { CircularProgress, Button, Stack, Tooltip } from "@mui/material";
 import palette from "../theme/palette";
 
 import MapModeSwitchAlbum from "./MapModeSwitchAlbum";
@@ -44,6 +44,8 @@ import theater from "../assets/theater.png";
 import theaterSelected from "../assets/theaterSelected.png";
 import food from "../assets/food.png";
 import foodSelected from "../assets/foodSelected.png";
+import DropDownMember from "./DropDownMember";
+import MemberRequests from "../requests/MemberRequests";
 
 const containerStyle = {
   position: "relative",
@@ -88,12 +90,26 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedPoiOfMarker, setSelectedPoiOfMarker] = useState(null);
+  const [selectedMember, setSelectedMember] = useState(null);
 
   const [showTimeline, setShowTimeline] = useState(false);
 
   const [stepAdded, setStepAdded] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
+
+  // Points
+  const {
+    isLoading: isLoadingPM,
+    isError: isErrorPM,
+    error: errorPM,
+    data: memberPositions,
+    refetch: refetchPM,
+  } = useQuery(
+    ["getPositionOfMember", idTravel],
+    () => MemberRequests.getPositionOfMember(selectedMember.id),
+    { enabled: false }
+  );
 
   // Points
   const {
@@ -127,6 +143,12 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
 
   //const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (selectedMember) {
+      refetchPM();
+    }
+  }, [selectedMember]);
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
@@ -558,22 +580,15 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
             onClick={onMapClick}
           >
             <Stack
-              direction="column-reverse"
+              direction="column"
               spacing={2}
               style={{
                 position: "absolute",
-                bottom: "25px",
-                left: "10px",
+                bottom: "2%",
+                left: "1%",
+                width: "8%",
               }}
             >
-              <MapModeSwitchAlbum
-                handleSwitch={handleSwitch}
-                isEdition={isEdition}
-                markerFilter={markerFilter}
-                handleChangeSelectModeEdit={handleChangeSelectModeEdit}
-                handleChangeSelectModeNav={handleChangeSelectModeNav}
-                editionMode={editionMode}
-              ></MapModeSwitchAlbum>
               {showTimeline ? (
                 <Button
                   onClick={() => {
@@ -600,6 +615,27 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   Liste Étapes
                 </Button>
               )}
+              <MapModeSwitchAlbum
+                handleSwitch={handleSwitch}
+                isEdition={isEdition}
+                markerFilter={markerFilter}
+                handleChangeSelectModeEdit={handleChangeSelectModeEdit}
+                handleChangeSelectModeNav={handleChangeSelectModeNav}
+                editionMode={editionMode}
+              ></MapModeSwitchAlbum>
+            </Stack>
+            <Stack
+              style={{
+                position: "absolute",
+                bottom: "2%",
+                left: "10%",
+                width: "15%",
+              }}
+            >
+              <DropDownMember
+                selectedMember={selectedMember}
+                setSelectedMember={setSelectedMember}
+              ></DropDownMember>
             </Stack>
 
             {isLoadingS ? (
@@ -743,30 +779,47 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
               )
             )}
 
-            {userPositions.map((userPosition, index) => (
+            {isLoadingPM ? (
+              <Loading />
+            ) : isErrorPM ? (
+              <p style={{ color: "red" }}>{errorPM.message}</p>
+            ) : (
               <>
-                {index > 0 && (
-                  <Polyline
-                    key={index - 1}
-                    geodesic={true}
-                    path={[
-                      {
-                        lat: userPositions[index - 1].latitude,
-                        lng: userPositions[index - 1].longitude,
-                      },
-                      {
-                        lat: userPosition.latitude,
-                        lng: userPosition.longitude,
-                      },
-                    ]}
-                    options={{
-                      strokeColor: palette.secondary.main,
-                      strokeWeight: 8,
-                    }}
-                  ></Polyline>
-                )}
+                {memberPositions?.map((memberPosition, index) => (
+                  <>
+                    {index > 0 && (
+                      <Polyline
+                        key={index - 1}
+                        geodesic={true}
+                        path={[
+                          {
+                            lat: memberPositions[index - 1].latitude,
+                            lng: memberPositions[index - 1].longitude,
+                          },
+                          {
+                            lat: memberPosition.latitude,
+                            lng: memberPosition.longitude,
+                          },
+                        ]}
+                        options={{
+                          strokeColor: palette.secondary.main,
+                          strokeWeight: 8,
+                        }}
+                      ></Polyline>
+                    )}
+
+                    <Marker
+                      key={index}
+                      position={{
+                        lat: memberPosition.latitude,
+                        lng: memberPosition.longitude,
+                      }}
+                    ></Marker>
+                  </>
+                ))}
               </>
-            ))}
+            )}
+
             {isLoadingPh ? (
               <Loading />
             ) : isErrorPh ? (

@@ -554,8 +554,8 @@ export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
               spacing={2}
               style={{
                 position: "absolute",
-                bottom: "25px",
-                left: "10px",
+                bottom: "2%",
+                left: "1%",
               }}
             >
               <MapModeSwitchAlbum

@@ -19,6 +19,7 @@ import StepRequests from "../requests/StepRequests";
 import { useParams } from "react-router-dom";
 import StepTimeline from "./StepTimeline";
 import Loading from "../utils/Loading";
+import RouteRequest from "../requests/RouteRequest";
 
 import stepIcon from "../assets/stepIcon.png";
 import selectedStepIcon from "../assets/selectedStepIcon.png";
@@ -207,6 +208,12 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
         step,
       ]);
       queryClient.invalidateQueries(["getSteps", idTravel]);
+    },
+  });
+
+  const updateRoute = useMutation(RouteRequest.updateRouteById, {
+    onSuccess: (route) => {
+      queryClient.invalidateQueries("getRoutes", idTravel);
     },
   });
 
@@ -668,52 +675,73 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                 ></Marker>
               ))
             )}
-
-            {isLoadingS ? (
-              "Chargement..."
-            ) : isErrorS ? (
-              <p style={{ color: "red" }}>{errorS.message}</p>
+            {isLoadingR ? (
+              <Loading />
+            ) : isErrorR ? (
+              <p style={{ color: "red" }}>{errorR.message}</p>
             ) : (
-              steps.length >= 2 &&
-              !(!isEdition && markerFilter === "interestPointOnlyNav") && (
-                <>
-                  {steps.map((step, index) => (
+              <>
+                {isLoadingS ? (
+                  "Chargement..."
+                ) : isErrorS ? (
+                  <p style={{ color: "red" }}>{errorS.message}</p>
+                ) : (
+                  steps.length >= 2 &&
+                  !(!isEdition && markerFilter === "interestPointOnlyNav") && (
                     <>
-                      {index > 0 && (
-                        <Polyline
-                          key={index - 1}
-                          geodesic={true}
-                          clickable={true}
-                          onClick={() => {
-                            setSelectedRoute(null);
-                            setSelectedRoute({
-                              route: routes[index - 1],
-                              start: steps[index - 1],
-                              finish: step,
-                            });
-                            setSelectedMarker(null);
-                            setShowTimeline(false);
-                          }}
-                          path={[
-                            {
-                              lat: steps[index - 1].latitude,
-                              lng: steps[index - 1].longitude,
-                            },
-                            {
-                              lat: step.latitude,
-                              lng: step.longitude,
-                            },
-                          ]}
-                          options={{
-                            strokeColor: palette.primary.main,
-                            strokeWeight: 8,
-                          }}
-                        ></Polyline>
-                      )}
+                      {steps.map((step, index) => (
+                        <>
+                          {index > 0 && (
+                            <Polyline
+                              key={index - 1}
+                              geodesic={true}
+                              clickable={true}
+                              onClick={() => {
+                                setSelectedRoute(null);
+                                setSelectedRoute({
+                                  route: routes[index - 1],
+                                  start: steps[index - 1],
+                                  finish: step,
+                                });
+                                setSelectedMarker(null);
+                                setShowTimeline(false);
+                              }}
+                              path={[
+                                {
+                                  lat: steps[index - 1].latitude,
+                                  lng: steps[index - 1].longitude,
+                                },
+                                {
+                                  lat: step.latitude,
+                                  lng: step.longitude,
+                                },
+                              ]}
+                              options={{
+                                strokeColor:
+                                  routes[index - 1].travelType == "DRIVING"
+                                    ? palette.primary.main
+                                    : "#fff",
+                                strokeWeight: 8,
+                                icons: [
+                                  {
+                                    icon: {
+                                      path: "M 0,-1 0,1",
+                                      strokeOpacity: 1,
+                                      scale: 4,
+                                    },
+                                    offset: "0",
+                                    repeat: "20px",
+                                  },
+                                ],
+                              }}
+                            ></Polyline>
+                          )}
+                        </>
+                      ))}
                     </>
-                  ))}
-                </>
-              )
+                  )
+                )}
+              </>
             )}
           </GoogleMap>
         )}
@@ -757,6 +785,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
           finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
           isEdition={isEdition}
+          updateRoute={updateRoute}
         ></RouteMenu>
       )}
       {showTimeline && (

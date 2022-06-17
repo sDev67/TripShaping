@@ -15,7 +15,11 @@ import TravelRequests from "./../requests/TravelRequests";
 import { UTurnLeft } from "@mui/icons-material";
 
 const Photos = () => {
-  let { idTravel } = useParams();
+  let { cryptedName } = useParams();
+  cryptedName = cryptedName.toString();
+
+  let idTravel = cryptedName.substring(cryptedName.indexOf('$') + 1);
+  console.log(idTravel);
   idTravel = parseInt(idTravel);
   const [url, setUrl] = useState();
 

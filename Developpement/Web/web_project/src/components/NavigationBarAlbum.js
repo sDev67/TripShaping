@@ -128,7 +128,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavigationBarAlbum = () => {
-  let { idTravel } = useParams();
+  let { cryptedName } = useParams();
+  cryptedName = cryptedName.toString();
+
+  let idTravel = cryptedName.substring(cryptedName.indexOf("$") + 1);
+  console.log(idTravel);
+
   idTravel = parseInt(idTravel);
 
   let { user, signout } = useAuth();
@@ -268,7 +273,7 @@ const NavigationBarAlbum = () => {
               }
               value="Carte"
               component={Link}
-              to={"/album/" + idTravel + "/map"}
+              to={"/album/" + cryptedName + "/map"}
             />
             <Tab
               icon={<PhotoSizeSelectActualRoundedIcon />}
@@ -285,7 +290,7 @@ const NavigationBarAlbum = () => {
               }
               value="Photos"
               component={Link}
-              to={"/album/" + idTravel + "/photos"}
+              to={"/album/" + cryptedName + "/photos"}
             />
             <Tab
               icon={<NewspaperRoundedIcon />}
@@ -302,7 +307,7 @@ const NavigationBarAlbum = () => {
               }
               value="Journal"
               component={Link}
-              to={"/album/" + idTravel + "/logbook"}
+              to={"/album/" + cryptedName + "/logbook"}
             />
           </Tabs>
         </Drawer>

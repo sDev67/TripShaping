@@ -62,6 +62,7 @@ const InterestPointMenu = ({
   const [title, setTitle] = useState(selectedMarker.title);
   const [category, setCategory] = useState(selectedMarker.category);
   const [description, setDescription] = useState(selectedMarker.description);
+  const [descriptionHTML, setDescriptionHTML] = useState(selectedMarker.descriptionHTML);
   const [stepId, setStepId] = useState(selectedMarker.StepId);
   const [selectedStep, setSelectedStep] = useState(null);
   const [days, setDays] = useState([]);
@@ -136,6 +137,7 @@ const InterestPointMenu = ({
         title: title,
         category: category,
         description: description,
+        descriptionHTML: descriptionHTML,
         idPoint: pointId.id,
         StepId: selectedStep?.id,
         day: dayStep,
@@ -317,6 +319,7 @@ const InterestPointMenu = ({
           </Typography>
           <div style={{ marginBottom: 25 }}>
             <RichTextEditor
+              setValueHTML={setDescriptionHTML}
               setValue={setDescription}
               value={description}
               limitedEditor={true}
@@ -357,6 +360,7 @@ const InterestPointMenu = ({
       <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
         <RichTextEditor
           setValue={setDescription}
+          setValueHTML={setDescriptionHTML}
           value={description}
           limitedEditor={false}
           OnClose={HandleCloseAddLabelForm}

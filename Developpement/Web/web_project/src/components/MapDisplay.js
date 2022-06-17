@@ -54,7 +54,11 @@ const containerStyle = {
 export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const queryClient = useQueryClient();
 
-  let { idTravel } = useParams();
+  let { cryptedName } = useParams();
+  cryptedName = cryptedName.toString();
+
+  let idTravel = cryptedName.substring(cryptedName.indexOf('$') + 1);
+  console.log(idTravel);
   idTravel = parseInt(idTravel);
 
   const [position, setPosition] = useState({

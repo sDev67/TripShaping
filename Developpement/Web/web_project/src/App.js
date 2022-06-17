@@ -34,6 +34,7 @@ import english from "./translations/english.json";
 import ItineraryAlbum from "./routes/ItineraryAlbum";
 import NavigationBarDisplay from "./components/NavigationBarDisplay";
 import ItineraryDisplay from "./routes/ItineraryDisplay";
+import { MapAlbum } from "./components/MapAlbum";
 
 const queryClient = new QueryClient();
 
@@ -74,10 +75,13 @@ function App() {
                   element={<TripSettings />}
                 />
               </Route>
-              <Route path="/album" element={<NavigationBarAlbum />}>
-                <Route path=":idTravel/map" element={<ItineraryAlbum />} />
-                <Route path=":idTravel/photos" element={<Photos />} />
-                <Route path=":idTravel/logbook" element={<LogBook />} />
+              <Route
+                path="/album/:cryptedName"
+                element={<NavigationBarAlbum />}
+              >
+                <Route path="map" element={<MapAlbum />} />
+                <Route path="photos" element={<Photos />} />
+                <Route path="logbook" element={<LogBook />} />
               </Route>
               <Route path="/display" element={<NavigationBarDisplay />}>
                 <Route path=":idTravel/map" element={<ItineraryDisplay />} />

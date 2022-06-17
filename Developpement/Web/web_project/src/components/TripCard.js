@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@mui/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -32,6 +32,7 @@ import CustomSnackbar from "../utils/CustomSnackbar";
 const TripCard = ({ travelId, user }) => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [linkalbum, setLink] = useState("");
 
   const addMember = useMutation(MemberRequests.addMember, {
     onSuccess: (member) => {
@@ -178,7 +179,7 @@ const TripCard = ({ travelId, user }) => {
                   component={Link}
                   icon={<PhotoRoundedIcon />}
                   tooltipTitle={"Album"}
-                  to={"/album/" + travelId + "/map"}
+                  to={"/album/" + travel.albumURL + "/map"}
                 />
               </SpeedDial>
             </Stack>

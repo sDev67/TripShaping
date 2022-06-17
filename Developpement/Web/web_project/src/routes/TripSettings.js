@@ -10,9 +10,13 @@ import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
+import ConfirmedSuppressionModal from "../components/ConfirmedSuppressionModal";
+import { useNavigate } from "react-router-dom";
 
 const TripSettings = () => {
   const queryClient = useQueryClient();
+
+  const navigate = useNavigate();
 
   var today = new Date();
   var dateMax =
@@ -42,6 +46,7 @@ const TripSettings = () => {
   let trackPosition = travel?.positionAgree;
 
   const [startDialogOpen, setStartDialogOpen] = useState(false);
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
 
   const date1 = new Date(plannedDate);
   const date2 = new Date(dateMax);
@@ -146,7 +151,12 @@ const TripSettings = () => {
       },
     }
   );
-
+  const deleteVoyage = useMutation(TravelRequests.deleteTravel, {
+    onSuccess: travel => {
+      HandleCloseConfirmedSuppr();
+      navigate('/mytrips')
+    }
+  });
   const updatePosition = useMutation(TravelRequests.updateTravelTrackPosition, {
     onSuccess: (statusPosition) => {
       queryClient.setQueryData(["getTravel", idTravel], statusPosition);
@@ -157,6 +167,11 @@ const TripSettings = () => {
   const HandleCloseAddLabelForm = () => {
     setStartDialogOpen(false);
   };
+
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
+  };
+
 
   return (
     <>
@@ -224,7 +239,7 @@ const TripSettings = () => {
                 variant="contained"
                 color="error"
                 startIcon={<DeleteRounded />}
-                // onClick={handleSwitch()}
+                onClick={() => setConfirmedDeleteDialogOpen(true)}
                 style={{
                   paddingLeft: "25px",
                   paddingRight: "25px",
@@ -253,6 +268,9 @@ const TripSettings = () => {
               )}
             </Stack>
           </Stack>
+          <Dialog open={confirmedDeleteDialogOpen} onClose={HandleCloseConfirmedSuppr}>
+            <ConfirmedSuppressionModal idTravel={travel.id} onClose={HandleCloseConfirmedSuppr} title={travel.name} onDelete={deleteVoyage} />
+          </Dialog>
           <Dialog open={startDialogOpen} onClose={HandleCloseAddLabelForm}>
             <Stack>
               <Stack

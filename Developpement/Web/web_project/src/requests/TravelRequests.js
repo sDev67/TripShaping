@@ -356,6 +356,15 @@ const TravelRequests = {
       // },
     }).then(checkStatus);
   },
+  deleteTravel: (idTravel) => {
+    //const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/${idTravel}`, {
+      method: "DELETE",
+      // headers: {
+      //     Authorization: 'Bearer ' + token
+      // },
+    }).then(checkStatus);
+  },
 
   removeStep: (idStep) => {
     //const token = window.localStorage.getItem('token');

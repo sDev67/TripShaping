@@ -221,7 +221,10 @@ module.exports = [
   {
     url: "/users",
     method: "get",
-    func: user_ctrl.get_all,
+    func: [
+      user_ctrl.identify_client,
+      user_ctrl.get_all,
+    ],
   },
   {
     url: "/user/signup",
@@ -241,7 +244,11 @@ module.exports = [
   {
     url: "/user/:user_id",
     method: "get",
-    func: user_ctrl.get_by_id,
+    func: [
+      user_ctrl.identify_client,
+      client_is_user_id,
+      user_ctrl.get_by_id,
+    ],
   },
   {
     url: "/user/:user_id",

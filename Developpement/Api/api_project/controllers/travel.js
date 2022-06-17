@@ -218,7 +218,6 @@ module.exports = {
       .then(() => res.status(200).end())
       .catch(next);
   },
-
   copyTravel: (req, res, next) => {
     db.Travel.findOne({
       include:

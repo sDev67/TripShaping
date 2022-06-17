@@ -48,7 +48,7 @@ const InterestPointMenu = ({
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
-      queryClient.invalidateQueries(["getDocumentsOfPoint", idTravel]);
+      queryClient.invalidateQueries(["getDocumentsOfPoint", selectedMarker.id]);
     },
   });
 

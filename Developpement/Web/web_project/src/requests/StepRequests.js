@@ -2,22 +2,22 @@ import { checkStatus, url_prefix } from "../utils";
 
 const StepRequests = {
   getStepById: (id) => {
-    //const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/step/${id}`, {
       headers: {
-        // Authorization: 'Bearer ' + token
+        Authorization: 'Bearer ' + token
       },
     })
       .then(checkStatus)
       .then((res) => res.json());
   },
   updateStepLocationById: ({ latitude, longitude, idPoint }) => {
-    //const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/step/${idPoint}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        //  Authorization: 'Bearer ' + token
+        Authorization: 'Bearer ' + token
       },
       body: JSON.stringify({ latitude, longitude }),
     })
@@ -25,12 +25,12 @@ const StepRequests = {
       .then((res) => res.json());
   },
   updateStepInfoById: ({ title, duration, description, idStep }) => {
-    //const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/step/${idStep}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        //  Authorization: 'Bearer ' + token
+        Authorization: 'Bearer ' + token
       },
       body: JSON.stringify({ title, duration, description }),
     })
@@ -39,11 +39,11 @@ const StepRequests = {
   },
 
   getPointsOfStep: (idStep) => {
-    //const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/step/${idStep}/points`, {
-      // headers: {
-      //     Authorization: 'Bearer ' + token
-      // }
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
     })
       .then(checkStatus)
       .then((res) => res.json());

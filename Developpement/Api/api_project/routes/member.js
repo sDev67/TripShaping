@@ -1,4 +1,5 @@
 const member_ctrl = require('../controllers/member');
+const user_ctrl = require("../controllers/user");
 
 module.exports = [
 
@@ -258,27 +259,42 @@ module.exports = [
 	{
 		url: '/members',
 		method: 'get',
-		func: member_ctrl.get_all
+		func: [
+			user_ctrl.identify_client,
+			member_ctrl.get_all,
+		],
 	},
 	{
 		url: '/member',
 		method: 'post',
-		func: member_ctrl.create
+		func: [
+			user_ctrl.identify_client,
+			member_ctrl.create,
+		],
 	},
 	{
 		url: '/member/:member_id',
 		method: 'get',
-		func: member_ctrl.get_by_id
+		func: [
+			user_ctrl.identify_client,
+			member_ctrl.get_by_id,
+		],
 	},
 	{
 		url: '/member/:member_id',
 		method: 'put',
-		func: member_ctrl.update_by_id
+		func: [
+			user_ctrl.identify_client,
+			member_ctrl.update_by_id,
+		],
 	},
 	{
 		url: '/member/:member_id',
 		method: 'delete',
-		func: member_ctrl.delete_by_id
+		func: [
+			user_ctrl.identify_client,
+			member_ctrl.delete_by_id,
+		],
 	}
 
 ];

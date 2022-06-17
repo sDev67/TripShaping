@@ -3,15 +3,11 @@ import {
   List,
   IconButton,
   ListItem,
-  Typography,
-  Avatar,
-  Chip,
   ListItemButton,
   ListItemAvatar,
   ListItemText,
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import { stringAvatar } from "../utils/AvatarColorPicker";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import DocumentRequest from "../requests/DocumentRequest";

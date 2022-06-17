@@ -6,7 +6,6 @@ import {
   CardMedia,
   CardContent,
   Dialog,
-  MenuItem,
   Button,
   Typography,
   IconButton,
@@ -65,7 +64,6 @@ const StepMenu = ({
 
   useEffect(() => {
     let dayCounter = 0;
-    let date;
     let stop = false;
 
     steps.forEach((step) => {
@@ -84,7 +82,7 @@ const StepMenu = ({
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
-      queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
+      queryClient.invalidateQueries(["getDocumentsOfStep", selectedMarker.id]);
     },
   });
 

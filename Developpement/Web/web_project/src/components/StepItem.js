@@ -83,7 +83,7 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
-      queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
+      queryClient.invalidateQueries(["getDocumentsOfStep", step.id]);
     },
   });
 
@@ -361,7 +361,7 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
-      queryClient.invalidateQueries(["getDocumentsOfPoint", idTravel]);
+      queryClient.invalidateQueries(["getDocumentsOfPoint", selectedInterestPoint.id]);
     },
   });
 

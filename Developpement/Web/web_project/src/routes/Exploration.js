@@ -35,6 +35,7 @@ import ProfileBubble from "../components/ProfileBubble";
 import CustomSnackbar from "../utils/CustomSnackbar";
 import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
+import ExplorationTripCard from "../components/ExplorationTripCard";
 
 const drawerWidth = 170;
 
@@ -138,6 +139,7 @@ const Exploration = () => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
+  const [filterTravel, setFilterTravel] = useState("");
 
   const {
     isLoading: isLoadingT,
@@ -218,104 +220,79 @@ const Exploration = () => {
         <div style={{ height: "6.85%" }}></div>
         <Stack
           direction="column"
-          alignItems="center"
-          style={{
-            // backgroundImage: `url(${require("../assets/balloons-flying.jpg")})`,
-            backgroundSize: "cover",
-            height: "93.15%",
-          }}
+          // style={{
+          //   // backgroundImage: `url(${require("../assets/balloons-flying.jpg")})`,
+          //   backgroundSize: "cover",
+          //   height: "93.15%",
+          // }}
+          height="93.15%"
+          width="90%"
+          marginLeft="5%"
+          justifyContent="flex-start"
         >
-          <Stack direction="row" marginTop={8}>
-            <Typography color="primary" variant="h2">
-              Découvrez tous les voyages partagés par les utilisateurs !
-            </Typography>
-          </Stack>
-          <Stack direction="column" justifyContent="flex-start" width="90%">
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              spacing={2}
-              width="40%"
-              marginTop={10}
-              marginBottom={5}
-            >
-              <TextField
-                fullWidth
-                label="Voyage"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <Button
-                style={{ paddingLeft: 32, paddingRight: 32 }}
-                variant="contained"
-                color="primary"
-              >
-                Rechercher
-              </Button>
-            </Stack>
-            <Grid container spacing={10}>
-              {isLoadingT ? (
-                <Loading />
-              ) : isErrorT ? (
-                <p style={{ color: "red" }}>{errorT.message}</p>
-              ) : travels.length == 0 ? (
+          <Typography
+            color="primary"
+            variant="h2"
+            textAlign="center"
+            marginTop={8}
+          >
+            Découvrez tous les voyages partagés par les utilisateurs !
+          </Typography>
+          <TextField
+            style={{ width: "40%", marginTop: "2%", marginBottom: "1%" }}
+            fullWidth
+            label="Chercher un voyage"
+            value={filterTravel}
+            onChange={(e) => setFilterTravel(e.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <Grid
+            marginTop={0}
+            paddingX={2}
+            paddingBottom={2}
+            container
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={5}
+            style={{
+              overflowY: "scroll",
+            }}
+          >
+            {isLoadingT ? (
+              <Loading />
+            ) : isErrorT ? (
+              <p style={{ color: "red" }}>{errorT.message}</p>
+            ) : travels.length == 0 ? (
+              <>
+                <Typography
+                  color="error"
+                  variant="h3"
+                  textAlign="center"
+                  paddingTop={4}
+                >
+                  Aucun voyage n'est publié actuellement
+                </Typography>
+              </>
+            ) : (
+              travels.map((travel, index) => (
                 <>
-                  <Typography
-                    color="error"
-                    variant="h3"
-                    textAlign="center"
-                    paddingTop={4}
-                  >
-                    Aucun voyage n'est publié actuellement
-                  </Typography>
+                  {travel.name
+                    .toLowerCase()
+                    .trim()
+                    .includes(filterTravel.toLowerCase().trim()) && (
+                    <ExplorationTripCard
+                      index={index}
+                      travel={travel}
+                      user={user}
+                      handleCLickCopyTravel={handleCLickCopyTravel}
+                    />
+                  )}
                 </>
-              ) : (
-                travels.map((travel, index) => (
-                  <Grid key={index} item xs={4}>
-                    <Card>
-                      <CardMedia
-                        component="img"
-                        height="194"
-                        image={require("../assets/etapes.png")}
-                      />
-                      <CardContent>
-                        <Stack
-                          direction="row"
-                          justifyContent="space-between"
-                          spacing={2}
-                        >
-                          <Typography variant="h4" textAlign="center">
-                            {travel.name}
-                            {travel.toPublish}
-                          </Typography>
-                          {user && (
-                            <SpeedDial
-                              ariaLabel="SpeedDial basic example"
-                              icon={<SpeedDialIcon />}
-                              direction="left"
-                            >
-                              <SpeedDialAction
-                                icon={<FileCopyIcon />}
-                                tooltipTitle={"Copier"}
-                                onClick={() => handleCLickCopyTravel(travel)}
-                              />
-                              <SpeedDialAction
-                                component={Link}
-                                icon={<PhotoRoundedIcon />}
-                                tooltipTitle={"Visualiser"}
-                                to={"/display/" + travel.id + "/map"}
-                              />
-                            </SpeedDial>
-                          )}
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))
-              )}
-            </Grid>
-          </Stack>
+              ))
+            )}
+          </Grid>
         </Stack>
       </main>
       <CustomSnackbar

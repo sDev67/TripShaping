@@ -35,6 +35,9 @@ import ItineraryAlbum from "./routes/ItineraryAlbum";
 import NavigationBarDisplay from "./components/NavigationBarDisplay";
 import ItineraryDisplay from "./routes/ItineraryDisplay";
 import { MapAlbum } from "./components/MapAlbum";
+import { useAuth } from "./Authentication/auth";
+import { useNavigate } from "react-router-dom";
+import PrivateRoute from "./Authentication/privateRoute";
 
 const queryClient = new QueryClient();
 
@@ -59,8 +62,24 @@ function App() {
               <Route path="/discover" element={<Exploration />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/mytrips" element={<TripSelection />} />
-              <Route path="/trip" element={<NavigationBar />}>
+
+              <Route
+                path="/mytrips"
+                element={
+                  <PrivateRoute>
+                    <TripSelection />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/trip"
+                element={
+                  <PrivateRoute>
+                    <NavigationBar />
+                  </PrivateRoute>
+                }
+              >
                 <Route path=":idTravel/map" element={<Itinerary />} />
                 <Route path=":idTravel/steps" element={<Steps />} />
                 <Route path=":idTravel/todolist" element={<TodoList />} />

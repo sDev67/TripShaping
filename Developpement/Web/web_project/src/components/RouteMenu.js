@@ -60,7 +60,8 @@ const RouteMenu = ({
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
 
-  console.log(selectedRoute);
+  console.log(selectedRoute.travelType);
+
   const {
     isLoading: isLoadingD,
     isError: isErrorD,
@@ -180,6 +181,7 @@ const RouteMenu = ({
             select
             label="Type de transport"
             value={travelType}
+            defaultValue={selectedRoute.travelType}
             onChange={(e) => setTravelType(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{

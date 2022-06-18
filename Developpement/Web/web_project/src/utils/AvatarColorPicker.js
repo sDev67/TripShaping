@@ -26,3 +26,17 @@ export function stringAvatar(name) {
     children: `${name.split(" ")[0][0]}`.toUpperCase(),
   };
 }
+
+export function stringColor(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name.toUpperCase()),
+    },
+    children: (
+      <>
+        <br />
+        <br />
+      </>
+    ),
+  };
+}

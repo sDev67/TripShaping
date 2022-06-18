@@ -46,7 +46,8 @@ const TripSettings = () => {
   let trackPosition = travel?.positionAgree;
 
   const [startDialogOpen, setStartDialogOpen] = useState(false);
-  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
+    useState(false);
 
   const date1 = new Date(plannedDate);
   const date2 = new Date(dateMax);
@@ -152,10 +153,10 @@ const TripSettings = () => {
     }
   );
   const deleteVoyage = useMutation(TravelRequests.deleteTravel, {
-    onSuccess: travel => {
+    onSuccess: (travel) => {
       HandleCloseConfirmedSuppr();
-      navigate('/mytrips')
-    }
+      navigate("/mytrips");
+    },
   });
   const updatePosition = useMutation(TravelRequests.updateTravelTrackPosition, {
     onSuccess: (statusPosition) => {
@@ -171,7 +172,6 @@ const TripSettings = () => {
   const HandleCloseConfirmedSuppr = () => {
     setConfirmedDeleteDialogOpen(false);
   };
-
 
   return (
     <>
@@ -192,7 +192,7 @@ const TripSettings = () => {
             spacing={5}
           >
             <Stack direction="row" justifyContent="space-between">
-              <FormControlLabel
+              {/* <FormControlLabel
                 value={trackPosition}
                 checked={trackPosition}
                 control={<Switch color="primary" />}
@@ -204,7 +204,7 @@ const TripSettings = () => {
                 labelPlacement="start"
                 onChange={handleSwitchTrackPosition}
                 position="relative"
-              />
+              /> */}
               <FormControlLabel
                 value={publicItinerary}
                 checked={publicItinerary}
@@ -268,8 +268,16 @@ const TripSettings = () => {
               )}
             </Stack>
           </Stack>
-          <Dialog open={confirmedDeleteDialogOpen} onClose={HandleCloseConfirmedSuppr}>
-            <ConfirmedSuppressionModal idTravel={travel.id} onClose={HandleCloseConfirmedSuppr} title={travel.name} onDelete={deleteVoyage} />
+          <Dialog
+            open={confirmedDeleteDialogOpen}
+            onClose={HandleCloseConfirmedSuppr}
+          >
+            <ConfirmedSuppressionModal
+              idTravel={travel.id}
+              onClose={HandleCloseConfirmedSuppr}
+              title={travel.name}
+              onDelete={deleteVoyage}
+            />
           </Dialog>
           <Dialog open={startDialogOpen} onClose={HandleCloseAddLabelForm}>
             <Stack>

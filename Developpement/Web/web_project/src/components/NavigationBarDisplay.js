@@ -200,7 +200,18 @@ const NavigationBarDisplay = () => {
               >
                 {value}
               </Typography>
-              <ProfileBubble />
+              {user ? (
+                <ProfileBubble />
+              ) : (
+                <>
+                  <Button color="inherit" to={"/signin"} component={Link}>
+                    Connexion
+                  </Button>
+                  <Button color="inherit" to={"/signup"} component={Link}>
+                    Inscription
+                  </Button>
+                </>
+              )}
             </Toolbar>
           </AppBar>
         </Box>

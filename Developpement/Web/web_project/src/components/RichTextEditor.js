@@ -41,7 +41,9 @@ const RichTextEditor = ({ setValueHTML, setValue, OnClose, value, limitedEditor,
   }, [content]);
 
   const onChange = (editorState, limitedCheck = false) => {
+
     if (information) {
+      console.log("fergergergregerg");
       limitedCheck = true;
     }
     const contentState = editorState.getCurrentContent();
@@ -55,9 +57,10 @@ const RichTextEditor = ({ setValueHTML, setValue, OnClose, value, limitedEditor,
     });
   };
   const saveContent = (content) => {
+
     //window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
     setValue(JSON.stringify(convertToRaw(content)));
-    console.log(convertToHTML(content));
+
     setValueHTML(JSON.stringify(convertToHTML(content)));
   }
   return (

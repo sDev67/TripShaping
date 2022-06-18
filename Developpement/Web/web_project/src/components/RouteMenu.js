@@ -241,6 +241,7 @@ const RouteMenu = ({
                 requestKeyTitle="getDocumentsOfPoint"
                 requestKeyValue={selectedRoute.id}
                 isEdition={isEdition}
+                show={false}
               ></DocumentsList>
             )}
           </Stack>

@@ -104,6 +104,7 @@ const Documents = () => {
               requestKeyTitle="getDocumentsOfTravel"
               requestKeyValue={idTravel}
               isEdition={true}
+              show={true}
             ></DocumentsList>
           )}
         </Stack>

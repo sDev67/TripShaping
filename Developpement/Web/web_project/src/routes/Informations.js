@@ -83,7 +83,7 @@ const Informations = () => {
               </Stack>
               <RichTextEditor
                 setValue={setValue}
-                setValueHTMLM={setValueHTML}
+                setValueHTML={setValueHTML}
                 value={travelDatas.infos !== null ? travelDatas.infos : null}
                 minH="500px"
                 information={true}

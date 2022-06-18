@@ -1,6 +1,16 @@
 import { checkStatus, url_prefix } from "../utils";
 
 const PointRequests = {
+    getPointById: (id) => {
+        //const token = window.localStorage.getItem('token');
+        return fetch(`${url_prefix}/point/${id}`, {
+            headers: {
+                // Authorization: 'Bearer ' + token
+            },
+        })
+            .then(checkStatus)
+            .then((res) => res.json());
+    },
     updatePointLocationById: ({ latitude, longitude, idPoint }) => {
         //const token = window.localStorage.getItem('token');
         return fetch(`${url_prefix}/point/${idPoint}`, {
@@ -27,6 +37,7 @@ const PointRequests = {
             .then(checkStatus)
             .then(res => res.json())
     },
+
 };
 
 export default PointRequests;

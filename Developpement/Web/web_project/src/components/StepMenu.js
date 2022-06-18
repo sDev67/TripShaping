@@ -235,6 +235,7 @@ const StepMenu = ({
                 requestKeyTitle="getDocumentsOfStep"
                 requestKeyValue={selectedMarker.id}
                 isEdition={isEdition}
+                show={false}
               ></DocumentsList>
             )}
           </Stack>

@@ -299,6 +299,7 @@ const InterestPointMenu = ({
                 requestKeyTitle="getDocumentsOfPoint"
                 requestKeyValue={selectedMarker.id}
                 isEdition={isEdition}
+                show={false}
               ></DocumentsList>
             )}
           </Stack>

@@ -19,7 +19,6 @@ import {
   DirectionsService,
 } from "@react-google-maps/api";
 import palette from "./../theme/palette";
-import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";

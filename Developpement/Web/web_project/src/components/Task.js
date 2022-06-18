@@ -7,8 +7,6 @@ import {
   Chip,
   Grid,
   Typography,
-  Autocomplete,
-  TextField,
   Button,
 } from "@mui/material";
 import "../Styles/ButtonStyles.css";
@@ -23,9 +21,6 @@ import { useQuery } from "react-query";
 import TodoListRequest from "../requests/TodoListRequest";
 import Loading from "../utils/Loading";
 import { Dialog } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
-import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
-import { tabsListUnstyledClasses } from "@mui/material/node_modules/@mui/base";
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const Task = ({

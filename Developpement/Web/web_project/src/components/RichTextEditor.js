@@ -2,15 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import {
   EditorState,
-  ContentState,
   convertToRaw,
   convertFromRaw,
-  CompositeDecorator,
 } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { Button, TextField, Typography, IconButton } from "@mui/material";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import DoneRounded from "@mui/icons-material/DoneRounded";
+import { Button } from "@mui/material";
+
 
 const RichTextEditor = ({
   setValue,
@@ -85,13 +82,13 @@ const RichTextEditor = ({
           toolbar={
             limitedEditor
               ? {
-                  options: [],
-                  inline: { inDropdown: true },
-                  list: { inDropdown: true },
+                options: [],
+                inline: { inDropdown: true },
+                list: { inDropdown: true },
 
-                  link: { inDropdown: true },
-                  history: { inDropdown: true },
-                }
+                link: { inDropdown: true },
+                history: { inDropdown: true },
+              }
               : ""
           }
         />

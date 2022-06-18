@@ -1,7 +1,17 @@
 const db = require("../models");
+const user_crtl = require("../controllers/user");
+
 const { Sequelize } = require('sequelize');
+const { Op } = require("sequelize");
+const { QueryTypes } = require('sequelize');
+
+const seq = new Sequelize({
+  dialect: 'sqlite',
+  storage: 'data.sqlite'
+});
 
 module.exports = {
+
   get_all: (req, res, next) => {
     return db.Travel.findAll({
       order: ["name"],
@@ -38,7 +48,18 @@ module.exports = {
         if (!travel) {
           throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
-        return res.json(travel);
+        var userId = req.user['dataValues'].id;
+
+        checkAuthorization(req.params.travel_id, userId)
+          .then((authorized) => {
+            if (!authorized) {
+              if (travel['dataValues'].toPublish == false) {
+                throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
+              }
+            }
+            return res.json(travel);
+          })
+          .catch(next)
       })
       .catch(next);
   },
@@ -200,10 +221,19 @@ module.exports = {
         if (!travel) {
           throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
-        Object.assign(travel, req.body);
-        return travel.save();
+        var userId = req.user['dataValues'].id;
+
+        checkAuthorization(req.params.travel_id, userId)
+          .then((authorized) => {
+            if (!authorized) {
+              throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
+            }
+            Object.assign(travel, req.body);
+            travel.save();
+            return res.json(travel);
+          })
+          .catch(next)
       })
-      .then((travel) => res.json(travel))
       .catch(next);
   },
 
@@ -297,6 +327,27 @@ module.exports = {
       })
       .catch(next)
   },
+};
+
+/****
+ *        FONCTION PERSO
+ */
+
+const checkAuthorization = (travelId, userId) => {
+  var authorized = { oui: false };
+  return db.Member.findOne({
+    where: {
+      TravelId: travelId,
+      UserId: userId
+    }
+  }).then((member) => {
+    if (member && member['dataValues'].TravelId == travelId && member['dataValues'].UserId == userId) {
+      authorized.oui = true;
+    } else {
+      authorized.oui = false;
+    }
+    return authorized.oui;
+  })
 };
 
 const copyTravelRoutes = async (OldTravelId, NewTravelId) => {

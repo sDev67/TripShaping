@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import clsx from "clsx";
-import { makeStyles } from "@mui/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import {
-  CardActionArea,
   Card,
   Button,
   Stack,
@@ -11,16 +7,12 @@ import {
   Avatar,
   AvatarGroup,
   Typography,
-  IconButton,
   SpeedDial,
   SpeedDialIcon,
   SpeedDialAction,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import TripForm from "../components/TripForm";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 import Loading from "./../utils/Loading";

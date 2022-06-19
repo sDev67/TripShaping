@@ -5,6 +5,7 @@ import { NativeBaseProvider, Button, Image } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import { format } from "date-fns";
 import { Camera } from 'expo-camera'
+import HTMLView from 'react-native-htmlview';
 
 import file from '../assets/navigation_icons/icon_file.png';
 import noImage from "../assets/images/NoImage.jpg"
@@ -131,7 +132,12 @@ const StepDetails = ({ route, navigation }) => {
                     <Text style={styles.font} >Durée</Text>
                     <Text style={{ marginLeft: 10 }}>{step.duration}{step.duration > 1 ? " jours" : " jour"}</Text>
                     <Text style={styles.font} >Description</Text>
-                    <Text style={{ marginLeft: 10 }}>{step.description}</Text>
+                    <View style={{ marginLeft: 10, marginTop: 25 }}>
+                        <HTMLView
+                            value={step.descriptionHTML}
+                            stylesheet={styles}
+                        />
+                    </View>
                     <Text style={styles.font}>Documents</Text>
                     <ScrollView style={{ height: "30%" }}>
                         {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :
@@ -202,7 +208,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "bold",
         margin: 10
-    }
+    },
+    p: {
+        marginTop: -25
+    },
 });
 
 export default StepDetails;

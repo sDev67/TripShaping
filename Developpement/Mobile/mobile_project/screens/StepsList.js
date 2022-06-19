@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, Pressable } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Image, Pressable, Button } from 'react-native';
 import Constants from 'expo-constants';
 import Collapsible from 'react-native-collapsible';
 
@@ -9,7 +9,6 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import marker from '../assets/images/marker.png'
 import iconFiles from '../assets/navigation_icons/icon_files.png';
-
 export default StepsList = ({ navigation, route }) => {
 
     const { isReadOnly, idTravel } = route.params;
@@ -62,78 +61,86 @@ export default StepsList = ({ navigation, route }) => {
     }
     return (
         <View>
-
             <DocumentsModal showModal={showModal} setShowModal={setShowModal} navigation={navigation} idTravel={idTravel} PointId={idPoint} />
-            <ScrollView>
+            <ScrollView >
                 {isLoadingS ? <Text>Chargement...</Text> : isErrorS ? <Text style={{ color: 'red' }}>{errorS.message}</Text> :
                     steps.map((step, idx) => {
                         var tabDays = [];
                         FillTab(step.duration, tabDays);
                         return (<ScrollView contentContainerStyle={{ paddingTop: 0 }} key={idx}>
-                            <TouchableOpacity onPress={() => toggleExpanded(idx)}>
-                                <View style={styles.header}>
-                                    <Text style={styles.headerText}>{step.title}</Text>
-                                </View>
-                            </TouchableOpacity>
-                            <Collapsible collapsed={collapsed[idx]} align="center">
-                                <View style={styles.content}>
-                                    <Text>
-                                        <Text style={styles.font}>Durée :</Text> {step.duration}{step.duration > 1 ? " jours" : " jour"}
-                                    </Text>
-                                    <Text style={{ fontSize: 15, fontWeight: "bold", marginTop: 5 }}>
-                                        Planning :
-                                    </Text >
-                                    {tabDays.map((day, i) => {
-                                        total = total + 1;
-                                        let date = travel ? travel.startDate : null;
-                                        let now = null;
+                            <View >
+                                <TouchableOpacity onPress={() => toggleExpanded(idx)} style={{ borderBottomColor: 'black', borderBottomWidth: 1 }}>
+                                    <View style={styles.header}>
+                                        <Text style={styles.headerText}>{step.title}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <Collapsible collapsed={collapsed[idx]} align="center">
+                                    <View style={styles.content}>
+                                        <Text>
+                                            <Text style={styles.font}>Durée :</Text> {step.duration}{step.duration > 1 ? " jours" : " jour"}
+                                        </Text>
+                                        <Text style={{ fontSize: 15, fontWeight: "bold", marginTop: 5 }}>
+                                            Planning :
+                                        </Text >
+                                        {tabDays.map((day, i) => {
+                                            total = total + 1;
+                                            let date = travel ? travel.startDate : null;
+                                            let now = null;
 
-                                        if (date != null) {
-                                            if (typeof date == "string") {
-                                                let dateS = date.substring(0, 10);
-                                                let dateT = dateS.split('-');
-                                                date = new Date(parseInt(dateT[0]), parseInt(dateT[1]), parseInt(dateT[2]))
+                                            if (date != null) {
+                                                if (typeof date == "string") {
+                                                    let dateS = date.substring(0, 10);
+                                                    let dateT = dateS.split('-');
+                                                    date = new Date(parseInt(dateT[0]), parseInt(dateT[1]), parseInt(dateT[2]))
+                                                }
+
+                                                date.setTime(date.getTime() + total * 24 * 3600 * 1000);
+                                                now = date.getTime() == Date.now() ? true : false;
                                             }
 
-                                            date.setTime(date.getTime() + total * 24 * 3600 * 1000);
-                                            now = date.getTime() == Date.now() ? true : false;
-                                        }
+                                            return (<View key={[idx, i]} style={{
+                                                borderRadius: 5,
+                                                marginVertical: 5,
+                                                padding: 5,
+                                                borderWidth: 1,
+                                                borderColor: now ? "red" : "black"
+                                            }}>
+                                                {date ? <Text>Jour {i + 1} : {(date.getDate() < 10 && "0") + date.getDate() + "/" + (date.getMonth() < 10 && "0") + date.getMonth() + "/" + date.getFullYear()} </Text> :
+                                                    <Text>Jour {i + 1} </Text>
+                                                }
 
-                                        return (<View key={[idx, i]} style={{
-                                            borderRadius: 5,
-                                            marginVertical: 5,
-                                            padding: 5,
-                                            borderWidth: 1,
-                                            borderColor: now ? "red" : "black"
-                                        }}>
-                                            {date ? <Text>Jour {i + 1} : {(date.getDate() < 10 && "0") + date.getDate() + "/" + (date.getMonth() < 10 && "0") + date.getMonth() + "/" + date.getFullYear()} </Text> :
-                                                <Text>Jour {i + 1} </Text>
-                                            }
+                                                <View style={{ marginTop: 5, flexDirection: "row" }}>
+                                                    {points.map((point, id) => {
+                                                        if (point.StepId === step.id && point.day === i + 1) {
+                                                            return <View key={id} style={{ flexDirection: "row" }}>
 
-                                            <View style={{ marginTop: 5, flexDirection: "row" }}>
-                                                {points.map((point, id) => {
-                                                    if (point.StepId === step.id && point.day === i + 1) {
-                                                        return <View key={id} style={{ flexDirection: "row" }}>
-                                                            <Image source={marker} style={{ width: 20, height: 20, tintColor: "red" }} />
-                                                            <Text>{point.title}</Text>
-                                                            {isLoadingD ? <Text>Chargement...</Text> : isErrorD ? <Text style={{ color: 'red' }}>{errorD.message}</Text> :
-                                                                documents.map((doc, idx) => {
-                                                                    if (doc.PointId === point.id) {
-                                                                        count++;
-                                                                    }
-                                                                })
-                                                            }
-                                                            {count != 0 && <Pressable onPress={() => { setShowModal(true); setIdPoint(point.id) }}><Image source={iconFiles} style={{ width: 20, height: 20, marginLeft: 10 }} /></Pressable>}
+                                                                <Image source={marker} style={{ width: 20, height: 20, tintColor: "red" }} />
+                                                                {/* <TouchableOpacity onPress={navigation.navigate("StepDetails", {
+                                                                step: step,
+                                                                isReadOnly: false,
+                                                                idTravel: idTravel,
+                                                                photo: null
+                                                            })
+                                                            }> */}
+                                                                <Text>{point.title}</Text>{/*</TouchableOpacity>*/}
+                                                                {isLoadingD ? <Text>Chargement...</Text> : isErrorD ? <Text style={{ color: 'red' }}>{errorD.message}</Text> :
+                                                                    documents.map((doc, idx) => {
+                                                                        if (doc.PointId === point.id) {
+                                                                            count++;
+                                                                        }
+                                                                    })
+                                                                }
+                                                                {count != 0 && <Pressable onPress={() => { setShowModal(true); setIdPoint(point.id) }}><Image source={iconFiles} style={{ width: 20, height: 20, marginLeft: 10 }} /></Pressable>}
+                                                            </View>
+                                                        }
+                                                    })}
+                                                </View>
+                                            </View>)
+                                        })}
+                                    </View>
+                                </Collapsible>
+                            </View>
 
-                                                        </View>
-                                                    }
-                                                })}
-                                            </View>
-                                        </View>)
-
-                                    })}
-                                </View>
-                            </Collapsible>
                         </ScrollView>)
                     })}
             </ScrollView>
@@ -155,7 +162,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     header: {
-        backgroundColor: '#00AB55',
+        backgroundColor: '#dddddd',
         padding: 10,
     },
     headerText: {
@@ -165,7 +172,7 @@ const styles = StyleSheet.create({
     },
     content: {
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#f5f5f5',
     },
     dayContent: {
         borderRadius: 5,

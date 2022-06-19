@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { ScrollView, Pressable, Text, View, Image } from 'react-native';
 
 import file from '../assets/navigation_icons/icon_file.png';
-import info from '../assets/navigation_icons/icon_info.png';
+import info from '../assets/navigation_icons/icon_info2.png';
 
 import TravelRequests from '../requests/TravelRequests';
 import { useQuery, useQueryClient } from 'react-query';
@@ -21,7 +21,7 @@ const Folder = ({ route, navigation }) => {
     useEffect(() => {
         navigation.setOptions({
             headerRight: (() =>
-                <Pressable onPress={() => navigation.navigate('Information', { isReadOnly: isReadOnly, idTravel: idTravel })}><Image source={info} style={{ width: 25, height: 25, marginRight: 5, alignContent: "center" }} /></Pressable>
+                <Pressable onPress={() => navigation.navigate('Information', { isReadOnly: isReadOnly, idTravel: idTravel })}><Image source={info} style={{ width: 25, height: 25, marginRight: 5, alignContent: "center", tintColor: "white" }} /></Pressable>
             )
         });
     }, [])

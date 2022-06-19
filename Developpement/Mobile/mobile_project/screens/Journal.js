@@ -24,7 +24,7 @@ const Journal = ({ idTravel, isReadOnly }) => {
     );
 
     const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: members } = useQuery(
-        ['getMembers'], () => MemberRequests.getMembers()
+        ['getMembers', idTravel], () => MemberRequests.getMembers()
     );
 
     // Envoi du message en BDD

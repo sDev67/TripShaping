@@ -6,18 +6,25 @@ import * as Location from 'expo-location';
 import { NativeBaseProvider, Select, CheckIcon } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useAuth } from '../requests/Auth'
 import TravelRequests from "../requests/TravelRequests";
+import PositionRequests from '../requests/PositionRequests';
+import MemberRequests from '../requests/MemberRequests';
 
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient, useMutation } from 'react-query';
 
 import iconBackTravel from "../assets/navigation_icons/icon_backVoyage.png"
 
 const Maps = ({ navigation, route }) => {
 
+    const { user } = useAuth();
+
+    const queryClient = useQueryClient();
+
     useEffect(() => {
         navigation.setOptions({
             headerRight: (() =>
-                <Pressable onPress={() => navigation.navigate('Travels')}><Image source={iconBackTravel} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center" }} /></Pressable>
+                <Pressable onPress={() => navigation.navigate('Travels')}><Image source={iconBackTravel} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center", tintColor: "white" }} /></Pressable>
             )
         });
     }, [])
@@ -39,6 +46,21 @@ const Maps = ({ navigation, route }) => {
         ["getRoutes", idTravel], () => TravelRequests.getRoutesOfTravel(idTravel)
     );
 
+    // Membres
+    const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: members } = useQuery(
+        ['getMembers', idTravel], () => MemberRequests.getMembers()
+    );
+
+    // Position 
+    const addPosition = useMutation(PositionRequests.setPosition, {
+        onSuccess: newPos => {
+            queryClient.setQueryData(
+                ['setPosition'],
+                position => [...position, newPos]
+            )
+        }
+    });
+
     const [modalVisible, setModalVisible] = useState(false);
     const [modalPointVisible, setModalPointVisible] = useState(false);
     const [modalStepVisible, setModalStepVisible] = useState(false);
@@ -50,15 +72,6 @@ const Maps = ({ navigation, route }) => {
     const [distance, setDistance] = useState(null);
     const [checked, setChecked] = useState("0");
 
-    // const [date, setDate] = useState(new Date());
-
-    // useEffect(() => {
-    //     const id = setInterval(() => { setDate(new Date()) }, 300000);
-    //     return () => {
-    //         clearInterval(id);
-    //     }
-    // }, []);
-
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -68,10 +81,52 @@ const Maps = ({ navigation, route }) => {
             }
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
+
+            let id = null
+            if (members !== undefined) {
+                if (members.length !== 0 || members !== null) {
+                    members.map((member, idx) => {
+                        if (member.TravelId == idTravel && member.userLogin == user.username) {
+                            id = member.id
+                        }
+                    })
+                }
+            }
+            const newPos = { date: Date.now(), TravelId: idTravel, longitude: location.coords.longitude, latitude: location.coords.latitude, MemberId: id }
+            addPosition.mutate(newPos)
         })();
+
     }, []);
 
-    showModal = () => {
+    useEffect(() => {
+        const interval = setInterval(() => {
+            (async () => {
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                    return;
+                }
+                let location = await Location.getCurrentPositionAsync({});
+                setLocation(location);
+
+                let id = null
+                if (members !== undefined) {
+                    if (members.length !== 0 || members !== null) {
+                        members.map((member, idx) => {
+                            if (member.TravelId == idTravel && member.userLogin == user.username) {
+                                id = member.id
+                            }
+                        })
+                    }
+                }
+                const newPos = { date: Date.now(), TravelId: idTravel, longitude: location.coords.longitude, latitude: location.coords.latitude, MemberId: id }
+                addPosition.mutate(newPos)
+            })();
+        }, 300000);
+        return () => clearInterval(interval);
+    }, [members]);
+
+    const showModal = () => {
         setModalVisible(true)
     }
 

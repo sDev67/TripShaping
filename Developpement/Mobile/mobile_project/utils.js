@@ -1,4 +1,4 @@
-export const GOOGLE_MAPS_APIKEY = 'AIzaSyDEVNIIS4W08GaTEYt_OfJ0mfA4gB0mxgI';
+export const GOOGLE_MAPS_APIKEY = 'AIzaSyBB-rIwC_N_-sX3JVt6HUzvAP4jHc_2jAs';
 
 export const checkStatus = res => {
     if (res.ok) {

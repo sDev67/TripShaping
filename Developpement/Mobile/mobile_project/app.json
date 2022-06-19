@@ -1,15 +1,23 @@
 {
   "expo": {
-    "name": "mobile_project",
-    "slug": "mobile_project",
+    "name": "TripShaping",
+    "slug": "TripShaping",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/navigation_icons/app.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/navigation_icons/app.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -17,13 +25,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vivien67.TripShaping",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBB-rIwC_N_-sX3JVt6HUzvAP4jHc_2jAs"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/navigation_icons/app.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBB-rIwC_N_-sX3JVt6HUzvAP4jHc_2jAs"
+        }
+      },
+      "package": "com.vivien67.TripShaping",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

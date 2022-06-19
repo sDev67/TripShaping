@@ -32,41 +32,39 @@ const SpendingHistory = ({ route, navigation }) => {
 
 const HistoryBox = ({ hist, destId }) => {
 
-    const [destiString, setDestiString] = useState("");
-
-    // Member
-    const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: member } = useQuery(["getMember", hist.MemberId], () => MemberRequests.getMemberById(hist.MemberId))
-
-    const { isLoading: isLoadingD, isError: isErrorD, error: errorD, data: destinataires } = useQueries(
-        destId.map(id => {
-            return {
-                queryKey: ['getMember', id],
-                queryFn: () => MemberRequests.getMemberById(id),
-            }
-        })
-    )
-
-    useEffect(() => {
-        let desti = "";
-        isLoadingD ? null : isErrorD ? null : destinataires != undefined && destinataires.map((dest, i) => {
-            if (i == destinataires.length - 1) {
-                desti += dest.data.name
-            }
-            else {
-                desti += dest.data.name + ', '
-            }
-        })
-        setDestiString(desti)
-    }, [destinataires])
+    // Author
+    const { isLoading: isLoadingM, isError: isErrorM, error: errorM, data: author } = useQuery(["getMember", hist.MemberId], () => MemberRequests.getMemberById(hist.MemberId))
 
     return (
         <View style={styles.box}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                {isLoadingM ? <Text>Chargement...</Text> : isErrorM ? <Text style={{ color: 'red' }}>{errorM.message}</Text> : <Text style={{ fontWeight: "bold" }}>De : {member.name}</Text>}
+                {isLoadingM ? <Text>Chargement...</Text> : isErrorM ? <Text style={{ color: 'red' }}>{errorM.message}</Text> : <Text style={{ fontWeight: "bold" }}>De : {author.name}</Text>}
                 <Text style={{ fontWeight: "bold", color: hist.cost > 0 ? "green" : (hist.cost == 0 ? "black" : "red") }}>{" "}{hist.cost > 0 && "+"}{hist.cost}</Text>
             </View>
-            <Text style={{ marginTop: 7 }}>Pour : {destiString}</Text>
+            <View style={{ flexDirection: "row" }}>
+                <Text style={{ marginTop: 7 }}>Pour : </Text>
+                {destId.map((id, idx) =>
+                (
+                    <View key={idx} style={{ flexDirection: "row", marginTop: 7 }}>
+                        <Destinataire id={id} />
+                        {idx != destId.length - 1 && <Text>, </Text>}
+                    </View>
+                ))}
+            </View>
             <Text style={{ marginTop: 7 }}>Catégorie : {hist.category}</Text>
+        </View>
+    )
+}
+
+const Destinataire = ({ id }) => {
+    // Destinataire 
+    const { isLoading: isLoadingD, isError: isErrorD, error: errorD, data: desti } = useQuery(["getMember", id], () => MemberRequests.getMemberById(id))
+
+    return (
+        <View>
+            {isLoadingD ? <Text>Chargement...</Text> : isErrorD ? <Text style={{ color: 'red' }}>{errorD.message}</Text> :
+                <Text>{desti.name}</Text>
+            }
         </View>
     )
 }

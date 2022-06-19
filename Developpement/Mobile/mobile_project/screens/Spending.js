@@ -44,7 +44,7 @@ const Spending = ({ navigation, route }) => {
     useEffect(() => {
         navigation.setOptions({
             headerRight: (() =>
-                <Pressable onPress={() => navigation.navigate('SpendingHistory', { idTravel: idTravel })}><Image source={iconHistory} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center" }} /></Pressable>
+                <Pressable onPress={() => navigation.navigate('SpendingHistory', { idTravel: idTravel })}><Image source={iconHistory} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center", tintColor: "white" }} /></Pressable>
             )
         });
     }, [])
@@ -88,7 +88,6 @@ const Spending = ({ navigation, route }) => {
     const spend = () => {
 
         if (donateur !== "" && destinataires !== null && selectedItems.length !== 0 && montant !== null && category !== "") {
-            let author = "";
             members.map((member, idx) => {
                 if (donateur == member.id) {
                     author = member.name
@@ -102,31 +101,24 @@ const Spending = ({ navigation, route }) => {
             let part = montant / nbDest;
             part = Math.round(part * 100) / 100
 
-            members.map((member, idx) => {
+            members.map((member) => {
                 if (donateur == member.id) {
                     if (selectedItems.includes(donateur)) {
-                        console.log("Si donateur = receveur : " + member.balance)
-                        let m = member.balance + montant - part;
+                        let m = parseFloat(member.balance) + parseFloat(montant) - parseFloat(part);
                         let res = Math.round(m * 100) / 100;
                         updateMember(member.id, res)
                     }
                     else {
-                        console.log("Si donateur != receveur")
-                        let o = member.balance + montant;
-                        let res = Math.round(o * 100) / 100;
-                        updateMember(member.id, res)
+                        let m = parseFloat(member.balance) + parseFloat(montant);
+                        let res = Math.round(m * 100) / 100;
+                        updateMember(donateur, res)
                     }
                 }
-                selectedItems.map((item, i) => {
-                    if (item == member.id) {
-                        if (donateur != member.id) {
-                            console.log("Donateur : " + donateur + " Member : " + member.id)
-                            let n = member.balance - part;
-                            let res = Math.round(n * 100) / 100
-                            updateMember(member.id, res)
-                        }
-                    }
-                })
+                if (donateur != member.id && selectedItems.includes(member.id)) {
+                    let n = parseFloat(member.balance) - parseFloat(part);
+                    let res = Math.round(n * 100) / 100
+                    updateMember(member.id, res)
+                }
             })
 
             setDonateur("")

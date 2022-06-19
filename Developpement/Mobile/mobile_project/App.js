@@ -27,11 +27,11 @@ import Spending from './screens/Spending';
 import SpendingHistory from './screens/SpendingHistory';
 import Information from './screens/Information';
 
-import iconMaps from './assets/navigation_icons/icon_maps.png';
+import iconMaps from './assets/navigation_icons/icon_maps2.png';
 import iconJournal from './assets/navigation_icons/icon_journal.png';
 import iconPhoto from './assets/navigation_icons/icon_photo.png';
-import iconFiles from './assets/navigation_icons/icon_files.png';
-import iconStepsList from './assets/navigation_icons/icon_stepsList.png';
+import iconFiles from './assets/navigation_icons/icon_files2.png';
+import iconStepsList from './assets/navigation_icons/icon_stepsList2.png';
 import iconSpending from './assets/navigation_icons/icon_spending.png';
 
 import TravelRequests from "./requests/TravelRequests";
@@ -39,7 +39,6 @@ import TravelRequests from "./requests/TravelRequests";
 import { AuthProvider } from './requests/Auth';
 import { useQuery, useQueryClient } from 'react-query';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
 
 const queryClient = new QueryClient();
 
@@ -75,7 +74,11 @@ const TabScreen = ({ route }) => {
         },
         tabBarActiveTintColor: '#00AB55',
         tabBarInactiveTintColor: 'black',
-        tabBarShowLabel: false
+        tabBarShowLabel: false,
+        headerTintColor: 'white',
+        headerStyle: {
+          backgroundColor: '#00AB55'
+        }
       })}
     >
       <Tab.Screen name="Atlas" component={Maps} initialParams={{ isReadOnly: isReadOnly, idTravel: idTravel }} />

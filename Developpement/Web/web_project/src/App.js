@@ -72,10 +72,10 @@ function App() {
                   element={<TripSettings />}
                 />
               </Route>
-              <Route path="/album" element={<NavigationBarAlbum />}>
-                <Route path=":idTravel/map" element={<MapReview />} />
-                <Route path=":idTravel/photos" element={<Photos />} />
-                <Route path=":idTravel/logbook" element={<LogBook />} />
+              <Route path="/album/:cryptedName" element={<NavigationBarAlbum />}>
+                <Route path="map" element={<MapReview />} />
+                <Route path="photos" element={<Photos />} />
+                <Route path="logbook" element={<LogBook />} />
               </Route>
             </Routes>
             {/* <ReactQueryDevtools />  */}

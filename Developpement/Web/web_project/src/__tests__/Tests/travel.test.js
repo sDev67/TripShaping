@@ -5,7 +5,7 @@ const tests = require('../Requests/travelRequest')
 // A simple example test
 describe('#getStepOne() using Promises', () => {
     it('should load step one data', () => {
-        return tests.getStepOne(1)
+        return tests.getStepOne(2)
             .then(data => {
                 expect(data).toBeDefined()
                 expect(data.entity.title).toEqual('Milan')
@@ -44,12 +44,12 @@ describe('#getRouteOne() using Promises', () => {
 })
 
 // a changer selon point
-const latitude = 48.5357532332089;
-const longitude = 7.42526803828125;
+const latitude = 45.50350965969653;
+const longitude = 9.147270990821355;
 
 describe('#getStepWithPos() using Promises', () => {
     it('should check if a step has position', () => {
-        return tests.getStepWithPos(1)
+        return tests.getStepWithPos(2)
             .then(data => {
                 expect(data).toBeDefined()
                 expect(data.entity.latitude).toEqual(latitude)
@@ -83,11 +83,11 @@ describe('#getMemberUserLogin() using Promises', () => {
 
 describe('#getFictiveMember() using Promises', () => {
     it('should check if member is fictive', () => {
-        return tests.getMemberUserLogin(1)
+        return tests.getMemberUserLogin(3)
             .then(data => {
                 expect(data).toBeDefined()
-                expect(data.entity.userLogin).toBeUndefined()
-                expect(data.entity.UserId).toBeUndefined()
+                expect(data.entity.userLogin).toEqual(null)
+                expect(data.entity.UserId).toEqual(null)
             })
     })
 })
@@ -107,17 +107,17 @@ describe('#getTravelStatus() using Promises', () => {
         return tests.getTravelStatus(1)
             .then(data => {
                 expect(data).toBeDefined()
-                expect(data.entity.status).toEqual(0)
+                expect(data.entity.status).toEqual(1)
             })
     })
 })
 
 describe('#getTravelStatus() using Promises', () => {
-    it('should check if travel has status', () => {
+    it('should check if travel has status 1 ', () => {
         return tests.getTravelStatus(2)
             .then(data => {
                 expect(data).toBeDefined()
-                expect(data.entity.status).toEqual(1)
+                expect(data.entity.status).toEqual(0)
             })
     })
 })

@@ -25,6 +25,7 @@ import CancelRounded from "@mui/icons-material/CancelRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import DocumentRequest from "../requests/DocumentRequest";
+import RouteRequest from "../requests/RouteRequest";
 import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
 
@@ -44,6 +45,7 @@ const RouteMenu = ({
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
+  const queryClient = useQueryClient();
   const [files, setFiles] = useState([]);
   const [travelType, setTravelType] = useState(selectedRoute.travelType);
   const [response, setResponse] = useState(null);
@@ -57,6 +59,25 @@ const RouteMenu = ({
   } = useQuery(["getDocumentsOfRoute", selectedRoute.id], () =>
     DocumentRequest.getDocumentsByRouteId(selectedRoute.id)
   );
+
+  const updateRoute = useMutation(RouteRequest.updateRouteById, {
+    onSuccess: (route) => {
+
+      queryClient.invalidateQueries("GetRoute", route.id);
+
+    }
+  })
+
+  const UpdateProperties = () => {
+
+    console.log(travelType);
+    const route = {
+
+      idRoute: selectedRoute.id,
+      travelType: travelType
+    }
+    updateRoute.mutate(route)
+  }
 
   const distance = response?.routes[0].legs[0].distance.text;
   const duration = response?.routes[0].legs[0].duration.text;
@@ -212,6 +233,7 @@ const RouteMenu = ({
                 requestKeyTitle="getDocumentsOfPoint"
                 requestKeyValue={selectedRoute.id}
                 isEdition={isEdition}
+                show={false}
               ></DocumentsList>
             )}
           </Stack>
@@ -328,7 +350,7 @@ const RouteMenu = ({
               variant="contained"
               color="primary"
               startIcon={<DoneRounded />}
-              // onClick={updateProperties(selectedRoute)}
+              onClick={() => UpdateProperties()}
               disabled={!isEdition}
             >
               Enregistrer

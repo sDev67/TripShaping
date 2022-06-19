@@ -271,6 +271,7 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
                   requestKeyTitle="getDocumentsOfPoint"
                   requestKeyValue={step.id}
                   isEdition={true}
+                  show={false}
                 ></DocumentsList>
               )}
             </Stack>
@@ -614,6 +615,7 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
                 documents={documents}
                 requestKeyTitle="getDocumentsOfPoint"
                 requestKeyValue={selectedInterestPoint.id}
+                show={false}
               ></DocumentsList>
             )}
           </Stack>

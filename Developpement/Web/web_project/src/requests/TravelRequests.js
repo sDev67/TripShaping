@@ -42,6 +42,8 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
+
+
   createTravel: ({ name, UserId }) => {
     const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel`, {
@@ -136,7 +138,7 @@ const TravelRequests = {
       .then((res) => res.json());
   },
 
-  addPoint: ({ title, latitude, longitude, description, category, TravelId, }) => {
+  addPoint: ({ title, latitude, longitude, description, descriptionHTML, category, TravelId }) => {
     const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/point`, {
       method: "POST",
@@ -149,6 +151,7 @@ const TravelRequests = {
         latitude,
         longitude,
         description,
+        descriptionHTML,
         category,
         TravelId,
       }),
@@ -157,7 +160,7 @@ const TravelRequests = {
       .then((res) => res.json());
   },
 
-  addStep: ({ title, latitude, longitude, description, duration, TravelId }) => {
+  addStep: ({ title, latitude, longitude, description, descriptionHTML, duration, TravelId }) => {
     const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/step`, {
       method: "POST",
@@ -170,6 +173,7 @@ const TravelRequests = {
         latitude,
         longitude,
         description,
+        descriptionHTML,
         duration,
         TravelId,
       }),
@@ -191,7 +195,7 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
-  updateTravel: ({ TravelId, name, picture, activated, budget, infos, finished }) => {
+  updateTravel: ({ TravelId, name, picture, activated, budget, infos, finished, albumURL }) => {
     const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel/${TravelId}`, {
       method: "PUT",
@@ -207,6 +211,7 @@ const TravelRequests = {
         budget,
         infos,
         finished,
+        albumURL
       }),
     })
       .then(checkStatus)
@@ -234,6 +239,19 @@ const TravelRequests = {
         Authorization: 'Bearer ' + token
       },
       body: JSON.stringify({ startDate }),
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+  updateTravelCryptedName: ({ TravelId, albumURL }) => {
+    const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/${TravelId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: 'Bearer ' + token
+      },
+      body: JSON.stringify({ TravelId, albumURL }),
     })
       .then(checkStatus)
       .then((res) => res.json());
@@ -268,6 +286,15 @@ const TravelRequests = {
   removePoint: (idPoint) => {
     const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/point/${idPoint}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: 'Bearer ' + token
+      },
+    }).then(checkStatus);
+  },
+  deleteTravel: (idTravel) => {
+    const token = window.localStorage.getItem('token');
+    return fetch(`${url_prefix}/travel/${idTravel}`, {
       method: "DELETE",
       headers: {
         Authorization: 'Bearer ' + token

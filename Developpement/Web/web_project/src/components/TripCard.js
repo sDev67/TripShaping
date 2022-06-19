@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Card,
   Button,
@@ -11,7 +11,7 @@ import {
   SpeedDialIcon,
   SpeedDialAction,
 } from "@mui/material";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
@@ -20,18 +20,6 @@ import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 
 const TripCard = ({ travelId }) => {
-  const actions = [
-    {
-      icon: <FileCopyIcon />,
-      name: "Dupliquer",
-      to: "",
-    },
-    {
-      icon: <PhotoRoundedIcon />,
-      name: "Album",
-      to: "/album/" + travelId + "/map",
-    },
-  ];
 
   const {
     isLoading: isLoadingT,
@@ -39,7 +27,8 @@ const TripCard = ({ travelId }) => {
     error: errorT,
     data: travel,
   } = useQuery(["getTravel", travelId], () =>
-    TravelRequests.getTravelByid(travelId)
+    TravelRequests.getTravelByid(travelId),
+
   );
 
   const {
@@ -51,7 +40,6 @@ const TripCard = ({ travelId }) => {
     TravelRequests.getMembersOfTravel(travelId)
   );
 
-  let isActive = travel?.activated;
   return (
     <>
       {isLoadingT ? (
@@ -143,15 +131,23 @@ const TripCard = ({ travelId }) => {
                 icon={<SpeedDialIcon />}
                 direction="left"
               >
-                {actions.map((action) => (
-                  <SpeedDialAction
-                    component={Link}
-                    key={action.name}
-                    icon={action.icon}
-                    tooltipTitle={action.name}
-                    to={action.to}
-                  />
-                ))}
+
+                <SpeedDialAction
+                  component={Link}
+                  key={"Dupliquer"}
+                  icon={<FileCopyIcon />}
+                  tooltipTitle={"Dupliquer"}
+                  to={""}
+                />
+                <SpeedDialAction
+                  component={Link}
+                  key={"Album"}
+                  icon={<PhotoRoundedIcon />}
+                  tooltipTitle={"Album"}
+                  to={"/album/" + travel.albumURL + "/map"}
+                />
+
+
               </SpeedDial>
             </Stack>
           </CardContent>

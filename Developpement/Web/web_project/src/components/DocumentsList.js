@@ -12,12 +12,14 @@ import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRound
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import DocumentRequest from "../requests/DocumentRequest";
 import { url_prefix } from "../utils";
+import Document from "./Document";
 
 const DocumentsList = ({
   documents,
   requestKeyTitle,
   requestKeyValue,
   isEdition,
+  show
 }) => {
   const queryClient = useQueryClient();
 
@@ -49,26 +51,27 @@ const DocumentsList = ({
         }}
       >
         {documents.map((document) => (
-          <ListItem
-            key={document.toString()}
-            disablePadding
-            secondaryAction={
-              <IconButton
-                color="error"
-                onClick={() => OnRemoveDocument(document.id)}
-                disabled={!isEdition}
-              >
-                <ClearIcon />
-              </IconButton>
-            }
-          >
-            <ListItemButton onClick={() => displayDocument(document.id)}>
-              <ListItemAvatar>
-                <InsertDriveFileRoundedIcon color="primary" />
-              </ListItemAvatar>
-              <ListItemText primary={<>{document.title}</>} />
-            </ListItemButton>
-          </ListItem>
+          <Document document={document} onRemoveDocument={OnRemoveDocument} onDisplayDocument={displayDocument} isEdition={isEdition} show={show} />
+          // <ListItem
+          //   key={document.toString()}
+          //   disablePadding
+          //   secondaryAction={
+          //     <IconButton
+          //       color="error"
+          //       onClick={() => OnRemoveDocument(document.id)}
+          //       disabled={!isEdition}
+          //     >
+          //       <ClearIcon />
+          //     </IconButton>
+          //   }
+          // >
+          //   <ListItemButton onClick={() => displayDocument(document.id)}>
+          //     <ListItemAvatar>
+          //       <InsertDriveFileRoundedIcon color="primary" />
+          //     </ListItemAvatar>
+          //     <ListItemText primary={<>{document.title}</>} />
+          //   </ListItemButton>
+          // </ListItem>
         ))}
       </List>
       <Divider></Divider>

@@ -11,6 +11,8 @@ const Informations = () => {
   const [switchState, setSwitchState] = React.useState(false);
   const queryClient = useQueryClient();
   const [value, setValue] = React.useState();
+  const [valueHTML, setValueHTML] = React.useState();
+
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
@@ -31,6 +33,7 @@ const Informations = () => {
       activated: travelDatas.activated,
       budget: travelDatas.budget,
       infos: value,
+      infosHTML: valueHTML,
       finished: travelDatas.finished,
     };
 
@@ -80,6 +83,7 @@ const Informations = () => {
               </Stack>
               <RichTextEditor
                 setValue={setValue}
+                setValueHTML={setValueHTML}
                 value={travelDatas.infos !== null ? travelDatas.infos : null}
                 minH="500px"
                 information={true}

@@ -4,11 +4,11 @@ module.exports = sequelize => {
 
 	class Member extends Sequelize.Model {
 		static associate(db) {
-			Member.belongsTo(db.Travel);
-			Member.belongsTo(db.User);
+			Member.belongsTo(db.Travel, { onDelete: 'cascade' });
+			Member.belongsTo(db.User, { onDelete: 'cascade' });
 
-			Member.hasMany(db.Expense);
-			Member.hasMany(db.JournalEntry);
+			Member.hasMany(db.Expense, { onDelete: 'cascade' });
+			Member.hasMany(db.JournalEntry, { onDelete: 'cascade' });
 		}
 	}
 

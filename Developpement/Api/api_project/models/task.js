@@ -4,7 +4,7 @@ module.exports = sequelize => {
 
 	class Task extends Sequelize.Model {
 		static associate(db) {
-			Task.belongsTo(db.Travel);
+			Task.belongsTo(db.Travel, { onDelete: 'cascade' });
 			Task.belongsToMany(db.Label, { through: 'TaskLabel' })
 		}
 	}

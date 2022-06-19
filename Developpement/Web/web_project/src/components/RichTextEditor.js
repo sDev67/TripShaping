@@ -7,19 +7,13 @@ import {
 } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Button } from "@mui/material";
+import { convertToHTML } from "draft-convert";
 
 
-const RichTextEditor = ({
-  setValue,
-  OnClose,
-  value,
-  limitedEditor,
-  minH,
-  isReadOnly,
-  openFormEditor,
-  maxW,
-  information,
-}) => {
+
+const RichTextEditor = ({ setValueHTML, setValue, OnClose, value, limitedEditor, minH, isReadOnly, openFormEditor, maxW, information }) => {
+
+
   const [state, setState] = useState([
     {
       editorState: EditorState.createEmpty,
@@ -43,7 +37,9 @@ const RichTextEditor = ({
   }, [content]);
 
   const onChange = (editorState, limitedCheck = false) => {
+
     if (information) {
+      console.log("fergergergregerg");
       limitedCheck = true;
     }
     const contentState = editorState.getCurrentContent();
@@ -57,9 +53,12 @@ const RichTextEditor = ({
     });
   };
   const saveContent = (content) => {
+
     //window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
     setValue(JSON.stringify(convertToRaw(content)));
-  };
+
+    setValueHTML(JSON.stringify(convertToHTML(content)));
+  }
   return (
     <div class="container">
       <div

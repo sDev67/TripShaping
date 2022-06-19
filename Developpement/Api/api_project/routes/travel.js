@@ -1156,6 +1156,16 @@ module.exports = [
     ],
   },
 
+  // {
+  //   url: "/travel/:travel_id/journal_entries",
+  //   method: "get",
+  //   func: travel_ctrl.get_all_journal_entries_by_travel_id,
+  // },
+  {
+    url: "/travel/:travel_id",
+    method: "put",
+    func: travel_ctrl.update_by_id,
+  },
   {
     url: "/travel/:travel_id/photos",
     method: "get",

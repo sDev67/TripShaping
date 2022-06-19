@@ -40,6 +40,8 @@ const StepMenu = ({
 
   const [title, setTitle] = useState(selectedMarker.title);
   const [description, setDescription] = useState(selectedMarker.description);
+  const [descriptionHTML, setDescriptionHTML] = useState(selectedMarker.descriptionHTML);
+
   const [duration, setDuration] = useState(selectedMarker.duration);
 
   const {
@@ -98,6 +100,7 @@ const StepMenu = ({
       const newPoint = {
         title: title,
         description: description,
+        descriptionHTML: descriptionHTML,
         duration: duration,
         idStep: step.id,
       };
@@ -230,6 +233,7 @@ const StepMenu = ({
                 requestKeyTitle="getDocumentsOfStep"
                 requestKeyValue={selectedMarker.id}
                 isEdition={isEdition}
+                show={false}
               ></DocumentsList>
             )}
           </Stack>
@@ -245,6 +249,7 @@ const StepMenu = ({
           </Typography>
           <div style={{ marginBottom: 25 }}>
             <RichTextEditor
+              setValueHTML={setDescriptionHTML}
               setValue={setDescription}
               value={description}
               limitedEditor={true}
@@ -284,6 +289,7 @@ const StepMenu = ({
 
       <Dialog open={informationDialogOpen} onClose={HandleCloseAddLabelForm}>
         <RichTextEditor
+          setValueHTML={setDescriptionHTML}
           setValue={setDescription}
           value={description}
           limitedEditor={false}

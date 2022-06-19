@@ -4,7 +4,7 @@ module.exports = sequelize => {
 
     class Expense extends Sequelize.Model {
         static associate(db) {
-            Expense.belongsTo(db.Travel);
+            Expense.belongsTo(db.Travel, { onDelete: 'cascade' });
             Expense.belongsTo(db.Member);
         }
     }

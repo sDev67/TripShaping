@@ -718,6 +718,72 @@ module.exports = [
    */
 
   /**
+ * @swagger
+ * /travel/{travel_id}/expenses:
+ *   get:
+ *     tags:
+ *     - Travel
+ *     summary: Retourne les depenses d'un voyages.
+ *     description: Retourne toutes les depenses appartenant à un voyage.
+ *     parameters:
+ *      - in: path
+ *        name: travel_id
+ *        example: 1
+ *        required: true
+ *        schema:
+ *          type: integer
+ *
+ *     responses:
+ *       200:
+ *         description: Retourne toutes les depenses appartenant à un voyage dont l'id du voyage est passé en paramètre.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: Id du membre
+ *                   example: 5
+ *                 cost:
+ *                   type: string
+ *                   description: Cout de la depense
+ *                   example: Serkan
+ *                 to:
+ *                   type: string
+ *                   description: ID des destinataires
+ *                   example: Sdev
+ *                 category:
+ *                   type: string
+ *                   description: Category de la depense
+ *                   example: Sdev
+ *                 date:
+ *                   type: string
+ *                   description: Date oû la depense a été effectué
+ *                   example: Sdev
+ *                 createdAt:
+ *                   type: string
+ *                   description: Date de création de la depense
+ *                   example: 2022-03-17T15:17:42.282Z
+ *                 updateAt:
+ *                   type: string
+ *                   description: Date de modification de la depense
+ *                   example: 2022-03-17T15:17:42.282Z
+ *                 TravelId:
+ *                   type: integer
+ *                   description: Id du voyage
+ *                   example: 1
+ *                 MemberId:
+ *                   type: integer
+ *                   description: Id de l'utilisateur
+ *                   example: 1
+ *       404:
+ *         description: L'id que vous avez passé n'existe pas. Voyage non trouvé.
+ *
+ *
+ */
+
+  /**
    * @swagger
    * /travel/{travel_id}/tasks:
    *   get:

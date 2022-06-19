@@ -28,6 +28,7 @@ import DocumentRequest from "../requests/DocumentRequest";
 import RouteRequest from "../requests/RouteRequest";
 import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const containerStyle = {
   position: "relative",
@@ -41,15 +42,17 @@ const RouteMenu = ({
   finish,
   setSelectedRoute,
   isEdition,
+  hideDocuments,
+  updateRoute,
+  idTravel,
 }) => {
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
-
   const queryClient = useQueryClient();
   const [files, setFiles] = useState([]);
   const [travelType, setTravelType] = useState(selectedRoute.travelType);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
+
+  console.log(selectedRoute.travelType);
 
   const {
     isLoading: isLoadingD,
@@ -60,24 +63,15 @@ const RouteMenu = ({
     DocumentRequest.getDocumentsByRouteId(selectedRoute.id)
   );
 
-  const updateRoute = useMutation(RouteRequest.updateRouteById, {
-    onSuccess: (route) => {
-
-      queryClient.invalidateQueries("GetRoute", route.id);
-
-    }
-  })
-
   const UpdateProperties = () => {
-
     console.log(travelType);
     const route = {
-
       idRoute: selectedRoute.id,
-      travelType: travelType
-    }
-    updateRoute.mutate(route)
-  }
+      travelType: travelType,
+    };
+    updateRoute.mutate(route);
+    setSelectedRoute(null);
+  };
 
   const distance = response?.routes[0].legs[0].distance.text;
   const duration = response?.routes[0].legs[0].duration.text;
@@ -179,6 +173,7 @@ const RouteMenu = ({
             select
             label="Type de transport"
             value={travelType}
+            defaultValue={selectedRoute.travelType}
             onChange={(e) => setTravelType(e.target.value)}
             style={{ marginBottom: 25 }}
             InputLabelProps={{
@@ -191,52 +186,55 @@ const RouteMenu = ({
               </MenuItem>
             ))}
           </TextField>
-          <Stack
-            style={{ marginBottom: 25 }}
-            spacing={1}
-            direction="column"
-            height="160px"
-          >
+          {hideDocuments ? (
+            <></>
+          ) : (
             <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
+              style={{ marginBottom: 25 }}
+              spacing={1}
+              direction="column"
+              height="160px"
             >
-              <Typography variant="h6" color="primary">
-                Documents
-              </Typography>
-              <Button
-                style={{ paddingLeft: 32, paddingRight: 32 }}
-                startIcon={<UploadFileRounded />}
-                variant="contained"
-                component="label"
-                disabled={!isEdition}
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
               >
-                Ajouter
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => {
-                    addFile(e.target.files[0]);
-                  }}
-                  required
-                />
-              </Button>
+                <Typography variant="h6" color="primary">
+                  Documents
+                </Typography>
+                <Button
+                  style={{ paddingLeft: 32, paddingRight: 32 }}
+                  startIcon={<UploadFileRounded />}
+                  variant="contained"
+                  component="label"
+                  disabled={!isEdition}
+                >
+                  Ajouter
+                  <input
+                    type="file"
+                    hidden
+                    onChange={(e) => {
+                      addFile(e.target.files[0]);
+                    }}
+                    required
+                  />
+                </Button>
+              </Stack>
+              {isLoadingD ? (
+                <Loading />
+              ) : isErrorD ? (
+                <p style={{ color: "red" }}>{errorD.message}</p>
+              ) : (
+                <DocumentsList
+                  documents={documents}
+                  requestKeyTitle="getDocumentsOfPoint"
+                  requestKeyValue={selectedRoute.id}
+                  isEdition={isEdition}
+                ></DocumentsList>
+              )}
             </Stack>
-            {isLoadingD ? (
-              <Loading />
-            ) : isErrorD ? (
-              <p style={{ color: "red" }}>{errorD.message}</p>
-            ) : (
-              <DocumentsList
-                documents={documents}
-                requestKeyTitle="getDocumentsOfPoint"
-                requestKeyValue={selectedRoute.id}
-                isEdition={isEdition}
-                show={false}
-              ></DocumentsList>
-            )}
-          </Stack>
+          )}
 
           {response && distance && duration && (
             <Stack direction="row">

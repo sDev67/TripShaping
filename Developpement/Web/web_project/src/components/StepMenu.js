@@ -23,6 +23,7 @@ import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
 import TravelRequests from "../requests/TravelRequests";
 import { addDays } from "../utils/DateFormatting";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const StepMenu = ({
   deleteStep,
@@ -32,15 +33,18 @@ const StepMenu = ({
   isEdition,
   steps,
   setSelectedPoiOfMarker,
+  hideDocuments,
+  idTravel,
 }) => {
   const queryClient = useQueryClient();
 
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
+  console.log("HIDE DOCUMENTS : " + hideDocuments);
 
   const [title, setTitle] = useState(selectedMarker.title);
   const [description, setDescription] = useState(selectedMarker.description);
-  const [descriptionHTML, setDescriptionHTML] = useState(selectedMarker.descriptionHTML);
+  const [descriptionHTML, setDescriptionHTML] = useState(
+    selectedMarker.descriptionHTML
+  );
 
   const [duration, setDuration] = useState(selectedMarker.duration);
 
@@ -190,53 +194,55 @@ const StepMenu = ({
               disabled={!isEdition}
             />
           </Stack>
-
-          <Stack
-            style={{ marginBottom: 25 }}
-            spacing={1}
-            direction="column"
-            height="160px"
-          >
+          {hideDocuments ? (
+            <></>
+          ) : (
             <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
+              style={{ marginBottom: 25 }}
+              spacing={1}
+              direction="column"
+              height="160px"
             >
-              <Typography variant="h6" color="primary">
-                Documents
-              </Typography>
-              <Button
-                style={{ paddingLeft: 32, paddingRight: 32 }}
-                startIcon={<UploadFileRounded />}
-                variant="contained"
-                component="label"
-                disabled={!isEdition}
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
               >
-                Ajouter
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => {
-                    addFile(e.target.files[0]);
-                  }}
-                  required
-                />
-              </Button>
+                <Typography variant="h6" color="primary">
+                  Documents
+                </Typography>
+                <Button
+                  style={{ paddingLeft: 32, paddingRight: 32 }}
+                  startIcon={<UploadFileRounded />}
+                  variant="contained"
+                  component="label"
+                  disabled={!isEdition}
+                >
+                  Ajouter
+                  <input
+                    type="file"
+                    hidden
+                    onChange={(e) => {
+                      addFile(e.target.files[0]);
+                    }}
+                    required
+                  />
+                </Button>
+              </Stack>
+              {isLoadingD ? (
+                <Loading />
+              ) : isErrorD ? (
+                <p style={{ color: "red" }}>{errorD.message}</p>
+              ) : (
+                <DocumentsList
+                  documents={documents}
+                  requestKeyTitle="getDocumentsOfStep"
+                  requestKeyValue={selectedMarker.id}
+                  isEdition={isEdition}
+                ></DocumentsList>
+              )}
             </Stack>
-            {isLoadingD ? (
-              <Loading />
-            ) : isErrorD ? (
-              <p style={{ color: "red" }}>{errorD.message}</p>
-            ) : (
-              <DocumentsList
-                documents={documents}
-                requestKeyTitle="getDocumentsOfStep"
-                requestKeyValue={selectedMarker.id}
-                isEdition={isEdition}
-                show={false}
-              ></DocumentsList>
-            )}
-          </Stack>
+          )}
 
           <Typography variant="h6" color="primary">
             Description

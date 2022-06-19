@@ -6,26 +6,47 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import { CircularProgress, Button, Stack } from "@mui/material";
-import palette from "./../theme/palette";
+import { CircularProgress, Button, Stack, Tooltip } from "@mui/material";
+import palette from "../theme/palette";
 
-import MapModeSwitchAlbum from "./../components/MapModeSwitchAlbum";
-import RouteMenu from "./../components/RouteMenu";
+import MapModeSwitchAlbum from "./MapModeSwitchAlbum";
+import RouteMenu from "./RouteMenu";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import PointRequests from "../requests/PointRequests";
 import StepRequests from "../requests/StepRequests";
 import { useParams } from "react-router-dom";
-import StepTimeline from "./../components/StepTimeline";
+import StepTimeline from "./StepTimeline";
 import Loading from "../utils/Loading";
-import stepIcon from "../assets/stepIcon.png";
 import photoIcon from "../assets/photoIcon.png";
+import InterestPointMenu from "./InterestPointMenu";
+import StepMenu from "./StepMenu";
+import PhotoMenu from "./PhotoMenu";
+import stepIcon from "../assets/stepIcon.png";
 import selectedStepIcon from "../assets/selectedStepIcon.png";
 import interestPointIcon from "../assets/interestPointIcon.png";
 import selectedInterestPointIcon from "../assets/selectedInterestPointIcon.png";
-import InterestPointMenu from "./../components/InterestPointMenu";
-import StepMenu from "./../components/StepMenu";
-import PhotoMenu from "../components/PhotoMenu";
+import antique from "../assets/antique.png";
+import antiqueSelected from "../assets/antiqueSelected.png";
+import boat from "../assets/boat.png";
+import boatSelected from "../assets/boatSelected.png";
+import camera from "../assets/camera.png";
+import cameraSelected from "../assets/cameraSelected.png";
+import castle from "../assets/castle.png";
+import castleSelected from "../assets/castleSelected.png";
+import parc from "../assets/parc.png";
+import parcSelected from "../assets/parcSelected.png";
+import shop from "../assets/shop.png";
+import shopSelected from "../assets/shopSelected.png";
+import stade from "../assets/stade.png";
+import stadeSelected from "../assets/stadeSelected.png";
+import theater from "../assets/theater.png";
+import theaterSelected from "../assets/theaterSelected.png";
+import food from "../assets/food.png";
+import foodSelected from "../assets/foodSelected.png";
+import DropDownMember from "./DropDownMember";
+import MemberRequests from "../requests/MemberRequests";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const containerStyle = {
   position: "relative",
@@ -33,19 +54,15 @@ const containerStyle = {
   height: "100%",
 };
 
-export const MapReview = ({ }) => {
+export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const queryClient = useQueryClient();
 
   let { cryptedName } = useParams();
-  cryptedName = cryptedName.toString();
-
-  let idTravel = cryptedName.substring(cryptedName.indexOf('$') + 1);
-  console.log(idTravel);
-  idTravel = parseInt(idTravel);
+  let idTravel = cryptedNameToTravelId(cryptedName);
 
   const [position, setPosition] = useState({
-    lat: 48.5734053,
-    lng: 7.7521113,
+    lat: steps[0] ? steps[0].latitude : 48.5734053,
+    lng: steps[0] ? steps[0].longitude : 7.7521113,
   });
 
   const userPositions = [
@@ -73,6 +90,8 @@ export const MapReview = ({ }) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedPoiOfMarker, setSelectedPoiOfMarker] = useState(null);
+  const [selectedMember, setSelectedMember] = useState(null);
 
   const [showTimeline, setShowTimeline] = useState(false);
 
@@ -80,14 +99,17 @@ export const MapReview = ({ }) => {
 
   const [expanded, setExpanded] = useState(false);
 
-  // Etapes
+  // Points
   const {
-    isLoading: isLoadingS,
-    isError: isErrorS,
-    error: errorS,
-    data: steps,
-  } = useQuery(["getSteps", idTravel], () =>
-    TravelRequests.getStepsOfTravel(idTravel)
+    isLoading: isLoadingPM,
+    isError: isErrorPM,
+    error: errorPM,
+    data: memberPositions,
+    refetch: refetchPM,
+  } = useQuery(
+    ["getPositionOfMember", idTravel],
+    () => MemberRequests.getPositionOfMember(selectedMember.id),
+    { enabled: false }
   );
 
   // Points
@@ -122,6 +144,12 @@ export const MapReview = ({ }) => {
 
   //const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (selectedMember) {
+      refetchPM();
+    }
+  }, [selectedMember]);
 
   useEffect(() => {
     // met a jour la page avec l'élément choisi dans la box Navigation
@@ -166,6 +194,162 @@ export const MapReview = ({ }) => {
 
   const handleChangeSelectModeEdit = (event) => {
     setEditionMode(event.target.value);
+  };
+
+  const selectInterestPointIcon = (interestPoint) => {
+    if (selectedPoiOfMarker != null && selectedPoiOfMarker.length > 0) {
+      for (let index = 0; index < selectedPoiOfMarker.length; index++) {
+        if (selectedPoiOfMarker[index].id == interestPoint.id) {
+          if (interestPoint.category == "Parc") {
+            return parcSelected;
+          } else if (interestPoint.category == "Musée") {
+            return antiqueSelected;
+          } else if (interestPoint.category == "Cinéma") {
+            return cameraSelected;
+          } else if (interestPoint.category == "Stade") {
+            return stadeSelected;
+          } else if (interestPoint.category == "Magasin") {
+            return shopSelected;
+          } else if (interestPoint.category == "Monument historique") {
+            return castleSelected;
+          } else if (interestPoint.category == "Restaurant") {
+            return foodSelected;
+          } else if (interestPoint.category == "Spectacle") {
+            return theaterSelected;
+          } else if (interestPoint.category == "Port") {
+            return boatSelected;
+          } else if (interestPoint.category == "Autre") {
+            return selectedInterestPointIcon;
+          } else {
+            return selectedInterestPointIcon;
+          }
+        }
+      }
+      if (interestPoint.category == "Parc") {
+        return parc;
+      } else if (interestPoint.category == "Musée") {
+        return antique;
+      } else if (interestPoint.category == "Cinéma") {
+        return camera;
+      } else if (interestPoint.category == "Stade") {
+        return stade;
+      } else if (interestPoint.category == "Magasin") {
+        return shop;
+      } else if (interestPoint.category == "Monument historique") {
+        return castle;
+      } else if (interestPoint.category == "Restaurant") {
+        return food;
+      } else if (interestPoint.category == "Spectacle") {
+        return theater;
+      } else if (interestPoint.category == "Port") {
+        return boat;
+      } else if (interestPoint.category == "Autre") {
+        return interestPointIcon;
+      } else {
+        return interestPointIcon;
+      }
+    } else {
+      if (interestPoint.category == "Parc") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return parcSelected;
+        } else {
+          return parc;
+        }
+      } else if (interestPoint.category == "Musée") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return antiqueSelected;
+        } else {
+          return antique;
+        }
+      } else if (interestPoint.category == "Cinéma") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return cameraSelected;
+        } else {
+          return camera;
+        }
+      } else if (interestPoint.category == "Stade") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return stadeSelected;
+        } else {
+          return stade;
+        }
+      } else if (interestPoint.category == "Magasin") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return shopSelected;
+        } else {
+          return shop;
+        }
+      } else if (interestPoint.category == "Monument historique") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return castleSelected;
+        } else {
+          return castle;
+        }
+      } else if (interestPoint.category == "Restaurant") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return foodSelected;
+        } else {
+          return food;
+        }
+      } else if (interestPoint.category == "Spectacle") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return theaterSelected;
+        } else {
+          return theater;
+        }
+      } else if (interestPoint.category == "Port") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return boatSelected;
+        } else {
+          return boat;
+        }
+      } else if (interestPoint.category == "Autre") {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return selectedInterestPointIcon;
+        } else {
+          return interestPointIcon;
+        }
+      } else {
+        if (
+          selectedMarker?.marker.id == interestPoint.id &&
+          selectedMarker?.type == "Point"
+        ) {
+          return selectedInterestPointIcon;
+        } else {
+          return interestPointIcon;
+        }
+      }
+    }
   };
 
   const addPoint = useMutation(TravelRequests.addPoint, {
@@ -262,6 +446,7 @@ export const MapReview = ({ }) => {
 
   const onMapClick = (e) => {
     // on peut placer les points uniquement si on est en mode edition
+    setSelectedPoiOfMarker(null);
     if (isEdition) {
       if (selectedMarker !== null) {
         setSelectedMarker(null);
@@ -396,25 +581,22 @@ export const MapReview = ({ }) => {
             onClick={onMapClick}
           >
             <Stack
-              direction="column-reverse"
+              direction="column"
               spacing={2}
               style={{
                 position: "absolute",
-                bottom: "25px",
-                left: "10px",
+                bottom: "2%",
+                left: "1%",
+                width: "8%",
               }}
             >
-              <MapModeSwitchAlbum
-                handleSwitch={handleSwitch}
-                isEdition={isEdition}
-                markerFilter={markerFilter}
-                handleChangeSelectModeEdit={handleChangeSelectModeEdit}
-                handleChangeSelectModeNav={handleChangeSelectModeNav}
-                editionMode={editionMode}
-              ></MapModeSwitchAlbum>
               {showTimeline ? (
                 <Button
-                  onClick={() => setShowTimeline(!showTimeline)}
+                  onClick={() => {
+                    setShowTimeline(!showTimeline);
+                    setSelectedMarker(null);
+                    setSelectedRoute(null);
+                  }}
                   variant="outlined"
                   style={{
                     backgroundColor: "white",
@@ -424,12 +606,37 @@ export const MapReview = ({ }) => {
                 </Button>
               ) : (
                 <Button
-                  onClick={() => setShowTimeline(!showTimeline)}
+                  onClick={() => {
+                    setShowTimeline(!showTimeline);
+                    setSelectedMarker(null);
+                    setSelectedRoute(null);
+                  }}
                   variant="contained"
                 >
                   Liste Étapes
                 </Button>
               )}
+              <MapModeSwitchAlbum
+                handleSwitch={handleSwitch}
+                isEdition={isEdition}
+                markerFilter={markerFilter}
+                handleChangeSelectModeEdit={handleChangeSelectModeEdit}
+                handleChangeSelectModeNav={handleChangeSelectModeNav}
+                editionMode={editionMode}
+              ></MapModeSwitchAlbum>
+            </Stack>
+            <Stack
+              style={{
+                position: "absolute",
+                bottom: "2%",
+                left: "10%",
+                width: "15%",
+              }}
+            >
+              <DropDownMember
+                selectedMember={selectedMember}
+                setSelectedMember={setSelectedMember}
+              ></DropDownMember>
             </Stack>
 
             {isLoadingS ? (
@@ -445,10 +652,19 @@ export const MapReview = ({ }) => {
                   draggable={!error && isEdition}
                   clickable={true}
                   onClick={() => {
+                    setSelectedPoiOfMarker(null);
                     setSelectedMarker(null);
                     setSelectedMarker({ marker: step, type: "Step" });
+                    const PoisOfStep = [];
+                    interestPoints.map((interestPoint) => {
+                      interestPoint.StepId == step.id &&
+                        PoisOfStep.push(interestPoint);
+                    });
+
+                    setSelectedPoiOfMarker(PoisOfStep);
                     setSelectedRoute(null);
                     setPosition({ lat: step.latitude, lng: step.longitude });
+                    setShowTimeline(false);
                   }}
                   onRightClick={() => {
                     if (!error && isEdition) {
@@ -476,7 +692,7 @@ export const MapReview = ({ }) => {
                   onDragEnd={updateStepLocation(step)}
                   icon={
                     selectedMarker?.marker.id == step.id &&
-                      selectedMarker?.type == "Step"
+                    selectedMarker?.type == "Step"
                       ? selectedStepIcon
                       : stepIcon
                   }
@@ -503,6 +719,7 @@ export const MapReview = ({ }) => {
                     setSelectedMarker(null);
                     setSelectedMarker({ marker: interestPoint, type: "Point" });
                     setSelectedRoute(null);
+                    setShowTimeline(false);
                   }}
                   onRightClick={() => {
                     if (!error && isEdition) {
@@ -511,12 +728,7 @@ export const MapReview = ({ }) => {
                     }
                   }}
                   onDragEnd={updateInterestPointLocation(interestPoint)}
-                  icon={
-                    selectedMarker?.marker.id == interestPoint.id &&
-                      selectedMarker?.type == "Point"
-                      ? selectedInterestPointIcon
-                      : interestPointIcon
-                  }
+                  icon={selectInterestPointIcon(interestPoint)}
                 ></Marker>
               ))
             )}
@@ -544,6 +756,7 @@ export const MapReview = ({ }) => {
                               finish: step,
                             });
                             setSelectedMarker(null);
+                            setShowTimeline(false);
                           }}
                           path={[
                             {
@@ -555,10 +768,87 @@ export const MapReview = ({ }) => {
                               lng: step.longitude,
                             },
                           ]}
-                          options={{
-                            strokeColor: palette.primary.main,
-                            strokeWeight: 8,
-                          }}
+                          options={
+                            routes[index - 1]?.travelType == "DRIVING"
+                              ? {
+                                  strokeOpacity: 0,
+                                  fillOpacity: 0,
+                                  zIndex: 1,
+                                  icons: [
+                                    {
+                                      icon: {
+                                        path: "M -1 -1 -1 1 M 1 1 1 -1",
+                                        strokeOpacity: 1,
+                                        scale: 3,
+                                        strokeColor: palette.primary.main,
+                                      },
+                                      offset: "0",
+                                      repeat: "3px",
+                                    },
+                                  ],
+                                }
+                              : routes[index - 1]?.travelType == "WALKING"
+                              ? {
+                                  strokeWeight: 8,
+                                  strokeOpacity: 0,
+                                  fillOpacity: 0,
+                                  zIndex: 1,
+                                  icons: [
+                                    {
+                                      icon: {
+                                        path: "M 0,-1 0,-1",
+                                        strokeOpacity: 1,
+                                        scale: 5,
+                                        strokeColor: palette.primary.main,
+                                      },
+                                      offset: "0",
+                                      repeat: "10px",
+                                    },
+                                  ],
+                                }
+                              : routes[index - 1]?.travelType == "BICYCLING"
+                              ? {
+                                  strokeWeight: 8,
+                                  strokeOpacity: 0,
+                                  fillOpacity: 0,
+                                  zIndex: 1,
+                                  icons: [
+                                    {
+                                      icon: {
+                                        path: "M 0,-1 0, 1",
+                                        strokeOpacity: 1,
+                                        scale: 5,
+                                        strokeColor: palette.primary.main,
+                                      },
+                                      offset: "0",
+                                      repeat: "20px",
+                                    },
+                                  ],
+                                }
+                              : routes[index - 1]?.travelType == "TRANSIT"
+                              ? {
+                                  strokeOpacity: 0,
+                                  fillOpacity: 0,
+                                  zIndex: 1,
+                                  icons: [
+                                    {
+                                      icon: {
+                                        path: "M -1 2 -1 -2 -1 0 -1.5 0 1.5 0 1 0 1 2 1 -2 ",
+                                        strokeOpacity: 1,
+                                        scale: 3,
+                                        strokeColor: palette.primary.main,
+                                      },
+
+                                      offset: "0",
+                                      repeat: "12px",
+                                    },
+                                  ],
+                                }
+                              : {
+                                  strokeWeight: 5,
+                                  strokeColor: palette.primary.main,
+                                }
+                          }
                         ></Polyline>
                       )}
                     </>
@@ -567,30 +857,47 @@ export const MapReview = ({ }) => {
               )
             )}
 
-            {userPositions.map((userPosition, index) => (
+            {isLoadingPM ? (
+              <Loading />
+            ) : isErrorPM ? (
+              <p style={{ color: "red" }}>{errorPM.message}</p>
+            ) : (
               <>
-                {index > 0 && (
-                  <Polyline
-                    key={index - 1}
-                    geodesic={true}
-                    path={[
-                      {
-                        lat: userPositions[index - 1].latitude,
-                        lng: userPositions[index - 1].longitude,
-                      },
-                      {
-                        lat: userPosition.latitude,
-                        lng: userPosition.longitude,
-                      },
-                    ]}
-                    options={{
-                      strokeColor: palette.secondary.main,
-                      strokeWeight: 8,
-                    }}
-                  ></Polyline>
-                )}
+                {memberPositions?.map((memberPosition, index) => (
+                  <>
+                    {index > 0 && (
+                      <Polyline
+                        key={index - 1}
+                        geodesic={true}
+                        path={[
+                          {
+                            lat: memberPositions[index - 1].latitude,
+                            lng: memberPositions[index - 1].longitude,
+                          },
+                          {
+                            lat: memberPosition.latitude,
+                            lng: memberPosition.longitude,
+                          },
+                        ]}
+                        options={{
+                          strokeColor: palette.secondary.main,
+                          strokeWeight: 8,
+                        }}
+                      ></Polyline>
+                    )}
+
+                    <Marker
+                      key={index}
+                      position={{
+                        lat: memberPosition.latitude,
+                        lng: memberPosition.longitude,
+                      }}
+                    ></Marker>
+                  </>
+                ))}
               </>
-            ))}
+            )}
+
             {isLoadingPh ? (
               <Loading />
             ) : isErrorPh ? (
@@ -638,6 +945,7 @@ export const MapReview = ({ }) => {
               updateInfoPoint={updateInfoPoint}
               isEdition={isEdition}
               steps={steps}
+              idTravel={idTravel}
             ></InterestPointMenu>
           )
         ) : selectedMarker.type === "Step" && isLoadingS ? (
@@ -652,6 +960,8 @@ export const MapReview = ({ }) => {
             updateInfoStep={updateInfoStep}
             isEdition={isEdition}
             steps={steps}
+            setSelectedPoiOfMarker={setSelectedPoiOfMarker}
+            idTravel={idTravel}
           ></StepMenu>
         ))}
       {selectedRoute && (
@@ -661,6 +971,7 @@ export const MapReview = ({ }) => {
           finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
           isEdition={isEdition}
+          idTravel={idTravel}
         ></RouteMenu>
       )}
       {showTimeline && (

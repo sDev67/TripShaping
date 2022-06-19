@@ -44,8 +44,6 @@ import { useAuth } from "../Authentication/auth";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
 import ProfileBubble from "./ProfileBubble";
-import NavigationBar from "./NavigationBar";
-import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const drawerWidth = 170;
 
@@ -128,9 +126,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavigationBarAlbum = () => {
-  let { cryptedName } = useParams();
-  let idTravel = cryptedNameToTravelId(cryptedName);
+const NavigationBarDisplay = () => {
+  let { idTravel } = useParams();
+  idTravel = parseInt(idTravel);
 
   let { user, signout } = useAuth();
 
@@ -263,7 +261,7 @@ const NavigationBarAlbum = () => {
               }
               value="Retour"
               component={Link}
-              to={"/mytrips"}
+              to={"/discover"}
             />
             <Tab
               icon={<MapRoundedIcon />}
@@ -280,41 +278,7 @@ const NavigationBarAlbum = () => {
               }
               value="Carte"
               component={Link}
-              to={"/album/" + cryptedName + "/map"}
-            />
-            <Tab
-              icon={<PhotoSizeSelectActualRoundedIcon />}
-              iconPosition="start"
-              label={
-                <Stack
-                  style={{ minWidth: "200px" }}
-                  direction="row"
-                  justifyContent="flex-start"
-                  marginLeft={1}
-                >
-                  <Typography variant="button">Photos</Typography>
-                </Stack>
-              }
-              value="Photos"
-              component={Link}
-              to={"/album/" + cryptedName + "/photos"}
-            />
-            <Tab
-              icon={<NewspaperRoundedIcon />}
-              iconPosition="start"
-              label={
-                <Stack
-                  style={{ minWidth: "200px" }}
-                  direction="row"
-                  justifyContent="flex-start"
-                  marginLeft={1}
-                >
-                  <Typography variant="button">Journal</Typography>
-                </Stack>
-              }
-              value="Journal"
-              component={Link}
-              to={"/album/" + cryptedName + "/logbook"}
+              to={"/display/" + idTravel + "/map"}
             />
           </Tabs>
         </Drawer>
@@ -327,4 +291,4 @@ const NavigationBarAlbum = () => {
   );
 };
 
-export default NavigationBarAlbum;
+export default NavigationBarDisplay;

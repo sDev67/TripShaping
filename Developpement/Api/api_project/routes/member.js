@@ -295,6 +295,12 @@ module.exports = [
 			user_ctrl.identify_client,
 			member_ctrl.delete_by_id,
 		],
-	}
+	},
 
+	//Route à swagger
+	{
+		url: '/member/:member_id/positions',
+		method: 'get',
+		func: member_ctrl.get_positions
+	},
 ];

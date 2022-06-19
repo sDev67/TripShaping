@@ -7,10 +7,9 @@ import {
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
 import { CircularProgress, Button, Stack } from "@mui/material";
-import palette from "./../theme/palette";
-import InterestPointMenu from "./InterestPointMenu";
-import StepMenu from "./StepMenu";
-import MapModeSwitch from "./MapModeSwitch";
+import palette from "../theme/palette";
+
+import MapModeSwitchAlbum from "./MapModeSwitchAlbum";
 import RouteMenu from "./RouteMenu";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient, useMutation } from "react-query";
@@ -19,8 +18,10 @@ import StepRequests from "../requests/StepRequests";
 import { useParams } from "react-router-dom";
 import StepTimeline from "./StepTimeline";
 import Loading from "../utils/Loading";
-import RouteRequest from "../requests/RouteRequest";
-
+import photoIcon from "../assets/photoIcon.png";
+import InterestPointMenu from "./InterestPointMenu";
+import StepMenu from "./StepMenu";
+import PhotoMenu from "./PhotoMenu";
 import stepIcon from "../assets/stepIcon.png";
 import selectedStepIcon from "../assets/selectedStepIcon.png";
 import interestPointIcon from "../assets/interestPointIcon.png";
@@ -50,12 +51,12 @@ const containerStyle = {
   height: "100%",
 };
 
-export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
+export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
-
+  console.log(idTravel);
   const [position, setPosition] = useState({
     lat: steps[0] ? steps[0].latitude : 48.5734053,
     lng: steps[0] ? steps[0].longitude : 7.7521113,
@@ -67,6 +68,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedPoiOfMarker, setSelectedPoiOfMarker] = useState(null);
 
   const [showTimeline, setShowTimeline] = useState(false);
@@ -94,8 +96,6 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
   } = useQuery(["getRoutes", idTravel], () =>
     TravelRequests.getRoutesOfTravel(idTravel)
   );
-
-  console.log(routes);
 
   //const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
@@ -143,135 +143,6 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
 
   const handleChangeSelectModeEdit = (event) => {
     setEditionMode(event.target.value);
-  };
-
-  const addPoint = useMutation(TravelRequests.addPoint, {
-    onSuccess: (point) =>
-      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
-        ...interestPoints,
-        point,
-      ]),
-  });
-
-  const addStep = useMutation(TravelRequests.addStep, {
-    onSuccess: (step) => {
-      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
-        ...steps,
-        step,
-      ]);
-    },
-  });
-
-  const createRoute = useMutation(TravelRequests.addRoute, {
-    onSuccess: (route) =>
-      queryClient.setQueryData(["getRoutes", idTravel], (routes) => [
-        ...routes,
-        route,
-      ]),
-  });
-
-  const updateLocationPoint = useMutation(
-    PointRequests.updatePointLocationById,
-    {
-      onSuccess: (point) => {
-        queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
-          ...interestPoints,
-          point,
-        ]);
-        queryClient.invalidateQueries(["getPoints", idTravel]);
-      },
-    }
-  );
-
-  const updateInfoPoint = useMutation(PointRequests.updatePointInfoById, {
-    onSuccess: (point) => {
-      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
-        ...interestPoints,
-        point,
-      ]);
-      queryClient.invalidateQueries(["getPoints", idTravel]);
-    },
-  });
-
-  const updateLocationStep = useMutation(StepRequests.updateStepLocationById, {
-    onSuccess: (step) => {
-      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
-        ...steps,
-        step,
-      ]);
-      queryClient.invalidateQueries(["getSteps", idTravel]);
-    },
-  });
-
-  const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
-    onSuccess: (step) => {
-      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
-        ...steps,
-        step,
-      ]);
-      queryClient.invalidateQueries(["getSteps", idTravel]);
-    },
-  });
-
-  const updateRoute = useMutation(RouteRequest.updateRouteById, {
-    onSuccess: (route) => {
-      queryClient.invalidateQueries("getRoutes", idTravel);
-    },
-  });
-
-  //Suppression de point
-  const deletePoint = useMutation(TravelRequests.removePoint, {
-    onSuccess: (_, id) =>
-      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) =>
-        interestPoints.filter((e) => e.id !== id)
-      ),
-  });
-
-  //Suppression d'étape
-  const deleteStep = useMutation(TravelRequests.removeStep, {
-    onSuccess: (_, id) =>
-      queryClient.setQueryData(["getSteps", idTravel], (steps) =>
-        steps.filter((e) => e.id !== id)
-      ),
-  });
-
-  //Suppression de route
-  const deleteRoute = useMutation(TravelRequests.removeRoute, {
-    onSuccess: (_, id) =>
-      queryClient.setQueryData(["getRoutes", idTravel], (routes) =>
-        routes.filter((e) => e.id !== id)
-      ),
-  });
-
-  const onMapClick = (e) => {
-    // on peut placer les points uniquement si on est en mode edition*
-    setSelectedPoiOfMarker(null);
-    if (isEdition) {
-      if (selectedMarker !== null) {
-        setSelectedMarker(null);
-      } else if (selectedRoute !== null) {
-        setSelectedRoute(null);
-      } else {
-        if (editionMode === "stepOnlyEdit") {
-          if (!error) {
-            addStepPoint(e);
-          }
-        }
-        // ici : editionMode === "interestPointOnlyEdit")
-        else {
-          if (!error) {
-            addInterestPoint(e);
-          }
-        }
-      }
-    }
-    // si on est en mode navigation
-    else {
-      // si le menu est ouvert on le ferme en cliquant sur la map
-      if (selectedMarker !== null) {
-        setSelectedMarker(null);
-      }
-    }
   };
 
   const selectInterestPointIcon = (interestPoint) => {
@@ -432,11 +303,133 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
     }
   };
 
-  console.log(steps);
+  const addPoint = useMutation(TravelRequests.addPoint, {
+    onSuccess: (point) =>
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+        ...interestPoints,
+        point,
+      ]),
+  });
+
+  const addStep = useMutation(TravelRequests.addStep, {
+    onSuccess: (step) => {
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]);
+    },
+  });
+
+  const createRoute = useMutation(TravelRequests.addRoute, {
+    onSuccess: (route) =>
+      queryClient.setQueryData(["getRoutes", idTravel], (routes) => [
+        ...routes,
+        route,
+      ]),
+  });
+
+  const updateLocationPoint = useMutation(
+    PointRequests.updatePointLocationById,
+    {
+      onSuccess: (point) => {
+        queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+          ...interestPoints,
+          point,
+        ]);
+        queryClient.invalidateQueries(["getPoints", idTravel]);
+      },
+    }
+  );
+
+  const updateInfoPoint = useMutation(PointRequests.updatePointInfoById, {
+    onSuccess: (point) => {
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
+        ...interestPoints,
+        point,
+      ]);
+      queryClient.invalidateQueries(["getPoints", idTravel]);
+    },
+  });
+
+  const updateLocationStep = useMutation(StepRequests.updateStepLocationById, {
+    onSuccess: (step) => {
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]);
+      queryClient.invalidateQueries(["getSteps", idTravel]);
+    },
+  });
+
+  const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
+    onSuccess: (step) => {
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]);
+      queryClient.invalidateQueries(["getSteps", idTravel]);
+    },
+  });
+
+  //Suppression de point
+  const deletePoint = useMutation(TravelRequests.removePoint, {
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getPoints", idTravel], (interestPoints) =>
+        interestPoints.filter((e) => e.id !== id)
+      ),
+  });
+
+  //Suppression d'étape
+  const deleteStep = useMutation(TravelRequests.removeStep, {
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getSteps", idTravel], (steps) =>
+        steps.filter((e) => e.id !== id)
+      ),
+  });
+
+  //Suppression de route
+  const deleteRoute = useMutation(TravelRequests.removeRoute, {
+    onSuccess: (_, id) =>
+      queryClient.setQueryData(["getRoutes", idTravel], (routes) =>
+        routes.filter((e) => e.id !== id)
+      ),
+  });
+
+  const onMapClick = (e) => {
+    // on peut placer les points uniquement si on est en mode edition
+    setSelectedPoiOfMarker(null);
+    if (isEdition) {
+      if (selectedMarker !== null) {
+        setSelectedMarker(null);
+      } else if (selectedRoute !== null) {
+        setSelectedRoute(null);
+      } else {
+        if (editionMode === "stepOnlyEdit") {
+          if (!error) {
+            addStepPoint(e);
+          }
+        }
+        // ici : editionMode === "interestPointOnlyEdit")
+        else {
+          if (!error) {
+            addInterestPoint(e);
+          }
+        }
+      }
+    }
+    // si on est en mode navigation
+    else {
+      // si le menu est ouvert on le ferme en cliquant sur la map
+      if (selectedMarker !== null) {
+        setSelectedMarker(null);
+      }
+    }
+  };
+
   // Fonction qui permet d'ajouter un point d'étape
   const addStepPoint = (e) => {
     const newStep = {
-      title: "Etape_" + (steps.length + 1),
+      title: "",
       latitude: parseFloat(e.latLng.lat()),
       longitude: parseFloat(e.latLng.lng()),
       description: JSON.stringify({
@@ -473,7 +466,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
   // Fonction qui permet d'ajouter un point d'interet
   const addInterestPoint = (e) => {
     const newPoint = {
-      title: "POI_" + (interestPoints.length + 1),
+      title: "",
       latitude: parseFloat(e.latLng.lat()),
       longitude: parseFloat(e.latLng.lng()),
       description: JSON.stringify({
@@ -547,14 +540,14 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                 left: "1%",
               }}
             >
-              <MapModeSwitch
+              <MapModeSwitchAlbum
                 handleSwitch={handleSwitch}
                 isEdition={isEdition}
                 markerFilter={markerFilter}
                 handleChangeSelectModeEdit={handleChangeSelectModeEdit}
                 handleChangeSelectModeNav={handleChangeSelectModeNav}
                 editionMode={editionMode}
-              ></MapModeSwitch>
+              ></MapModeSwitchAlbum>
               {showTimeline ? (
                 <Button
                   onClick={() => {
@@ -660,7 +653,6 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   draggable={!error && isEdition}
                   clickable={true}
                   onClick={() => {
-                    setSelectedPoiOfMarker(null);
                     setSelectedMarker(null);
                     setSelectedMarker({ marker: interestPoint, type: "Point" });
                     setSelectedRoute(null);
@@ -677,136 +669,129 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                 ></Marker>
               ))
             )}
-            {isLoadingR ? (
-              <Loading />
-            ) : isErrorR ? (
-              <p style={{ color: "red" }}>{errorR.message}</p>
-            ) : (
-              <>
-                {isLoadingS ? (
-                  "Chargement..."
-                ) : isErrorS ? (
-                  <p style={{ color: "red" }}>{errorS.message}</p>
-                ) : (
-                  steps.length >= 2 &&
-                  !(!isEdition && markerFilter === "interestPointOnlyNav") && (
-                    <>
-                      {steps.map((step, index) => (
-                        <>
-                          {index > 0 && (
-                            <Polyline
-                              key={index - 1}
-                              geodesic={true}
-                              clickable={true}
-                              onClick={() => {
-                                setSelectedRoute(null);
-                                setSelectedRoute({
-                                  route: routes[index - 1],
-                                  start: steps[index - 1],
-                                  finish: step,
-                                });
-                                setSelectedMarker(null);
-                                setShowTimeline(false);
-                              }}
-                              path={[
-                                {
-                                  lat: steps[index - 1].latitude,
-                                  lng: steps[index - 1].longitude,
-                                },
-                                {
-                                  lat: step.latitude,
-                                  lng: step.longitude,
-                                },
-                              ]}
-                              options={
-                                routes[index - 1]?.travelType == "DRIVING"
-                                  ? {
-                                      strokeOpacity: 0,
-                                      fillOpacity: 0,
-                                      zIndex: 1,
-                                      icons: [
-                                        {
-                                          icon: {
-                                            path: "M -1 -1 -1 1 M 1 1 1 -1",
-                                            strokeOpacity: 1,
-                                            scale: 3,
-                                            strokeColor: palette.primary.main,
-                                          },
-                                          offset: "0",
-                                          repeat: "3px",
-                                        },
-                                      ],
-                                    }
-                                  : routes[index - 1]?.travelType == "WALKING"
-                                  ? {
-                                      strokeWeight: 8,
-                                      strokeOpacity: 0,
-                                      fillOpacity: 0,
-                                      zIndex: 1,
-                                      icons: [
-                                        {
-                                          icon: {
-                                            path: "M 0,-1 0,-1",
-                                            strokeOpacity: 1,
-                                            scale: 5,
-                                            strokeColor: palette.primary.main,
-                                          },
-                                          offset: "0",
-                                          repeat: "10px",
-                                        },
-                                      ],
-                                    }
-                                  : routes[index - 1]?.travelType == "BICYCLING"
-                                  ? {
-                                      strokeWeight: 8,
-                                      strokeOpacity: 0,
-                                      fillOpacity: 0,
-                                      zIndex: 1,
-                                      icons: [
-                                        {
-                                          icon: {
-                                            path: "M 0,-1 0, 1",
-                                            strokeOpacity: 1,
-                                            scale: 5,
-                                            strokeColor: palette.primary.main,
-                                          },
-                                          offset: "0",
-                                          repeat: "20px",
-                                        },
-                                      ],
-                                    }
-                                  : routes[index - 1]?.travelType == "TRANSIT"
-                                  ? {
-                                      strokeOpacity: 0,
-                                      fillOpacity: 0,
-                                      zIndex: 1,
-                                      icons: [
-                                        {
-                                          icon: {
-                                            path: "M -1 2 -1 -2 -1 0 -1.5 0 1.5 0 1 0 1 2 1 -2 ",
-                                            strokeOpacity: 1,
-                                            scale: 3,
-                                            strokeColor: palette.primary.main,
-                                          },
 
-                                          offset: "0",
-                                          repeat: "12px",
-                                        },
-                                      ],
-                                    }
-                                  : {
-                                      strokeWeight: 5,
-                                      strokeColor: palette.primary.main,
-                                    }
-                              }
-                            ></Polyline>
-                          )}
-                        </>
-                      ))}
+            {isLoadingS ? (
+              "Chargement..."
+            ) : isErrorS ? (
+              <p style={{ color: "red" }}>{errorS.message}</p>
+            ) : (
+              steps.length >= 2 &&
+              !(!isEdition && markerFilter === "interestPointOnlyNav") && (
+                <>
+                  {steps.map((step, index) => (
+                    <>
+                      {index > 0 && (
+                        <Polyline
+                          key={index - 1}
+                          geodesic={true}
+                          clickable={true}
+                          onClick={() => {
+                            setSelectedRoute(null);
+                            setSelectedRoute({
+                              route: routes[index - 1],
+                              start: steps[index - 1],
+                              finish: step,
+                            });
+                            setSelectedMarker(null);
+                            setShowTimeline(false);
+                          }}
+                          path={[
+                            {
+                              lat: steps[index - 1].latitude,
+                              lng: steps[index - 1].longitude,
+                            },
+                            {
+                              lat: step.latitude,
+                              lng: step.longitude,
+                            },
+                          ]}
+                          options={
+                            routes[index - 1]?.travelType == "DRIVING"
+                              ? {
+                                  strokeOpacity: 0,
+                                  fillOpacity: 0,
+                                  zIndex: 1,
+                                  icons: [
+                                    {
+                                      icon: {
+                                        path: "M -1 -1 -1 1 M 1 1 1 -1",
+                                        strokeOpacity: 1,
+                                        scale: 3,
+                                        strokeColor: palette.primary.main,
+                                      },
+                                      offset: "0",
+                                      repeat: "3px",
+                                    },
+                                  ],
+                                }
+                              : routes[index - 1]?.travelType == "WALKING"
+                              ? {
+                                  strokeWeight: 8,
+                                  strokeOpacity: 0,
+                                  fillOpacity: 0,
+                                  zIndex: 1,
+                                  icons: [
+                                    {
+                                      icon: {
+                                        path: "M 0,-1 0,-1",
+                                        strokeOpacity: 1,
+                                        scale: 5,
+                                        strokeColor: palette.primary.main,
+                                      },
+                                      offset: "0",
+                                      repeat: "10px",
+                                    },
+                                  ],
+                                }
+                              : routes[index - 1]?.travelType == "BICYCLING"
+                              ? {
+                                  strokeWeight: 8,
+                                  strokeOpacity: 0,
+                                  fillOpacity: 0,
+                                  zIndex: 1,
+                                  icons: [
+                                    {
+                                      icon: {
+                                        path: "M 0,-1 0, 1",
+                                        strokeOpacity: 1,
+                                        scale: 5,
+                                        strokeColor: palette.primary.main,
+                                      },
+                                      offset: "0",
+                                      repeat: "20px",
+                                    },
+                                  ],
+                                }
+                              : routes[index - 1]?.travelType == "TRANSIT"
+                              ? {
+                                  strokeOpacity: 0,
+                                  fillOpacity: 0,
+                                  zIndex: 1,
+                                  icons: [
+                                    {
+                                      icon: {
+                                        path: "M -1 2 -1 -2 -1 0 -1.5 0 1.5 0 1 0 1 2 1 -2 ",
+                                        strokeOpacity: 1,
+                                        scale: 3,
+                                        strokeColor: palette.primary.main,
+                                      },
+
+                                      offset: "0",
+                                      repeat: "12px",
+                                    },
+                                  ],
+                                }
+                              : {
+                                  strokeWeight: 5,
+                                  strokeColor: palette.primary.main,
+                                }
+                          }
+                        ></Polyline>
+                      )}
                     </>
-                  )
-                )}
-              </>
+                  ))}
+                </>
+              )
             )}
           </GoogleMap>
         )}
@@ -826,6 +811,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
               updateInfoPoint={updateInfoPoint}
               isEdition={isEdition}
               steps={steps}
+              hideDocuments={true}
               idTravel={idTravel}
             ></InterestPointMenu>
           )
@@ -842,6 +828,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
             isEdition={isEdition}
             steps={steps}
             setSelectedPoiOfMarker={setSelectedPoiOfMarker}
+            hideDocuments={true}
             idTravel={idTravel}
           ></StepMenu>
         ))}
@@ -852,7 +839,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
           finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
           isEdition={isEdition}
-          updateRoute={updateRoute}
+          hideDocuments={true}
           idTravel={idTravel}
         ></RouteMenu>
       )}
@@ -868,6 +855,12 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
           setExpanded={setExpanded}
           setShowTimeline={setShowTimeline}
         ></StepTimeline>
+      )}
+      {selectedPhoto && (
+        <PhotoMenu
+          selectedPhoto={selectedPhoto}
+          setSelectedPhoto={setSelectedPhoto}
+        ></PhotoMenu>
       )}
     </div>
   );

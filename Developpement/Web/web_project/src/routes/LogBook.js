@@ -1,21 +1,16 @@
 import React from "react";
 
-import {
-  Stack,
-} from "@mui/material";
+import { Stack } from "@mui/material";
 import TravelRequests from "../requests/TravelRequests";
 import { useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import Message from "../components/Message";
+import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const LogBook = () => {
   let { cryptedName } = useParams();
-  cryptedName = cryptedName.toString();
-
-  let idTravel = cryptedName.substring(cryptedName.indexOf('$') + 1);
-  console.log(idTravel);
-  idTravel = parseInt(idTravel);
+  let idTravel = cryptedNameToTravelId(cryptedName);
 
   const queryClient = useQueryClient();
 

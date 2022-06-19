@@ -1,4 +1,5 @@
 const db = require("../models");
+const position = require("../models/position");
 
 module.exports = {
   get_all: (req, res, next) => {
@@ -29,6 +30,18 @@ module.exports = {
         }
         return res.json(member);
       })
+      .catch(next);
+  },
+
+  get_positions: (req, res, next) => {
+    return db.Member.findByPk(req.params.member_id)
+      .then((member) => {
+        if (!member) {
+          throw { status: 404, message: "Membre inexistant / introuvable" };
+        }
+        return member.getPositions();
+      })
+      .then(positions => res.json(positions))
       .catch(next);
   },
 

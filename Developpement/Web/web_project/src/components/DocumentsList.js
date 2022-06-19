@@ -27,6 +27,7 @@ const DocumentsList = ({
     let url = encodeURI(
       url_prefix + "/document/file/" + idDocument
     );
+
     window.open(url);
   };
 
@@ -51,27 +52,14 @@ const DocumentsList = ({
         }}
       >
         {documents.map((document) => (
-          <Document document={document} onRemoveDocument={OnRemoveDocument} onDisplayDocument={displayDocument} isEdition={isEdition} show={show} />
-          // <ListItem
-          //   key={document.toString()}
-          //   disablePadding
-          //   secondaryAction={
-          //     <IconButton
-          //       color="error"
-          //       onClick={() => OnRemoveDocument(document.id)}
-          //       disabled={!isEdition}
-          //     >
-          //       <ClearIcon />
-          //     </IconButton>
-          //   }
-          // >
-          //   <ListItemButton onClick={() => displayDocument(document.id)}>
-          //     <ListItemAvatar>
-          //       <InsertDriveFileRoundedIcon color="primary" />
-          //     </ListItemAvatar>
-          //     <ListItemText primary={<>{document.title}</>} />
-          //   </ListItemButton>
-          // </ListItem>
+          <Document
+            document={document}
+            onRemoveDocument={OnRemoveDocument}
+            onDisplayDocument={displayDocument}
+            isEdition={isEdition}
+            show={show}
+          />
+
         ))}
       </List>
       <Divider></Divider>

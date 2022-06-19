@@ -15,7 +15,6 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
-import { useParams } from "react-router-dom";
 import RichTextEditor from "./RichTextEditor";
 import DocumentRequest from "../requests/DocumentRequest";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -23,7 +22,6 @@ import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
 import TravelRequests from "../requests/TravelRequests";
 import { addDays } from "../utils/DateFormatting";
-import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const StepMenu = ({
   deleteStep,
@@ -37,8 +35,6 @@ const StepMenu = ({
   idTravel,
 }) => {
   const queryClient = useQueryClient();
-
-  console.log("HIDE DOCUMENTS : " + hideDocuments);
 
   const [title, setTitle] = useState(selectedMarker.title);
   const [description, setDescription] = useState(selectedMarker.description);
@@ -75,7 +71,6 @@ const StepMenu = ({
     steps.forEach((step) => {
       if (!stop) {
         if (step.id === selectedMarker.id) {
-          console.log(step.id);
           stop = true;
         } else {
           dayCounter += step.duration;
@@ -118,8 +113,6 @@ const StepMenu = ({
     formData.append("title", file);
     formData.append("TravelId", idTravel);
     formData.append("StepId", selectedMarker.id);
-
-    console.log(...formData);
 
     addDocument.mutate(formData);
   };

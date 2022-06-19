@@ -2,20 +2,15 @@ import {
   Button,
   TextField,
   Typography,
-  Checkbox,
 } from "@mui/material";
 import { Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 import MemberRequests from "../requests/MemberRequests";
 import { useAuth } from "../Authentication/auth";
-import shrtcode from "../requests/shrtcode";
-import { url_prefix } from "../utils";
-const HTTP_URL_VALIDATOR_REGEX =
-  /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
 
 const TripForm = ({ setTripFormOpen }) => {
   const queryClient = useQueryClient();
@@ -24,7 +19,6 @@ const TripForm = ({ setTripFormOpen }) => {
 
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
-  const [short, setShort] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleNameChange = (newName) => {
@@ -87,21 +81,13 @@ const TripForm = ({ setTripFormOpen }) => {
 
       addMember.mutate(newMember);
 
-      // queryClient.setQueryData(
-      //   ['getTravels'],
-      //   console.log(travels)
-      //   (travels) => [...travels, travel]
-      // )
-
       let cryptedName = generateName(travel.id);
 
       const Travel = {
         TravelId: travel.id,
         albumURL: cryptedName,
       };
-      console.log("here " + cryptedName);
       updateTravel.mutate(Travel);
-      //travel.cryptedName = generateName(travel.id)
     },
   });
 

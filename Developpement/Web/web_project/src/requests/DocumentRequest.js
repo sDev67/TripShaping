@@ -60,7 +60,7 @@ const DocumentRequest = {
       headers: {
         Authorization: 'Bearer ' + token
       }
-    }).then(checkStatus);
+    });
   },
 
 

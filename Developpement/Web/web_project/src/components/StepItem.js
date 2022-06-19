@@ -93,8 +93,6 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
     formData.append("TravelId", idTravel);
     formData.append("StepId", step.id);
 
-    console.log(...formData);
-
     addDocument.mutate(formData);
   };
 
@@ -471,7 +469,6 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
     formData.append("title", file);
     formData.append("TravelId", idTravel);
     formData.append("PointId", selectedInterestPoint.id);
-    console.log(...formData);
 
     addDocument.mutate(formData);
   };

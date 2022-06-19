@@ -11,12 +11,11 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
+
+  // Pas besoin du token pour cette requete
   getPublishedTravel: () => {
-    const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travelpublished`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
+
     })
       .then(checkStatus)
       .then((res) => res.json());

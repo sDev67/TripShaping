@@ -153,7 +153,6 @@ const InterestPointMenu = ({
     formData.append("title", file);
     formData.append("TravelId", idTravel);
     formData.append("PointId", selectedMarker.id);
-    console.log(...formData);
 
     addDocument.mutate(formData);
   };

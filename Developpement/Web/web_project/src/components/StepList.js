@@ -36,7 +36,6 @@ const StepList = ({ steps, startDate }) => {
       dayCounter += step.duration;
     });
     setDates(dates);
-    console.log(dates);
   }, []);
 
   return (

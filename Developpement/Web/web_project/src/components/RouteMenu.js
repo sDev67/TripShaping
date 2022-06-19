@@ -23,12 +23,9 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
-import { useParams } from "react-router-dom";
 import DocumentRequest from "../requests/DocumentRequest";
-import RouteRequest from "../requests/RouteRequest";
 import DocumentsList from "./DocumentsList";
 import Loading from "../utils/Loading";
-import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
 
 const containerStyle = {
   position: "relative",
@@ -52,8 +49,6 @@ const RouteMenu = ({
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(false);
 
-  console.log(selectedRoute.travelType);
-
   const {
     isLoading: isLoadingD,
     isError: isErrorD,
@@ -64,7 +59,6 @@ const RouteMenu = ({
   );
 
   const UpdateProperties = () => {
-    console.log(travelType);
     const route = {
       idRoute: selectedRoute.id,
       travelType: travelType,
@@ -130,8 +124,6 @@ const RouteMenu = ({
     formData.append("TravelId", idTravel);
     formData.append("RouteId", selectedRoute.id);
 
-    console.log(...formData);
-
     DocumentRequest.uploadFile(formData);
   };
 
@@ -179,6 +171,7 @@ const RouteMenu = ({
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={!isEdition}
           >
             {categ.map((option) => (
               <MenuItem key={option.value} value={option.value}>

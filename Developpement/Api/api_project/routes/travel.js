@@ -1044,11 +1044,12 @@ module.exports = [
       travel_ctrl.create,
     ],
   },
+
+  // Pas besoin du token pour cette requete
   {
     url: "/travelpublished",
     method: "get",
     func: [
-      user_ctrl.identify_client,
       travel_ctrl.get_published,
     ],
   },
@@ -1157,7 +1158,10 @@ module.exports = [
   {
     url: "/travel/:travel_id",
     method: "put",
-    func: travel_ctrl.update_by_id,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.update_by_id,
+    ],
   },
   {
     url: "/travel/:travel_id/photos",

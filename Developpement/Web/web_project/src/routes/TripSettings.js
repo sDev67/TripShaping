@@ -273,9 +273,10 @@ const TripSettings = () => {
             onClose={HandleCloseConfirmedSuppr}
           >
             <ConfirmedSuppressionModal
-              idTravel={travel.id}
+              id={travel.id}
               onClose={HandleCloseConfirmedSuppr}
-              title={travel.name}
+              title="Etes-vous sûr de vouloir supprimer le voyage ?
+                    Cette action est irréversible."
               onDelete={deleteVoyage}
             />
           </Dialog>

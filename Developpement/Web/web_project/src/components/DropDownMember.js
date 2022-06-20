@@ -30,7 +30,7 @@ const DropDownMember = ({ selectedMember, setSelectedMember }) => {
         <TextField
           fullWidth
           select
-          label="Choisir position du membre"
+          label="Suivi positions réelles"
           value={selectedMember}
           onChange={(e) => setSelectedMember(e.target.value)}
           variant="outlined"

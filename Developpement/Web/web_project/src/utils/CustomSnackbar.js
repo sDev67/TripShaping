@@ -1,7 +1,7 @@
 import { Snackbar, Alert } from "@mui/material";
 import React from "react";
 
-const CustomSnackbar = ({ open, setOpen, message }) => {
+const CustomSnackbar = ({ open, setOpen, message, color }) => {
   return (
     <Snackbar
       open={open}
@@ -11,7 +11,7 @@ const CustomSnackbar = ({ open, setOpen, message }) => {
       <Alert
         onClose={() => setOpen(false)}
         variant="filled"
-        color="primary"
+        color={color}
         sx={{ width: "100%" }}
       >
         {message}

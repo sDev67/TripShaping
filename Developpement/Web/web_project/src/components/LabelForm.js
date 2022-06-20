@@ -3,20 +3,38 @@ import { TextField, Button, Typography } from "@mui/material";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import { useEffect, useState } from "react";
 
-const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
+const LabelForm = ({
+  label,
+  addLabel,
+  updateLabel,
+  onClose,
+  setOpen,
+  setMessage,
+  setColor,
+}) => {
   const [currentTitle, setCurrentTitle] = useState("");
 
   const handleClick = () => {
-
     if (label != undefined) {
-      if (currentTitle != undefined && currentTitle != null && currentTitle != "") {
-
+      if (
+        currentTitle != undefined &&
+        currentTitle != null &&
+        currentTitle != ""
+      ) {
         updateLabel({ title: currentTitle, labelId: label.id });
       }
     }
 
-    if (currentTitle != undefined && currentTitle != null && currentTitle != "") {
+    if (
+      currentTitle != undefined &&
+      currentTitle != null &&
+      currentTitle != ""
+    ) {
       addLabel({ title: currentTitle });
+    } else {
+      setMessage("Veuillez renseigné un nom.");
+      setColor("error");
+      setOpen(true);
     }
 
     onClose();

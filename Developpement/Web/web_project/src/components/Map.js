@@ -44,6 +44,7 @@ import theaterSelected from "../assets/theaterSelected.png";
 import food from "../assets/food.png";
 import foodSelected from "../assets/foodSelected.png";
 import ConfirmedSuppressionModal from "./ConfirmedSuppressionModal";
+import CustomSnackbar from "../utils/CustomSnackbar";
 
 const containerStyle = {
   position: "relative",
@@ -76,6 +77,10 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const [stepAdded, setStepAdded] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [color, setColor] = useState("");
 
   // Points
   const {
@@ -141,10 +146,10 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
     }
   };
 
-  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
+    useState(false);
 
   const HandleCloseConfirmedSuppr = () => {
-
     setConfirmedDeleteDialogOpen(false);
     if (!error && isEdition) {
       if (steps.length > 1 && !isLoadingR && !isErrorR) {
@@ -167,10 +172,11 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
 
       // deleteStep.mutate(selectedMarker.marker.id);
       setSelectedMarker(null);
-    };
+    }
   };
 
-  const [confirmedDeleteDialogOpen2, setConfirmedDeleteDialogOpen2] = useState(false);
+  const [confirmedDeleteDialogOpen2, setConfirmedDeleteDialogOpen2] =
+    useState(false);
 
   const HandleCloseConfirmedSuppr2 = () => {
     setConfirmedDeleteDialogOpen2(false);
@@ -183,11 +189,15 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
   };
 
   const addPoint = useMutation(TravelRequests.addPoint, {
-    onSuccess: (point) =>
+    onSuccess: (point) => {
       queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
         ...interestPoints,
         point,
-      ]),
+      ]);
+      setMessage("Point d'intérêt ajouté.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   const addStep = useMutation(TravelRequests.addStep, {
@@ -196,6 +206,9 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
         ...steps,
         step,
       ]);
+      setMessage("Étape ajoutée.");
+      setColor("primary");
+      setOpen(true);
     },
   });
 
@@ -258,18 +271,26 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
 
   //Suppression de point
   const deletePoint = useMutation(TravelRequests.removePoint, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getPoints", idTravel], (interestPoints) =>
         interestPoints.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Point d'intérêt supprimé.");
+      setColor("error");
+      setOpen(true);
+    },
   });
 
   //Suppression d'étape
   const deleteStep = useMutation(TravelRequests.removeStep, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getSteps", idTravel], (steps) =>
         steps.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Étape supprimé.");
+      setColor("error");
+      setOpen(true);
+    },
   });
 
   //Suppression de route
@@ -648,7 +669,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                     setShowTimeline(false);
                   }}
                   onRightClick={() => {
-                    setConfirmedDeleteDialogOpen(true)
+                    setConfirmedDeleteDialogOpen(true);
                     setCurrentPOISTEP(step);
                   }}
                   onDragEnd={updateStepLocation(step)}
@@ -688,8 +709,8 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   }}
                   onRightClick={() => {
                     if (!error && isEdition) {
-                      setConfirmedDeleteDialogOpen2(true)
-                      setCurrentPOISTEP(interestPoint)
+                      setConfirmedDeleteDialogOpen2(true);
+                      setCurrentPOISTEP(interestPoint);
                     }
                   }}
                   onDragEnd={updateInterestPointLocation(interestPoint)}
@@ -834,15 +855,25 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
 
       <Dialog
         open={confirmedDeleteDialogOpen}
-        onClose={HandleCloseConfirmedSuppr}>
-        <ConfirmedSuppressionModal message=" Confirmez la suppression de cette étape ?"
-          id={currentPOISTEP?.id} onClose={setConfirmedDeleteDialogOpen} onDelete={deleteStep} />
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          message=" Confirmez la suppression de cette étape ?"
+          id={currentPOISTEP?.id}
+          onClose={setConfirmedDeleteDialogOpen}
+          onDelete={deleteStep}
+        />
       </Dialog>
       <Dialog
         open={confirmedDeleteDialogOpen2}
-        onClose={HandleCloseConfirmedSuppr2}>
-        <ConfirmedSuppressionModal message=" Confirmer la suppression de ce point d'intérêt ?"
-          id={currentPOISTEP?.id} onClose={setConfirmedDeleteDialogOpen2} onDelete={deletePoint} />
+        onClose={HandleCloseConfirmedSuppr2}
+      >
+        <ConfirmedSuppressionModal
+          message=" Confirmer la suppression de ce point d'intérêt ?"
+          id={currentPOISTEP?.id}
+          onClose={setConfirmedDeleteDialogOpen2}
+          onDelete={deletePoint}
+        />
       </Dialog>
 
       {selectedMarker &&
@@ -902,9 +933,12 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
           setShowTimeline={setShowTimeline}
         ></StepTimeline>
       )}
+      <CustomSnackbar
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        color={color}
+      ></CustomSnackbar>
     </div>
-
-
   );
 };
-

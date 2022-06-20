@@ -136,11 +136,19 @@ const TripSelection = () => {
               variant="h3"
               onClick={() => navigate("/")}
               style={{ cursor: "pointer" }}
-              width="5%"
+              width="8%"
             >
-              TripShaping
+              <img
+                src="https://see.fontimg.com/api/renderfont4/PxlZ/eyJyIjoiZnMiLCJoIjo4NywidyI6MTAwMCwiZnMiOjg3LCJmZ2MiOiIjRkZGRkZGIiwiYmdjIjoiIzAwMDAwMCIsInQiOjF9/VHJpcFNoYXBpbmc/quick-kiss-personal-use.png"
+                alt="Trip Shaping"
+              />
             </Typography>
             <Stack width="80%"></Stack>
+            <Stack
+              direction="row"
+              width="15%"
+              justifyContent="flex-end"
+            ></Stack>
             <ProfileBubble></ProfileBubble>
           </Toolbar>
         </AppBar>

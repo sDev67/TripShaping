@@ -422,6 +422,8 @@ export const MapDisplay = ({ steps, isLoadingS, isErrorS, errorS }) => {
       // si le menu est ouvert on le ferme en cliquant sur la map
       if (selectedMarker !== null) {
         setSelectedMarker(null);
+      } else if (selectedRoute !== null) {
+        setSelectedRoute(null);
       }
     }
   };

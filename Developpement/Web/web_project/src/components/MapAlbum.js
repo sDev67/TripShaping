@@ -460,8 +460,10 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
         }
         // ici : editionMode === "interestPointOnlyEdit")
         else {
-          if (!error) {
-            addInterestPoint(e);
+          if (selectedMarker !== null) {
+            setSelectedMarker(null);
+          } else if (selectedRoute !== null) {
+            setSelectedRoute(null);
           }
         }
       }

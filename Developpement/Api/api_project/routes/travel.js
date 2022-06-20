@@ -1057,6 +1057,7 @@ module.exports = [
     url: "/travel/:travel_id",
     method: "get",
     func: [
+      user_ctrl.identify_client,
       travel_ctrl.get_by_id,
     ],
   },
@@ -1064,6 +1065,7 @@ module.exports = [
     url: "/travel/:travel_id/points",
     method: "get",
     func: [
+      user_ctrl.identify_client,
       travel_ctrl.get_points_of_travel,
     ],
   },
@@ -1072,6 +1074,7 @@ module.exports = [
     url: "/travel/:travel_id/steps",
     method: "get",
     func: [
+      user_ctrl.identify_client,
       travel_ctrl.get_steps_of_travel,
     ],
   },
@@ -1080,6 +1083,7 @@ module.exports = [
     url: "/travel/:travel_id/routes",
     method: "get",
     func: [
+      user_ctrl.identify_client,
       travel_ctrl.get_routes_of_travel,
     ],
   },

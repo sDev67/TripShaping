@@ -38,25 +38,18 @@ module.exports = {
         if (!travel) {
           throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
-        var userId = req.user ? req.user['dataValues'].id : null;
+        var userId = req.user['dataValues'].id;
 
-        if (userId) {
-          checkAuthorization(req.params.travel_id, userId)
-            .then((authorized) => {
-              if (!authorized) {
-                if (travel['dataValues'].toPublish == false) {
-                  throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-                }
+        checkAuthorization(req.params.travel_id, userId)
+          .then((authorized) => {
+            if (!authorized) {
+              if (travel['dataValues'].toPublish == false) {
+                throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
               }
-              return res.json(travel);
-            })
-            .catch(next)
-        } else {
-          if (travel['dataValues'].toPublish == false) {
-            throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-          }
-        }
-
+            }
+            return res.json(travel);
+          })
+          .catch(next)
       })
       .catch(next);
   },
@@ -67,24 +60,7 @@ module.exports = {
         if (!travel) {
           throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
-        var userId = req.user ? req.user['dataValues'].id : null;
-        if (userId) {
-          checkAuthorization(req.params.travel_id, userId)
-            .then((authorized) => {
-              if (!authorized) {
-                if (travel['dataValues'].toPublish == false) {
-                  throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-                }
-              }
-
-            })
-            .catch(next)
-        } else {
-          if (travel['dataValues'].toPublish == false) {
-            throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-          }
-        }
-        return travel.Points();
+        return travel.getPoints();
       })
       .then((points) => res.json(points))
       .catch((err) => next(err));
@@ -95,22 +71,6 @@ module.exports = {
       .then((travel) => {
         if (!travel) {
           throw { status: 404, message: "Voyage inexistant / introuvable" };
-        }
-        var userId = req.user ? req.user['dataValues'].id : null;
-        if (userId) {
-          checkAuthorization(req.params.travel_id, userId)
-            .then((authorized) => {
-              if (!authorized) {
-                if (travel['dataValues'].toPublish == false) {
-                  throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-                }
-              }
-            })
-            .catch(next)
-        } else {
-          if (travel['dataValues'].toPublish == false) {
-            throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-          }
         }
         return travel.getSteps();
       })
@@ -145,26 +105,9 @@ module.exports = {
         if (!travel) {
           throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
-        var userId = req.user ? req.user['dataValues'].id : null;
-        if (userId) {
-          checkAuthorization(req.params.travel_id, userId)
-            .then((authorized) => {
-              if (!authorized) {
-                if (travel['dataValues'].toPublish == false) {
-                  throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-                }
-              }
-
-            })
-            .catch(next)
-        } else {
-          if (travel['dataValues'].toPublish == false) {
-            throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-          }
-        }
         return travel.getRoutes();
       })
-      .then((routes) => res.json(routes))
+      .then((steps) => res.json(steps))
       .catch((err) => next(err));
   },
   get_in_preparation_travel: (req, res, next) => {

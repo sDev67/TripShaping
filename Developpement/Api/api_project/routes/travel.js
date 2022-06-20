@@ -1,5 +1,5 @@
 const travel_ctrl = require("../controllers/travel");
-const point_ctrl = require("../controllers/point");
+const user_ctrl = require("../controllers/user");
 
 module.exports = [
   /**
@@ -30,7 +30,7 @@ module.exports = [
    *          positionAgree:
    *            type: boolean
    *            description: Indique si on autorise la suivie de notre position
-   *          startDate: 
+   *          startDate:
    *            type: date
    *            description: Date de début du voyage
    *          createdAt:
@@ -98,7 +98,7 @@ module.exports = [
    *                   type: boolean
    *                   description: Indique si on autorise la suivie de notre position
    *                   example: true
-   *                 startDate: 
+   *                 startDate:
    *                   type: date
    *                   description: Date de début du voyage
    *                   example: null
@@ -114,8 +114,8 @@ module.exports = [
    *                   type: integer
    *                   description: Id de l'utilisateur ayant crée le voyage
    *                   example: 2
-   *                 
-   *                
+   *
+   *
    *
    *
    */
@@ -238,7 +238,7 @@ module.exports = [
    *                   type: boolean
    *                   description: Indique si on autorise la suivie de notre position
    *                   example: true
-   *                 startDate: 
+   *                 startDate:
    *                   type: date
    *                   description: Date de début du voyage
    *                   example: null
@@ -254,8 +254,8 @@ module.exports = [
    *                   type: integer
    *                   description: Id de l'utilisateur ayant crée le voyage
    *                   example: 2
-   *                 
-   *                
+   *
+   *
    *
    *
    */
@@ -312,7 +312,7 @@ module.exports = [
    *                   type: boolean
    *                   description: Indique si on autorise la suivie de notre position
    *                   example: true
-   *                 startDate: 
+   *                 startDate:
    *                   type: date
    *                   description: Date de début du voyage
    *                   example: null
@@ -577,11 +577,11 @@ module.exports = [
    *                 type: boolean
    *                 description: Indique si on autorise la suivie de notre position
    *                 example: true
-   *               startDate: 
+   *               startDate:
    *                 type: date
    *                 description: Date de début du voyage
    *                 example: null
-   *               
+   *
    *
    *     responses:
    *       200:
@@ -619,7 +619,7 @@ module.exports = [
    *                   type: boolean
    *                   description: Indique si on autorise la suivie de notre position
    *                   example: true
-   *                 startDate: 
+   *                 startDate:
    *                   type: date
    *                   description: Date de début du voyage
    *                   example: null
@@ -747,7 +747,7 @@ module.exports = [
    *                   example: 2
    *                 title:
    *                   type: string
-   *                   description: Titre de la tâche 
+   *                   description: Titre de la tâche
    *                   example: Préparer les rations pour le voyage
    *                 date:
    *                   type: string
@@ -798,7 +798,7 @@ module.exports = [
    *                   example: 2
    *                 title:
    *                   type: string
-   *                   description: Titre du label 
+   *                   description: Titre du label
    *                   example: Préparer les rations pour le voyage
    *                 createdAt:
    *                   type: string
@@ -845,11 +845,11 @@ module.exports = [
    *                   example: 2
    *                 date:
    *                   type: string
-   *                   description: Date de l'entrée du journal 
+   *                   description: Date de l'entrée du journal
    *                   example: 12/05/2022 15:18
    *                 text:
    *                   type: string
-   *                   description: Text de l'entrée du journal 
+   *                   description: Text de l'entrée du journal
    *                   example: Woah c'est vraiment beau ici !
    *                 createdAt:
    *                   type: string
@@ -870,11 +870,11 @@ module.exports = [
    *                 StepId:
    *                   type: integer
    *                   description: Id du point d'étape
-   *                   example: 1 
+   *                   example: 1
    *                 PointId:
    *                   type: integer
    *                   description: Id du point d'intérêt
-   *                   example: 1 
+   *                   example: 1
    *
    */
 
@@ -908,11 +908,11 @@ module.exports = [
    *                   example: 2
    *                 title:
    *                   type: string
-   *                   description: titre du document 
+   *                   description: titre du document
    *                   example: monument.png
    *                 typeFile:
    *                   type: string
-   *                   description: Type du document 
+   *                   description: Type du document
    *                   example: image/png
    *                 createdAt:
    *                   type: string
@@ -976,16 +976,16 @@ module.exports = [
    *                 dataFile:
    *                   type: object
    *                   properties:
-   *                     type: 
+   *                     type:
    *                        type: string
-   *                     data: 
-   *                        type: array   
+   *                     data:
+   *                        type: array
    *                        items:
    *                          type: integer
-   *                          example: 1   
+   *                          example: 1
    *                 date:
    *                   type: string
-   *                   description: Date de prise de la photo 
+   *                   description: Date de prise de la photo
    *                   example: 26/05/2022 15:30
    *                 latitude:
    *                   type: number
@@ -1031,126 +1031,178 @@ module.exports = [
   {
     url: "/travel",
     method: "get",
-    func: travel_ctrl.get_all,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_all,
+    ],
   },
   {
     url: "/travel",
     method: "post",
-    func: travel_ctrl.create,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.create,
+    ],
   },
+
+  // Pas besoin du token pour cette requete
   {
     url: "/travelpublished",
     method: "get",
-    func: travel_ctrl.get_published,
+    func: [
+      travel_ctrl.get_published,
+    ],
   },
   {
     url: "/travel/:travel_id",
     method: "get",
-    func: travel_ctrl.get_by_id,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_by_id,
+    ],
   },
   {
     url: "/travel/:travel_id/points",
     method: "get",
-    func: travel_ctrl.get_points_of_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_points_of_travel,
+    ],
   },
 
   {
     url: "/travel/:travel_id/steps",
     method: "get",
-    func: travel_ctrl.get_steps_of_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_steps_of_travel,
+    ],
   },
 
   {
     url: "/travel/:travel_id/routes",
     method: "get",
-    func: travel_ctrl.get_routes_of_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_routes_of_travel,
+    ],
   },
 
   {
     url: "/travel/:travel_id",
     method: "put",
-    func: travel_ctrl.update_by_id,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.update_by_id,
+    ],
   },
 
   {
     url: "/travel/:travel_id",
     method: "delete",
-    func: travel_ctrl.delete_by_id,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.delete_by_id,
+    ],
   },
   {
     url: "/travel/:travel_id/tasks",
     method: "get",
-    func: travel_ctrl.get_tasks_of_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_tasks_of_travel,
+    ],
   },
   {
     url: "/travel/:travel_id/labels",
     method: "get",
-    func: travel_ctrl.get_labels_of_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_labels_of_travel,
+    ],
   },
 
   {
     url: "/travel/:travel_id/journalEntries",
     method: "get",
-    func: travel_ctrl.get_journalEntries_of_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_journalEntries_of_travel,
+    ],
   },
 
   {
     url: "/travel/:travel_id/members",
     method: "get",
-    func: travel_ctrl.get_members_of_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_members_of_travel,
+    ],
   },
   {
     url: "/travel/:travel_id/expenses",
     method: "get",
-    func: travel_ctrl.get_expenses_of_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_expenses_of_travel,
+    ],
   },
   {
     url: "/travel/:travel_id/documents",
     method: "get",
-    func: travel_ctrl.get_all_documents_by_travel_id,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_all_documents_by_travel_id,
+    ],
   },
-
-  // {
-  //   url: "/travel/:travel_id/journal_entries",
-  //   method: "get",
-  //   func: travel_ctrl.get_all_journal_entries_by_travel_id,
-  // },
   {
     url: "/travel/:travel_id",
     method: "put",
-    func: travel_ctrl.update_by_id,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.update_by_id,
+    ],
   },
   {
     url: "/travel/:travel_id/photos",
     method: "get",
-    func: travel_ctrl.get_all_photos_by_travel_id,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_all_photos_by_travel_id,
+    ],
   },
 
   /* new route a swagger */
   {
     url: "/travel_preparation",
     method: "get",
-    func: travel_ctrl.get_in_preparation_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_in_preparation_travel,
+    ],
   },
   {
     url: "/travel_current",
     method: "get",
-    func: travel_ctrl.get_current_travel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_current_travel,
+    ],
   },
   {
     url: "/travel_finish",
     method: "get",
-    func: travel_ctrl.get_finish_travel,
-  },
-  {
-    url: "/travel/:travel_id/copy",
-    method: "post",
-    func: travel_ctrl.copyTravel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_finish_travel,
+    ],
   },
   {
     url: "/travel/copy",
     method: "post",
-    func: travel_ctrl.copyTravel,
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.copyTravel,
+    ],
   },
-
 ];

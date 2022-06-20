@@ -7,40 +7,26 @@ import {
   Tab,
   Tabs,
   Typography,
-  Avatar,
   IconButton,
   AppBar,
   Toolbar,
   Box,
   Drawer,
   Divider,
-  Popover,
-  Card,
-  CardHeader,
-  CardContent,
-  Container,
-  Grid,
-  Paper,
-  Button,
 } from "@mui/material";
-import { mainListItems, secondaryListItems } from "./ListItems";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
-import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import TextSnippetRoundedIcon from "@mui/icons-material/TextSnippetRounded";
 import { Link, Outlet, useParams } from "react-router-dom";
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
-import { stringAvatar } from "../utils/AvatarColorPicker";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
 import DirectionsWalkRoundedIcon from "@mui/icons-material/DirectionsWalkRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
-import TopicRoundedIcon from "@mui/icons-material/TopicRounded";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
 import { useAuth } from "../Authentication/auth";
 import Loading from "../utils/Loading";

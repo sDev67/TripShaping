@@ -74,7 +74,12 @@ const swaggerOptions = {
     ],
     components: {
       securitySchemes: {
-        Bearer: {
+        // Bearer: {
+        //   type: "http",
+        //   scheme: "bearer",
+        //   description: "Le token est obligatoire pour les requêtes lorsque vous êtes connecté"
+        // }
+        bearerAuth: {
           type: "http",
           scheme: "bearer",
           description: "Le token est obligatoire pour les requêtes lorsque vous êtes connecté"
@@ -92,7 +97,6 @@ const swaggerOptions = {
       Bearer: []
     }
     ]
-
   },
   apis: ['./routes/*.js'],
 };

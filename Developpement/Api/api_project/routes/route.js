@@ -1,4 +1,6 @@
 const route_ctrl = require('../controllers/route');
+const user_ctrl = require("../controllers/user");
+
 
 module.exports = [
 
@@ -217,32 +219,50 @@ module.exports = [
     {
         url: '/route',
         method: 'get',
-        func: route_ctrl.get_all
+        func: [
+            user_ctrl.identify_client,
+            route_ctrl.get_all,
+        ],
     },
     {
         url: '/route',
         method: 'post',
-        func: route_ctrl.create
+        func: [
+            user_ctrl.identify_client,
+            route_ctrl.create,
+        ],
     },
     {
         url: '/route/:route_id',
         method: 'get',
-        func: route_ctrl.get_by_id
+        func: [
+            user_ctrl.identify_client,
+            route_ctrl.get_by_id,
+        ],
     },
     {
         url: '/route/:route_id',
         method: 'put',
-        func: route_ctrl.update_by_id
+        func: [
+            user_ctrl.identify_client,
+            route_ctrl.update_by_id,
+        ],
     },
     {
         url: '/route/:route_id/documents',
         method: 'get',
-        func: route_ctrl.get_all_documents_by_route_id
+        func: [
+            user_ctrl.identify_client,
+            route_ctrl.get_all_documents_by_route_id,
+        ],
     },
     {
         url: '/route/:route_id',
         method: 'delete',
-        func: route_ctrl.delete_by_id
+        func: [
+            user_ctrl.identify_client,
+            route_ctrl.delete_by_id,
+        ],
     }
 
 ];

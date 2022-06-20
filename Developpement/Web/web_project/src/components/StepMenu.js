@@ -6,7 +6,6 @@ import {
   CardMedia,
   CardContent,
   Dialog,
-  MenuItem,
   Button,
   Typography,
   IconButton,
@@ -16,7 +15,6 @@ import DoneRounded from "@mui/icons-material/DoneRounded";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
-import { useParams } from "react-router-dom";
 import RichTextEditor from "./RichTextEditor";
 import DocumentRequest from "../requests/DocumentRequest";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
@@ -33,15 +31,16 @@ const StepMenu = ({
   isEdition,
   steps,
   setSelectedPoiOfMarker,
+  hideDocuments,
+  idTravel,
 }) => {
   const queryClient = useQueryClient();
 
-  let { idTravel } = useParams();
-  idTravel = parseInt(idTravel);
-
   const [title, setTitle] = useState(selectedMarker.title);
   const [description, setDescription] = useState(selectedMarker.description);
-  const [descriptionHTML, setDescriptionHTML] = useState(selectedMarker.descriptionHTML);
+  const [descriptionHTML, setDescriptionHTML] = useState(
+    selectedMarker.descriptionHTML
+  );
 
   const [duration, setDuration] = useState(selectedMarker.duration);
 
@@ -67,13 +66,11 @@ const StepMenu = ({
 
   useEffect(() => {
     let dayCounter = 0;
-    let date;
     let stop = false;
 
     steps.forEach((step) => {
       if (!stop) {
         if (step.id === selectedMarker.id) {
-          console.log(step.id);
           stop = true;
         } else {
           dayCounter += step.duration;
@@ -86,7 +83,7 @@ const StepMenu = ({
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
-      queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
+      queryClient.invalidateQueries(["getDocumentsOfStep", selectedMarker.id]);
     },
   });
 
@@ -116,8 +113,6 @@ const StepMenu = ({
     formData.append("title", file);
     formData.append("TravelId", idTravel);
     formData.append("StepId", selectedMarker.id);
-
-    console.log(...formData);
 
     addDocument.mutate(formData);
   };
@@ -192,53 +187,55 @@ const StepMenu = ({
               disabled={!isEdition}
             />
           </Stack>
-
-          <Stack
-            style={{ marginBottom: 25 }}
-            spacing={1}
-            direction="column"
-            height="160px"
-          >
+          {hideDocuments ? (
+            <></>
+          ) : (
             <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
+              style={{ marginBottom: 25 }}
+              spacing={1}
+              direction="column"
+              height="160px"
             >
-              <Typography variant="h6" color="primary">
-                Documents
-              </Typography>
-              <Button
-                style={{ paddingLeft: 32, paddingRight: 32 }}
-                startIcon={<UploadFileRounded />}
-                variant="contained"
-                component="label"
-                disabled={!isEdition}
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
               >
-                Ajouter
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => {
-                    addFile(e.target.files[0]);
-                  }}
-                  required
-                />
-              </Button>
+                <Typography variant="h6" color="primary">
+                  Documents
+                </Typography>
+                <Button
+                  style={{ paddingLeft: 32, paddingRight: 32 }}
+                  startIcon={<UploadFileRounded />}
+                  variant="contained"
+                  component="label"
+                  disabled={!isEdition}
+                >
+                  Ajouter
+                  <input
+                    type="file"
+                    hidden
+                    onChange={(e) => {
+                      addFile(e.target.files[0]);
+                    }}
+                    required
+                  />
+                </Button>
+              </Stack>
+              {isLoadingD ? (
+                <Loading />
+              ) : isErrorD ? (
+                <p style={{ color: "red" }}>{errorD.message}</p>
+              ) : (
+                <DocumentsList
+                  documents={documents}
+                  requestKeyTitle="getDocumentsOfStep"
+                  requestKeyValue={selectedMarker.id}
+                  isEdition={isEdition}
+                ></DocumentsList>
+              )}
             </Stack>
-            {isLoadingD ? (
-              <Loading />
-            ) : isErrorD ? (
-              <p style={{ color: "red" }}>{errorD.message}</p>
-            ) : (
-              <DocumentsList
-                documents={documents}
-                requestKeyTitle="getDocumentsOfStep"
-                requestKeyValue={selectedMarker.id}
-                isEdition={isEdition}
-                show={false}
-              ></DocumentsList>
-            )}
-          </Stack>
+          )}
 
           <Typography variant="h6" color="primary">
             Description

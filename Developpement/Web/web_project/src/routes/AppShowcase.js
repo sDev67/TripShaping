@@ -18,14 +18,9 @@ import {
   FormControl,
   Select,
   MenuItem,
-  ListItemText,
-  ListSubheader,
-  Container,
-  Grid,
   Rating,
   Card,
   CardContent,
-  CardHeader,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";

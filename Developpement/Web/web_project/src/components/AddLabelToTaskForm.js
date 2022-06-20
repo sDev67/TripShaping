@@ -10,7 +10,7 @@ import { useEffect } from "react";
 
 const AddLabelToTask = ({ labels, addLabelToTask, setLabelToAdd, task }) => {
   useEffect(() => {
-    console.log(labels);
+    // console.log(labels);
   }, []);
 
   return (

@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from "react";
-import clsx from "clsx";
-import { makeStyles } from "@mui/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import React, { useState } from "react";
 import {
-  CardActionArea,
   Card,
   Button,
   Stack,
@@ -11,25 +7,51 @@ import {
   Avatar,
   AvatarGroup,
   Typography,
-  IconButton,
   SpeedDial,
   SpeedDialIcon,
   SpeedDialAction,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import TripForm from "../components/TripForm";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 import Loading from "./../utils/Loading";
 import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
+import MemberRequests from "../requests/MemberRequests";
+import CustomSnackbar from "../utils/CustomSnackbar";
 
-const TripCard = ({ travelId }) => {
+const TripCard = ({ travelId, user }) => {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [linkalbum, setLink] = useState("");
 
-  const [linkalbum, setLink] = useState('');
+  const addMember = useMutation(MemberRequests.addMember, {
+    onSuccess: (member) => {
+      queryClient.setQueriesData(["getMembers", user.id], (members) => [
+        ...members,
+        member,
+      ]);
+      setOpen(true);
+    },
+  });
+
+  const handleCLickCopyTravel = (travelId) => {
+    copyTravel.mutate({ TravelId: travelId, UserId: user.id });
+  };
+
+  const copyTravel = useMutation(TravelRequests.copyTravel, {
+    onSuccess: (travel) => {
+      const newMember = {
+        name: user.name,
+        userLogin: user.username,
+        TravelId: travel.id,
+        UserId: user.id,
+      };
+
+      addMember.mutate(newMember);
+    },
+  });
 
   const {
     isLoading: isLoadingT,
@@ -37,8 +59,7 @@ const TripCard = ({ travelId }) => {
     error: errorT,
     data: travel,
   } = useQuery(["getTravel", travelId], () =>
-    TravelRequests.getTravelByid(travelId),
-
+    TravelRequests.getTravelByid(travelId)
   );
 
   const {
@@ -50,13 +71,6 @@ const TripCard = ({ travelId }) => {
     TravelRequests.getMembersOfTravel(travelId)
   );
 
-
-  // useEffect(() => {
-
-  //   setLink(travel.cryptedName)
-  // }, [travel])
-
-  let isActive = travel?.activated;
   return (
     <>
       {isLoadingT ? (
@@ -148,28 +162,27 @@ const TripCard = ({ travelId }) => {
                 icon={<SpeedDialIcon />}
                 direction="left"
               >
-
                 <SpeedDialAction
-                  component={Link}
-                  key={"Dupliquer"}
                   icon={<FileCopyIcon />}
                   tooltipTitle={"Dupliquer"}
-                  to={""}
+                  onClick={() => handleCLickCopyTravel(travelId)}
                 />
                 <SpeedDialAction
                   component={Link}
-                  key={"Album"}
                   icon={<PhotoRoundedIcon />}
                   tooltipTitle={"Album"}
                   to={"/album/" + travel.albumURL + "/map"}
                 />
-
-
               </SpeedDial>
             </Stack>
           </CardContent>
         </Card>
       )}
+      <CustomSnackbar
+        open={open}
+        setOpen={setOpen}
+        message={"Voyage dupliqué !"}
+      ></CustomSnackbar>
     </>
   );
 };

@@ -1,4 +1,6 @@
 const point_ctrl = require('../controllers/point');
+const user_ctrl = require("../controllers/user");
+
 
 module.exports = [
 	/**
@@ -469,35 +471,53 @@ module.exports = [
 	{
 		url: '/point',
 		method: 'get',
-		func: point_ctrl.get_all
+		func: [
+			user_ctrl.identify_client,
+			point_ctrl.get_all,
+		],
 	},
 
 	{
 		url: '/point/:point_id',
 		method: 'get',
-		func: point_ctrl.get_by_id
+		func: [
+			user_ctrl.identify_client,
+			point_ctrl.get_by_id,
+		],
 	},
 
 	{
 		url: '/point',
 		method: 'post',
-		func: point_ctrl.create
+		func: [
+			user_ctrl.identify_client,
+			point_ctrl.create,
+		],
 	},
 
 	{
 		url: '/point/:point_id',
 		method: 'put',
-		func: point_ctrl.update_by_id
+		func: [
+			user_ctrl.identify_client,
+			point_ctrl.update_by_id,
+		],
 	},
 	{
 		url: '/point/:point_id/documents',
 		method: 'get',
-		func: point_ctrl.get_all_documents_by_point_id
+		func: [
+			user_ctrl.identify_client,
+			point_ctrl.get_all_documents_by_point_id,
+		],
 	},
 
 	{
 		url: '/point/:point_id',
 		method: 'delete',
-		func: point_ctrl.delete_by_id
+		func: [
+			user_ctrl.identify_client,
+			point_ctrl.delete_by_id,
+		],
 	},
 ];

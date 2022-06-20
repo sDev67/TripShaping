@@ -2,15 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import {
   EditorState,
-  ContentState,
   convertToRaw,
   convertFromRaw,
-  CompositeDecorator,
 } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { Button, TextField, Typography, IconButton } from "@mui/material";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import DoneRounded from "@mui/icons-material/DoneRounded";
+import { Button } from "@mui/material";
 import { convertToHTML } from "draft-convert";
 
 
@@ -24,7 +20,6 @@ const RichTextEditor = ({ setValueHTML, setValue, OnClose, value, limitedEditor,
     },
   ]);
 
-  /*const content = window.localStorage.getItem('content');*/
   let content = value;
 
   useEffect(() => {
@@ -35,7 +30,6 @@ const RichTextEditor = ({ setValueHTML, setValue, OnClose, value, limitedEditor,
         ),
       });
     } else {
-      /* setState({editorState:EditorState.createEmpty()});*/
       setState({ editorState: EditorState.createEmpty() });
     }
   }, [content]);
@@ -43,7 +37,6 @@ const RichTextEditor = ({ setValueHTML, setValue, OnClose, value, limitedEditor,
   const onChange = (editorState, limitedCheck = false) => {
 
     if (information) {
-      console.log("fergergergregerg");
       limitedCheck = true;
     }
     const contentState = editorState.getCurrentContent();
@@ -58,7 +51,6 @@ const RichTextEditor = ({ setValueHTML, setValue, OnClose, value, limitedEditor,
   };
   const saveContent = (content) => {
 
-    //window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
     setValue(JSON.stringify(convertToRaw(content)));
 
     setValueHTML(JSON.stringify(convertToHTML(content)));

@@ -1,8 +1,7 @@
-import { Divider, Grid, Dialog, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-import { Button, Stack, Avatar, FormControlLabel, Switch } from "@mui/material";
-import Autocomplete from "@mui/material/Autocomplete";
+import { Button, Stack, FormControlLabel, Switch } from "@mui/material";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import MemberRequests from "../requests/MemberRequests";

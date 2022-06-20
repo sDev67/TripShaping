@@ -19,7 +19,6 @@ import Documents from "./routes/Documents";
 import NavigationBarAlbum from "./components/NavigationBarAlbum";
 import Photos from "./routes/Photos";
 import LogBook from "./routes/LogBook";
-import { MapReview } from "./routes/MapReview";
 import { AuthProvider } from "./Authentication/auth";
 import TripSettings from "./routes/TripSettings";
 import Exploration from "./routes/Exploration";
@@ -32,6 +31,13 @@ import {
 import "@psyycker/react-translation";
 import french from "./translations/french.json";
 import english from "./translations/english.json";
+import ItineraryAlbum from "./routes/ItineraryAlbum";
+import NavigationBarDisplay from "./components/NavigationBarDisplay";
+import ItineraryDisplay from "./routes/ItineraryDisplay";
+import { MapAlbum } from "./components/MapAlbum";
+import { useAuth } from "./Authentication/auth";
+import { useNavigate } from "react-router-dom";
+import PrivateRoute from "./Authentication/privateRoute";
 
 const queryClient = new QueryClient();
 
@@ -56,8 +62,24 @@ function App() {
               <Route path="/discover" element={<Exploration />} />
               <Route path="/signin" element={<Signin />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/mytrips" element={<TripSelection />} />
-              <Route path="/trip" element={<NavigationBar />}>
+
+              <Route
+                path="/mytrips"
+                element={
+                  <PrivateRoute>
+                    <TripSelection />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/trip"
+                element={
+                  <PrivateRoute>
+                    <NavigationBar />
+                  </PrivateRoute>
+                }
+              >
                 <Route path=":idTravel/map" element={<Itinerary />} />
                 <Route path=":idTravel/steps" element={<Steps />} />
                 <Route path=":idTravel/todolist" element={<TodoList />} />
@@ -72,10 +94,13 @@ function App() {
                   element={<TripSettings />}
                 />
               </Route>
-              <Route path="/album/:cryptedName" element={<NavigationBarAlbum />}>
-                <Route path="map" element={<MapReview />} />
-                <Route path="photos" element={<Photos />} />
-                <Route path="logbook" element={<LogBook />} />
+              <Route path="/album" element={<NavigationBarAlbum />}>
+                <Route path=":cryptedName/map" element={<ItineraryAlbum />} />
+                <Route path=":cryptedName/photos" element={<Photos />} />
+                <Route path=":cryptedName/logbook" element={<LogBook />} />
+              </Route>
+              <Route path="/display" element={<NavigationBarDisplay />}>
+                <Route path=":idTravel/map" element={<ItineraryDisplay />} />
               </Route>
             </Routes>
             {/* <ReactQueryDevtools />  */}

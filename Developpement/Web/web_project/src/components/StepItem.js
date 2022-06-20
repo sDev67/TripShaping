@@ -83,7 +83,7 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
-      queryClient.invalidateQueries(["getDocumentsOfStep", idTravel]);
+      queryClient.invalidateQueries(["getDocumentsOfStep", step.id]);
     },
   });
 
@@ -92,8 +92,6 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
     formData.append("title", file);
     formData.append("TravelId", idTravel);
     formData.append("StepId", step.id);
-
-    console.log(...formData);
 
     addDocument.mutate(formData);
   };
@@ -362,7 +360,7 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
-      queryClient.invalidateQueries(["getDocumentsOfPoint", idTravel]);
+      queryClient.invalidateQueries(["getDocumentsOfPoint", selectedInterestPoint.id]);
     },
   });
 
@@ -471,7 +469,6 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
     formData.append("title", file);
     formData.append("TravelId", idTravel);
     formData.append("PointId", selectedInterestPoint.id);
-    console.log(...formData);
 
     addDocument.mutate(formData);
   };

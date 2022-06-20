@@ -1,32 +1,18 @@
 import React, { useState } from "react";
-import clsx from "clsx";
-import { makeStyles } from "@mui/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import {
   Card,
   CardContent,
   Popover,
-  Grid,
   Stack,
   Avatar,
-  Dialog,
   Button,
   Typography,
-  Box,
-  AppBar,
-  Toolbar,
+
   CardHeader,
 } from "@mui/material";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import TripForm from "../components/TripForm";
-import { useQuery, useQueryClient, useMutation } from "react-query";
-import TravelRequests from "../requests/TravelRequests";
-import UserRequests from "../requests/UserRequests";
-import Loading from "./../utils/Loading";
 import { useAuth } from "../Authentication/auth";
-import TripCard from "../components/TripCard";
 
 const ProfileBubble = () => {
   let { user, signout } = useAuth();

@@ -49,6 +49,8 @@ const Task = ({
 
   const [labelAddFormOpen, setLabelAddFormFormOpen] = useState(false);
 
+
+
   useEffect(() => { }, [labels]);
 
   useEffect(() => {
@@ -84,26 +86,7 @@ const Task = ({
     }
 
     setIsFiltered(isGood);
-    // else
-    // {
-    //   labels.map((f) =>
-    //   {
-    //     filteredLabel.map((l) =>
-    //     {
-    //       if(f.title==l.title)
-    //       {
-    //           isGood = true;
 
-    //       }else{
-
-    //         setIsFiltered( false);
-    //         return
-    //       }
-    //     })
-    //   })
-    // }
-
-    //  return false;
   };
 
   let color = task.isDone ? "#C8FACD" : "#FFFFFF";

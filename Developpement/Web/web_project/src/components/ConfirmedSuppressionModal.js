@@ -5,10 +5,14 @@ const ConfirmedSuppressionModal = ({ message, id, onClose, onDelete }) => {
 
     const HandleClick = () => {
         onDelete.mutate(id);
+        if (onClose != undefined) {
+            onClose();
+        }
     }
 
     return (
         <>
+
             <Stack flex="column" heigth="100%" width="100%">
                 <Typography variant="h5" color="error">
                     {message}

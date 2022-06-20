@@ -833,7 +833,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
       <Dialog
         open={confirmedDeleteDialogOpen}
         onClose={HandleCloseConfirmedSuppr}>
-        <ConfirmedSuppressionModal message=" Confirmez la suppression de cette étape ?"
+        <ConfirmedSuppressionModal message=" Confirmer la suppression de cette étape ?"
           id={currentPOISTEP?.id} onClose={setConfirmedDeleteDialogOpen} onDelete={deleteStep} />
       </Dialog>
       <Dialog

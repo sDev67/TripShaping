@@ -349,7 +349,7 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date, deleteS
         <ConfirmedSuppressionModal
           id={step.id}
           onClose={HandleCloseConfirmedSuppr}
-          message="Confirmez la suppression de cette étape ?
+          message="Confirmer la suppression de cette étape ?
                     Cette action est irréversible."
           onDelete={deleteStep}
         />
@@ -697,7 +697,7 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen, deleteSte
         <ConfirmedSuppressionModal
           id={selectedStep.id}
           onClose={deleteStep}
-          message="Confirmez la suppression de cette étape ?
+          message="Confirmer la suppression de cette étape ?
                     Cette action est irréversible."
           onDelete={deleteStep}
         />

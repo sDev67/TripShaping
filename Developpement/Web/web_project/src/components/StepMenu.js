@@ -19,6 +19,7 @@ import RichTextEditor from "./RichTextEditor";
 import DocumentRequest from "../requests/DocumentRequest";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DocumentsList from "./DocumentsList";
+import ConfirmedSuppressionModal from "./ConfirmedSuppressionModal";
 import Loading from "../utils/Loading";
 import TravelRequests from "../requests/TravelRequests";
 import { addDays } from "../utils/DateFormatting";
@@ -41,6 +42,12 @@ const StepMenu = ({
   const [descriptionHTML, setDescriptionHTML] = useState(
     selectedMarker.descriptionHTML
   );
+
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
+    setSelectedMarker(null);
+  };
 
   const [duration, setDuration] = useState(selectedMarker.duration);
 
@@ -266,8 +273,7 @@ const StepMenu = ({
               color="error"
               startIcon={<DeleteRounded />}
               onClick={() => {
-                deleteStep.mutate(selectedMarker.id);
-                setSelectedMarker(null);
+                setConfirmedDeleteDialogOpen(true)
               }}
               disabled={!isEdition}
             >
@@ -297,6 +303,18 @@ const StepMenu = ({
           isReadOnly={!isEdition}
           maxW="600px"
           information={false}
+        />
+      </Dialog>
+      <Dialog
+        open={confirmedDeleteDialogOpen}
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          id={selectedMarker.id}
+          onClose={HandleCloseConfirmedSuppr}
+          message="Confirmez la suppression de cette étape ?
+                    Cette action est irréversible."
+          onDelete={deleteStep}
         />
       </Dialog>
     </>

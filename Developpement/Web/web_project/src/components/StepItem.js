@@ -20,7 +20,7 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-
+import ConfirmedSuppressionModal from "./ConfirmedSuppressionModal";
 import LocationOnRounded from "@mui/icons-material/LocationOnRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
@@ -39,7 +39,7 @@ import PointRequests from "./../requests/PointRequests";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { addDays } from "../utils/DateFormatting";
 
-const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
+const StepItem = ({ step, index, updateInfoStep, steps, startDate, date, deleteStep }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -104,6 +104,10 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
       idStep: id,
     };
     updateInfoStep.mutate(newStep);
+  };
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
   };
 
   return (
@@ -343,11 +347,23 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
           information={false}
         />
       </Dialog>
+      <Dialog
+        open={confirmedDeleteDialogOpen}
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          id={step.id}
+          onClose={HandleCloseConfirmedSuppr}
+          message="Confirmez la suppression de cette étape ?
+                    Cette action est irréversible."
+          onDelete={deleteStep}
+        />
+      </Dialog>
     </>
   );
 };
 
-const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
+const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen, deleteStep }) => {
   const queryClient = useQueryClient();
 
   let { idTravel } = useParams();
@@ -396,6 +412,11 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
   const listSteps = steps;
 
   const [informationDialogOpen, setInformationDialogOpen] = useState(false);
+
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
+  };
 
   const categ = [
     {
@@ -675,6 +696,18 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
           isReadOnly={false}
           maxW="600px"
           information={false}
+        />
+      </Dialog>
+      <Dialog
+        open={confirmedDeleteDialogOpen}
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          id={selectedStep.id}
+          onClose={deleteStep}
+          message="Confirmez la suppression de cette étape ?
+                    Cette action est irréversible."
+          onDelete={deleteStep}
         />
       </Dialog>
     </>

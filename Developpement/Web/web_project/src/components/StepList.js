@@ -6,6 +6,7 @@ import {
 
 import { useQueryClient, useMutation } from "react-query";
 import StepRequests from "../requests/StepRequests";
+import TravelRequests from "../requests/TravelRequests";
 import { useParams } from "react-router-dom";
 import StepItem from "./StepItem";
 
@@ -18,6 +19,16 @@ const StepList = ({ steps, startDate }) => {
   const [dates, setDates] = useState([]);
 
   const updateInfoStep = useMutation(StepRequests.updateStepInfoById, {
+    onSuccess: (step) => {
+      queryClient.setQueryData(["getSteps", idTravel], (steps) => [
+        ...steps,
+        step,
+      ]);
+      queryClient.invalidateQueries("getSteps");
+    },
+  });
+
+  const deleteStep = useMutation(TravelRequests.removeStep, {
     onSuccess: (step) => {
       queryClient.setQueryData(["getSteps", idTravel], (steps) => [
         ...steps,
@@ -42,6 +53,7 @@ const StepList = ({ steps, startDate }) => {
     <Box marginBottom={5}>
       {steps.map((step, index) => (
         <StepItem
+          deleteStep={deleteStep}
           date={dates[index]}
           step={step}
           index={index}

@@ -384,8 +384,7 @@ const InterestPointMenu = ({
         <ConfirmedSuppressionModal
           id={selectedMarker.id}
           onClose={HandleCloseConfirmedSuppr}
-          message="Confirmez la suppression de ce point d'intêret ?
-                    Cette action est irréversible."
+          message="Confirmer la suppression de ce point d'intérêt ?"
           onDelete={deletePoint}
         />
       </Dialog>

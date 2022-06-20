@@ -312,8 +312,7 @@ const StepMenu = ({
         <ConfirmedSuppressionModal
           id={selectedMarker.id}
           onClose={HandleCloseConfirmedSuppr}
-          message="Confirmez la suppression de cette étape ?
-                    Cette action est irréversible."
+          message="Confirmez la suppression de cette étape ?"
           onDelete={deleteStep}
         />
       </Dialog>

@@ -10,6 +10,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import ConfirmedSuppressionModal from "../components/ConfirmedSuppressionModal";
 import { useState } from "react";
 import "../App.css";
 import TasksItemGrid from "../components/TasksItemGrid";
@@ -31,9 +32,15 @@ const TodoList = () => {
   const [currentTaskSelected, setCurrentTask] = useState();
   const [currentLabelSelected, setCurrentLabel] = useState();
   const [taskToAdd, OnSelectTaskToAddLabel] = useState();
-
+  const [allIdOfLabel, setAllLabelId] = useState([]);
+  const [currentLabelId, setCurrentLabelId] = useState();
   const [filterLabels, setFilterLabels] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState({});
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
+    useState(false);
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
+  };
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -114,17 +121,25 @@ const TodoList = () => {
   });
 
   const removeTask = useMutation(TravelRequests.removeTask, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getTasks", idTravel], (tasks) =>
         tasks.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Tâche supprimée.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   const removeLabel = useMutation(TravelRequests.removeLabel, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getLabels", idTravel], (labels) =>
         labels.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Label supprimé.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   const addLabel = useMutation(TravelRequests.addLabel, {
@@ -344,7 +359,7 @@ const TodoList = () => {
                 existingLabels={labels}
                 OnRemoveLabelToTask={OnRemoveLabelToTask}
                 OnSelectTask={OnSelectTask}
-                OnRemoveTask={OnRemoveTask}
+                OnRemoveTask={removeTask}
                 OnUpdateTask={UpdateTask}
                 OnEditTask={OnSelectTask}
                 AddLabel={OnAddLabelToTask}
@@ -389,12 +404,17 @@ const TodoList = () => {
               >
                 {labels.map((label, index) => {
                   return (
-                    <Chip
-                      size="medium"
-                      color="secondary"
-                      label={label.title}
-                      onDelete={() => OnRemoveLabel(label)}
-                    />
+                    <>
+                      <Chip
+                        size="medium"
+                        color="secondary"
+                        label={label.title}
+                        onDelete={() => {
+                          setConfirmedDeleteDialogOpen(true);
+                          setCurrentLabelId(label.id);
+                        }}
+                      />
+                    </>
                   );
                 })}
               </Stack>
@@ -431,8 +451,18 @@ const TodoList = () => {
         message={message}
         color={color}
       ></CustomSnackbar>
+      <Dialog
+        open={confirmedDeleteDialogOpen}
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          id={currentLabelId}
+          onClose={HandleCloseConfirmedSuppr}
+          message="Confirmer la suppression de ce label ?"
+          onDelete={removeLabel}
+        />
+      </Dialog>
     </>
   );
 };
-
 export default TodoList;

@@ -52,15 +52,13 @@ const Member = ({ member, index, deleteMember }) => {
           <ConfirmedSuppressionModal
             id={member.id}
             onClose={HandleCloseConfirmedSuppr}
-            message="Confirmez la suppression de ce membre ?
-                    Cette action est irréversible."
+            message="Confirmer la suppression de ce membre ?"
             onDelete={deleteMember}
           />
         </Dialog>
       </>
     );
   } else {
-    console.log("HERE");
     return (
       <>
         <ListItem

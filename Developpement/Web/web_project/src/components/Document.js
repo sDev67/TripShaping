@@ -105,7 +105,7 @@ const Document = ({
                                 variant="h8"
                                 style={{ fontWeight: "normal" }}
                               >
-                                {step.title}
+                                {step?.title}
                               </Typography>
                             </Stack>
                           </Tooltip>
@@ -141,7 +141,7 @@ const Document = ({
                                 variant="h8"
                                 style={{ fontWeight: "normal" }}
                               >
-                                {point.title}
+                                {point?.title}
                               </Typography>
                             </Stack>
                           </Tooltip>

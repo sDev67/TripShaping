@@ -276,8 +276,7 @@ const TripSettings = () => {
             <ConfirmedSuppressionModal
               id={travel.id}
               onClose={HandleCloseConfirmedSuppr}
-              message="Confirmez la suppression de le voyage ?
-                    Cette action est irréversible."
+              message="Confirmer la suppression du voyage ?"
               onDelete={deleteVoyage}
             />
           </Dialog>

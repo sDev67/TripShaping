@@ -114,6 +114,9 @@ const Documents = () => {
                 requestKeyValue={idTravel}
                 isEdition={true}
                 show={true}
+                setOpen={setOpen}
+                setMessage={setMessage}
+                setColor={setColor}
               ></DocumentsList>
             )}
           </Stack>

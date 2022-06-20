@@ -27,7 +27,6 @@ import { mainListItems, secondaryListItems } from "./ListItems";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";

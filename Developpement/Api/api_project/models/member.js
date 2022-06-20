@@ -9,6 +9,7 @@ module.exports = sequelize => {
 
 			Member.hasMany(db.Expense, { onDelete: 'cascade' });
 			Member.hasMany(db.JournalEntry, { onDelete: 'cascade' });
+			Member.hasMany(db.Position);
 		}
 	}
 

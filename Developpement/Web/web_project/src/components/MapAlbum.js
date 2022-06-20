@@ -734,129 +734,136 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
                 ></Marker>
               ))
             )}
-
-            {isLoadingS ? (
-              "Chargement..."
-            ) : isErrorS ? (
-              <p style={{ color: "red" }}>{errorS.message}</p>
+            {isLoadingR ? (
+              <Loading />
+            ) : isErrorR ? (
+              <p style={{ color: "red" }}>{errorR.message}</p>
             ) : (
-              steps.length >= 2 &&
-              !(!isEdition && markerFilter === "interestPointOnlyNav") && (
-                <>
-                  {steps.map((step, index) => (
+              <>
+                {isLoadingS ? (
+                  "Chargement..."
+                ) : isErrorS ? (
+                  <p style={{ color: "red" }}>{errorS.message}</p>
+                ) : (
+                  steps.length >= 2 &&
+                  !(!isEdition && markerFilter === "interestPointOnlyNav") && (
                     <>
-                      {index > 0 && (
-                        <Polyline
-                          key={index - 1}
-                          geodesic={true}
-                          clickable={true}
-                          onClick={() => {
-                            setSelectedRoute(null);
-                            setSelectedRoute({
-                              route: routes[index - 1],
-                              start: steps[index - 1],
-                              finish: step,
-                            });
-                            setSelectedMarker(null);
-                            setShowTimeline(false);
-                          }}
-                          path={[
-                            {
-                              lat: steps[index - 1].latitude,
-                              lng: steps[index - 1].longitude,
-                            },
-                            {
-                              lat: step.latitude,
-                              lng: step.longitude,
-                            },
-                          ]}
-                          options={
-                            routes[index - 1]?.travelType == "DRIVING"
-                              ? {
-                                  strokeOpacity: 0,
-                                  fillOpacity: 0,
-                                  zIndex: 1,
-                                  icons: [
-                                    {
-                                      icon: {
-                                        path: "M -1 -1 -1 1 M 1 1 1 -1",
-                                        strokeOpacity: 1,
-                                        scale: 3,
-                                        strokeColor: palette.primary.main,
-                                      },
-                                      offset: "0",
-                                      repeat: "3px",
-                                    },
-                                  ],
-                                }
-                              : routes[index - 1]?.travelType == "WALKING"
-                              ? {
-                                  strokeWeight: 8,
-                                  strokeOpacity: 0,
-                                  fillOpacity: 0,
-                                  zIndex: 1,
-                                  icons: [
-                                    {
-                                      icon: {
-                                        path: "M 0,-1 0,-1",
-                                        strokeOpacity: 1,
-                                        scale: 5,
-                                        strokeColor: palette.primary.main,
-                                      },
-                                      offset: "0",
-                                      repeat: "10px",
-                                    },
-                                  ],
-                                }
-                              : routes[index - 1]?.travelType == "BICYCLING"
-                              ? {
-                                  strokeWeight: 8,
-                                  strokeOpacity: 0,
-                                  fillOpacity: 0,
-                                  zIndex: 1,
-                                  icons: [
-                                    {
-                                      icon: {
-                                        path: "M 0,-1 0, 1",
-                                        strokeOpacity: 1,
-                                        scale: 5,
-                                        strokeColor: palette.primary.main,
-                                      },
-                                      offset: "0",
-                                      repeat: "20px",
-                                    },
-                                  ],
-                                }
-                              : routes[index - 1]?.travelType == "TRANSIT"
-                              ? {
-                                  strokeOpacity: 0,
-                                  fillOpacity: 0,
-                                  zIndex: 1,
-                                  icons: [
-                                    {
-                                      icon: {
-                                        path: "M -1 2 -1 -2 -1 0 -1.5 0 1.5 0 1 0 1 2 1 -2 ",
-                                        strokeOpacity: 1,
-                                        scale: 3,
-                                        strokeColor: palette.primary.main,
-                                      },
+                      {steps.map((step, index) => (
+                        <>
+                          {index > 0 && (
+                            <Polyline
+                              key={index - 1}
+                              geodesic={true}
+                              clickable={true}
+                              onClick={() => {
+                                setSelectedRoute(null);
+                                setSelectedRoute({
+                                  route: routes[index - 1],
+                                  start: steps[index - 1],
+                                  finish: step,
+                                });
+                                setSelectedMarker(null);
+                                setShowTimeline(false);
+                              }}
+                              path={[
+                                {
+                                  lat: steps[index - 1].latitude,
+                                  lng: steps[index - 1].longitude,
+                                },
+                                {
+                                  lat: step.latitude,
+                                  lng: step.longitude,
+                                },
+                              ]}
+                              options={
+                                routes[index - 1]?.travelType == "DRIVING"
+                                  ? {
+                                      strokeOpacity: 0,
+                                      fillOpacity: 0,
+                                      zIndex: 1,
+                                      icons: [
+                                        {
+                                          icon: {
+                                            path: "M -1 -1 -1 1 M 1 1 1 -1",
+                                            strokeOpacity: 1,
+                                            scale: 3,
+                                            strokeColor: palette.primary.main,
+                                          },
+                                          offset: "0",
+                                          repeat: "3px",
+                                        },
+                                      ],
+                                    }
+                                  : routes[index - 1]?.travelType == "WALKING"
+                                  ? {
+                                      strokeWeight: 8,
+                                      strokeOpacity: 0,
+                                      fillOpacity: 0,
+                                      zIndex: 1,
+                                      icons: [
+                                        {
+                                          icon: {
+                                            path: "M 0,-1 0,-1",
+                                            strokeOpacity: 1,
+                                            scale: 5,
+                                            strokeColor: palette.primary.main,
+                                          },
+                                          offset: "0",
+                                          repeat: "10px",
+                                        },
+                                      ],
+                                    }
+                                  : routes[index - 1]?.travelType == "BICYCLING"
+                                  ? {
+                                      strokeWeight: 8,
+                                      strokeOpacity: 0,
+                                      fillOpacity: 0,
+                                      zIndex: 1,
+                                      icons: [
+                                        {
+                                          icon: {
+                                            path: "M 0,-1 0, 1",
+                                            strokeOpacity: 1,
+                                            scale: 5,
+                                            strokeColor: palette.primary.main,
+                                          },
+                                          offset: "0",
+                                          repeat: "20px",
+                                        },
+                                      ],
+                                    }
+                                  : routes[index - 1]?.travelType == "TRANSIT"
+                                  ? {
+                                      strokeOpacity: 0,
+                                      fillOpacity: 0,
+                                      zIndex: 1,
+                                      icons: [
+                                        {
+                                          icon: {
+                                            path: "M -1 2 -1 -2 -1 0 -1.5 0 1.5 0 1 0 1 2 1 -2 ",
+                                            strokeOpacity: 1,
+                                            scale: 3,
+                                            strokeColor: palette.primary.main,
+                                          },
 
-                                      offset: "0",
-                                      repeat: "12px",
-                                    },
-                                  ],
-                                }
-                              : {
-                                  strokeWeight: 5,
-                                  strokeColor: palette.primary.main,
-                                }
-                          }
-                        ></Polyline>
-                      )}
+                                          offset: "0",
+                                          repeat: "12px",
+                                        },
+                                      ],
+                                    }
+                                  : {
+                                      strokeWeight: 5,
+                                      strokeColor: palette.primary.main,
+                                    }
+                              }
+                            ></Polyline>
+                          )}
+                        </>
+                      ))}
                     </>
-                  ))}
-                </>
-              )
+                  )
+                )}
+              </>
             )}
 
             {isLoadingPM ? (

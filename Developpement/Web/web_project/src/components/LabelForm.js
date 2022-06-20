@@ -9,10 +9,13 @@ const LabelForm = ({ label, addLabel, updateLabel, onClose }) => {
   const handleClick = () => {
 
     if (label != undefined) {
-      updateLabel({ title: currentTitle, labelId: label.id });
+      if (currentTitle != undefined && currentTitle != null && currentTitle != "") {
+
+        updateLabel({ title: currentTitle, labelId: label.id });
+      }
     }
 
-    if (currentTitle !== undefined) {
+    if (currentTitle != undefined && currentTitle != null && currentTitle != "") {
       addLabel({ title: currentTitle });
     }
 

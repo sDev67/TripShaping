@@ -2,15 +2,13 @@
   text-align: center;
 }
 
+.BackGround {
+  background: linear - gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(120, 223, 130, 1) 100%)
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {
@@ -28,11 +26,14 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.hr-v {
+  border: none;
+  border-left: 3px solid hsla(100, 10%, 50%, 100);
+  height: 85vh;
+  width: 1px;
+}
+
+.map-container {
+  height: 800px;
+  width: 1500px;
 }

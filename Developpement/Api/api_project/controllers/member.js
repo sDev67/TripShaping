@@ -57,9 +57,22 @@ module.exports = {
           return res.status(404).send("Nom d'utilisateur inexistant / introuvable");
         }
         else {
-          return db.Member.create({ name: req.body.name, UserId: resp[0].id, TravelId: req.body.TravelId, userLogin: req.body.userLogin })
-            .then((member) => res.json(member))
-            .catch(next);
+          db.Member.findOne({
+            where: {
+              userLogin: req.body.userLogin,
+              TravelId: req.body.TravelId
+            }
+          })
+            .then(member => {
+              if (member) {
+                return res.status(404).send("Cet utilisateur est déjà membre de ce voyage.")
+              }
+              else {
+                return db.Member.create({ name: req.body.name, UserId: resp[0].id, TravelId: req.body.TravelId, userLogin: req.body.userLogin })
+                  .then((member) => res.json(member))
+                  .catch(next);
+              }
+            })
         }
       });
     }

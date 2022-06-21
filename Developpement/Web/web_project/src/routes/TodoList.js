@@ -445,12 +445,14 @@ const TodoList = () => {
           setColor={setColor}
         ></LabelForm>
       </Dialog>
+
       <CustomSnackbar
         open={open}
         setOpen={setOpen}
         message={message}
         color={color}
       ></CustomSnackbar>
+
       <Dialog
         open={confirmedDeleteDialogOpen}
         onClose={HandleCloseConfirmedSuppr}

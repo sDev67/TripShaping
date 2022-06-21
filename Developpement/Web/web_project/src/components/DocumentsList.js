@@ -34,13 +34,11 @@ const DocumentsList = ({
 
   const removeDocument = useMutation(DocumentRequest.removeDocument, {
     onSuccess: (_, id) => {
-      queryClient.setQueryData([requestKeyTitle, requestKeyValue], (tasks) =>
-        tasks.filter((e) => e.id !== id)
-      );
+      queryClient.invalidateQueries([requestKeyTitle, requestKeyValue]);
       setMessage("Document supprimé.");
       setColor("primary");
       setOpen(true);
-    },
+    }
   });
 
   const OnRemoveDocument = (documentId) => {

@@ -1031,178 +1031,121 @@ module.exports = [
   {
     url: "/travel",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_all,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.get_all],
   },
   {
     url: "/travel",
     method: "post",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.create,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.create],
   },
 
   // Pas besoin du token pour cette requete
   {
     url: "/travelpublished",
     method: "get",
-    func: [
-      travel_ctrl.get_published,
-    ],
+    func: [travel_ctrl.get_published],
   },
   {
     url: "/travel/:travel_id",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_by_id,
-    ],
+    func: [travel_ctrl.get_by_id],
   },
   {
     url: "/travel/:travel_id/points",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_points_of_travel,
-    ],
+    func: [travel_ctrl.get_points_of_travel],
   },
 
   {
     url: "/travel/:travel_id/steps",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_steps_of_travel,
-    ],
+    func: [travel_ctrl.get_steps_of_travel],
   },
 
   {
     url: "/travel/:travel_id/routes",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_routes_of_travel,
-    ],
+    func: [travel_ctrl.get_routes_of_travel],
   },
 
   {
     url: "/travel/:travel_id",
     method: "put",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.update_by_id,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.update_by_id],
   },
 
   {
     url: "/travel/:travel_id",
     method: "delete",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.delete_by_id,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.delete_by_id],
   },
   {
     url: "/travel/:travel_id/tasks",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_tasks_of_travel,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.get_tasks_of_travel],
+  },
+  {
+    url: "/getLastTravels",
+    method: "get",
+    func: [travel_ctrl.get_last_ten_published_travel],
   },
   {
     url: "/travel/:travel_id/labels",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_labels_of_travel,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.get_labels_of_travel],
   },
 
   {
     url: "/travel/:travel_id/journalEntries",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_journalEntries_of_travel,
-    ],
+    func: [travel_ctrl.get_journalEntries_of_travel],
   },
 
   {
     url: "/travel/:travel_id/members",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_members_of_travel,
-    ],
+    func: [travel_ctrl.get_members_of_travel],
   },
   {
     url: "/travel/:travel_id/expenses",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_expenses_of_travel,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.get_expenses_of_travel],
   },
   {
     url: "/travel/:travel_id/documents",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_all_documents_by_travel_id,
-    ],
+    func: [travel_ctrl.get_all_documents_by_travel_id],
   },
   {
     url: "/travel/:travel_id",
     method: "put",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.update_by_id,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.update_by_id],
   },
   {
     url: "/travel/:travel_id/photos",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_all_photos_by_travel_id,
-    ],
+    func: [travel_ctrl.get_all_photos_by_travel_id],
   },
 
   /* new route a swagger */
   {
     url: "/travel_preparation",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_in_preparation_travel,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.get_in_preparation_travel],
   },
   {
     url: "/travel_current",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_current_travel,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.get_current_travel],
   },
   {
     url: "/travel_finish",
     method: "get",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.get_finish_travel,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.get_finish_travel],
   },
   {
     url: "/travel/copy",
     method: "post",
-    func: [
-      user_ctrl.identify_client,
-      travel_ctrl.copyTravel,
-    ],
+    func: [user_ctrl.identify_client, travel_ctrl.copyTravel],
   },
 ];

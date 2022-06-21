@@ -694,7 +694,7 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   onDragEnd={updateStepLocation(step)}
                   icon={
                     selectedMarker?.marker.id == step.id &&
-                    selectedMarker?.type == "Step"
+                      selectedMarker?.type == "Step"
                       ? selectedStepIcon
                       : stepIcon
                   }
@@ -778,24 +778,24 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
                               options={
                                 routes[index - 1]?.travelType == "DRIVING"
                                   ? {
-                                      strokeOpacity: 0,
-                                      fillOpacity: 0,
-                                      zIndex: 1,
-                                      icons: [
-                                        {
-                                          icon: {
-                                            path: "M -1 -1 -1 1 M 1 1 1 -1",
-                                            strokeOpacity: 1,
-                                            scale: 3,
-                                            strokeColor: palette.primary.main,
-                                          },
-                                          offset: "0",
-                                          repeat: "3px",
+                                    strokeOpacity: 0,
+                                    fillOpacity: 0,
+                                    zIndex: 1,
+                                    icons: [
+                                      {
+                                        icon: {
+                                          path: "M -1 -1 -1 1 M 1 1 1 -1",
+                                          strokeOpacity: 1,
+                                          scale: 3,
+                                          strokeColor: palette.primary.main,
                                         },
-                                      ],
-                                    }
+                                        offset: "0",
+                                        repeat: "3px",
+                                      },
+                                    ],
+                                  }
                                   : routes[index - 1]?.travelType == "WALKING"
-                                  ? {
+                                    ? {
                                       strokeWeight: 8,
                                       strokeOpacity: 0,
                                       fillOpacity: 0,
@@ -813,48 +813,48 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
                                         },
                                       ],
                                     }
-                                  : routes[index - 1]?.travelType == "BICYCLING"
-                                  ? {
-                                      strokeWeight: 8,
-                                      strokeOpacity: 0,
-                                      fillOpacity: 0,
-                                      zIndex: 1,
-                                      icons: [
-                                        {
-                                          icon: {
-                                            path: "M 0,-1 0, 1",
-                                            strokeOpacity: 1,
-                                            scale: 5,
-                                            strokeColor: palette.primary.main,
+                                    : routes[index - 1]?.travelType == "BICYCLING"
+                                      ? {
+                                        strokeWeight: 8,
+                                        strokeOpacity: 0,
+                                        fillOpacity: 0,
+                                        zIndex: 1,
+                                        icons: [
+                                          {
+                                            icon: {
+                                              path: "M 0,-1 0, 1",
+                                              strokeOpacity: 1,
+                                              scale: 5,
+                                              strokeColor: palette.primary.main,
+                                            },
+                                            offset: "0",
+                                            repeat: "20px",
                                           },
-                                          offset: "0",
-                                          repeat: "20px",
-                                        },
-                                      ],
-                                    }
-                                  : routes[index - 1]?.travelType == "TRANSIT"
-                                  ? {
-                                      strokeOpacity: 0,
-                                      fillOpacity: 0,
-                                      zIndex: 1,
-                                      icons: [
-                                        {
-                                          icon: {
-                                            path: "M -1 2 -1 -2 -1 0 -1.5 0 1.5 0 1 0 1 2 1 -2 ",
-                                            strokeOpacity: 1,
-                                            scale: 3,
-                                            strokeColor: palette.primary.main,
-                                          },
+                                        ],
+                                      }
+                                      : routes[index - 1]?.travelType == "TRANSIT"
+                                        ? {
+                                          strokeOpacity: 0,
+                                          fillOpacity: 0,
+                                          zIndex: 1,
+                                          icons: [
+                                            {
+                                              icon: {
+                                                path: "M -1 2 -1 -2 -1 0 -1.5 0 1.5 0 1 0 1 2 1 -2 ",
+                                                strokeOpacity: 1,
+                                                scale: 3,
+                                                strokeColor: palette.primary.main,
+                                              },
 
-                                          offset: "0",
-                                          repeat: "12px",
-                                        },
-                                      ],
-                                    }
-                                  : {
-                                      strokeWeight: 5,
-                                      strokeColor: palette.primary.main,
-                                    }
+                                              offset: "0",
+                                              repeat: "12px",
+                                            },
+                                          ],
+                                        }
+                                        : {
+                                          strokeWeight: 5,
+                                          strokeColor: palette.primary.main,
+                                        }
                               }
                             ></Polyline>
                           )}

@@ -34,22 +34,11 @@ module.exports = {
 
   get_by_id: (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
-      .then((travel) => {
+      .then(travel => {
         if (!travel) {
-          throw { status: 404, message: "Voyage inexistant / introuvable" };
+          throw { status: 404, message: 'Requested Group not found' };
         }
-        var userId = req.user['dataValues'].id;
-
-        checkAuthorization(req.params.travel_id, userId)
-          .then((authorized) => {
-            if (!authorized) {
-              if (travel['dataValues'].toPublish == false) {
-                throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-              }
-            }
-            return res.json(travel);
-          })
-          .catch(next)
+        return res.json(travel);
       })
       .catch(next);
   },
@@ -75,6 +64,27 @@ module.exports = {
         return travel.getSteps();
       })
       .then((steps) => res.json(steps))
+      .catch((err) => next(err));
+  },
+  get_last_ten_published_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        toPublish: 1,
+      },
+      order: ["startDate"],
+      limit: 10
+    })
+      .then((travels) => {
+
+        if (!travels) {
+          throw { status: 404, message: "Aucun voyage récent." };
+        }
+        else {
+
+          res.json(travels);
+        }
+      })
+
       .catch((err) => next(err));
   },
   get_tasks_of_travel: (req, res, next) => {
@@ -179,12 +189,20 @@ module.exports = {
         if (!travel) {
           throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
-        return travel.getDocuments({
-          attributes: { exclude: ["dataFile"] }, // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
-        });
+
+        var userId = req.user['dataValues'].id;
+        checkAuthorization(req.params.travel_id, userId)
+          .then((authorized) => {
+            if (!authorized) {
+              throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
+            }
+            return travel.getDocuments({
+              attributes: { exclude: ["dataFile"] }, // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
+            });
+          })
+          .then((docs) => res.json(docs))
+          .catch((err) => next(err));
       })
-      .then((steps) => res.json(steps))
-      .catch((err) => next(err));
   },
 
   get_all_photos_by_travel_id: (req, res, next) => {
@@ -322,23 +340,6 @@ module.exports = {
  *        FONCTION PERSO
  */
 
-const checkAuthorization = (travelId, userId) => {
-  var authorized = { oui: false };
-  return db.Member.findOne({
-    where: {
-      TravelId: travelId,
-      UserId: userId
-    }
-  }).then((member) => {
-    if (member && member['dataValues'].TravelId == travelId && member['dataValues'].UserId == userId) {
-      authorized.oui = true;
-    } else {
-      authorized.oui = false;
-    }
-    return authorized.oui;
-  })
-};
-
 const copyTravelRoutes = async (OldTravelId, NewTravelId) => {
   var newSteps = await db.Step.findAll({
     where: {
@@ -385,4 +386,21 @@ const copyTravelRoutes = async (OldTravelId, NewTravelId) => {
     };
     db.Route.create(newRoute);
   });
+};
+
+const checkAuthorization = (travelId, userId) => {
+  var authorized = { oui: false };
+  return db.Member.findOne({
+    where: {
+      TravelId: travelId,
+      UserId: userId
+    }
+  }).then((member) => {
+    if (member && member['dataValues'].TravelId == travelId && member['dataValues'].UserId == userId) {
+      authorized.oui = true;
+    } else {
+      authorized.oui = false;
+    }
+    return authorized.oui;
+  })
 };

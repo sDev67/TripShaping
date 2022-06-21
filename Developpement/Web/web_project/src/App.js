@@ -31,6 +31,7 @@ import {
 import "@psyycker/react-translation";
 import french from "./translations/french.json";
 import english from "./translations/english.json";
+import turkish from "./translations/turkish.json"
 import ItineraryAlbum from "./routes/ItineraryAlbum";
 import NavigationBarDisplay from "./components/NavigationBarDisplay";
 import ItineraryDisplay from "./routes/ItineraryDisplay";
@@ -44,6 +45,7 @@ const queryClient = new QueryClient();
 registerTranslations({
   en: english,
   fr: french,
+  tr: turkish
 });
 
 // Do not call inside a component

@@ -15,6 +15,10 @@ module.exports = sequelize => {
 
 	Member.init({
 		name: DataTypes.STRING,
+		saveLocation: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false,
+		},
 		userLogin: {
 			type: Sequelize.STRING,
 			references: {

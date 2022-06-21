@@ -76,9 +76,7 @@ const TripForm = ({ setTripFormOpen, setOpen, setMessage, setColor }) => {
       };
 
       addMember.mutate(newMember);
-
       let cryptedName = generateName(travel.id);
-
       const Travel = {
         TravelId: travel.id,
         albumURL: cryptedName,

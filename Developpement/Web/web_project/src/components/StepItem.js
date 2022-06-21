@@ -284,7 +284,7 @@ const StepItem = ({
               ) : (
                 <DocumentsList
                   documents={documents}
-                  requestKeyTitle="getDocumentsOfPoint"
+                  requestKeyTitle="getDocumentsOfStep"
                   requestKeyValue={step.id}
                   isEdition={true}
                   show={false}

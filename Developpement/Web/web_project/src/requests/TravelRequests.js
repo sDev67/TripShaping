@@ -20,28 +20,49 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
+
+  // Pas besoin du token pour cette requete
+  getLastTenPublishedTravel: () => {
+    return fetch(`${url_prefix}/getLastTravels`, {
+
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
   getTravelByid: (idTravel) => {
-    const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel/${idTravel}`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
+
     })
       .then(checkStatus)
       .then((res) => res.json());
   },
 
+  // Pas besoin du token pour cette requete
   getPointsOfTravel: (idTravel) => {
-    const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel/${idTravel}/points`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
+
     })
       .then(checkStatus)
       .then((res) => res.json());
   },
 
+  // Pas besoin du token pour cette requete
+  getStepsOfTravel: (idTravel) => {
+    return fetch(`${url_prefix}/travel/${idTravel}/steps`, {
+
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
+
+  // Pas besoin du token pour cette requete
+  getRoutesOfTravel: (idTravel) => {
+    return fetch(`${url_prefix}/travel/${idTravel}/routes`, {
+
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
 
   createTravel: ({ name, UserId }) => {
     const token = window.localStorage.getItem('token');
@@ -66,28 +87,6 @@ const TravelRequests = {
         Authorization: 'Bearer ' + token
       },
       body: JSON.stringify({ TravelId, UserId }),
-    })
-      .then(checkStatus)
-      .then((res) => res.json());
-  },
-
-  getStepsOfTravel: (idTravel) => {
-    const token = window.localStorage.getItem('token');
-    return fetch(`${url_prefix}/travel/${idTravel}/steps`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-      .then(checkStatus)
-      .then((res) => res.json());
-  },
-
-  getRoutesOfTravel: (idTravel) => {
-    const token = window.localStorage.getItem('token');
-    return fetch(`${url_prefix}/travel/${idTravel}/routes`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
     })
       .then(checkStatus)
       .then((res) => res.json());

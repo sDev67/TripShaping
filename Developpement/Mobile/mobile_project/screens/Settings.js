@@ -1,4 +1,4 @@
-import { View, Text, Switch, Pressable, Touch, Clipboard, TouchableOpacity } from "react-native"
+import { View, Text, Switch, Pressable, Touch, Clipboard, TouchableOpacity, StyleSheet } from "react-native"
 import { NativeBaseProvider, Tooltip } from "native-base"
 import { useEffect, useState } from "react"
 import * as Location from 'expo-location';
@@ -41,13 +41,15 @@ const Settings = ({ navigation, route }) => {
 
     // Enable save position
     const toggleSwitch = () => {
-        if (members.length !== 0 || members !== null) {
-            members.map((member) => {
-                if (member.TravelId == idTravel && member.userLogin == user.username) {
-                    id = member.id
-                    setIsEnabled(!isEnabled)
-                }
-            })
+        if (members !== undefined) {
+            if (members.length !== 0 || members !== null) {
+                members.map((member) => {
+                    if (member.TravelId == idTravel && member.userLogin == user.username) {
+                        id = member.id
+                        setIsEnabled(!isEnabled)
+                    }
+                })
+            }
         };
 
         const newMember = { MemberId: id, saveLocation: !isEnabled }
@@ -79,7 +81,7 @@ const Settings = ({ navigation, route }) => {
 
     const copyToClipboard = () => {
         if (travel != null) {
-            Clipboard.setString('cdad181.iutrs.unistra.fr:4200/' + travel.albumURL + '/map')
+            Clipboard.setString('https://tripshapingapi.herokuapp.com/' + travel.albumURL + '/map')
         }
 
     }
@@ -95,8 +97,27 @@ const Settings = ({ navigation, route }) => {
                     value={isEnabled}
                 />
             </View>
-            <Pressable style={{ paddingLeft: 10 }} onPress={() => disconnect()}><Text style={{ color: "red" }}>Se déconnecter</Text></Pressable>
-            <Text style={{ paddingTop: 20, paddingLeft: 10 }}>Cliquer ici pour copier <Text style={{ color: "blue", textDecorationStyle: "solid", textDecorationLine: "underline" }} onPress={copyToClipboard()}>le lien de l'album du voyage</Text></Text>
+            <View
+                style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                }}
+            />
+            <Pressable style={{ paddingLeft: 10, paddingVertical: 20 }} onPress={() => disconnect()}><Text style={{ color: "red" }}>Se déconnecter</Text></Pressable>
+            <View
+                style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                }}
+            />
+
+            <Text style={{ paddingVertical: 20, paddingLeft: 10, }}>Cliquer ici pour copier <Text style={{ color: "blue", textDecorationStyle: "solid", textDecorationLine: "underline" }} onPress={copyToClipboard()}>le lien de l'album du voyage</Text></Text>
+            <View
+                style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                }}
+            />
         </NativeBaseProvider>
     )
 }

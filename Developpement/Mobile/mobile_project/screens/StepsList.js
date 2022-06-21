@@ -73,7 +73,7 @@ export default StepsList = ({ navigation, route }) => {
                         FillTab(step.duration, tabDays);
                         return (<ScrollView contentContainerStyle={{ paddingTop: 0 }} key={idx}>
                             <View >
-                                <TouchableOpacity onPress={() => toggleExpanded(idx)} style={{ borderBottomColor: 'black', borderBottomWidth: 1 }}>
+                                <TouchableOpacity onPress={() => toggleExpanded(idx)} style={{ borderBottomColor: 'white', borderBottomWidth: 1, marginBottom: 5 }}>
                                     <View style={styles.header}>
                                         <Text style={styles.headerText}>{step.title}</Text>
                                         <View>
@@ -83,7 +83,7 @@ export default StepsList = ({ navigation, route }) => {
                                                 idTravel: idTravel,
                                                 photo: null
                                             })
-                                            }><Image source={iconEye} style={{ width: 20, height: 20, marginLeft: 10 }} /></Pressable>
+                                            }><Image source={iconEye} style={{ width: 20, height: 20, marginLeft: 10, tintColor: "black" }} /></Pressable>
                                         </View>
 
                                     </View>
@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         fontWeight: '500',
+        color: "black"
     },
     content: {
         padding: 20,

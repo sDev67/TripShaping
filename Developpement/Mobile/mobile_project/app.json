@@ -4,7 +4,7 @@
     "slug": "TripShaping",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/navigation_icons/app.png",
+    "icon": "./assets/navigation_icons/icon.png",
     "splash": {
       "image": "./assets/navigation_icons/app.png",
       "resizeMode": "contain",
@@ -33,7 +33,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/navigation_icons/app.png",
+        "foregroundImage": "./assets/navigation_icons/icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "config": {

@@ -20,6 +20,7 @@ import {
   SpeedDialIcon,
   Grid,
   Rating,
+  Divider,
   CardHeader,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -274,53 +275,57 @@ const Exploration = () => {
           >
             Découvrez tous les voyages partagés par les utilisateurs !
           </Typography>
-          <Stack>
-            <Grid
-              marginTop={0}
-              paddingX={2}
-              paddingBottom={2}
-              container
-              justifyContent="flex-start"
-              alignItems="center"
-              spacing={5}
-              style={{
-                overflowY: "scroll",
-              }}
-            >
-              {isLoadingL ? (
-                <Loading />
-              ) : isErrorL ? (
-                <p style={{ color: "red" }}>{errorL.message}</p>
-              ) : lastTravels.length == 0 ? (
+          <Divider />
+          <Typography color="black" variant="h3" textAlign="left" marginTop={3}>
+            Voyages récents
+          </Typography>
+
+          <Grid
+            marginTop={0}
+            paddingX={2}
+            paddingBottom={2}
+            container
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={5}
+            style={{
+              overFlowY: "hidden",
+              overflowX: "scroll",
+            }}
+          >
+            {isLoadingL ? (
+              <Loading />
+            ) : isErrorL ? (
+              <p style={{ color: "red" }}>{errorL.message}</p>
+            ) : lastTravels.length == 0 ? (
+              <>
+                <Typography
+                  color="error"
+                  variant="h3"
+                  textAlign="center"
+                  paddingTop={4}
+                >
+                  Aucun voyage récent.
+                </Typography>
+              </>
+            ) : (
+              lastTravels.map((travel, index) => (
                 <>
-                  <Typography
-                    color="error"
-                    variant="h3"
-                    textAlign="center"
-                    paddingTop={4}
-                  >
-                    Aucun voyage récent.
-                  </Typography>
+                  <ExplorationTripCard
+                    index={index}
+                    travel={travel}
+                    user={user}
+                    handleCLickCopyTravel={handleCLickCopyTravel}
+                  />
                 </>
-              ) : (
-                lastTravels.map((travel, index) => (
-                  <>
-                    {travel.name
-                      .toLowerCase()
-                      .trim()
-                      .includes(
-                        <ExplorationTripCard
-                          index={index}
-                          travel={travel}
-                          user={user}
-                          handleCLickCopyTravel={handleCLickCopyTravel}
-                        />
-                      )}
-                  </>
-                ))
-              )}
-            </Grid>
-          </Stack>
+              ))
+            )}
+          </Grid>
+          <Divider />
+          <Typography color="black" variant="h3" textAlign="left" marginTop={3}>
+            Rechercher un voyage
+          </Typography>
+
           <TextField
             style={{ width: "40%", marginTop: "2%", marginBottom: "1%" }}
             fullWidth
@@ -335,6 +340,7 @@ const Exploration = () => {
             marginTop={0}
             paddingX={2}
             paddingBottom={2}
+            marginBottom={2}
             container
             justifyContent="flex-start"
             alignItems="center"

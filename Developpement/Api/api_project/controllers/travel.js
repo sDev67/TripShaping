@@ -1,7 +1,6 @@
 const db = require("../models");
 
 module.exports = {
-
   get_all: (req, res, next) => {
     return db.Travel.findAll({
       order: ["name"],
@@ -34,9 +33,9 @@ module.exports = {
 
   get_by_id: (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
-      .then(travel => {
+      .then((travel) => {
         if (!travel) {
-          throw { status: 404, message: 'Requested Group not found' };
+          throw { status: 404, message: "Requested Group not found" };
         }
         return res.json(travel);
       })
@@ -71,16 +70,13 @@ module.exports = {
       where: {
         toPublish: 1,
       },
-      order: ["startDate"],
-      limit: 10
+      order: [["startDate", "DESC"]],
+      limit: 10,
     })
       .then((travels) => {
-
         if (!travels) {
           throw { status: 404, message: "Aucun voyage récent." };
-        }
-        else {
-
+        } else {
           res.json(travels);
         }
       })
@@ -184,25 +180,27 @@ module.exports = {
       .catch((err) => next(err));
   },
   get_all_documents_by_travel_id: async (req, res, next) => {
-    return db.Travel.findByPk(req.params.travel_id)
-      .then((travel) => {
-        if (!travel) {
-          throw { status: 404, message: "Voyage inexistant / introuvable" };
-        }
-
-        var userId = req.user['dataValues'].id;
-        checkAuthorization(req.params.travel_id, userId)
-          .then((authorized) => {
-            if (!authorized) {
-              throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
-            }
-            return travel.getDocuments({
-              attributes: { exclude: ["dataFile"] }, // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
-            });
-          })
-          .then((docs) => res.json(docs))
-          .catch((err) => next(err));
-      })
+    return db.Travel.findByPk(req.params.travel_id).then((travel) => {
+      if (!travel) {
+        throw { status: 404, message: "Voyage inexistant / introuvable" };
+      }
+      console.log(req);
+      var userId = req.user["dataValues"].id;
+      checkAuthorization(req.params.travel_id, userId)
+        .then((authorized) => {
+          if (!authorized) {
+            throw {
+              status: 404,
+              message: "Vous ne faites pas partie de ce voyage",
+            };
+          }
+          return travel.getDocuments({
+            attributes: { exclude: ["dataFile"] }, // dans le retour en json on enleve le champs dataFile, pour ne pas avoir tout le bordel
+          });
+        })
+        .then((docs) => res.json(docs))
+        .catch((err) => next(err));
+    });
   },
 
   get_all_photos_by_travel_id: (req, res, next) => {
@@ -229,18 +227,21 @@ module.exports = {
         if (!travel) {
           throw { status: 404, message: "Voyage inexistant / introuvable" };
         }
-        var userId = req.user['dataValues'].id;
+        var userId = req.user["dataValues"].id;
 
         checkAuthorization(req.params.travel_id, userId)
           .then((authorized) => {
             if (!authorized) {
-              throw { status: 404, message: "Vous ne faites pas partie de ce voyage" };
+              throw {
+                status: 404,
+                message: "Vous ne faites pas partie de ce voyage",
+              };
             }
             Object.assign(travel, req.body);
             travel.save();
             return res.json(travel);
           })
-          .catch(next)
+          .catch(next);
       })
       .catch(next);
   },
@@ -393,14 +394,18 @@ const checkAuthorization = (travelId, userId) => {
   return db.Member.findOne({
     where: {
       TravelId: travelId,
-      UserId: userId
-    }
+      UserId: userId,
+    },
   }).then((member) => {
-    if (member && member['dataValues'].TravelId == travelId && member['dataValues'].UserId == userId) {
+    if (
+      member &&
+      member["dataValues"].TravelId == travelId &&
+      member["dataValues"].UserId == userId
+    ) {
       authorized.oui = true;
     } else {
       authorized.oui = false;
     }
     return authorized.oui;
-  })
+  });
 };

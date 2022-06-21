@@ -1114,7 +1114,10 @@ module.exports = [
   {
     url: "/travel/:travel_id/documents",
     method: "get",
-    func: [travel_ctrl.get_all_documents_by_travel_id],
+    func: [
+      user_ctrl.identify_client,
+      travel_ctrl.get_all_documents_by_travel_id,
+    ],
   },
   {
     url: "/travel/:travel_id",

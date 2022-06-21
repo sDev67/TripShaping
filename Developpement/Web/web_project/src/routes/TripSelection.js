@@ -24,6 +24,7 @@ import Loading from "./../utils/Loading";
 import { useAuth } from "../Authentication/auth";
 import TripCard from "../components/TripCard";
 import ProfileBubble from "../components/ProfileBubble";
+import CustomSnackbar from "../utils/CustomSnackbar";
 
 const drawerWidth = 170;
 
@@ -124,6 +125,10 @@ const TripSelection = () => {
 
   const [tripFormOpen, setTripFormOpen] = useState(false);
 
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [color, setColor] = useState("");
+
   return (
     <>
       <CssBaseline />
@@ -213,7 +218,13 @@ const TripSelection = () => {
               ) : (
                 members.map((member, index) => (
                   <Grid key={index} item xs={4}>
-                    <TripCard travelId={member.TravelId} user={user} />
+                    <TripCard
+                      travelId={member.TravelId}
+                      user={user}
+                      setOpen={setOpen}
+                      setMessage={setMessage}
+                      setColor={setColor}
+                    />
                   </Grid>
                 ))
               )}
@@ -222,8 +233,19 @@ const TripSelection = () => {
         </Stack>
       </main>
       <Dialog open={tripFormOpen} onClose={() => setTripFormOpen(false)}>
-        <TripForm setTripFormOpen={setTripFormOpen}></TripForm>
+        <TripForm
+          setTripFormOpen={setTripFormOpen}
+          setOpen={setOpen}
+          setMessage={setMessage}
+          setColor={setColor}
+        ></TripForm>
       </Dialog>
+      <CustomSnackbar
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        color={color}
+      ></CustomSnackbar>
     </>
   );
 };

@@ -276,7 +276,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
         interestPoints.filter((e) => e.id !== id)
       );
       setMessage("Point d'intérêt supprimé.");
-      setColor("error");
+      setColor("primary");
       setOpen(true);
     },
   });
@@ -288,7 +288,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
         steps.filter((e) => e.id !== id)
       );
       setMessage("Étape supprimé.");
-      setColor("error");
+      setColor("primary");
       setOpen(true);
     },
   });

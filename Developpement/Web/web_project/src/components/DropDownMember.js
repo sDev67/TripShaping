@@ -40,6 +40,9 @@ const DropDownMember = ({ selectedMember, setSelectedMember }) => {
             },
           }}
         >
+          <MenuItem key={null} value={"Aucun"}>
+            Aucun
+          </MenuItem>
           {members.map((member, index) => (
             <MenuItem key={index} value={member}>
               {member.name}

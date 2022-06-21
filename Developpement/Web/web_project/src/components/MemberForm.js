@@ -6,7 +6,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import MemberRequests from "../requests/MemberRequests";
 
-const MemberForm = () => {
+const MemberForm = ({ setOpen, setMessage, setColor }) => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
@@ -24,12 +24,18 @@ const MemberForm = () => {
         member,
       ]);
       setError(null);
+      setMessage("Membre ajouté.");
+      setColor("primary");
+      setOpen(true);
     },
-    onError: (error) => setError(error.message),
+    onError: (error) => {
+      setMessage("Utilisateur inexistant/introuvable.");
+      setColor("error");
+      setOpen(true);
+    },
   });
 
   const OnAddMember = (name, login, fictive) => {
-
     if (fictive) {
       const newMember = {
         name: name,
@@ -49,7 +55,6 @@ const MemberForm = () => {
     }
     setName("");
     setLogin("");
-
   };
 
   const handleSwitch = () => {

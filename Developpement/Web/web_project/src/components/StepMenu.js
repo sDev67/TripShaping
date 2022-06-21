@@ -19,6 +19,7 @@ import RichTextEditor from "./RichTextEditor";
 import DocumentRequest from "../requests/DocumentRequest";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import DocumentsList from "./DocumentsList";
+import ConfirmedSuppressionModal from "./ConfirmedSuppressionModal";
 import Loading from "../utils/Loading";
 import TravelRequests from "../requests/TravelRequests";
 import { addDays } from "../utils/DateFormatting";
@@ -42,6 +43,13 @@ const StepMenu = ({
     selectedMarker.descriptionHTML
   );
 
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
+    useState(false);
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
+    setSelectedMarker(null);
+  };
+
   const [duration, setDuration] = useState(selectedMarker.duration);
 
   const {
@@ -49,8 +57,10 @@ const StepMenu = ({
     isError: isErrorD,
     error: errorD,
     data: documents,
-  } = useQuery(["getDocumentsOfStep", selectedMarker.id], () =>
-    DocumentRequest.getDocumentsByStepId(selectedMarker.id)
+  } = useQuery(
+    ["getDocumentsOfStep", selectedMarker.id],
+    () => DocumentRequest.getDocumentsByStepId(selectedMarker.id),
+    { enabled: !hideDocuments }
   );
 
   const {
@@ -266,8 +276,7 @@ const StepMenu = ({
               color="error"
               startIcon={<DeleteRounded />}
               onClick={() => {
-                deleteStep.mutate(selectedMarker.id);
-                setSelectedMarker(null);
+                setConfirmedDeleteDialogOpen(true);
               }}
               disabled={!isEdition}
             >
@@ -297,6 +306,17 @@ const StepMenu = ({
           isReadOnly={!isEdition}
           maxW="600px"
           information={false}
+        />
+      </Dialog>
+      <Dialog
+        open={confirmedDeleteDialogOpen}
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          id={selectedMarker.id}
+          onClose={HandleCloseConfirmedSuppr}
+          message="Confirmer la suppression de cette étape ?"
+          onDelete={deleteStep}
         />
       </Dialog>
     </>

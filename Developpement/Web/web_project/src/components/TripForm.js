@@ -1,8 +1,4 @@
-import {
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/material";
 import React, { useState } from "react";
 import DoneRounded from "@mui/icons-material/DoneRounded";
@@ -12,7 +8,7 @@ import TravelRequests from "../requests/TravelRequests";
 import MemberRequests from "../requests/MemberRequests";
 import { useAuth } from "../Authentication/auth";
 
-const TripForm = ({ setTripFormOpen }) => {
+const TripForm = ({ setTripFormOpen, setOpen, setMessage, setColor }) => {
   const queryClient = useQueryClient();
 
   let { user } = useAuth();
@@ -61,6 +57,12 @@ const TripForm = ({ setTripFormOpen }) => {
         ...members,
         member,
       ]);
+      let cryptedName = generateName(member.TravelId);
+      const Travel = {
+        TravelId: member.TravelId,
+        albumURL: cryptedName,
+      };
+      updateTravel.mutate(Travel);
     },
   });
 
@@ -81,13 +83,9 @@ const TripForm = ({ setTripFormOpen }) => {
 
       addMember.mutate(newMember);
 
-      let cryptedName = generateName(travel.id);
-
-      const Travel = {
-        TravelId: travel.id,
-        albumURL: cryptedName,
-      };
-      updateTravel.mutate(Travel);
+      setMessage("Voyage créé.");
+      setColor("primary");
+      setOpen(true);
     },
   });
 

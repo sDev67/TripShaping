@@ -6,7 +6,7 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import { Button, Stack } from "@mui/material";
+import { Button, Dialog, Stack } from "@mui/material";
 import palette from "./../theme/palette";
 import InterestPointMenu from "./InterestPointMenu";
 import StepMenu from "./StepMenu";
@@ -43,6 +43,8 @@ import theater from "../assets/theater.png";
 import theaterSelected from "../assets/theaterSelected.png";
 import food from "../assets/food.png";
 import foodSelected from "../assets/foodSelected.png";
+import ConfirmedSuppressionModal from "./ConfirmedSuppressionModal";
+import CustomSnackbar from "../utils/CustomSnackbar";
 
 const containerStyle = {
   position: "relative",
@@ -66,14 +68,19 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
   const [editionMode, setEditionMode] = useState("stepOnlyEdit");
 
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [currentPOISTEP, setCurrentPOISTEP] = useState(null);
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [selectedPoiOfMarker, setSelectedPoiOfMarker] = useState(null);
-
+  const [currentIndex, setCurrentIndex] = useState();
   const [showTimeline, setShowTimeline] = useState(false);
 
   const [stepAdded, setStepAdded] = useState(false);
 
   const [expanded, setExpanded] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [color, setColor] = useState("");
 
   // Points
   const {
@@ -139,16 +146,58 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
     }
   };
 
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
+    useState(false);
+
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
+    if (!error && isEdition) {
+      if (steps.length > 1 && !isLoadingR && !isErrorR) {
+        if (currentPOISTEP.id === steps[steps.length - 1].id) {
+          // Si on supprime la dernière étape
+          deleteRoute.mutate(routes[routes.length - 1].id);
+        } else if (currentPOISTEP.id === steps[0].id) {
+          // Si on supprime la première étape
+          deleteRoute.mutate(routes[0].id);
+        } else {
+          // Si on supprime une étape intermédiaire
+          deleteRoute.mutate(routes[currentIndex - 1].id);
+          deleteRoute.mutate(routes[currentIndex].id);
+          addRoute({
+            idStart: steps[currentIndex - 1].id,
+            idFinish: steps[currentIndex + 1].id,
+          });
+        }
+      }
+
+      // deleteStep.mutate(selectedMarker.marker.id);
+      setSelectedMarker(null);
+    }
+  };
+
+  const [confirmedDeleteDialogOpen2, setConfirmedDeleteDialogOpen2] =
+    useState(false);
+
+  const HandleCloseConfirmedSuppr2 = () => {
+    setConfirmedDeleteDialogOpen2(false);
+    // deletePoint.mutate(selectedMarker.marker.id);
+    setSelectedMarker(null);
+  };
+
   const handleChangeSelectModeEdit = (event) => {
     setEditionMode(event.target.value);
   };
 
   const addPoint = useMutation(TravelRequests.addPoint, {
-    onSuccess: (point) =>
+    onSuccess: (point) => {
       queryClient.setQueryData(["getPoints", idTravel], (interestPoints) => [
         ...interestPoints,
         point,
-      ]),
+      ]);
+      setMessage("Point d'intérêt ajouté.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   const addStep = useMutation(TravelRequests.addStep, {
@@ -157,6 +206,9 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
         ...steps,
         step,
       ]);
+      setMessage("Étape ajoutée.");
+      setColor("primary");
+      setOpen(true);
     },
   });
 
@@ -219,18 +271,26 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
 
   //Suppression de point
   const deletePoint = useMutation(TravelRequests.removePoint, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getPoints", idTravel], (interestPoints) =>
         interestPoints.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Point d'intérêt supprimé.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   //Suppression d'étape
   const deleteStep = useMutation(TravelRequests.removeStep, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getSteps", idTravel], (steps) =>
         steps.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Étape supprimé.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   //Suppression de route
@@ -593,6 +653,7 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   draggable={!error && isEdition}
                   clickable={true}
                   onClick={() => {
+                    setCurrentIndex(index);
                     setSelectedPoiOfMarker(null);
                     setSelectedMarker(null);
                     setSelectedMarker({ marker: step, type: "Step" });
@@ -608,27 +669,8 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                     setShowTimeline(false);
                   }}
                   onRightClick={() => {
-                    if (!error && isEdition) {
-                      if (steps.length > 1 && !isLoadingR && !isErrorR) {
-                        if (step.id === steps[steps.length - 1].id) {
-                          // Si on supprime la dernière étape
-                          deleteRoute.mutate(routes[routes.length - 1].id);
-                        } else if (step.id === steps[0].id) {
-                          // Si on supprime la première étape
-                          deleteRoute.mutate(routes[0].id);
-                        } else {
-                          // Si on supprime une étape intermédiaire
-                          deleteRoute.mutate(routes[index - 1].id);
-                          deleteRoute.mutate(routes[index].id);
-                          addRoute({
-                            idStart: steps[index - 1].id,
-                            idFinish: steps[index + 1].id,
-                          });
-                        }
-                      }
-                      deleteStep.mutate(step.id);
-                      setSelectedMarker(null);
-                    }
+                    setConfirmedDeleteDialogOpen(true);
+                    setCurrentPOISTEP(step);
                   }}
                   onDragEnd={updateStepLocation(step)}
                   icon={
@@ -657,6 +699,8 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   draggable={!error && isEdition}
                   clickable={true}
                   onClick={() => {
+                    setCurrentIndex(index);
+
                     setSelectedPoiOfMarker(null);
                     setSelectedMarker(null);
                     setSelectedMarker({ marker: interestPoint, type: "Point" });
@@ -665,8 +709,8 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
                   }}
                   onRightClick={() => {
                     if (!error && isEdition) {
-                      deletePoint.mutate(interestPoint.id);
-                      setSelectedMarker(null);
+                      setConfirmedDeleteDialogOpen2(true);
+                      setCurrentPOISTEP(interestPoint);
                     }
                   }}
                   onDragEnd={updateInterestPointLocation(interestPoint)}
@@ -809,6 +853,29 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
         )}
       </LoadScript>
 
+      <Dialog
+        open={confirmedDeleteDialogOpen}
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          message=" Confirmer la suppression de cette étape ?"
+          id={currentPOISTEP?.id}
+          onClose={setConfirmedDeleteDialogOpen}
+          onDelete={deleteStep}
+        />
+      </Dialog>
+      <Dialog
+        open={confirmedDeleteDialogOpen2}
+        onClose={HandleCloseConfirmedSuppr2}
+      >
+        <ConfirmedSuppressionModal
+          message=" Confirmer la suppression de ce point d'intérêt ?"
+          id={currentPOISTEP?.id}
+          onClose={setConfirmedDeleteDialogOpen2}
+          onDelete={deletePoint}
+        />
+      </Dialog>
+
       {selectedMarker &&
         (selectedMarker.type === "Point" ? (
           isLoadingP ? (
@@ -866,6 +933,12 @@ export const Map = ({ steps, isLoadingS, isErrorS, errorS }) => {
           setShowTimeline={setShowTimeline}
         ></StepTimeline>
       )}
+      <CustomSnackbar
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        color={color}
+      ></CustomSnackbar>
     </div>
   );
 };

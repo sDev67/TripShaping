@@ -16,6 +16,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import ConfirmedSuppressionModal from "./ConfirmedSuppressionModal";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import TodoListRequest from "../requests/TodoListRequest";
@@ -48,6 +49,12 @@ const Task = ({
   const [extendResearch, setResearchType] = useState(true);
 
   const [labelAddFormOpen, setLabelAddFormFormOpen] = useState(false);
+
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
+
+  };
 
   useEffect(() => { }, [labels]);
 
@@ -84,26 +91,7 @@ const Task = ({
     }
 
     setIsFiltered(isGood);
-    // else
-    // {
-    //   labels.map((f) =>
-    //   {
-    //     filteredLabel.map((l) =>
-    //     {
-    //       if(f.title==l.title)
-    //       {
-    //           isGood = true;
 
-    //       }else{
-
-    //         setIsFiltered( false);
-    //         return
-    //       }
-    //     })
-    //   })
-    // }
-
-    //  return false;
   };
 
   let color = task.isDone ? "#C8FACD" : "#FFFFFF";
@@ -145,7 +133,7 @@ const Task = ({
             <Card sx={{ background: color }}>
               <CardHeader
                 action={
-                  <IconButton color="error" onClick={(e) => OnRemoveTask(task)}>
+                  <IconButton color="error" onClick={(e) => setConfirmedDeleteDialogOpen(true)}>
                     <HighlightOffIcon sx={{ fontSize: "30px" }} />
                   </IconButton>
                 }
@@ -238,6 +226,17 @@ const Task = ({
           setLabelToAdd={setLabelToAdd}
           task={task}
         ></AddLabelToTask>
+      </Dialog>
+      <Dialog
+        open={confirmedDeleteDialogOpen}
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          id={task.id}
+          onClose={HandleCloseConfirmedSuppr}
+          message="Confirmer la suppression de cette tâche ?"
+          onDelete={OnRemoveTask}
+        />
       </Dialog>
     </>
   );

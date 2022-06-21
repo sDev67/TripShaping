@@ -15,7 +15,6 @@ import {
   InputLabel,
   OutlinedInput,
   Button,
-
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -25,6 +24,7 @@ import { Link } from "react-router-dom";
 import AlertError from "../utils/AlertError";
 import image from "../assets/rainbow.png";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
+import { backgroundColorMain } from "../theme/backgroundColor";
 
 const theme = createTheme();
 
@@ -68,7 +68,18 @@ const Signin = () => {
             backgroundPosition: "center",
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          md={5}
+          component={Paper}
+          elevation={6}
+          square
+          style={{
+            background: backgroundColorMain,
+          }}
+        >
           <Box
             sx={{
               my: 8,

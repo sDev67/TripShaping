@@ -252,7 +252,6 @@ module.exports = [
         url: '/document/file/:document_id',
         method: 'get',
         func: [
-            user_ctrl.identify_client,
             doc_ctrl.disp_file_by_id,
         ],
     },

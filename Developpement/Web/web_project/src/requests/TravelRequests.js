@@ -22,6 +22,13 @@ const TravelRequests = {
   },
 
   // Pas besoin du token pour cette requete
+  getLastTenPublishedTravel: () => {
+    return fetch(`${url_prefix}/getLastTravels`, {
+
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
   getTravelByid: (idTravel) => {
     return fetch(`${url_prefix}/travel/${idTravel}`, {
 

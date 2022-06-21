@@ -4,6 +4,9 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 const ConfirmedSuppressionModal = ({ message, id, onClose, onDelete }) => {
   const HandleClick = () => {
     onDelete.mutate(id);
+    if (onClose != undefined) {
+      onClose();
+    }
   };
 
   return (
@@ -19,13 +22,31 @@ const ConfirmedSuppressionModal = ({ message, id, onClose, onDelete }) => {
             <Typography variant="h5" color="error">
               {message}
             </Typography>
-            <Button
-              onClick={() => HandleClick()}
-              color="error"
-              variant="contained"
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+              spacing={2}
             >
-              Supprimer
-            </Button>
+              <Button
+                onClick={() => HandleClick()}
+                color="primary"
+                variant="contained"
+              >
+                Oui
+              </Button>
+              <Button
+                onClick={() => {
+                  if (onClose != undefined) {
+                    onClose();
+                  }
+                }}
+                color="error"
+                variant="contained"
+              >
+                Non
+              </Button>
+            </Stack>
           </Stack>
         </CardContent>
       </Card>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@mui/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import AppStyle from "../App.css";
 import {
   TextField,
   Card,
@@ -19,6 +20,7 @@ import {
   SpeedDialIcon,
   Grid,
   Rating,
+  Divider,
   CardHeader,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
@@ -36,6 +38,8 @@ import CustomSnackbar from "../utils/CustomSnackbar";
 import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 import ExplorationTripCard from "../components/ExplorationTripCard";
+import { backgroundColorMain } from "./../theme/backgroundColor";
+import { generateName } from "../utils/CryptedNameFormatting";
 
 const drawerWidth = 170;
 
@@ -148,12 +152,32 @@ const Exploration = () => {
     data: travels,
   } = useQuery(["getTravels"], () => TravelRequests.getPublishedTravel());
 
+  const updateTravel = useMutation(TravelRequests.updateTravelCryptedName, {
+    onSuccess: (travel) => {
+      queryClient.invalidateQueries(["getTravelById", travel.id]);
+    },
+  });
+  const {
+    isLoading: isLoadingL,
+    isError: isErrorL,
+    error: errorL,
+    data: lastTravels,
+  } = useQuery(["getLastTravels"], () =>
+    TravelRequests.getLastTenPublishedTravel()
+  );
+
   const addMember = useMutation(MemberRequests.addMember, {
     onSuccess: (member) => {
       queryClient.setQueriesData(["getMembers", user.id], (members) => [
         ...members,
         member,
       ]);
+      let cryptedName = generateName(member.TravelId);
+      const Travel = {
+        TravelId: member.TravelId,
+        albumURL: cryptedName,
+      };
+      updateTravel.mutate(Travel);
       setOpen(true);
     },
   });
@@ -224,15 +248,20 @@ const Exploration = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      <main className={classes.content}>
+      <main
+        className={classes.content}
+        style={{
+          background: backgroundColorMain,
+        }}
+        //# ebedee
+      >
         <div style={{ height: "6.85%" }}></div>
         <Stack
           direction="column"
-          // style={{
-          //   // backgroundImage: `url(${require("../assets/balloons-flying.jpg")})`,
-          //   backgroundSize: "cover",
-          //   height: "93.15%",
-          // }}
+          style={{
+            backgroundSize: "cover",
+            height: "93.15%",
+          }}
           height="93.15%"
           width="90%"
           marginLeft="5%"
@@ -246,6 +275,57 @@ const Exploration = () => {
           >
             Découvrez tous les voyages partagés par les utilisateurs !
           </Typography>
+          <Divider />
+          <Typography color="black" variant="h3" textAlign="left" marginTop={3}>
+            Voyages récents
+          </Typography>
+
+          <Grid
+            marginTop={0}
+            paddingX={2}
+            paddingBottom={2}
+            container
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={5}
+            style={{
+              overFlowY: "hidden",
+              overflowX: "scroll",
+            }}
+          >
+            {isLoadingL ? (
+              <Loading />
+            ) : isErrorL ? (
+              <p style={{ color: "red" }}>{errorL.message}</p>
+            ) : lastTravels.length == 0 ? (
+              <>
+                <Typography
+                  color="error"
+                  variant="h3"
+                  textAlign="center"
+                  paddingTop={4}
+                >
+                  Aucun voyage récent.
+                </Typography>
+              </>
+            ) : (
+              lastTravels.map((travel, index) => (
+                <>
+                  <ExplorationTripCard
+                    index={index}
+                    travel={travel}
+                    user={user}
+                    handleCLickCopyTravel={handleCLickCopyTravel}
+                  />
+                </>
+              ))
+            )}
+          </Grid>
+          <Divider />
+          <Typography color="black" variant="h3" textAlign="left" marginTop={3}>
+            Rechercher un voyage
+          </Typography>
+
           <TextField
             style={{ width: "40%", marginTop: "2%", marginBottom: "1%" }}
             fullWidth
@@ -260,6 +340,7 @@ const Exploration = () => {
             marginTop={0}
             paddingX={2}
             paddingBottom={2}
+            marginBottom={2}
             container
             justifyContent="flex-start"
             alignItems="center"

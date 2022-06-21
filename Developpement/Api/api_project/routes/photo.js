@@ -15,7 +15,6 @@ module.exports = [
         url: '/photo/file/:photo_id',
         method: 'get',
         func: [
-            user_ctrl.identify_client,
             photo_ctrl.disp_file_by_id,
         ],
     },

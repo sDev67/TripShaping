@@ -16,6 +16,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import { Link, Outlet, useParams } from "react-router-dom";
 import image from "../assets/rainbow.png";
+import { backgroundColorMain } from "../theme/backgroundColor";
 const Login = () => {
   const [values, setValues] = React.useState({
     amount: "",

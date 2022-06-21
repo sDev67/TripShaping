@@ -13,9 +13,11 @@ import {
   Dialog,
   FormControlLabel,
   Switch,
+  Tooltip,
+  CardMedia,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { stringAvatar } from "../utils/AvatarColorPicker";
+import { stringAvatar, stringColor } from "../utils/AvatarColorPicker";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 import Loading from "./../utils/Loading";
@@ -128,6 +130,7 @@ const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
       ) : (
         <>
           <Card>
+            <CardMedia height="194" {...stringColor(travel.name)} />
             <CardContent>
               <Stack direction="column">
                 <Stack
@@ -135,7 +138,7 @@ const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Typography color="primary" variant="h4" textAlign="center">
+                  <Typography variant="h4" textAlign="center">
                     {travel.name}
                   </Typography>
 
@@ -226,11 +229,19 @@ const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
                     tooltipTitle={"Dupliquer"}
                     onClick={() => handleCLickCopyTravel(travelId)}
                   />
-                  <SpeedDialAction
-                    icon={<SettingsRoundedIcon />}
-                    tooltipTitle={"Options"}
-                    onClick={() => setOpenOptions(true)}
-                  />
+                  {travel.UserId == user.id ? (
+                    <SpeedDialAction
+                      icon={<SettingsRoundedIcon />}
+                      tooltipTitle={"Options"}
+                      onClick={() => setOpenOptions(true)}
+                    />
+                  ) : (
+                    <SpeedDialAction
+                      icon={<SettingsRoundedIcon />}
+                      tooltipTitle={"Options"}
+                      disabled
+                    />
+                  )}
                 </SpeedDial>
               </Stack>
             </CardContent>
@@ -270,6 +281,7 @@ const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
               >
                 Supprimer le voyage
               </Button>
+
               <FormControlLabel
                 value={publicItinerary}
                 checked={publicItinerary}

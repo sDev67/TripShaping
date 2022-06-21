@@ -33,6 +33,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Translation, changeLocale } from "@psyycker/react-translation";
 import { useAuth } from "../Authentication/auth";
 import ProfileBubble from "../components/ProfileBubble";
+import { backgroundColorMain } from "../theme/backgroundColor";
 
 const drawerWidth = 170;
 
@@ -205,7 +206,12 @@ const AppShowcase = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      <main className={classes.content}>
+      <main
+        className={classes.content}
+        style={{
+          background: backgroundColorMain,
+        }}
+      >
         <div style={{ height: "6.85%" }}></div>
         <Stack
           direction="column"

@@ -36,6 +36,7 @@ import CustomSnackbar from "../utils/CustomSnackbar";
 import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 import ExplorationTripCard from "../components/ExplorationTripCard";
+import { backgroundColorMain } from "./../theme/backgroundColor";
 
 const drawerWidth = 170;
 
@@ -224,15 +225,16 @@ const Exploration = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      <main className={classes.content}>
+      <main
+        className={classes.content}
+        style={{
+          background: backgroundColorMain,
+        }}
+        //# ebedee
+      >
         <div style={{ height: "6.85%" }}></div>
         <Stack
           direction="column"
-          // style={{
-          //   // backgroundImage: `url(${require("../assets/balloons-flying.jpg")})`,
-          //   backgroundSize: "cover",
-          //   height: "93.15%",
-          // }}
           height="93.15%"
           width="90%"
           marginLeft="5%"

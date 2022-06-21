@@ -31,6 +31,7 @@ import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRound
 import { useAuth } from "../Authentication/auth";
 import Loading from "../utils/Loading";
 import ProfileBubble from "./ProfileBubble";
+import { backgroundColorMain } from "../theme/backgroundColor";
 
 const drawerWidth = 170;
 
@@ -355,7 +356,8 @@ const NavigationBar = () => {
             ) : isErrorT ? (
               <p style={{ color: "red" }}>{errorT.message}</p>
             ) : (
-              travel.status !== 1 && (
+              travel.status !== 1 &&
+              travel.UserId == user.id && (
                 <Tab
                   icon={<SettingsRoundedIcon />}
                   iconPosition="start"
@@ -377,7 +379,12 @@ const NavigationBar = () => {
             )}
           </Tabs>
         </Drawer>
-        <main className={classes.content}>
+        <main
+          className={classes.content}
+          style={{
+            background: backgroundColorMain,
+          }}
+        >
           <div style={{ height: "6.85%" }}></div>
           <Outlet />
         </main>

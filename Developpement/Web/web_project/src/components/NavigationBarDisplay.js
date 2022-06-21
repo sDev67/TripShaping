@@ -44,6 +44,7 @@ import { useAuth } from "../Authentication/auth";
 import PhotoSizeSelectActualRoundedIcon from "@mui/icons-material/PhotoSizeSelectActualRounded";
 import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
 import ProfileBubble from "./ProfileBubble";
+import { backgroundColorMain } from "../theme/backgroundColor";
 
 const drawerWidth = 170;
 
@@ -282,7 +283,12 @@ const NavigationBarDisplay = () => {
             />
           </Tabs>
         </Drawer>
-        <main class={classes.content}>
+        <main
+          class={classes.content}
+          style={{
+            background: backgroundColorMain,
+          }}
+        >
           <div style={{ height: "6.85%" }}></div>
           <Outlet />
         </main>

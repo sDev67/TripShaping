@@ -25,6 +25,7 @@ import { useAuth } from "../Authentication/auth";
 import TripCard from "../components/TripCard";
 import ProfileBubble from "../components/ProfileBubble";
 import CustomSnackbar from "../utils/CustomSnackbar";
+import { backgroundColorMain } from "../theme/backgroundColor";
 
 const drawerWidth = 170;
 
@@ -158,78 +159,90 @@ const TripSelection = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      <main className={classes.content}>
+      <main
+        className={classes.content}
+        style={{
+          background: backgroundColorMain,
+        }}
+      >
         <div style={{ height: "6.85%" }}></div>
         <Stack
           direction="column"
-          alignItems="center"
-          style={{
-            // backgroundImage: `url(${require("../assets/balloons-flying.jpg")})`,
-            backgroundSize: "cover",
-            height: "93.15%",
-          }}
+          height="93.15%"
+          width="90%"
+          marginLeft="5%"
+          justifyContent="flex-start"
         >
-          <Stack direction="column" justifyContent="flex-start" width="90%">
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              marginTop={8}
-            >
-              <Typography color="primary" variant="h2" textAlign="center">
-                Mes voyages
-              </Typography>
-              <Stack direction="row" spacing={5} alignItems="center">
-                <Button
-                  style={{
-                    paddingLeft: "25px",
-                    paddingRight: "25px",
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                  }}
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setTripFormOpen(true)}
-                >
-                  Créer un nouveau voyage
-                </Button>
-                <Button
-                  style={{
-                    paddingLeft: "25px",
-                    paddingRight: "25px",
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                  }}
-                  variant="contained"
-                  color="primary"
-                  component={Link}
-                  to={"/discover"}
-                >
-                  Explorer des voyages
-                </Button>
-              </Stack>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            marginTop={8}
+          >
+            <Typography color="primary" variant="h2" textAlign="center">
+              Mes voyages
+            </Typography>
+            <Stack direction="row" spacing={5} alignItems="center">
+              <Button
+                style={{
+                  paddingLeft: "25px",
+                  paddingRight: "25px",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
+                }}
+                variant="contained"
+                color="primary"
+                onClick={() => setTripFormOpen(true)}
+              >
+                Créer un nouveau voyage
+              </Button>
+              <Button
+                style={{
+                  paddingLeft: "25px",
+                  paddingRight: "25px",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
+                }}
+                variant="contained"
+                color="primary"
+                component={Link}
+                to={"/discover"}
+              >
+                Explorer des voyages
+              </Button>
             </Stack>
-
-            <Grid marginTop={0} container spacing={10}>
-              {isLoadingT ? (
-                <Loading />
-              ) : isErrorT ? (
-                <p style={{ color: "red" }}>{errorT.message}</p>
-              ) : (
-                members.map((member, index) => (
-                  <Grid key={index} item xs={4}>
-                    <TripCard
-                      travelId={member.TravelId}
-                      user={user}
-                      setOpen={setOpen}
-                      setMessage={setMessage}
-                      setColor={setColor}
-                    />
-                  </Grid>
-                ))
-              )}
-            </Grid>
           </Stack>
+
+          <Grid
+            marginTop={0}
+            paddingX={2}
+            paddingBottom={2}
+            container
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={5}
+            style={{
+              overflowY: "scroll",
+            }}
+          >
+            {isLoadingT ? (
+              <Loading />
+            ) : isErrorT ? (
+              <p style={{ color: "red" }}>{errorT.message}</p>
+            ) : (
+              members.map((member, index) => (
+                <Grid key={index} item xs={4}>
+                  <TripCard
+                    travelId={member.TravelId}
+                    user={user}
+                    setOpen={setOpen}
+                    setMessage={setMessage}
+                    setColor={setColor}
+                  />
+                </Grid>
+              ))
+            )}
+          </Grid>
         </Stack>
       </main>
       <Dialog open={tripFormOpen} onClose={() => setTripFormOpen(false)}>

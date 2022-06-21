@@ -45,16 +45,11 @@ const ExplorationTripCard = ({
   return (
     <Grid key={index} item xs={4}>
       <Card>
-        <CardMedia
-          height="194"
-          //   image="https://source.unsplash.com/1600x900/?beach"
-          {...stringColor(travel.name)}
-        />
+        <CardMedia height="194" {...stringColor(travel.name)} />
         <CardContent>
           <Stack direction="row" justifyContent="space-between" spacing={2}>
             <Typography variant="h4" textAlign="center">
               {travel.name}
-              {travel.toPublish}
             </Typography>
             <SpeedDial
               ariaLabel="SpeedDial basic example"

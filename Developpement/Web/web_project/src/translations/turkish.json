@@ -29,32 +29,32 @@
       "title2": "Önemli belgelerinizi kaydedin",
       "paragraph2": "Planlamaya ek olarak, TripShapping önemli belgeleri kaydetmenize ve mobil uygulamada kolay erişim için bunları seyahatinizin farklı aşamalarına bağlamanıza olanak tanır.",
       "title3": "Ekibinizi oluşturun",
-      "paragraph3": "Ajoutez les membres de votre voyage pour qu’ils vous aident à la planification de celui-ci ! Certains membres de votre voyage ne souhaitent pas s’inscrire sur l’application ? Ce n’est pas grave ! Vous pouvez les ajouter sans inscription préalable pour qu’ils figurent tout de même dans l’application et l’album !",
-      "title4": "Gérez vos dépenses lors du voyage",
-      "paragraph4": "Dans notre application mobile vous trouverez un onglet dédié à la gestion des dépenses. Il vous permettra notamment de voir l’état des finances de chaque membre du voyage et ainsi gérer les dépenses équitablement lors du voyage.",
-      "title5": "Un album souvenir",
-      "paragraph5": "Une fois votre voyage achevé, vous aurez accès à un album qui vous permettra de retracer votre voyage et votre itinéraire. Vous pourrez ainsi voir les photos prises durant votre voyage ainsi que les textes rédigés par les différents membres du voyage.",
-      "title6": "Montrez vos exploits !",
-      "paragraph6": "Partagez votre voyage avec vos amis et votre famille grâce à un lien web unique, qui leur permettra de suivre en direct votre voyage, ainsi que les photos et textes que vous partagerez !"
+      "paragraph3": "Seyahatinizi planlamanıza yardımcı olması için seyahat üyelerinizi ekleyin !  Seyahatinizin bazı üyeleri uygulamaya kaydolmak istemiyor mu ? Sorun değil ! Bunları kayıt olmadan ekleyebilirsiniz ve yine de uygulamada ve albümde görüneceklerdir !",
+      "title4": "Seyahat masraflarınızı yönetin",
+      "paragraph4": "Mobil uygulamamızda giderlerin yönetimine ayrılmış bir sekme bulacaksınız. Seyahatin her bir üyesinin mali durumunu görmenizi ve böylece seyahat sırasında harcamaları adil bir şekilde yönetmenizi sağlayacaktır.",
+      "title5": "Bir hatıra albümü",
+      "paragraph5": "Seyahatiniz sona erdiğinde, seyahatinizi ve güzergahınızı yeniden izlemenizi sağlayacak bir albüme erişebileceksiniz. Geziniz sırasında çekilen fotoğrafların yanı sıra gezinin farklı üyeleri tarafından yazılan metinleri de görebileceksiniz.",
+      "title6": "Başarılarınızı gösterin !",
+      "paragraph6": "Seyahatinizi, paylaştığınız fotoğraf ve metinlerin yanı sıra canlı olarak takip etmelerini sağlayacak benzersiz bir web bağlantısı aracılığıyla arkadaşlarınız ve ailenizle paylaşın !"
     },
     "page4": {
-      "title": "Avis",
-      "title1": "Une application très pratique !",
-      "paragraph11": "J’ai toujours été très hésitant à planifier des voyages car j’avais beaucoup de mal à m’organiser.",
-      "paragraph12": "Mais depuis que j’ai découvert TripShaping, planifier un voyage est devenu un jeu d’enfant. En quelques clics, j’arrive à obtenir une vision globale de mon voyage et de chaque étape importante de celui-ci. ",
-      "paragraph13": "L’interface est claire et simple d’utilisation. Je recommande fortement pour tous ceux qui détestent planifier !",
-      "title2": "Une application incroyable !",
-      "paragraph21": "La partie planification possède déjà de nombreuses fonctionnalités mais j’ai surtout été surpris par l’application mobile permettant de suivre son voyage !",
-      "paragraph22": "Non seulement vous pouvez exactement vous situer dans votre voyage mais vous avez aussi accès à tous vos documents, vous pouvez voir les endroits proches à visiter et même gérer vos dépenses.",
-      "title3": "Parfait pour des voyages entre amis !",
-      "paragraph31": "Mes amis et moi ne pouvons plus nous passer de TripShapping !",
-      "paragraph32": "Prévoir et planifier les étapes d’un voyage était toujours fastidieux mais sur cette application c’est devenu un jeu d’enfant.",
-      "paragraph33": "De plus, une fois le voyage terminé, nous avons accès aux annotations rédigées par chacun d’entre nous mais aussi aux photos prises grâce à l’application. Bref, c’est à refaire !"
+      "title": "Görüş",
+      "title1": "Çok pratik bir uygulama !",
+      "paragraph11": "Seyahat planlamak konusunda her zaman çok isteksiz oldum çünkü kendimi organize etmeyi çok zor buldum.",
+      "paragraph12": "Ancak TripShaping'i keşfettiğimden beri seyahat planlamak çocuk oyuncağı haline geldi. Sadece birkaç tıklamayla seyahatimin ve her bir kilometre taşının genel bir görünümünü elde edebiliyorum. ",
+      "paragraph13": "Arayüz açık ve kullanımı kolaydır. Plan yapmaktan nefret eden herkese kesinlikle tavsiye ederim !",
+      "title2": "İnanılmaz bir uygulama !",
+      "paragraph21": "Planlama kısmı zaten birçok özelliğe sahip ancak seyahatinizi takip etmenize olanak tanıyan mobil uygulama beni özellikle şaşırttı !",
+      "paragraph22": "Sadece yolculuğunuzun tam olarak neresinde olduğunuzu görmekle kalmaz, aynı zamanda tüm belgelerinize erişebilir, ziyaret edilecek yakın yerleri görebilir ve hatta harcamalarınızı yönetebilirsiniz.",
+      "title3": "Arkadaşlarla geziler için mükemmel !",
+      "paragraph31": "Arkadaşlarım ve ben TripShapping olmadan yapamayız !",
+      "paragraph32": "Bir seyahat planlamak eskiden sıkıcıydı, ancak bu uygulama ile çocuk oyuncağı.",
+      "paragraph33": "Üstelik yolculuk bittiğinde her birimizin yazdığı notlara ve uygulama sayesinde çekilen fotoğraflara da erişebiliyoruz. Kısacası, tekrar yapmaya değer !"
     },
     "page5": {
-      "title": "Créez vous aussi le voyage de vos rêves",
-      "button1": "Explorer les voyages",
-      "button2": "Créer vos voyages"
+      "title": "Kendi rüya seyahatinizi yaratın",
+      "button1": "Seyahatleri keşfed",
+      "button2": "Seyahatlerinizi oluşturun"
     }
   }
 }

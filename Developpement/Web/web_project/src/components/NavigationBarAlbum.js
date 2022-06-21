@@ -325,21 +325,42 @@ const NavigationBarAlbum = () => {
               to={"/album/" + cryptedName + "/logbook"}
             />
           </Tabs>
-          <Button
-            onClick={() => {
-              navigator.clipboard.writeText(
-                `http://localhost:3000/album/${cryptedName}/map`
-              );
-              setOpenSnackBar(true);
+          <Tabs
+            orientation="vertical"
+            textColor="primary"
+            indicatorColor="primary"
+            alignItems="flex-start"
+            centered={false}
+            style={{ marginTop: "100px" }}
+            sx={{
+              "& .MuiTabs-flexContainer": {
+                alignItems: "flex-start",
+              },
             }}
-            style={{ marginTop: 30 }}
           >
-            <Stack direction="row" justifyContent="center">
-              <Tooltip title="Copier le lien" arrow>
-                <ContentCopyRoundedIcon color="secondary" fontSize="large" />
-              </Tooltip>
-            </Stack>
-          </Button>
+            <Tab
+              icon={<ContentCopyRoundedIcon color="secondary" />}
+              iconPosition="start"
+              label={
+                <Stack
+                  style={{ minWidth: "200px" }}
+                  direction="row"
+                  justifyContent="flex-start"
+                  marginLeft={1}
+                >
+                  <Typography variant="button" color="secondary">
+                    Copier le lien
+                  </Typography>
+                </Stack>
+              }
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `http://localhost:3000/album/${cryptedName}/map`
+                );
+                setOpenSnackBar(true);
+              }}
+            />
+          </Tabs>
         </Drawer>
         <main
           class={classes.content}
@@ -356,6 +377,7 @@ const NavigationBarAlbum = () => {
         open={openSnackBar}
         setOpen={setOpenSnackBar}
         message={msg}
+        color={"primary"}
       />
     </>
   );

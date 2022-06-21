@@ -50,6 +50,13 @@ const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
         ...members,
         member,
       ]);
+      let cryptedName = generateName(member.TravelId);
+      console.log(cryptedName);
+      const Travel = {
+        TravelId: member.TravelId,
+        albumURL: cryptedName,
+      };
+      updateTravel.mutate(Travel);
       setOpen(true);
       setMessage("Voyage dupliqué.");
       setColor("primary");
@@ -76,14 +83,6 @@ const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
       };
 
       addMember.mutate(newMember);
-
-      let cryptedName = generateName(travel.id);
-
-      const Travel = {
-        TravelId: travel.id,
-        albumURL: cryptedName,
-      };
-      updateTravel.mutate(Travel);
     },
   });
 

@@ -7,6 +7,7 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import TravelRequests from "../requests/TravelRequests";
 import MemberRequests from "../requests/MemberRequests";
 import { useAuth } from "../Authentication/auth";
+import { generateName } from "../utils/CryptedNameFormatting";
 
 const TripForm = ({ setTripFormOpen, setOpen, setMessage, setColor }) => {
   const queryClient = useQueryClient();
@@ -19,25 +20,6 @@ const TripForm = ({ setTripFormOpen, setOpen, setMessage, setColor }) => {
 
   const handleNameChange = (newName) => {
     setName(newName);
-  };
-
-  const generateName = (travelId) => {
-    let alphabet =
-      "Aa1Bb2Cc3Dd4Ee5Ff6Gg7Hh8Ii9JjKkLl&MmNnOoPpQqRrSsTtUu_VvàWwXxYyZz";
-    var min = 5;
-    var max = 10;
-    var rand = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    let cryptedName = "";
-
-    for (var i = 0; i < rand; i++) {
-      cryptedName +=
-        alphabet[Math.floor(Math.random() * (alphabet.length - 0 + 1)) + 0];
-    }
-
-    cryptedName += "$" + travelId;
-
-    return encodeURI(cryptedName);
   };
 
   const getLink = async () => {

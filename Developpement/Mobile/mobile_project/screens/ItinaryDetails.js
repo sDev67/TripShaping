@@ -4,7 +4,7 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_APIKEY } from "../utils";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import file from '../assets/navigation_icons/icon_file.png';
 
@@ -18,6 +18,7 @@ const ItinaryDetails = ({ route, navigation }) => {
     const [distance, setDistance] = useState(null);
     const [duration, setDuration] = useState(null);
     const [deplacement, setDeplacement] = useState(itinairary.travelType);
+    const [errorDir, setError] = useState(false);
 
     let heureDec = 0;
     let heure = 0;
@@ -49,10 +50,26 @@ const ItinaryDetails = ({ route, navigation }) => {
                         mode={deplacement}
                         apikey={GOOGLE_MAPS_APIKEY}
                         onReady={result => {
+                            setError(false);
                             setDistance(result.distance);
                             setDuration(result.duration);
                         }}
+                        onError={() => {
+                            setError(true);
+                        }}
                     />
+                    {
+                        errorDir &&
+                        <Polyline
+                            geodesic={true}
+                            strokeWidth={3}
+                            strokeColor='#00AB55'
+                            coordinates={[
+                                { latitude: stepBefore.latitude, longitude: stepBefore.longitude },
+                                { latitude: step.latitude, longitude: step.longitude }
+                            ]}
+                        />
+                    }
                 </MapView>
                 <ScrollView>
                     <Text style={styles.font}>Départ/Arrivée</Text>
@@ -66,10 +83,19 @@ const ItinaryDetails = ({ route, navigation }) => {
                             <Select.Item label="En transport en commun" value="TRANSIT" />
                         </Select>
                     </View>
-                    <Text style={styles.font}>Durée</Text>
-                    <Text style={{ marginLeft: 10 }}>{duration < 60 ? (Math.round(duration) + " min") : (heure + " h " + min + " min")}</Text>
-                    <Text style={styles.font}>Distance</Text>
-                    <Text style={{ marginLeft: 10 }}>{Math.round(distance * 100) / 100} km</Text>
+                    {
+                        errorDir &&
+                        <Text style={{ marginLeft: 10, marginTop: 10, color: "red" }}>Aucun itinéraire trouvé</Text>
+                    }
+                    {
+                        !errorDir &&
+                        <View>
+                            <Text style={styles.font}>Durée</Text>
+                            <Text style={{ marginLeft: 10 }}>{duration < 60 ? (Math.round(duration) + " min") : (heure + " h " + min + " min")}</Text>
+                            <Text style={styles.font}>Distance</Text>
+                            <Text style={{ marginLeft: 10 }}>{Math.round(distance * 100) / 100} km</Text>
+                        </View>
+                    }
                     <Text style={styles.font}>Documents</Text>
                     <ScrollView style={{ height: "30%" }}>
                         {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :

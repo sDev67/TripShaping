@@ -9,6 +9,10 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import marker from '../assets/images/marker.png'
 import iconFiles from '../assets/navigation_icons/icon_files.png';
+import iconEye from '../assets/navigation_icons/eye.png'
+
+
+
 export default StepsList = ({ navigation, route }) => {
 
     const { isReadOnly, idTravel } = route.params;
@@ -64,7 +68,7 @@ export default StepsList = ({ navigation, route }) => {
             <DocumentsModal showModal={showModal} setShowModal={setShowModal} navigation={navigation} idTravel={idTravel} PointId={idPoint} />
             <ScrollView >
                 {isLoadingS ? <Text>Chargement...</Text> : isErrorS ? <Text style={{ color: 'red' }}>{errorS.message}</Text> :
-                    steps.map((step, idx) => {
+                    (steps.length != 0 || steps != undefined) && steps.map((step, idx) => {
                         var tabDays = [];
                         FillTab(step.duration, tabDays);
                         return (<ScrollView contentContainerStyle={{ paddingTop: 0 }} key={idx}>
@@ -72,6 +76,16 @@ export default StepsList = ({ navigation, route }) => {
                                 <TouchableOpacity onPress={() => toggleExpanded(idx)} style={{ borderBottomColor: 'black', borderBottomWidth: 1 }}>
                                     <View style={styles.header}>
                                         <Text style={styles.headerText}>{step.title}</Text>
+                                        <View>
+                                            <Pressable onPress={() => navigation.navigate('StepDetails', {
+                                                step: step,
+                                                isReadOnly: isReadOnly,
+                                                idTravel: idTravel,
+                                                photo: null
+                                            })
+                                            }><Image source={iconEye} style={{ width: 20, height: 20, marginLeft: 10 }} /></Pressable>
+                                        </View>
+
                                     </View>
                                 </TouchableOpacity>
                                 <Collapsible collapsed={collapsed[idx]} align="center">
@@ -115,14 +129,13 @@ export default StepsList = ({ navigation, route }) => {
                                                             return <View key={id} style={{ flexDirection: "row" }}>
 
                                                                 <Image source={marker} style={{ width: 20, height: 20, tintColor: "red" }} />
-                                                                {/* <TouchableOpacity onPress={navigation.navigate("StepDetails", {
-                                                                step: step,
-                                                                isReadOnly: false,
-                                                                idTravel: idTravel,
-                                                                photo: null
-                                                            })
-                                                            }> */}
-                                                                <Text>{point.title}</Text>{/*</TouchableOpacity>*/}
+                                                                <Text>{point.title}</Text>
+                                                                <Pressable onPress={() => navigation.navigate('PointDetails', {
+                                                                    point: point,
+                                                                    isReadOnly: isReadOnly,
+                                                                    idTravel: idTravel,
+                                                                    photo: null
+                                                                })}><Image source={iconEye} style={{ width: 20, height: 20, marginLeft: 10 }} /></Pressable>
                                                                 {isLoadingD ? <Text>Chargement...</Text> : isErrorD ? <Text style={{ color: 'red' }}>{errorD.message}</Text> :
                                                                     documents.map((doc, idx) => {
                                                                         if (doc.PointId === point.id) {
@@ -164,6 +177,8 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: '#dddddd',
         padding: 10,
+        flexDirection: "row",
+        justifyContent: "center"
     },
     headerText: {
         textAlign: 'center',

@@ -46,7 +46,7 @@ const Signup = (props) => {
             <ScrollView>
                 <NativeBaseProvider>
                     <Center flex={1} px="3">
-                        <AlertError showAlert={showAlert} setShowAlert={setShowAlert} alertMessage={alertMessage} />
+                        <AlertError showAlert={showAlert} setShowAlert={setShowAlert} alertMessage={alertMessage} status={"error"} />
                         <Center alignItems={"center"}>
                             <Heading size="lg" mt={10} fontWeight="bold" color="coolGray.800" _dark={{ color: "warmGray.50" }}>Création d'un compte</Heading>
                         </Center>

@@ -28,7 +28,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.vivien67.TripShaping",
       "config": {
-        "googleMapsApiKey": "AIzaSyBB-rIwC_N_-sX3JVt6HUzvAP4jHc_2jAs"
+        "googleMapsApiKey": "AIzaSyCoR4sbD7mDwU_8Eghdygxh3g4rRi0XxVs"
       }
     },
     "android": {
@@ -38,9 +38,14 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyBB-rIwC_N_-sX3JVt6HUzvAP4jHc_2jAs"
+          "apiKey": "AIzaSyCoR4sbD7mDwU_8Eghdygxh3g4rRi0XxVs"
         }
       },
+      "permissions": [
+        "CAMERA",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
+      ],
       "package": "com.vivien67.TripShaping",
       "versionCode": 1
     },

@@ -1,16 +1,15 @@
 import { checkStatus, url_prefix } from "../utils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const UserRequests = {
-    getMembers: (idUser) => {
-        //const token = window.localStorage.getItem('token');
+    getMembers: async (idUser) => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/user/${idUser}/members`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                //  Authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + token
             },
         })
             .then(checkStatus)

@@ -1,36 +1,37 @@
 import { checkStatus, url_prefix } from "../utils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TravelRequests = {
 
-    getAllTravel: () => {
-        //const token = window.localStorage.getItem('token');
+    getAllTravel: async () => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getTravelByid: idTravel => {
-        //const token = window.localStorage.getItem('token');
+    getTravelByid: async idTravel => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    updateTravel: ({ TravelId, status, startDate }) => {
-        //const token = window.localStorage.getItem('token');
+    updateTravel: async ({ TravelId, status, startDate }) => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${TravelId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                //Authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + token
             },
             body: JSON.stringify({ status, startDate })
         })
@@ -38,104 +39,100 @@ const TravelRequests = {
             .then(res => res.json());
     },
 
-    getPointsOfTravel: idTravel => {
-        //const token = window.localStorage.getItem('token');
+    getPointsOfTravel: async idTravel => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/points`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getStepsOfTravel: idTravel => {
-        //const token = window.localStorage.getItem('token');
+    getStepsOfTravel: async idTravel => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/steps`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getRoutesOfTravel: idTravel => {
-        //const token = window.localStorage.getItem('token');
+    getRoutesOfTravel: async idTravel => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/routes`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getMembersOfTravel: idTravel => {
-        //const token = window.localStorage.getItem('token');
+    getMembersOfTravel: async idTravel => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/members`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getExpensesOfTravel: idTravel => {
-        //const token = window.localStorage.getItem('token');
+    getExpensesOfTravel: async idTravel => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/expenses`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getInPreparationTravel: () => {
-        //const token = window.localStorage.getItem('token');
+    getInPreparationTravel: async () => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel_preparation`, {
-
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getCurrentTravel: () => {
-        //const token = window.localStorage.getItem('token');
+    getCurrentTravel: async () => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel_current`, {
-
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getFinishTravel: () => {
-        //const token = window.localStorage.getItem('token');
+    getFinishTravel: async () => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel_finish`, {
-
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    getDocumentsByTravelId: idTravel => {
-        //const token = window.localStorage.getItem('token');
+    getDocumentsByTravelId: async idTravel => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/travel/${idTravel}/documents`, {
-
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())

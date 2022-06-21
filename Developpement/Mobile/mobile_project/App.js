@@ -26,6 +26,7 @@ import PointDetails from './screens/PointDetails';
 import Spending from './screens/Spending';
 import SpendingHistory from './screens/SpendingHistory';
 import Information from './screens/Information';
+import Settings from './screens/Settings';
 
 import iconMaps from './assets/navigation_icons/icon_maps2.png';
 import iconJournal from './assets/navigation_icons/icon_journal.png';
@@ -100,7 +101,7 @@ function MapStackScreen() {
         <Stack.Navigator>
           <Stack.Screen name="Signin" component={Signin} options={{ headerShown: false }} />
           <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
-          <Stack.Screen name="Travels" component={Travels} options={{ title: "Mes voyages" }} />
+          <Stack.Screen name="Travels" component={Travels} options={{ title: "Mes voyages", headerBackVisible: false }} />
           <Stack.Screen name="Map" component={TabScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Itinéraire" component={ItinaryDetails} />
           <Stack.Screen name="StepDetails" component={StepDetails} options={{ title: "Etape" }} />
@@ -109,6 +110,7 @@ function MapStackScreen() {
           <Stack.Screen name='Documents' component={Files} options={{ title: "Document" }} />
           <Stack.Screen name="SpendingHistory" component={SpendingHistory} options={{ title: "Historique des dépenses" }} />
           <Stack.Screen name="Information" component={Information} options={{ title: "Informations" }} />
+          <Stack.Screen name="Settings" component={Settings} options={{ title: "Options" }} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>

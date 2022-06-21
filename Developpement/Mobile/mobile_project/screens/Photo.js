@@ -10,26 +10,30 @@ import noImage from "../assets/images/NoImage.jpg"
 
 import PhotoRequests from '../requests/PhotoRequests';
 
+import AlertError from '../components/elements/AlertError';
+
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 
 const Photo = ({ navigation, route }) => {
 
-    const [ok, setOk] = useState(false);
     const [photoIsSaved, setPhotoIsSaved] = useState(false);
+    const [firstPhoto, setFirstPhoto] = useState(false);
+
+    const [message, setMessage] = useState("")
+    const [showAlert, setShowAlert] = useState(false)
+    const [status, setStatus] = useState("")
 
     const queryClient = useQueryClient();
 
     const { photo, idTravel, location } = route.params;
 
     const [image, setImage] = useState(null);
-    let photoS = photo;
 
     const pickImage = async () => {
         setImage(null)
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 0.25,
-            allowsEditing: false,
             base64: true
         });
 
@@ -39,7 +43,6 @@ const Photo = ({ navigation, route }) => {
     };
 
     async function savePicture() {
-        setOk(false)
         setPhotoIsSaved(false)
         var date = Date.now();
         var formattedDate = format(date, "dd/MM/yyyy HH:mm");
@@ -53,12 +56,21 @@ const Photo = ({ navigation, route }) => {
             formData.append("dataFile2", part2);
             formData.append("date", formattedDate.toString());
             formData.append("TravelId", idTravel);
-            PhotoRequests.sendPhoto(formData);
+            PhotoRequests.sendPhoto(formData)
+                .then((res) => {
+                    setMessage("La photo a bien été enregistrée");
+                    setShowAlert(true);
+                    setStatus("success");
+                })
+                .catch((res) => {
+                    setMessage("La photo n'a pas été enregistrée");
+                    setShowAlert(true);
+                    setStatus("error");
+                });
             setPhotoIsSaved(true)
             setImage(null);
-            setOk(true);
         }
-        else if (photo != null) {
+        else if (photo != null && firstPhoto) {
             const formData = new FormData();
             let data = photo.base64;
             let part1 = data.substring(0, Math.abs((data.length - 1) / 2));
@@ -69,9 +81,26 @@ const Photo = ({ navigation, route }) => {
             formData.append("TravelId", idTravel);
             formData.append("longitude", location.coords.longitude);
             formData.append("latitude", location.coords.latitude);
-            PhotoRequests.sendPhoto(formData);
-            setPhotoIsSaved(true)
-            setOk(true)
+            PhotoRequests.sendPhoto(formData)
+                .then((res) => {
+                    setMessage("La photo a bien été enregistrée");
+                    setStatus("success");
+                    setShowAlert(true);
+                })
+                .catch((res) => {
+                    setMessage("La photo n'a pas été enregistrée");
+                    setStatus("error");
+                    setShowAlert(true);
+
+                });
+            setPhotoIsSaved(true);
+            setFirstPhoto(false);
+        }
+        else {
+            setMessage("La photo n'a pas été enregistrée");
+            setStatus("error");
+            setShowAlert(true);
+
         }
     }
 
@@ -80,6 +109,7 @@ const Photo = ({ navigation, route }) => {
         if (status === 'granted') {
             navigation.navigate("Cameras", { parent: "global" })
             setImage(null)
+            setFirstPhoto(true);
             setPhotoIsSaved(false);
         } else {
             Alert.alert('Access denied')
@@ -89,17 +119,18 @@ const Photo = ({ navigation, route }) => {
     return (
         <>
             <NativeBaseProvider>
+                <AlertError showAlert={showAlert} setShowAlert={setShowAlert} alertMessage={message} status={status} />
                 <SafeAreaView style={{ flex: 1 }}>
                     <View>
                         <Button style={{ width: "50%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => showCamera()}>Prendre une photo</Button>
                         <Button style={{ width: "50%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                     </View>
                     <View style={{ marginBottom: 10, position: "absolute", bottom: 0, alignSelf: "flex-end" }}>
-                        <CustomButton title={"Sauvegarder"} message={"La photo a été enregistrée"} func={savePicture} condition={ok} />
+                        <Button style={{ backgroundColor: "#00AB55", alignSelf: "center", marginRight: 10 }} onPress={savePicture}>Sauvegarder</Button>
                     </View>
                     {image ?
                         <Image source={{ uri: `data:image/jpeg;base64,${image.base64}` }} style={{ alignSelf: 'center', width: image.width / 10, height: image.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
-                        : photo && !photoIsSaved ?
+                        : photo && (!photoIsSaved && firstPhoto) ?
                             <Image source={{ uri: `data:image/jpeg;base64,${photo.base64}` }} style={{ alignSelf: 'center', width: photo.width / 10, height: photo.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" /> :
                             <Image source={noImage} style={{ alignSelf: "center", marginTop: "10%", width: 200, height: 200 }} alt="default" />}
                 </SafeAreaView>
@@ -107,34 +138,5 @@ const Photo = ({ navigation, route }) => {
         </>
     )
 }
-
-
-const CustomButton = ({ title, message, func, condition }) => {
-    const toast = useToast();
-    return <Button style={{ backgroundColor: "#00AB55", alignSelf: "center", marginRight: 10 }} onPress={() => {
-        func();
-        condition ?
-            toast.show({
-                placement: "top",
-                render: () => {
-                    return <Box bg="green.200" borderColor="green.500" borderWidth="1" px="4" py="2" rounded="sm">
-                        {message}
-                    </Box>;
-                }
-            }) :
-            toast.show({
-                placement: "top",
-                render: () => {
-                    return <Box bg="red.200" borderColor="red.500" borderWidth="1" px="4" py="2" rounded="sm">
-                        Oops, une erreur s'est produite
-                    </Box>;
-                }
-            })
-
-    }}>
-        {title}
-    </Button>;
-};
-
 
 export default Photo;

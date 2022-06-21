@@ -35,7 +35,7 @@ const Signin = (props) => {
     return (
         <NativeBaseProvider>
             <Center flex={1} px="3">
-                <AlertError showAlert={showAlert} setShowAlert={setShowAlert} alertMessage={alertMessage} />
+                <AlertError showAlert={showAlert} setShowAlert={setShowAlert} alertMessage={alertMessage} status={"error"} />
                 <Box safeArea p="2" py="8" w="90%" maxW="290">
                     <Center><Heading size="xl" fontWeight="600" color="coolGray.800" _dark={{ color: "warmGray.50" }}>Connexion</Heading></Center>
                     <VStack space={3} mt="5">

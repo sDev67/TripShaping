@@ -2,10 +2,10 @@ import React from "react";
 import { Text } from "react-native";
 import { Collapse, Alert, VStack, HStack, IconButton, CloseIcon } from "native-base";
 
-const AlertError = ({ showAlert, setShowAlert, alertMessage }) => {
+const AlertError = ({ showAlert, setShowAlert, alertMessage, status }) => {
     return (
         <Collapse isOpen={showAlert}>
-            <Alert status="error">
+            <Alert status={status}>
                 <VStack space={2} flexShrink={1}>
                     <HStack flexShrink={1} space={2} justifyContent="space-between">
                         <HStack space={2} flexShrink={1}>

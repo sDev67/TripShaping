@@ -27,12 +27,15 @@ export const AuthProvider = ({ children }) => {
             .then(res => res.json())
             .then(async data => {
                 await AsyncStorage.setItem('token', data.token)
+                const token = await AsyncStorage.getItem('token');
+                console.log(token);
                 setUser(data.user);
             });
     };
 
     const signout = async () => {
         const token = await AsyncStorage.getItem('token');
+        console.log("Signout : " + token);
         await AsyncStorage.removeItem('token')
         setUser(null);
     };

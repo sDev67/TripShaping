@@ -7,6 +7,8 @@ import { format } from "date-fns";
 import { Camera } from 'expo-camera'
 import HTMLView from 'react-native-htmlview';
 
+import AlertError from '../components/elements/AlertError';
+
 import file from '../assets/navigation_icons/icon_file.png';
 import noImage from "../assets/images/NoImage.jpg"
 
@@ -20,6 +22,13 @@ import PhotoRequests from '../requests/PhotoRequests';
 
 
 const StepDetails = ({ route, navigation }) => {
+
+    const [photoIsSaved, setPhotoIsSaved] = useState(false);
+    const [firstPhoto, setFirstPhoto] = useState(false);
+
+    const [message, setMessage] = useState("")
+    const [showAlert, setShowAlert] = useState(false)
+    const [status, setStatus] = useState("")
 
     const Buffer = require("buffer").Buffer;
     const { photo, step, isReadOnly, idTravel, location } = route.params;
@@ -62,13 +71,25 @@ const StepDetails = ({ route, navigation }) => {
                 message => [...message, newMes]
             )
             queryClient.invalidateQueries(['getMessages', idTravel])
+            setMessage("Le message a bien été enregistré");
+            setShowAlert(true);
+            setStatus("success");
+        },
+        onError: () => {
+            setMessage("Le message n'a pas été enregistré");
+            setStatus("error");
+            setShowAlert(true);
         }
+
     });
 
     const showCamera = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync()
         if (status === 'granted') {
             navigation.navigate("Cameras", { parent: "step", point: step, idReadOnly: isReadOnly, idTravel: idTravel })
+            setImage(null)
+            setFirstPhoto(true);
+            setPhotoIsSaved(false);
         } else {
             Alert.alert('Access denied')
         }
@@ -89,30 +110,64 @@ const StepDetails = ({ route, navigation }) => {
     };
 
     async function savePicture() {
+        setPhotoIsSaved(false)
         var date = Date.now();
         var formattedDate = format(date, "dd/MM/yyyy HH:mm");
 
         if (image != null) {
             const formData = new FormData();
             let data = image.base64;
-            let b = Buffer.from(data, 'utf8');
-            formData.append("dataFile", JSON.stringify(b));
-            formData.append("date", formattedDate);
+            let part1 = data.substring(0, Math.abs((data.length - 1) / 2));
+            let part2 = data.substring(Math.abs((data.length - 1) / 2));
+            formData.append("dataFile1", part1);
+            formData.append("dataFile2", part2);
+            formData.append("date", formattedDate.toString());
             formData.append("TravelId", idTravel);
             formData.append("StepId", step.id);
-            PhotoRequests.sendPhoto(formData);
+            PhotoRequests.sendPhoto(formData)
+                .then((res) => {
+                    setMessage("La photo a bien été enregistrée");
+                    setStatus("success");
+                    setShowAlert(true);
+                })
+                .catch((res) => {
+                    setMessage("La photo n'a pas été enregistrée");
+                    setStatus("error");
+                    setShowAlert(true);
+                });
+            setPhotoIsSaved(true)
+            setImage(null);
         }
-        else if (photo != null) {
+        else if (photo != null && firstPhoto) {
             const formData = new FormData();
             let data = photo.base64;
-            let b = Buffer.from(data, 'utf8');
-            formData.append("dataFile", JSON.stringify(b));
+            let part1 = data.substring(0, Math.abs((data.length - 1) / 2));
+            let part2 = data.substring(Math.abs((data.length - 1) / 2));
+            formData.append("dataFile1", part1);
+            formData.append("dataFile2", part2);
             formData.append("date", formattedDate);
             formData.append("TravelId", idTravel);
             formData.append("StepId", step.id);
             formData.append("longitude", location.coords.longitude);
             formData.append("latitude", location.coords.latitude);
-            PhotoRequests.sendPhoto(formData);
+            PhotoRequests.sendPhoto(formData)
+                .then((res) => {
+                    setMessage("La photo a bien été enregistrée");
+                    setShowAlert(true);
+                    setStatus("success");
+                })
+                .catch((res) => {
+                    setMessage("La photo n'a pas été enregistrée");
+                    setShowAlert(true);
+                    setStatus("error");
+                });
+            setPhotoIsSaved(true)
+            setFirstPhoto(false);
+        }
+        else {
+            setMessage("La photo n'a pas été enregistrée");
+            setShowAlert(true);
+            setStatus("error");
         }
     }
 
@@ -123,21 +178,24 @@ const StepDetails = ({ route, navigation }) => {
     return (
         step != null &&
         <NativeBaseProvider >
+            <AlertError showAlert={showAlert} setShowAlert={setShowAlert} alertMessage={message} status={status} />
             <View style={styles.container}>
                 <ScrollView>
                     <Text style={styles.font}>Nom</Text>
                     <Text style={{ marginLeft: 10 }}>{step.title}</Text>
-                    <Text style={styles.font}>Catégorie</Text>
-                    <Text style={{ marginLeft: 10 }}>{step.category}</Text>
                     <Text style={styles.font} >Durée</Text>
                     <Text style={{ marginLeft: 10 }}>{step.duration}{step.duration > 1 ? " jours" : " jour"}</Text>
-                    <Text style={styles.font} >Description</Text>
-                    <View style={{ marginLeft: 10, marginTop: 25 }}>
-                        <HTMLView
-                            value={step.descriptionHTML}
-                            stylesheet={styles}
-                        />
-                    </View>
+                    {step.descriptionHTML != null &&
+                        <View>
+                            <Text style={styles.font} >Description</Text>
+                            <View style={{ marginLeft: 10, marginTop: 25 }}>
+                                <HTMLView
+                                    value={step.descriptionHTML}
+                                    stylesheet={styles}
+                                />
+                            </View>
+                        </View>
+                    }
                     <Text style={styles.font}>Documents</Text>
                     <ScrollView style={{ height: "30%" }}>
                         {isLoading ? <Text>Chargement...</Text> : isError ? <Text style={{ color: 'red' }}>{error.message}</Text> :
@@ -160,23 +218,18 @@ const StepDetails = ({ route, navigation }) => {
                             <Text style={styles.font} >Journal</Text>
                             <View>
                                 <TextInput multiline={true} numberOfLines={4} style={styles.inputFocused} value={newMessage} onChangeText={(text) => setNewMessage(text)} />
-                                <Button style={{ backgroundColor: "#00AB55", width: 100, alignSelf: "flex-end", marginRight: 10 }} onPress={() => post()} >Publier</Button>
+                                <Button style={{ backgroundColor: "#00AB55", width: 100, alignSelf: "flex-end", marginRight: 10 }} onPress={() => newMessage != "" && post()} >Publier</Button>
                             </View>
                             <Text style={styles.font}>Photo</Text>
                             <View>
                                 <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={() => showCamera()}>Prendre une photo</Button>
                                 <Button style={{ width: "70%", backgroundColor: "#00AB55", alignSelf: "center", marginTop: 20 }} onPress={pickImage}>Importer une photo</Button>
                             </View >
-
-
                             {image ?
                                 <Image source={{ uri: `data:image/jpeg;base64,${image.base64}` }} style={{ alignSelf: 'center', width: image.width / 10, height: image.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" />
-                                : photo ?
+                                : photo && (!photoIsSaved && firstPhoto) ?
                                     <Image source={{ uri: `data:image/jpeg;base64,${photo.base64}` }} style={{ alignSelf: 'center', width: photo.width / 10, height: photo.height / 10, display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", marginTop: "10%" }} alt="photo" /> :
-                                    <Image source={noImage} style={{ alignSelf: "center", marginTop: "10%", width: 200, height: 200 }} />
-                                // <View style={{ display: "flex", justifyContent: "center", alignContent: "center", alignItems: "center", borderColor: "#CECECE", borderWidth: 1, borderRadius: 5, backgroundColor: "#E3E3E3", marginHorizontal: "10%", height: "60%", marginTop: "10%" }}>
-                                //     <Image source={noImage} style={{ width: 100, height: 100, tintColor: "#CECECE" }} alt="No Image" />
-                                // </View>
+                                    <Image alt="No image" source={noImage} style={{ alignSelf: "center", marginTop: "10%", width: 200, height: 200 }} />
                             }
                             <View style={{ marginTop: 10, alignSelf: "flex-end" }}>
                                 <Button style={{ backgroundColor: "#00AB55", alignSelf: "flex-end", marginRight: 10 }} onPress={() => savePicture()} >Sauvegarder</Button>

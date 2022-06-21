@@ -1,36 +1,51 @@
 import { checkStatus, url_prefix } from "../utils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MemberRequests = {
-    getMemberById: memberId => {
-        //const token = window.localStorage.getItem('token');
+    getMemberById: async memberId => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/member/${memberId}`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
-    getMembers: () => {
-        //const token = window.localStorage.getItem('token');
+    getMembers: async () => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/members`, {
-            // headers: {
-            //     Authorization: 'Bearer ' + token
-            // }
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
         })
             .then(checkStatus)
             .then(res => res.json())
     },
 
-    setBalance: ({ MemberId, balance }) => {
-        //const token = window.localStorage.getItem('token');
+    setBalance: async ({ MemberId, balance }) => {
+        const token = await AsyncStorage.getItem('token');
         return fetch(`${url_prefix}/member/${MemberId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                //Authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + token
             },
             body: JSON.stringify({ balance })
+        })
+            .then(checkStatus)
+            .then(res => res.json());
+    },
+
+    setSavePosition: async ({ MemberId, saveLocation }) => {
+        const token = await AsyncStorage.getItem('token');
+        return fetch(`${url_prefix}/member/${MemberId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token
+            },
+            body: JSON.stringify({ saveLocation })
         })
             .then(checkStatus)
             .then(res => res.json());

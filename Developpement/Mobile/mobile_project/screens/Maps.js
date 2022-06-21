@@ -13,7 +13,20 @@ import MemberRequests from '../requests/MemberRequests';
 
 import { useQuery, useQueryClient, useMutation } from 'react-query';
 
-import iconBackTravel from "../assets/navigation_icons/icon_backVoyage.png"
+import iconBackTravel from "../assets/navigation_icons/icon_backVoyage.png";
+import iconSettings from "../assets/navigation_icons/settings.png";
+
+import iconParc from "../assets/map_icons/parc.png";
+import iconMusee from "../assets/map_icons/musee.png";
+import iconCinema from "../assets/map_icons/cinema.png";
+import iconStade from "../assets/map_icons/stade.png";
+import iconMagasin from "../assets/map_icons/magasin.png";
+import iconMonument from "../assets/map_icons/monument.png";
+import iconRestaurant from "../assets/map_icons/restaurant.png";
+import iconSpectacle from "../assets/map_icons/spectacle.png";
+import iconPort from "../assets/map_icons/port.png";
+import iconBase from "../assets/map_icons/autre.png";
+import iconStep from "../assets/map_icons/step.png";
 
 const Maps = ({ navigation, route }) => {
 
@@ -21,15 +34,54 @@ const Maps = ({ navigation, route }) => {
 
     const queryClient = useQueryClient();
 
+    const { isReadOnly, idTravel } = route.params;
+
     useEffect(() => {
         navigation.setOptions({
             headerRight: (() =>
-                <Pressable onPress={() => navigation.navigate('Travels')}><Image source={iconBackTravel} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center", tintColor: "white" }} /></Pressable>
+                <View style={{ flexDirection: "row" }}>
+                    <Pressable onPress={() => navigation.navigate('Travels')}><Image source={iconBackTravel} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center", tintColor: "white" }} /></Pressable>
+                    <Pressable onPress={() => navigation.navigate('Settings', { idTravel: idTravel })}><Image source={iconSettings} style={{ width: 30, height: 30, marginRight: 5, alignContent: "center", tintColor: "white" }}></Image></Pressable>
+                </View>
             )
         });
     }, [])
 
-    const { isReadOnly, idTravel } = route.params;
+    const selectIcon = (point) => {
+        if (point.category == "Parc") {
+            return iconParc;
+        }
+        else if (point.category == "Musée") {
+            return iconMusee;
+        }
+        else if (point.category == "Cinéma") {
+            return iconCinema;
+        }
+        else if (point.category == "Stade") {
+            return iconStade;
+        }
+        else if (point.category == "Magasin") {
+            return iconMagasin;
+        }
+        else if (point.category == "Monument historique") {
+            return iconMonument;
+        }
+        else if (point.category == "Restaurant") {
+            return iconRestaurant;
+        }
+        else if (point.category == "Spectacle") {
+            return iconSpectacle;
+        }
+        else if (point.category == "Port") {
+            return iconPort;
+        }
+        else if (point.category == "Autre") {
+            return iconBase;
+        }
+        else {
+            return iconBase;
+        }
+    }
 
     // Etapes
     const { isLoading: isLoadingS, isError: isErrorS, error: errorS, data: steps } = useQuery(
@@ -72,8 +124,11 @@ const Maps = ({ navigation, route }) => {
     const [distance, setDistance] = useState(null);
     const [checked, setChecked] = useState("0");
 
+    const [isEnabled, setIsEnabled] = useState(false);
+
     useEffect(() => {
         (async () => {
+
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
                 setErrorMsg('Permission to access location was denied');
@@ -82,18 +137,24 @@ const Maps = ({ navigation, route }) => {
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
 
-            let id = null
+
+            let id = null;
+            let saveLocation = null;
             if (members !== undefined) {
                 if (members.length !== 0 || members !== null) {
                     members.map((member, idx) => {
                         if (member.TravelId == idTravel && member.userLogin == user.username) {
                             id = member.id
+                            saveLocation = member.saveLocation;
                         }
                     })
                 }
             }
-            const newPos = { date: Date.now(), TravelId: idTravel, longitude: location.coords.longitude, latitude: location.coords.latitude, MemberId: id }
-            addPosition.mutate(newPos)
+
+            if (saveLocation) {
+                const newPos = { date: Date.now(), TravelId: idTravel, longitude: location.coords.longitude, latitude: location.coords.latitude, MemberId: id }
+                addPosition.mutate(newPos)
+            }
         })();
 
     }, []);
@@ -109,22 +170,26 @@ const Maps = ({ navigation, route }) => {
                 let location = await Location.getCurrentPositionAsync({});
                 setLocation(location);
 
-                let id = null
+                let id = null;
+                let saveLocation = null;
                 if (members !== undefined) {
                     if (members.length !== 0 || members !== null) {
                         members.map((member, idx) => {
                             if (member.TravelId == idTravel && member.userLogin == user.username) {
                                 id = member.id
+                                saveLocation = member.saveLocation;
                             }
                         })
                     }
                 }
-                const newPos = { date: Date.now(), TravelId: idTravel, longitude: location.coords.longitude, latitude: location.coords.latitude, MemberId: id }
-                addPosition.mutate(newPos)
+                if (saveLocation) {
+                    const newPos = { date: Date.now(), TravelId: idTravel, longitude: location.coords.longitude, latitude: location.coords.latitude, MemberId: id }
+                    addPosition.mutate(newPos)
+                }
             })();
-        }, 300000);
+        }, 60000);
         return () => clearInterval(interval);
-    }, [members]);
+    }, [members, isEnabled]);
 
     const showModal = () => {
         setModalVisible(true)
@@ -139,15 +204,17 @@ const Maps = ({ navigation, route }) => {
                             {(checked === "0" || checked === "1") && (isLoadingS ? <Text>Chargement...</Text> : isErrorS ? <Text style={{ color: 'red' }}>{errorS.message}</Text> :
                                 <>
                                     {steps.map((step, index) => (
-                                        <Marker key={index} coordinate={{ latitude: step.latitude, longitude: step.longitude }} onPress={() => {
-                                            navigation.navigate('StepDetails', {
-                                                step: step,
-                                                isReadOnly: isReadOnly,
-                                                idTravel: idTravel,
-                                                photo: null
-                                            })
-                                        }
-                                        } />
+                                        <Marker key={index} coordinate={{ latitude: step.latitude, longitude: step.longitude }}
+                                            icon={iconStep}
+                                            onPress={() => {
+                                                navigation.navigate('StepDetails', {
+                                                    step: step,
+                                                    isReadOnly: isReadOnly,
+                                                    idTravel: idTravel,
+                                                    photo: null
+                                                })
+                                            }
+                                            } />
                                     )
                                     )}
 
@@ -175,14 +242,16 @@ const Maps = ({ navigation, route }) => {
                             }
                             {(checked === "0" || checked === "2") && (isLoadingP ? <Text>Chargement...</Text> : isErrorP ? <Text style={{ color: 'red' }}>{errorP.message}</Text> :
                                 points.map((point, index) => (
-                                    <Marker key={index} pinColor='blue' coordinate={{ latitude: point.latitude, longitude: point.longitude }} onPress={() => {
-                                        navigation.navigate('PointDetails', {
-                                            point: point,
-                                            isReadOnly: isReadOnly,
-                                            idTravel: idTravel,
-                                            photo: null
-                                        })
-                                    }}>
+                                    <Marker key={index} pinColor='blue' coordinate={{ latitude: point.latitude, longitude: point.longitude }}
+                                        icon={selectIcon(point)}
+                                        onPress={() => {
+                                            navigation.navigate('PointDetails', {
+                                                point: point,
+                                                isReadOnly: isReadOnly,
+                                                idTravel: idTravel,
+                                                photo: null
+                                            })
+                                        }}>
                                     </Marker>)
                                 ))
                             }

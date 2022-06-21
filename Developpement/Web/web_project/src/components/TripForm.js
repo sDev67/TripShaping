@@ -57,6 +57,12 @@ const TripForm = ({ setTripFormOpen, setOpen, setMessage, setColor }) => {
         ...members,
         member,
       ]);
+      let cryptedName = generateName(member.TravelId);
+      const Travel = {
+        TravelId: member.TravelId,
+        albumURL: cryptedName,
+      };
+      updateTravel.mutate(Travel);
     },
   });
 
@@ -76,12 +82,6 @@ const TripForm = ({ setTripFormOpen, setOpen, setMessage, setColor }) => {
       };
 
       addMember.mutate(newMember);
-      let cryptedName = generateName(travel.id);
-      const Travel = {
-        TravelId: travel.id,
-        albumURL: cryptedName,
-      };
-      updateTravel.mutate(Travel);
 
       setMessage("Voyage créé.");
       setColor("primary");

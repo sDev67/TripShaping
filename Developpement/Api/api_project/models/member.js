@@ -17,7 +17,7 @@ module.exports = sequelize => {
 		name: DataTypes.STRING,
 		saveLocation: {
 			type: Sequelize.BOOLEAN,
-			defaultValue: false,
+			defaultValue: true,
 		},
 		userLogin: {
 			type: Sequelize.STRING,

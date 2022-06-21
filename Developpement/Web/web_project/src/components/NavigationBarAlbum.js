@@ -46,6 +46,7 @@ import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
 import ProfileBubble from "./ProfileBubble";
 import NavigationBar from "./NavigationBar";
 import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
+import { backgroundColorMain } from "../theme/backgroundColor";
 
 const drawerWidth = 170;
 
@@ -318,7 +319,12 @@ const NavigationBarAlbum = () => {
             />
           </Tabs>
         </Drawer>
-        <main class={classes.content}>
+        <main
+          class={classes.content}
+          style={{
+            background: backgroundColorMain,
+          }}
+        >
           <div style={{ height: "6.85%" }}></div>
           <Outlet />
         </main>

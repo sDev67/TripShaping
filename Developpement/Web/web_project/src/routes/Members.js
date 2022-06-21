@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import "../Styles/ButtonStyles.css";
 import { Stack, Typography } from "@mui/material";
 import MemberList from "../components/MembersList";
@@ -8,12 +9,17 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import Loading from "../utils/Loading";
 import MemberRequests from "../requests/MemberRequests";
+import CustomSnackbar from "../utils/CustomSnackbar";
 
 const Members = () => {
   let { idTravel } = useParams();
   idTravel = parseInt(idTravel);
 
   const queryClient = useQueryClient();
+
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [color, setColor] = useState("");
 
   const {
     isLoading: isLoadingM,
@@ -25,10 +31,14 @@ const Members = () => {
   );
 
   const deleteMember = useMutation(MemberRequests.removeMember, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getMembers", idTravel], (members) =>
         members.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Membre supprimé");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   return (
@@ -57,9 +67,19 @@ const Members = () => {
             />
           )}
 
-          <MemberForm />
+          <MemberForm
+            setOpen={setOpen}
+            setMessage={setMessage}
+            setColor={setColor}
+          />
         </Stack>
       </Stack>
+      <CustomSnackbar
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        color={color}
+      ></CustomSnackbar>
     </>
   );
 };

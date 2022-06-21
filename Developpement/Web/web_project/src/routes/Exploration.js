@@ -37,6 +37,7 @@ import CustomSnackbar from "../utils/CustomSnackbar";
 import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 import ExplorationTripCard from "../components/ExplorationTripCard";
+import { backgroundColorMain } from "./../theme/backgroundColor";
 
 const drawerWidth = 170;
 
@@ -233,15 +234,28 @@ const Exploration = () => {
           </Toolbar>
         </AppBar>
       </Box>
+<<<<<<< HEAD
       <main className={classes.content} style={{ backgroundColor: "BackGround" }}>
+=======
+      <main
+        className={classes.content}
+        style={{
+          background: backgroundColorMain,
+        }}
+        //# ebedee
+      >
+>>>>>>> dev_web_benjamin
         <div style={{ height: "6.85%" }}></div>
         <Stack
 
           direction="column"
+<<<<<<< HEAD
           style={{
             backgroundSize: "cover",
             height: "93.15%",
           }}
+=======
+>>>>>>> dev_web_benjamin
           height="93.15%"
           width="90%"
           marginLeft="5%"

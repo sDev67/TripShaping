@@ -36,18 +36,26 @@ const TodoList = () => {
   const [currentLabelId, setCurrentLabelId] = useState();
   const [filterLabels, setFilterLabels] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState({});
-  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
+    useState(false);
   const HandleCloseConfirmedSuppr = () => {
     setConfirmedDeleteDialogOpen(false);
+  };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev_web_benjamin
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [color, setColor] = useState("");
 
+<<<<<<< HEAD
 =======
   };
 >>>>>>> dev_enzo
+=======
+>>>>>>> dev_web_benjamin
   const {
     isLoading: isLoadingT,
     isError: isErrorT,
@@ -123,17 +131,25 @@ const TodoList = () => {
   });
 
   const removeTask = useMutation(TravelRequests.removeTask, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getTasks", idTravel], (tasks) =>
         tasks.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Tâche supprimée.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   const removeLabel = useMutation(TravelRequests.removeLabel, {
-    onSuccess: (_, id) =>
+    onSuccess: (_, id) => {
       queryClient.setQueryData(["getLabels", idTravel], (labels) =>
         labels.filter((e) => e.id !== id)
-      ),
+      );
+      setMessage("Label supprimé.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   const addLabel = useMutation(TravelRequests.addLabel, {
@@ -397,21 +413,17 @@ const TodoList = () => {
                 }}
               >
                 {labels.map((label, index) => {
-
                   return (
                     <>
-
                       <Chip
                         size="medium"
                         color="secondary"
                         label={label.title}
-
                         onDelete={() => {
                           setConfirmedDeleteDialogOpen(true);
-                          setCurrentLabelId(label.id)
+                          setCurrentLabelId(label.id);
                         }}
                       />
-
                     </>
                   );
                 })}
@@ -444,13 +456,19 @@ const TodoList = () => {
         ></LabelForm>
       </Dialog>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev_web_benjamin
       <CustomSnackbar
         open={open}
         setOpen={setOpen}
         message={message}
         color={color}
       ></CustomSnackbar>
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> dev_web_benjamin
       <Dialog
         open={confirmedDeleteDialogOpen}
         onClose={HandleCloseConfirmedSuppr}
@@ -462,9 +480,11 @@ const TodoList = () => {
           onDelete={removeLabel}
         />
       </Dialog>
+<<<<<<< HEAD
 >>>>>>> dev_enzo
+=======
+>>>>>>> dev_web_benjamin
     </>
   );
 };
-
 export default TodoList;

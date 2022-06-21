@@ -19,21 +19,26 @@ const DocumentsList = ({
   requestKeyTitle,
   requestKeyValue,
   isEdition,
-  show
+  show,
+  setOpen,
+  setMessage,
+  setColor,
 }) => {
   const queryClient = useQueryClient();
 
   const displayDocument = (idDocument) => {
-    let url = encodeURI(
-      url_prefix + "/document/file/" + idDocument
-    );
+    let url = encodeURI(url_prefix + "/document/file/" + idDocument);
 
     window.open(url);
   };
 
   const removeDocument = useMutation(DocumentRequest.removeDocument, {
-    onSuccess: (_, id) =>
-      queryClient.invalidateQueries([requestKeyTitle, requestKeyValue])
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries([requestKeyTitle, requestKeyValue]);
+      setMessage("Document supprimé.");
+      setColor("primary");
+      setOpen(true);
+    }
   });
 
   const OnRemoveDocument = (documentId) => {
@@ -57,7 +62,6 @@ const DocumentsList = ({
             isEdition={isEdition}
             show={show}
           />
-
         ))}
       </List>
       <Divider></Divider>

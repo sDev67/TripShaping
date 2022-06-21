@@ -37,15 +37,16 @@ const InterestPointMenu = ({
 }) => {
   const queryClient = useQueryClient();
 
-
   // Documents by id
   const {
     isLoading: isLoadingD,
     isError: isErrorD,
     error: errorD,
     data: documents,
-  } = useQuery(["getDocumentsOfPoint", selectedMarker.id], () =>
-    DocumentRequest.getDocumentsByPointId(selectedMarker.id)
+  } = useQuery(
+    ["getDocumentsOfPoint", selectedMarker.id],
+    () => DocumentRequest.getDocumentsByPointId(selectedMarker.id),
+    { enabled: !hideDocuments }
   );
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
@@ -71,7 +72,8 @@ const InterestPointMenu = ({
   const [days, setDays] = useState([]);
   const [dayStep, setDayStep] = useState(selectedMarker.day);
   const listSteps = steps;
-  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
+    useState(false);
   const HandleCloseConfirmedSuppr = () => {
     setConfirmedDeleteDialogOpen(false);
     setSelectedMarker(null);
@@ -345,7 +347,6 @@ const InterestPointMenu = ({
               startIcon={<DeleteRounded />}
               onClick={() => {
                 setConfirmedDeleteDialogOpen(true);
-
               }}
               disabled={!isEdition}
             >

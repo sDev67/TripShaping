@@ -426,12 +426,6 @@ const InterestPointMenuBis = ({
 
   const [informationDialogOpen, setInformationDialogOpen] = useState(false);
 
-  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
-    useState(false);
-  const HandleCloseConfirmedSuppr = () => {
-    setConfirmedDeleteDialogOpen(false);
-  };
-
   const categ = [
     {
       value: "Parc",
@@ -710,17 +704,6 @@ const InterestPointMenuBis = ({
           isReadOnly={false}
           maxW="600px"
           information={false}
-        />
-      </Dialog>
-      <Dialog
-        open={confirmedDeleteDialogOpen}
-        onClose={HandleCloseConfirmedSuppr}
-      >
-        <ConfirmedSuppressionModal
-          id={selectedStep.id}
-          onClose={deleteStep}
-          message="Confirmer la suppression de cette étape ?"
-          onDelete={deleteStep}
         />
       </Dialog>
     </>

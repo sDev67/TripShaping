@@ -28,6 +28,7 @@ import CustomSnackbar from "../utils/CustomSnackbar";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import ConfirmedSuppressionModal from "./ConfirmedSuppressionModal";
+import { generateName } from "../utils/CryptedNameFormatting";
 
 const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
   const queryClient = useQueryClient();
@@ -59,6 +60,12 @@ const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
     copyTravel.mutate({ TravelId: travelId, UserId: user.id });
   };
 
+  const updateTravel = useMutation(TravelRequests.updateTravelCryptedName, {
+    onSuccess: (travel) => {
+      queryClient.invalidateQueries(["getTravelById", travel.id]);
+    },
+  });
+
   const copyTravel = useMutation(TravelRequests.copyTravel, {
     onSuccess: (travel) => {
       const newMember = {
@@ -69,6 +76,14 @@ const TripCard = ({ travelId, user, setOpen, setMessage, setColor }) => {
       };
 
       addMember.mutate(newMember);
+
+      let cryptedName = generateName(travel.id);
+
+      const Travel = {
+        TravelId: travel.id,
+        albumURL: cryptedName,
+      };
+      updateTravel.mutate(Travel);
     },
   });
 

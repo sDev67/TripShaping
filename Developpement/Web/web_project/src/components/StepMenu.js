@@ -43,7 +43,8 @@ const StepMenu = ({
     selectedMarker.descriptionHTML
   );
 
-  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] =
+    useState(false);
   const HandleCloseConfirmedSuppr = () => {
     setConfirmedDeleteDialogOpen(false);
     setSelectedMarker(null);
@@ -56,8 +57,10 @@ const StepMenu = ({
     isError: isErrorD,
     error: errorD,
     data: documents,
-  } = useQuery(["getDocumentsOfStep", selectedMarker.id], () =>
-    DocumentRequest.getDocumentsByStepId(selectedMarker.id)
+  } = useQuery(
+    ["getDocumentsOfStep", selectedMarker.id],
+    () => DocumentRequest.getDocumentsByStepId(selectedMarker.id),
+    { enabled: !hideDocuments }
   );
 
   const {
@@ -273,7 +276,7 @@ const StepMenu = ({
               color="error"
               startIcon={<DeleteRounded />}
               onClick={() => {
-                setConfirmedDeleteDialogOpen(true)
+                setConfirmedDeleteDialogOpen(true);
               }}
               disabled={!isEdition}
             >

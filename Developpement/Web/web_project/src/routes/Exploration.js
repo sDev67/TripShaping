@@ -37,6 +37,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 import PhotoRoundedIcon from "@mui/icons-material/PhotoRounded";
 import ExplorationTripCard from "../components/ExplorationTripCard";
 import { backgroundColorMain } from "./../theme/backgroundColor";
+import { generateName } from "../utils/CryptedNameFormatting";
 
 const drawerWidth = 170;
 
@@ -149,6 +150,12 @@ const Exploration = () => {
     data: travels,
   } = useQuery(["getTravels"], () => TravelRequests.getPublishedTravel());
 
+  const updateTravel = useMutation(TravelRequests.updateTravelCryptedName, {
+    onSuccess: (travel) => {
+      queryClient.invalidateQueries(["getTravelById", travel.id]);
+    },
+  });
+
   const addMember = useMutation(MemberRequests.addMember, {
     onSuccess: (member) => {
       queryClient.setQueriesData(["getMembers", user.id], (members) => [
@@ -173,6 +180,14 @@ const Exploration = () => {
       };
 
       addMember.mutate(newMember);
+
+      let cryptedName = generateName(travel.id);
+
+      const Travel = {
+        TravelId: travel.id,
+        albumURL: cryptedName,
+      };
+      updateTravel.mutate(Travel);
     },
   });
 

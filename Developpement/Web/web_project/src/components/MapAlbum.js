@@ -954,6 +954,7 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
               updateInfoPoint={updateInfoPoint}
               isEdition={isEdition}
               steps={steps}
+              hideDocuments={true}
               idTravel={idTravel}
             ></InterestPointMenu>
           )
@@ -969,8 +970,10 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
             updateInfoStep={updateInfoStep}
             isEdition={isEdition}
             steps={steps}
+            hideDocuments={true}
             setSelectedPoiOfMarker={setSelectedPoiOfMarker}
             idTravel={idTravel}
+            loadDocuments={false}
           ></StepMenu>
         ))}
       {selectedRoute && (
@@ -980,6 +983,7 @@ export const MapAlbum = ({ steps, isLoadingS, isErrorS, errorS }) => {
           finish={selectedRoute.finish}
           setSelectedRoute={setSelectedRoute}
           isEdition={isEdition}
+          hideDocuments={true}
           idTravel={idTravel}
         ></RouteMenu>
       )}

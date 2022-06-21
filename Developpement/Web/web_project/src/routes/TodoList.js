@@ -20,6 +20,7 @@ import TravelRequests from "../requests/TravelRequests";
 import TodoListRequest from "../requests/TodoListRequest";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useParams } from "react-router-dom";
+import CustomSnackbar from "../utils/CustomSnackbar";
 
 const TodoList = () => {
   let { idTravel } = useParams();
@@ -33,6 +34,10 @@ const TodoList = () => {
 
   const [filterLabels, setFilterLabels] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState({});
+
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [color, setColor] = useState("");
 
   const {
     isLoading: isLoadingT,
@@ -68,11 +73,15 @@ const TodoList = () => {
   });
 
   const addTask = useMutation(TravelRequests.addTask, {
-    onSuccess: (task) =>
+    onSuccess: (task) => {
       queryClient.setQueryData(["getTasks", idTravel], (tasks) => [
         ...tasks,
         task,
-      ]),
+      ]);
+      setMessage("Tâche créée.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   const addLabelToTask = useMutation(TodoListRequest.addLabelToTask, {
@@ -81,6 +90,9 @@ const TodoList = () => {
         ["getLabelOfTask", taskLabel.task.id],
         (taskLabels) => [...taskLabels, taskLabel.label]
       );
+      setMessage("Label ajouté à la tâche.");
+      setColor("primary");
+      setOpen(true);
     },
   });
 
@@ -116,11 +128,15 @@ const TodoList = () => {
   });
 
   const addLabel = useMutation(TravelRequests.addLabel, {
-    onSuccess: (label) =>
+    onSuccess: (label) => {
       queryClient.setQueryData(["getLabels", idTravel], (labels) => [
         ...labels,
         label,
-      ]),
+      ]);
+      setMessage("Label créé.");
+      setColor("primary");
+      setOpen(true);
+    },
   });
 
   const [taskFormOpen, setTaskFormOpen] = useState(false);
@@ -176,7 +192,6 @@ const TodoList = () => {
 
     addTask.mutate(newTask);
   };
-
 
   const OnRemoveTask = (task) => {
     removeTask.mutate(task.id);
@@ -394,6 +409,9 @@ const TodoList = () => {
           OnAddTask={OnAddTask}
           UpdateTask={UpdateTask}
           onClose={HandleCloseTaskForm}
+          setOpen={setOpen}
+          setMessage={setMessage}
+          setColor={setColor}
         ></TaskForm>
       </Dialog>
       <Dialog open={labelFormOpen} onClose={HandleCloseLabelForm}>
@@ -402,8 +420,17 @@ const TodoList = () => {
           addLabel={OnAddLabel}
           UpdateLabel={UpdateLabel}
           onClose={HandleCloseLabelForm}
+          setOpen={setOpen}
+          setMessage={setMessage}
+          setColor={setColor}
         ></LabelForm>
       </Dialog>
+      <CustomSnackbar
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        color={color}
+      ></CustomSnackbar>
     </>
   );
 };

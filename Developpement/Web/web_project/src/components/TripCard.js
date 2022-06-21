@@ -181,7 +181,8 @@ const TripCard = ({ travelId, user }) => {
       <CustomSnackbar
         open={open}
         setOpen={setOpen}
-        message={"Voyage dupliqué !"}
+        message={"Voyage dupliqué."}
+        color="primary"
       ></CustomSnackbar>
     </>
   );

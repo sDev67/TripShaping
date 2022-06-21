@@ -9,13 +9,16 @@ module.exports = sequelize => {
 
 			Member.hasMany(db.Expense, { onDelete: 'cascade' });
 			Member.hasMany(db.JournalEntry, { onDelete: 'cascade' });
-
 			Member.hasMany(db.Position);
 		}
 	}
 
 	Member.init({
 		name: DataTypes.STRING,
+		saveLocation: {
+			type: Sequelize.BOOLEAN,
+			defaultValue: false,
+		},
 		userLogin: {
 			type: Sequelize.STRING,
 			references: {

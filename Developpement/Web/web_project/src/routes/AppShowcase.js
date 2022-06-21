@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import clsx from "clsx";
 import { makeStyles } from "@mui/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import image from "../assets/rainbow.png";
@@ -7,10 +6,8 @@ import Carousel from "react-material-ui-carousel";
 import {
   Stack,
   Button,
-  Tabs,
   Typography,
   Avatar,
-  Popover,
   AppBar,
   Toolbar,
   Box,
@@ -24,12 +21,6 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { stringAvatar } from "../utils/AvatarColorPicker";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import TripForm from "../components/TripForm";
-import { useQuery, useQueryClient, useMutation } from "react-query";
-import TravelRequests from "../requests/TravelRequests";
-import Loading from "../utils/Loading";
-import MenuIcon from "@mui/icons-material/Menu";
 import { Translation, changeLocale } from "@psyycker/react-translation";
 import { useAuth } from "../Authentication/auth";
 import ProfileBubble from "../components/ProfileBubble";
@@ -164,9 +155,12 @@ const AppShowcase = () => {
               variant="h3"
               onClick={() => navigate("/")}
               style={{ cursor: "pointer" }}
-              width="5%"
+              width="8%"
             >
-              TripShaping
+              <img
+                src="https://see.fontimg.com/api/renderfont4/PxlZ/eyJyIjoiZnMiLCJoIjo4NywidyI6MTAwMCwiZnMiOjg3LCJmZ2MiOiIjRkZGRkZGIiwiYmdjIjoiIzAwMDAwMCIsInQiOjF9/VHJpcFNoYXBpbmc/quick-kiss-personal-use.png"
+                alt="Trip Shaping"
+              />
             </Typography>
             <Stack width="80%"></Stack>
 
@@ -184,6 +178,7 @@ const AppShowcase = () => {
                 >
                   <MenuItem value="fr">🇫🇷</MenuItem>
                   <MenuItem value="en">🇬🇧</MenuItem>
+                  <MenuItem value="tr">🇹🇷</MenuItem>
                 </Select>
               </FormControl>
             </Stack>

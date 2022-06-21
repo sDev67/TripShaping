@@ -1,13 +1,18 @@
-import {
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import DoneRounded from "@mui/icons-material/DoneRounded";
+import { AirlineSeatReclineNormalRounded } from "@mui/icons-material";
 
-const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
+const TaskForm = ({
+  task,
+  OnAddTask,
+  UpdateTask,
+  onClose,
+  setOpen,
+  setMessage,
+  setColor,
+}) => {
   const [currentTitle, setCurrentTitle] = useState("");
 
   const [currentDate, setCurrentDate] = useState("");
@@ -44,6 +49,10 @@ const TaskForm = ({ task, OnAddTask, UpdateTask, onClose }) => {
         currentTitle != ""
       ) {
         OnAddTask({ title: currentTitle, date: currentDate });
+      } else {
+        setMessage("Veuillez renseigner un nom.");
+        setColor("error");
+        setOpen(true);
       }
       // on la créer
     }

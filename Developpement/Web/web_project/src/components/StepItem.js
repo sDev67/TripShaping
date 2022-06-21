@@ -122,9 +122,15 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
               </Typography>
             </Stack>
             <Tooltip title="Durée de l'étape" arrow>
-              <Typography variant="h5" width="15%">
-                {duration} jours
-              </Typography>
+              {duration > 1 ? (
+                <Typography variant="h5" width="15%">
+                  {duration} jours
+                </Typography>
+              ) : (
+                <Typography variant="h5" width="15%">
+                  {duration} jour
+                </Typography>
+              )}
             </Tooltip>
 
             <Tooltip title="Date du début de l'étape" arrow>
@@ -192,15 +198,14 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
                   variant="outlined"
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
-                  endAdornment={
-                    <InputAdornment position="end">jours</InputAdornment>
-                  }
                   InputLabelProps={{
                     shrink: true,
                   }}
                   InputProps={{
                     endAdornment: (
-                      <InputAdornment position="end">jours</InputAdornment>
+                      <InputAdornment position="end">
+                        {duration > 1 ? <>jours</> : <>jour</>}
+                      </InputAdornment>
                     ),
                   }}
                 />
@@ -266,7 +271,7 @@ const StepItem = ({ step, index, updateInfoStep, steps, startDate, date }) => {
               ) : (
                 <DocumentsList
                   documents={documents}
-                  requestKeyTitle="getDocumentsOfPoint"
+                  requestKeyTitle="getDocumentsOfStep"
                   requestKeyValue={step.id}
                   isEdition={true}
                   show={false}
@@ -360,7 +365,10 @@ const InterestPointMenuBis = ({ selectedInterestPoint, steps, setOpen }) => {
 
   const addDocument = useMutation(DocumentRequest.uploadFile, {
     onSuccess: (document) => {
-      queryClient.invalidateQueries(["getDocumentsOfPoint", selectedInterestPoint.id]);
+      queryClient.invalidateQueries([
+        "getDocumentsOfPoint",
+        selectedInterestPoint.id,
+      ]);
     },
   });
 

@@ -188,7 +188,7 @@ const TripSettings = () => {
             direction="column"
             height="85%"
             alignItems="strech"
-            marginTop="5%"
+            marginTop="10%"
             spacing={5}
           >
             <Stack direction="row" justifyContent="space-between">
@@ -205,6 +205,22 @@ const TripSettings = () => {
                 onChange={handleSwitchTrackPosition}
                 position="relative"
               /> */}
+              <Stack>
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<DeleteRounded />}
+                  onClick={() => setConfirmedDeleteDialogOpen(true)}
+                  style={{
+                    paddingLeft: "25px",
+                    paddingRight: "25px",
+                    paddingTop: "10px",
+                    paddingBottom: "10px",
+                  }}
+                >
+                  Supprimer le voyage
+                </Button>
+              </Stack>
               <FormControlLabel
                 value={publicItinerary}
                 checked={publicItinerary}
@@ -234,22 +250,7 @@ const TripSettings = () => {
                 />
               )}
             </Stack>
-            <Stack>
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<DeleteRounded />}
-                onClick={() => setConfirmedDeleteDialogOpen(true)}
-                style={{
-                  paddingLeft: "25px",
-                  paddingRight: "25px",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
-                }}
-              >
-                Supprimer le voyage
-              </Button>
-            </Stack>
+
             <Stack>
               {statusTrip == 0 && (
                 <Button
@@ -275,7 +276,7 @@ const TripSettings = () => {
             <ConfirmedSuppressionModal
               id={travel.id}
               onClose={HandleCloseConfirmedSuppr}
-              title="Etes-vous sûr de vouloir supprimer le voyage ?
+              message="Etes-vous sûr de vouloir supprimer le voyage ?
                     Cette action est irréversible."
               onDelete={deleteVoyage}
             />

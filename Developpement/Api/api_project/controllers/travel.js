@@ -82,7 +82,7 @@ module.exports = {
       where: {
         toPublish: 1,
       },
-      order: ["startDate"],
+      order: [["startDate", 'DESC']],
       limit: 10
     })
       .then((travels) => {

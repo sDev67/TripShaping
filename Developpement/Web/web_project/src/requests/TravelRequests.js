@@ -20,6 +20,13 @@ const TravelRequests = {
       .then(checkStatus)
       .then((res) => res.json());
   },
+  getLastTenPublishedTravel: () => {
+    return fetch(`${url_prefix}/getLastTravels`, {
+
+    })
+      .then(checkStatus)
+      .then((res) => res.json());
+  },
   getTravelByid: (idTravel) => {
     const token = window.localStorage.getItem('token');
     return fetch(`${url_prefix}/travel/${idTravel}`, {

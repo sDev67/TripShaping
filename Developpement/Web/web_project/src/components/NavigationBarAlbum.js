@@ -21,12 +21,13 @@ import {
   Button,
   Grid,
   Paper,
+  Tooltip,
 } from "@mui/material";
 import { mainListItems, secondaryListItems } from "./ListItems";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import CommuteRoundedIcon from "@mui/icons-material/CommuteRounded";
 import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
@@ -46,6 +47,8 @@ import NewspaperRoundedIcon from "@mui/icons-material/NewspaperRounded";
 import ProfileBubble from "./ProfileBubble";
 import NavigationBar from "./NavigationBar";
 import { cryptedNameToTravelId } from "../utils/CryptedNameFormatting";
+import { url_prefix } from "../utils";
+import CustomSnackbar from "../utils/CustomSnackbar";
 
 const drawerWidth = 170;
 
@@ -164,6 +167,12 @@ const NavigationBarAlbum = () => {
   } = useQuery(["getTravelById", idTravel], () =>
     TravelRequests.getTravelByid(idTravel)
   );
+
+  const [openSnackBar, setOpenSnackBar] = React.useState(false);
+  const msg = "Lien copié !";
+  const onClose = () => {
+
+  }
 
   const [value, setValue] = React.useState("Carte");
 
@@ -316,13 +325,32 @@ const NavigationBarAlbum = () => {
               component={Link}
               to={"/album/" + cryptedName + "/logbook"}
             />
+
           </Tabs>
+          <Button onClick={() => {
+            navigator.clipboard.writeText(`http://localhost:3000/album/${cryptedName}/map`)
+            setOpenSnackBar(true);
+          }} style={{ marginTop: 30 }}>
+            <Stack
+              direction="row"
+              justifyContent="center"
+
+            >
+              <Tooltip title="Copier le lien" arrow>
+                <ContentCopyRoundedIcon color="secondary" fontSize="large" />
+
+              </Tooltip>
+
+            </Stack>
+          </Button>
         </Drawer>
         <main class={classes.content}>
           <div style={{ height: "6.85%" }}></div>
           <Outlet />
         </main>
       </div>
+
+      <CustomSnackbar open={openSnackBar} setOpen={setOpenSnackBar} message={msg} />
     </>
   );
 };

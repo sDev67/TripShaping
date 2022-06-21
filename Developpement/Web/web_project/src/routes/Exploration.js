@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@mui/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import AppStyle from '../App.css'
 import {
   TextField,
   Card,
@@ -118,6 +119,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 const Exploration = () => {
   let { user, signout } = useAuth();
 
@@ -147,6 +149,13 @@ const Exploration = () => {
     error: errorT,
     data: travels,
   } = useQuery(["getTravels"], () => TravelRequests.getPublishedTravel());
+
+  const {
+    isLoading: isLoadingL,
+    isError: isErrorL,
+    error: errorL,
+    data: lastTravels,
+  } = useQuery(["getLastTravels"], () => TravelRequests.getLastTenPublishedTravel());
 
   const addMember = useMutation(MemberRequests.addMember, {
     onSuccess: (member) => {
@@ -224,15 +233,15 @@ const Exploration = () => {
           </Toolbar>
         </AppBar>
       </Box>
-      <main className={classes.content}>
+      <main className={classes.content} style={{ backgroundColor: "BackGround" }}>
         <div style={{ height: "6.85%" }}></div>
         <Stack
+
           direction="column"
-          // style={{
-          //   // backgroundImage: `url(${require("../assets/balloons-flying.jpg")})`,
-          //   backgroundSize: "cover",
-          //   height: "93.15%",
-          // }}
+          style={{
+            backgroundSize: "cover",
+            height: "93.15%",
+          }}
           height="93.15%"
           width="90%"
           marginLeft="5%"
@@ -246,6 +255,56 @@ const Exploration = () => {
           >
             Découvrez tous les voyages partagés par les utilisateurs !
           </Typography>
+          <Stack>
+
+
+            <Grid
+              marginTop={0}
+              paddingX={2}
+              paddingBottom={2}
+              container
+              justifyContent="flex-start"
+              alignItems="center"
+              spacing={5}
+              style={{
+                overflowY: "scroll",
+              }}
+            >
+              {isLoadingL ? (
+                <Loading />
+              ) : isErrorL ? (
+                <p style={{ color: "red" }}>{errorL.message}</p>
+              ) : lastTravels.length == 0 ? (
+                <>
+                  <Typography
+                    color="error"
+                    variant="h3"
+                    textAlign="center"
+                    paddingTop={4}
+                  >
+                    Aucun voyage récent.
+                  </Typography>
+                </>
+              ) : (
+                lastTravels.map((travel, index) => (
+                  <>
+                    {travel.name
+                      .toLowerCase()
+                      .trim()
+                      .includes(
+                        <ExplorationTripCard
+                          index={index}
+                          travel={travel}
+                          user={user}
+                          handleCLickCopyTravel={handleCLickCopyTravel}
+                        />
+                      )}
+                  </>
+                ))
+              )}
+            </Grid>
+
+          </Stack>
           <TextField
             style={{ width: "40%", marginTop: "2%", marginBottom: "1%" }}
             fullWidth
@@ -290,13 +349,13 @@ const Exploration = () => {
                     .toLowerCase()
                     .trim()
                     .includes(filterTravel.toLowerCase().trim()) && (
-                    <ExplorationTripCard
-                      index={index}
-                      travel={travel}
-                      user={user}
-                      handleCLickCopyTravel={handleCLickCopyTravel}
-                    />
-                  )}
+                      <ExplorationTripCard
+                        index={index}
+                        travel={travel}
+                        user={user}
+                        handleCLickCopyTravel={handleCLickCopyTravel}
+                      />
+                    )}
                 </>
               ))
             )}

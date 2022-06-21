@@ -6,31 +6,26 @@ const ConfirmedSuppressionModal = ({ message, id, onClose, onDelete }) => {
     onDelete.mutate(id);
   };
 
+  const HandleClick = () => {
+    onDelete.mutate(id);
+    if (onClose != undefined) {
+      onClose();
+    }
+  }
+
   return (
     <>
-      <Card>
-        <CardContent>
-          <Stack
-            direction="column"
-            justifyContent="center"
-            spacing={6}
-            alignItems="center"
-          >
-            <Typography variant="h5" color="error">
-              {message}
-            </Typography>
-            <Button
-              onClick={() => HandleClick()}
-              color="error"
-              variant="contained"
-            >
-              Supprimer
-            </Button>
-          </Stack>
-        </CardContent>
-      </Card>
+
+      <Stack flex="column" heigth="100%" width="100%">
+        <Typography variant="h5" color="error">
+          {message}
+        </Typography>
+        <Button onClick={() => HandleClick()} color="error" size="large">
+          Supprimer.
+        </Button>
+      </Stack>
     </>
-  );
-};
+  )
+}
 
 export default ConfirmedSuppressionModal;

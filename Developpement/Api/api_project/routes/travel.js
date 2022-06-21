@@ -1114,6 +1114,13 @@ module.exports = [
     ],
   },
   {
+    url: "/getLastTravels",
+    method: "get",
+    func: [
+      travel_ctrl.get_last_ten_published_travel,
+    ],
+  },
+  {
     url: "/travel/:travel_id/labels",
     method: "get",
     func: [

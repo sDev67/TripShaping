@@ -77,6 +77,27 @@ module.exports = {
       .then((steps) => res.json(steps))
       .catch((err) => next(err));
   },
+  get_last_ten_published_travel: (req, res, next) => {
+    return db.Travel.findAll({
+      where: {
+        toPublish: 1,
+      },
+      order: ["startDate"],
+      limit: 10
+    })
+      .then((travels) => {
+
+        if (!travels) {
+          throw { status: 404, message: "Aucun voyage récent." };
+        }
+        else {
+
+          res.json(travels);
+        }
+      })
+
+      .catch((err) => next(err));
+  },
   get_tasks_of_travel: (req, res, next) => {
     return db.Travel.findByPk(req.params.travel_id)
       .then((travel) => {

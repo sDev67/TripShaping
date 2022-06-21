@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import DeleteRounded from "@mui/icons-material/DeleteRounded";
 import DoneRounded from "@mui/icons-material/DoneRounded";
+import ConfirmedSuppressionModal from "./ConfirmedSuppressionModal";
 import UploadFileRounded from "@mui/icons-material/UploadFileRounded";
 import CancelRounded from "@mui/icons-material/CancelRounded";
 import { useQuery, useQueryClient, useMutation } from "react-query";
@@ -35,6 +36,7 @@ const InterestPointMenu = ({
   idTravel,
 }) => {
   const queryClient = useQueryClient();
+
 
   // Documents by id
   const {
@@ -69,6 +71,11 @@ const InterestPointMenu = ({
   const [days, setDays] = useState([]);
   const [dayStep, setDayStep] = useState(selectedMarker.day);
   const listSteps = steps;
+  const [confirmedDeleteDialogOpen, setConfirmedDeleteDialogOpen] = useState(false);
+  const HandleCloseConfirmedSuppr = () => {
+    setConfirmedDeleteDialogOpen(false);
+    setSelectedMarker(null);
+  };
 
   const categ = [
     {
@@ -337,8 +344,8 @@ const InterestPointMenu = ({
               color="error"
               startIcon={<DeleteRounded />}
               onClick={() => {
-                deletePoint.mutate(selectedMarker.id);
-                setSelectedMarker(null);
+                setConfirmedDeleteDialogOpen(true);
+
               }}
               disabled={!isEdition}
             >
@@ -368,6 +375,17 @@ const InterestPointMenu = ({
           isReadOnly={!isEdition}
           maxW="600px"
           information={false}
+        />
+      </Dialog>
+      <Dialog
+        open={confirmedDeleteDialogOpen}
+        onClose={HandleCloseConfirmedSuppr}
+      >
+        <ConfirmedSuppressionModal
+          id={selectedMarker.id}
+          onClose={HandleCloseConfirmedSuppr}
+          message="Confirmer la suppression de ce point d'intérêt ?"
+          onDelete={deletePoint}
         />
       </Dialog>
     </>
